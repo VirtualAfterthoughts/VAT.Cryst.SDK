@@ -1,0 +1,19 @@
+{
+    "name": "VAT.Scene.Editor",
+    "rootNamespace": "VAT.Scene.Editor",
+    "references": [
+        "GUID:99e2946940316944c8ffd63f4cd2d5a0",
+        "GUID:90a83c14fcb3592428d0406e14f847a0"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

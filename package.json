@@ -1,0 +1,21 @@
+{
+    "name": "com.virtualafterthoughts.cryst.sdk",
+	"version": "0.0.1",
+    "displayName": "VAT Cryst SDK",
+    "description": "Tools for streamlining our creation of games.",
+	"unity": "2021.3",
+	"dependencies": {
+		"com.unity.burst": "1.6.6",
+		"com.unity.addressables": "1.19.19"
+    },
+	"keywords": [
+		"vat",
+		"virtualafterthoughts"
+	],
+	"license": "MIT",
+	"author": {
+		"name": "VirtualAfterThoughts"
+	},
+	"unityRelease": "15f1",
+	"hideInEditor": false
+}
