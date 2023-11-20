@@ -22,6 +22,7 @@ namespace VAT.Packaging
 
         public override IWeakAsset MainAsset { get => StaticAsset; }
 
+        [SerializeField]
         private string _addressType;
         public virtual string AddressType
         {

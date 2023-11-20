@@ -5,6 +5,7 @@ using UnityEngine;
 
 using VAT.Shared.Extensions;
 using VAT.Shared;
+using VAT.Packaging;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -44,6 +45,27 @@ namespace VAT.Pooling
         }
 
 #if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (_spawnable.contentReference == null)
+                return;
+
+            var address = _spawnable.contentReference.Address;
+
+            if (_spawnable.contentReference.TryGetContent(out var content))
+            {
+                this.name = $"Spawnable Placer ({content.ContentInfo.Title})";
+            }
+            else if (address != Address.EMPTY)
+            {
+                this.name = $"Spawnable Placer ({address})";
+            }
+            else
+            {
+                this.name = "Spawnable Placer (Unknown)";
+            }
+        }
+
         private void OnDrawGizmos()
         {
             // Draw spawnable asset
@@ -69,6 +91,18 @@ namespace VAT.Pooling
             {
                 Debug.LogError("Missing Cryst editor asset: \"Resources/Question Mark\"");
             }
+        }
+
+        [MenuItem("GameObject/Crystalline/Pooling/Spawnable Placer")]
+        private static void MenuCreateItem(MenuCommand menuCommand)
+        {
+            GameObject go = new("Spawnable Placer", typeof(SpawnablePlacer));
+            go.transform.localScale = Vector3.one;
+
+            GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
+            Selection.activeObject = go;
+
+            Undo.RegisterCreatedObjectUndo(go, "Create Spawnable Placer");
         }
 #endif
     }

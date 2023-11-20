@@ -10,11 +10,7 @@ namespace VAT.Packaging.Editor
 {
     [CustomPropertyDrawer(typeof(ContentReference), true)]
     public class ContentReferencePropertyDrawer : PropertyDrawer {
-        public Content selectedContent = null;
         public bool isDrawingAddress = false;
-
-        private bool _hasRan = false;
-        private bool _hadValue = false;
 
         private Type contentType = null;
 
@@ -36,34 +32,29 @@ namespace VAT.Packaging.Editor
 
             OnDrawAddressToggle(position, addressProperty);
             EditorGUI.EndProperty();
+
+            property.serializedObject.ApplyModifiedProperties();
         }
 
         protected virtual void OnDrawAddress(Rect position, GUIContent label, SerializedProperty addressProperty) 
         {
             string result = EditorGUI.TextField(position, label, addressProperty.stringValue);
             addressProperty.stringValue = result;
-
-            if (AssetPackager.IsReady) {
-                AssetPackager.Instance.TryGetContent(result, out selectedContent);
-            }
         }
 
         protected virtual void OnDrawContent(Rect position, GUIContent label, SerializedProperty addressProperty) 
         {
-            selectedContent = EditorGUI.ObjectField(position, label, selectedContent, contentType, false) as Content;
-            if (selectedContent)
-                addressProperty.stringValue = selectedContent.Address.ID;
-            else if (!_hasRan && AssetPackager.IsReady)
-            {
-                AssetPackager.Instance.TryGetContent(addressProperty.stringValue, out selectedContent);
-                _hasRan = true;
-            }
-            else if (_hadValue)
-            {
-                addressProperty.stringValue = Address.EMPTY;
-            }
+            var address = addressProperty.stringValue;
+            AssetPackager.Instance.TryGetContent<Content>(address, out var content);
 
-            _hadValue = selectedContent != null;
+            EditorGUI.BeginChangeCheck();
+
+            content = EditorGUI.ObjectField(position, label, content, contentType, false) as Content;
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                addressProperty.stringValue = content ? content.Address : Address.EMPTY;
+            }
         }
 
         protected void OnDrawAddressToggle(Rect position, SerializedProperty addressProperty) {

@@ -75,7 +75,10 @@ namespace VAT.Packaging.Editor
             _title = EditorGUILayout.TextField("Content Title", _title);
 
             EditorGUI.BeginChangeCheck();
-            _mainAsset = EditorGUILayout.ObjectField("Main Asset", _mainAsset, typeof(Object), false);
+
+            Type objectType = _contentIdentifier != null ? _contentIdentifier.mainAssetType : typeof(Object);
+
+            _mainAsset = EditorGUILayout.ObjectField("Main Asset", _mainAsset, objectType, false);
 
             if (EditorGUI.EndChangeCheck() && _mainAsset != null) {
                 _title = _mainAsset.name;
