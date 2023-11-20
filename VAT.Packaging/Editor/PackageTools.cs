@@ -10,26 +10,32 @@ using VAT.Shared.Extensions;
 
 using VAT.Cryst;
 
-namespace VAT.Packaging.Editor {
-    public static class PackageTools {
+namespace VAT.Packaging.Editor
+{
+    public static class PackageTools
+    {
         [MenuItem("VAT/Cryst SDK/Tools/Packages/Import Package")]
-        public static void ImportPackage() {
+        public static void ImportPackage()
+        {
             string path = EditorUtility.OpenFilePanel("Import Package", Application.dataPath, "json");
-            if (!string.IsNullOrWhiteSpace(path)) {
+            if (!string.IsNullOrWhiteSpace(path))
+            {
                 var json = path.ReadFromFile();
-                JSONUnpacker unpacker = new (json);
+                JSONUnpacker unpacker = new(json);
                 unpacker.UnpackRoot(out Package package, Package.Create);
 
                 // Create package
                 var assetsFolderPath = $"Assets/{CrystAssetManager.CRYST_ASSETS_FOLDER}";
                 var packageFolderPath = $"{assetsFolderPath}/{AssetPackager.CRYST_PACKAGES_FOLDER}";
 
-                if (!AssetDatabase.IsValidFolder(packageFolderPath)) {
+                if (!AssetDatabase.IsValidFolder(packageFolderPath))
+                {
                     AssetDatabase.CreateFolder(assetsFolderPath, AssetPackager.CRYST_PACKAGES_FOLDER);
                 }
 
                 var addressPath = $"{packageFolderPath}/{package.Address}";
-                if (!AssetDatabase.IsValidFolder(addressPath)) {
+                if (!AssetDatabase.IsValidFolder(addressPath))
+                {
                     AssetDatabase.CreateFolder(packageFolderPath, package.Address);
                 }
 
@@ -39,7 +45,8 @@ namespace VAT.Packaging.Editor {
                 var initialContents = package.Contents.ToArray();
                 package.Contents.Clear();
 
-                foreach (var content in initialContents) {
+                foreach (var content in initialContents)
+                {
                     AssetDatabase.CreateAsset(content, $"{addressPath}/_{content.Info.Title}.asset");
                     package.Contents.Add(content);
                     content.MainPackage = package;
@@ -58,12 +65,14 @@ namespace VAT.Packaging.Editor {
             }
         }
 
-        public static void ExportPackage(Package package) {
+        public static void ExportPackage(Package package)
+        {
             var packer = new JSONPacker();
             var json = packer.PackRoot(package);
 
             string path = EditorUtility.SaveFilePanel("Export Package", Application.dataPath, package.Address, "json");
-            if (!string.IsNullOrWhiteSpace(path)) {
+            if (!string.IsNullOrWhiteSpace(path))
+            {
                 json.WriteToFile(path);
 
                 // Show file

@@ -9,12 +9,13 @@ using VAT.Shared.Editor;
 namespace VAT.Packaging.Editor
 {
     [CustomPropertyDrawer(typeof(ContentReference), true)]
-    public class ContentReferencePropertyDrawer : PropertyDrawer {
+    public class ContentReferencePropertyDrawer : PropertyDrawer
+    {
         public bool isDrawingAddress = false;
 
         private Type contentType = null;
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) 
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             contentType = (property.GetPropertyInstance() as ContentReference).EditorContentType;
 
@@ -23,10 +24,12 @@ namespace VAT.Packaging.Editor
             EditorGUI.BeginProperty(position, label, property);
             position.width -= 24;
 
-            if (isDrawingAddress) {
+            if (isDrawingAddress)
+            {
                 OnDrawAddress(position, label, addressProperty);
             }
-            else {
+            else
+            {
                 OnDrawContent(position, label, addressProperty);
             }
 
@@ -36,13 +39,13 @@ namespace VAT.Packaging.Editor
             property.serializedObject.ApplyModifiedProperties();
         }
 
-        protected virtual void OnDrawAddress(Rect position, GUIContent label, SerializedProperty addressProperty) 
+        protected virtual void OnDrawAddress(Rect position, GUIContent label, SerializedProperty addressProperty)
         {
             string result = EditorGUI.TextField(position, label, addressProperty.stringValue);
             addressProperty.stringValue = result;
         }
 
-        protected virtual void OnDrawContent(Rect position, GUIContent label, SerializedProperty addressProperty) 
+        protected virtual void OnDrawContent(Rect position, GUIContent label, SerializedProperty addressProperty)
         {
             var address = addressProperty.stringValue;
             AssetPackager.Instance.TryGetContent<Content>(address, out var content);
@@ -57,7 +60,8 @@ namespace VAT.Packaging.Editor
             }
         }
 
-        protected void OnDrawAddressToggle(Rect position, SerializedProperty addressProperty) {
+        protected void OnDrawAddressToggle(Rect position, SerializedProperty addressProperty)
+        {
             int indent = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;
             position.x += position.width + 24;

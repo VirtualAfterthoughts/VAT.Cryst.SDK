@@ -9,22 +9,28 @@ using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 
 using UnityEngine;
 
-namespace VAT.Packaging.Editor {
-    public static class ModAddressablesManager {
+namespace VAT.Packaging.Editor
+{
+    public static class ModAddressablesManager
+    {
         public const string BuildPrefix = "BuiltPackages";
 
-        private struct ProfileVariables {
+        private struct ProfileVariables
+        {
             public const string ProfileName = "Mods";
             public const string LocalBuildPath = "Local.BuildPath";
         }
 
-        private struct ProfileValues {
+        private struct ProfileValues
+        {
             public const string LocalBuildPath = "[UnityEngine.AddressableAssets.Addressables.BuildPath]";
         }
 
-        public static void SetActiveSettings() {
+        public static void SetActiveSettings()
+        {
             var settings = AddressablesManager.LoadedSettings;
-            if (settings != null) {
+            if (settings != null)
+            {
                 string id = settings.profileSettings.AddProfile(ProfileVariables.ProfileName, "Default");
 
                 settings.activeProfileId = id;
@@ -34,13 +40,15 @@ namespace VAT.Packaging.Editor {
             }
         }
 
-        public static string GetRootFolder() {
+        public static string GetRootFolder()
+        {
             string folderPath = $"{BuildPrefix}/{EditorUserBuildSettings.activeBuildTarget}";
             string parent = Directory.GetParent(Application.dataPath).FullName;
             return $"{parent}/{folderPath}";
         }
 
-        public static string GetBuildPath(Package package) {
+        public static string GetBuildPath(Package package)
+        {
             string folderPath = $"{BuildPrefix}/{EditorUserBuildSettings.activeBuildTarget}/{package.Address}";
             string parent = Directory.GetParent(Application.dataPath).FullName;
             string fullPath = $"{parent}/{folderPath}";

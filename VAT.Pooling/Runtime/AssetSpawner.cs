@@ -28,9 +28,9 @@ namespace VAT.Pooling
             public SpawnConditions(SpawnRules rules, Vector3? position, Quaternion? rotation, Vector3? scale, AssetPoolableDelegate onSpawn)
             {
                 this.rules = rules;
-                this.position = position.GetValueOrDefault();
-                this.rotation = rotation.GetValueOrDefault();
-                this.scale = scale.GetValueOrDefault();
+                this.position = position ?? Vector3.one;
+                this.rotation = rotation ?? Quaternion.identity;
+                this.scale = scale ?? Vector3.one;
                 this.onSpawn = onSpawn;
             }
         }

@@ -7,12 +7,15 @@ using UnityEngine;
 namespace VAT.Packaging.Editor
 {
     [InitializeOnLoad]
-    public static class PlayModeNotifier {
-        static PlayModeNotifier() {
+    public static class PlayModeNotifier
+    {
+        static PlayModeNotifier()
+        {
             EditorApplication.playModeStateChanged += Fire;
         }
 
-        private static void Fire(PlayModeStateChange state) {
+        private static void Fire(PlayModeStateChange state)
+        {
             switch (state)
             {
                 // Refresh the AssetPackager after entering edit mode
@@ -22,7 +25,7 @@ namespace VAT.Packaging.Editor
                     break;
                 // Before entering Play mode, pack all game assets
                 case PlayModeStateChange.ExitingEditMode:
-                    InternalAssetPacker.PackTextAssets();
+                    InternalAssetPacker.PackTextAssets(true);
                     break;
             }
         }

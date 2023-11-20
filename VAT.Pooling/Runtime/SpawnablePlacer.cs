@@ -20,8 +20,16 @@ namespace VAT.Pooling
         private Spawnable _spawnable;
 
         [SerializeField]
+        [Tooltip("An event called when the spawnable is placed.")]
+        private SpawnableEvent placeEvent;
+
+        [SerializeField]
         [Tooltip("Leave false if this spawnable should be placed when the level loads. If you set this to true, manually call Trigger to place the spawnable.")]
         private bool _manualSpawning = false;
+
+        [SerializeField]
+        [Tooltip("Should the spawned object use the scale of the spawnable placer?")]
+        private bool _useScale = false;
 
         private void Awake()
         {
@@ -41,13 +49,19 @@ namespace VAT.Pooling
             }
 #endif
 
-            AssetSpawner.Spawn(_spawnable, transform.position, transform.rotation, transform.lossyScale);
+            Vector3? scale = _useScale ? transform.lossyScale : null;
+            AssetSpawner.Spawn(_spawnable, transform.position, transform.rotation, scale, OnPlace);
+        }
+
+        private void OnPlace(AssetPoolable poolable)
+        {
+            placeEvent.Invoke(poolable.gameObject, this);
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (_spawnable.contentReference == null)
+            if (Application.isPlaying || _spawnable.contentReference == null)
                 return;
 
             var address = _spawnable.contentReference.Address;

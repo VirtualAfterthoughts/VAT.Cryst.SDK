@@ -32,7 +32,8 @@ namespace VAT.Packaging.Editor
             var root = new TreeViewItem { id = id++, depth = -1, displayName = "Root" };
 
             var packages = new TreeViewItem() { id = id++, depth = 0, displayName = "Packages" };
-            foreach (var package in AssetPackager.Instance.GetPackages()) {
+            foreach (var package in AssetPackager.Instance.GetPackages())
+            {
                 var item = new ShippableTreeViewItem(package)
                 {
                     id = id++,
@@ -42,7 +43,8 @@ namespace VAT.Packaging.Editor
 
                 Dictionary<Type, TreeViewItem> crateTypes = new();
 
-                foreach (var content in package.Contents) {
+                foreach (var content in package.Contents)
+                {
 
                     if (!crateTypes.TryGetValue(content.GetType(), out TreeViewItem parent))
                     {
@@ -79,15 +81,18 @@ namespace VAT.Packaging.Editor
 
         protected override void SingleClickedItem(int id)
         {
-            if (_items.TryGetValue(id, out var shippable)) {
+            if (_items.TryGetValue(id, out var shippable))
+            {
                 Selection.activeObject = shippable.shippable;
             }
-            else {
+            else
+            {
                 Selection.activeObject = null;
             }
         }
 
-        protected override bool DoesItemMatchSearch(TreeViewItem item, string search) {
+        protected override bool DoesItemMatchSearch(TreeViewItem item, string search)
+        {
             if (item is not ShippableTreeViewItem)
                 return false;
 

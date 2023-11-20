@@ -11,12 +11,14 @@ namespace VAT.Packaging.Editor
 {
     [CustomEditor(typeof(StaticContent), true)]
     [CanEditMultipleObjects]
-    public class StaticContentEditor : UnityEditor.Editor {
+    public class StaticContentEditor : UnityEditor.Editor
+    {
         private SerializedProperty _contentInfo;
         private SerializedProperty _package;
         private SerializedProperty _mainAsset;
 
-        protected virtual void OnEnable() {
+        protected virtual void OnEnable()
+        {
             _contentInfo = serializedObject.FindProperty("_contentInfo");
             _package = serializedObject.FindProperty("_package");
             _mainAsset = serializedObject.FindProperty("_mainAsset");
@@ -25,7 +27,8 @@ namespace VAT.Packaging.Editor
             content.OnValidate();
         }
 
-        public override void OnInspectorGUI() {
+        public override void OnInspectorGUI()
+        {
             serializedObject.Update();
 
             var content = target as StaticContent;

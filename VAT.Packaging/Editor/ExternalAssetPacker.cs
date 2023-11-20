@@ -10,26 +10,33 @@ using UnityEngine.AddressableAssets.Initialization;
 
 using VAT.Serialization.JSON;
 
-namespace VAT.Packaging.Editor {
-    public static class ExternalAssetPacker {
-        public static void PackPackages(BuildTarget target = BuildTarget.StandaloneWindows64, bool revealFolder = true) {
-            if (!AssetPackager.IsReady) {
+namespace VAT.Packaging.Editor
+{
+    public static class ExternalAssetPacker
+    {
+        public static void PackPackages(BuildTarget target = BuildTarget.StandaloneWindows64, bool revealFolder = true)
+        {
+            if (!AssetPackager.IsReady)
+            {
                 Debug.LogWarning("Cannot pack packages because AssetPackager is not ready!");
                 return;
             }
 
-            foreach (var package in AssetPackager.Instance.GetPackages()) {
+            foreach (var package in AssetPackager.Instance.GetPackages())
+            {
                 PackPackage(package, target, false);
             }
 
-            if (revealFolder) {
+            if (revealFolder)
+            {
                 string path = ModAddressablesManager.GetRootFolder();
                 EditorUtility.RevealInFinder(path);
                 Debug.Log("AssetPackager -> Successfully built all packages!");
             }
         }
 
-        public static void PackPackage(Package package, BuildTarget target = BuildTarget.StandaloneWindows64, bool revealFolder = true) {
+        public static void PackPackage(Package package, BuildTarget target = BuildTarget.StandaloneWindows64, bool revealFolder = true)
+        {
             // Set the build target
             var activeTarget = EditorUserBuildSettings.activeBuildTarget;
             var activeGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
@@ -65,27 +72,32 @@ namespace VAT.Packaging.Editor {
             EditorUserBuildSettings.SwitchActiveBuildTarget(activeGroup, activeTarget);
 
             // Show build folder
-            if (revealFolder) {
+            if (revealFolder)
+            {
                 EditorUtility.RevealInFinder(buildPath + "/");
                 Debug.Log($"AssetPackager -> Successfully built {package.Address}!");
             }
         }
 
-        private static void Internal_BuildPackage() {
+        private static void Internal_BuildPackage()
+        {
             AddressablesRuntimeProperties.ClearCachedPropertyValues();
             AddressableAssetSettings.BuildPlayerContent();
         }
 
-        private static void Internal_CopyBuildToFolder(string path) {
+        private static void Internal_CopyBuildToFolder(string path)
+        {
             string buildPath = Addressables.BuildPath;
 
             // Copy all directories
-            foreach (string dirPath in Directory.GetDirectories(buildPath, "*", SearchOption.AllDirectories)) {
+            foreach (string dirPath in Directory.GetDirectories(buildPath, "*", SearchOption.AllDirectories))
+            {
                 Directory.CreateDirectory(dirPath.Replace(buildPath, path));
             }
 
             // Copy all files
-            foreach (string newPath in Directory.GetFiles(buildPath, "*.*", SearchOption.AllDirectories)) {
+            foreach (string newPath in Directory.GetFiles(buildPath, "*.*", SearchOption.AllDirectories))
+            {
                 File.Copy(newPath, newPath.Replace(buildPath, path), true);
             }
         }

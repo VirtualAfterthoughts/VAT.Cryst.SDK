@@ -14,7 +14,8 @@ using Object = UnityEngine.Object;
 
 namespace VAT.Packaging.Editor
 {
-    public class StaticContentCreationWizard : EditorWindow {
+    public class StaticContentCreationWizard : EditorWindow
+    {
         private Address _address = Address.EMPTY;
         private Package _package = null;
         private string _title = "My Content";
@@ -23,34 +24,43 @@ namespace VAT.Packaging.Editor
         private Type _contentType;
         private StaticContentIdentifierAttribute _contentIdentifier;
 
-        public static void Initialize(Package package) {
+        public static void Initialize(Package package)
+        {
             StaticContentCreationWizard window = GetWindow<StaticContentCreationWizard>(true, "Content Creator");
             window._package = package;
             window.Show();
         }
 
-        private void LoadContentTypes(GenericMenu menu) {
+        private void LoadContentTypes(GenericMenu menu)
+        {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var assembly in assemblies) {
+            foreach (var assembly in assemblies)
+            {
                 bool header = false;
 
-                foreach (Type type in assembly.GetTypes()) {
+                foreach (Type type in assembly.GetTypes())
+                {
                     LoadContentType(type, menu, ref header);
                 }
             }
         }
 
-        private void LoadContentType(Type type, GenericMenu menu, ref bool header) {
-            if (!type.IsAbstract && type.IsSubclassOf(typeof(StaticContent))) {
+        private void LoadContentType(Type type, GenericMenu menu, ref bool header)
+        {
+            if (!type.IsAbstract && type.IsSubclassOf(typeof(StaticContent)))
+            {
                 var attribute = type.GetCustomAttribute<StaticContentIdentifierAttribute>();
 
-                if (attribute != null) {
-                    if (!header) {
+                if (attribute != null)
+                {
+                    if (!header)
+                    {
                         menu.AddDisabledItem(new GUIContent($"{type.Assembly.GetName().Name} Contents"));
                         header = true;
                     }
 
-                    menu.AddItem(new GUIContent(attribute.displayName), false, () => {
+                    menu.AddItem(new GUIContent(attribute.displayName), false, () =>
+                    {
                         _contentType = type;
                         _contentIdentifier = attribute;
                     });
@@ -80,14 +90,16 @@ namespace VAT.Packaging.Editor
 
             _mainAsset = EditorGUILayout.ObjectField("Main Asset", _mainAsset, objectType, false);
 
-            if (EditorGUI.EndChangeCheck() && _mainAsset != null) {
+            if (EditorGUI.EndChangeCheck() && _mainAsset != null)
+            {
                 _title = _mainAsset.name;
             }
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Content Type");
 
-            if (GUILayout.Button(_contentIdentifier != null ? _contentIdentifier.displayName : "", EditorStyles.objectField)) {
+            if (GUILayout.Button(_contentIdentifier != null ? _contentIdentifier.displayName : "", EditorStyles.objectField))
+            {
                 var menu = new GenericMenu();
                 LoadContentTypes(menu);
                 menu.ShowAsContext();
@@ -114,14 +126,14 @@ namespace VAT.Packaging.Editor
             GUILayout.Space(5);
 
             // Allow content creation
-            if (GUILayout.Button("Create Content", GUILayout.Width(200))) 
+            if (GUILayout.Button("Create Content", GUILayout.Width(200)))
             {
                 Internal_CreateContent();
                 Close();
             }
         }
-        
-        private bool Internal_ValidateContentSettings() 
+
+        private bool Internal_ValidateContentSettings()
         {
             GUILayout.Space(5);
 
@@ -133,31 +145,37 @@ namespace VAT.Packaging.Editor
             var errorStyle = new GUIStyle(EditorStyles.boldLabel);
             errorStyle.normal.textColor = Color.red;
 
-            if (_mainAsset == null) {
+            if (_mainAsset == null)
+            {
                 EditorGUILayout.LabelField("Missing Main Asset!", errorStyle);
                 isValid = false;
             }
-            else if (_contentType == null) {
+            else if (_contentType == null)
+            {
                 EditorGUILayout.LabelField("Missing Content Type!", errorStyle);
                 isValid = false;
             }
-            else if (!_contentIdentifier.mainAssetType.IsAssignableFrom(_mainAsset.GetType())) {
+            else if (!_contentIdentifier.mainAssetType.IsAssignableFrom(_mainAsset.GetType()))
+            {
                 EditorGUILayout.LabelField($"Main Asset is not a {_contentIdentifier.mainAssetType.Name}!", errorStyle);
                 isValid = false;
             }
-            else if (AssetPackager.Instance.HasContent(_address)) {
+            else if (AssetPackager.Instance.HasContent(_address))
+            {
                 EditorGUILayout.HelpBox("There's already content at that address!", MessageType.Error);
                 isValid = false;
             }
 
-            if (isValid) {
+            if (isValid)
+            {
                 EditorGUILayout.LabelField("No issues found!");
             }
 
             return isValid;
         }
 
-        private void Internal_CreateContent() {
+        private void Internal_CreateContent()
+        {
             StaticContent content = ContentFactory.Create(_contentType) as StaticContent;
             content.ContentInfo = new ContentInfo()
             {
@@ -167,7 +185,7 @@ namespace VAT.Packaging.Editor
             content.Address = _address;
             content.AddressType = _contentIdentifier?.displayName ?? "Unknown";
             content.SetAsset(_mainAsset);
-            
+
             var path = Path.GetDirectoryName(AssetDatabase.GetAssetPath(_package));
             var fileName = $"{path}/_{_title}";
             var fileExtension = ".asset";
@@ -176,11 +194,13 @@ namespace VAT.Packaging.Editor
             int suffix = 0;
 
             // Find a unique name for the file
-            while (AssetDatabase.LoadAllAssetsAtPath(filePath).Length > 0) {
+            while (AssetDatabase.LoadAllAssetsAtPath(filePath).Length > 0)
+            {
                 filePath = $"{fileName}_{suffix++}{fileExtension}";
 
                 // Terminate incase we ever reach here somehow
-                if (suffix > 1000) {
+                if (suffix > 1000)
+                {
                     Debug.LogError("Terminating content creation, too many files with the same name!");
                     return;
                 }

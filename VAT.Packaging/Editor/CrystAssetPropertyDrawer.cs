@@ -37,7 +37,7 @@ namespace VAT.Packaging.Editor
         {
             EditorGUI.BeginChangeCheck();
             string result = EditorGUI.TextField(position, label, asset.AssetGUID);
-            
+
             if (EditorGUI.EndChangeCheck())
             {
                 asset.ValidateGUID(result);

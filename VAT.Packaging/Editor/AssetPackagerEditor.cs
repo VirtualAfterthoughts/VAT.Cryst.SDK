@@ -4,8 +4,10 @@ using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace VAT.Packaging.Editor {
-    public class AssetPackagerEditor : EditorWindow {
+namespace VAT.Packaging.Editor
+{
+    public class AssetPackagerEditor : EditorWindow
+    {
         private const int BUTTON_SPACE = 3;
 
         private static TreeViewState _treeViewState;
@@ -15,7 +17,7 @@ namespace VAT.Packaging.Editor {
         private string _searchQuery;
 
         [MenuItem("VAT/Cryst SDK/Asset Packager", priority = -10000)]
-        public static void Initialize() 
+        public static void Initialize()
         {
             if (!Application.isPlaying)
             {
@@ -26,16 +28,16 @@ namespace VAT.Packaging.Editor {
             window.Show();
         }
 
-        private void OnEnable() 
+        private void OnEnable()
         {
             _treeViewState ??= new TreeViewState();
 
             _packageTreeView = new AssetPackagerTreeView(_treeViewState);
         }
 
-        public void OnGUI() 
+        public void OnGUI()
         {
-            if (AssetPackager.IsReady) 
+            if (AssetPackager.IsReady)
             {
                 if (AssetPackager.Instance.HasPackages)
                 {
@@ -70,7 +72,7 @@ namespace VAT.Packaging.Editor {
                 _packageTreeView.searchString = _searchQuery;
                 _packageTreeView.OnGUI(rect);
             }
-            else 
+            else
             {
                 GUILayout.Label("AssetPackager is not ready.");
 

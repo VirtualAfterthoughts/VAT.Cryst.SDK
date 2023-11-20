@@ -12,13 +12,12 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 using VAT.Serialization.JSON;
+using VAT.Cryst;
 
 using Newtonsoft.Json.Linq;
 
 using System.Linq;
 using System;
-using VAT.Cryst;
-using GluonGui.Dialog;
 
 namespace VAT.Packaging
 {

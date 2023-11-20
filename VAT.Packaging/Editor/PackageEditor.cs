@@ -12,11 +12,13 @@ namespace VAT.Packaging.Editor
 {
     [CustomEditor(typeof(Package))]
     [CanEditMultipleObjects]
-    public class PackageEditor : UnityEditor.Editor {
+    public class PackageEditor : UnityEditor.Editor
+    {
         private SerializedProperty _packageInfo;
         private SerializedProperty _contents;
 
-        private void OnEnable() {
+        private void OnEnable()
+        {
             _packageInfo = serializedObject.FindProperty("_packageInfo");
             _contents = serializedObject.FindProperty("_contents");
 
@@ -24,7 +26,8 @@ namespace VAT.Packaging.Editor
             package.OnValidate();
         }
 
-        public override void OnInspectorGUI() {
+        public override void OnInspectorGUI()
+        {
             var package = serializedObject.targetObject as Package;
 
             serializedObject.Update();
@@ -42,7 +45,8 @@ namespace VAT.Packaging.Editor
             EditorGUILayout.PropertyField(_contents);
             EditorGUI.EndDisabledGroup();
 
-            if (GUILayout.Button("Add Static Content", GUILayout.Width(120))) {
+            if (GUILayout.Button("Add Static Content", GUILayout.Width(120)))
+            {
                 StaticContentCreationWizard.Initialize(package);
             }
 
@@ -52,12 +56,14 @@ namespace VAT.Packaging.Editor
             GUILayout.Space(20);
 
             // Draw build buttons
-            if (GUILayout.Button("Pack for PC", GUILayout.Width(120))) {
+            if (GUILayout.Button("Pack for PC", GUILayout.Width(120)))
+            {
                 ExternalAssetPacker.PackPackage(package, BuildTarget.StandaloneWindows64);
             }
 
             // Draw exporting buttons
-            if (GUILayout.Button("Export as JSON", GUILayout.Width(120))) {
+            if (GUILayout.Button("Export as JSON", GUILayout.Width(120)))
+            {
                 PackageTools.ExportPackage(package);
             }
 

@@ -91,21 +91,30 @@ namespace VAT.Pooling
             foreach (var poolable in _poolables)
             {
                 if (poolable != null)
+                {
                     GameObject.Destroy(poolable.gameObject);
+                }
             }
+
+            _poolables = null;
+            _spawnedPoolables = null;
+            _storedPoolables = null;
 
             // Delete the root
             if (_rootTransform != null)
+            {
                 GameObject.Destroy(_rootTransform.gameObject);
+                _rootTransform = null;
+            }
 
             // Delete the temp parent if it still exists
             if (_tempParent != null)
-                GameObject.Destroy(_tempParent.gameObject);
-
-            if (_content.MainAsset != null)
             {
-                _content.MainAsset.ReleaseAsset();
+                GameObject.Destroy(_tempParent.gameObject);
+                _tempParent = null;
             }
+
+            _content.MainAsset?.ReleaseAsset();
         }
 
         private Vector3 Internal_EvaluateScale(Vector3? scale)
@@ -219,14 +228,22 @@ namespace VAT.Pooling
 
         private void Internal_MoveToSpawned(AssetPoolable poolable)
         {
+            // Clear it from existing lists
             _storedPoolables.Remove(poolable);
-            _spawnedPoolables.TryAdd(poolable);
+            _spawnedPoolables.Remove(poolable);
+
+            // Move it to the front of the spawned list
+            _spawnedPoolables.Add(poolable);
         }
 
         private void Internal_MoveToDespawned(AssetPoolable poolable)
         {
+            // Clear it from existing lists
             _spawnedPoolables.Remove(poolable);
-            _storedPoolables.TryAdd(poolable);
+            _storedPoolables.Remove(poolable);
+
+            // Move it to the front of the stored list
+            _storedPoolables.Add(poolable);
         }
 
         public void DespawnAll()
@@ -244,9 +261,13 @@ namespace VAT.Pooling
             else
             {
                 if (SpawnedCount < rules.maxSpawned || rules.spawnMode == SpawnMode.GROW)
+                {
                     poolable = Internal_FetchNew();
+                }
                 else
+                {
                     poolable = Internal_FetchSpawned(rules);
+                }
             }
 
             // Send over spawn events, and apply the transform to the poolable

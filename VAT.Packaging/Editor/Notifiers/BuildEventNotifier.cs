@@ -12,9 +12,10 @@ namespace VAT.Packaging.Editor
         // This should be called first. We want all assets to be packed and ready.
         public int callbackOrder => -10000;
 
-        public void OnPreprocessBuild(BuildReport report) {
+        public void OnPreprocessBuild(BuildReport report)
+        {
             // We want to make sure game assets are packed before built
-            InternalAssetPacker.PackTextAssets();
+            InternalAssetPacker.PackTextAssets(false);
         }
     }
 }

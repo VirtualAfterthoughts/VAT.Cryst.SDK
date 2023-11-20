@@ -10,20 +10,24 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Packaging.Editor
 {
-    public class PackageCreationWizard : EditorWindow {
+    public class PackageCreationWizard : EditorWindow
+    {
         public string _title = "My Package";
         public string _author = "Author";
 
-        public static void Initialize() {
+        public static void Initialize()
+        {
             PackageCreationWizard window = (PackageCreationWizard)EditorWindow.GetWindow(typeof(PackageCreationWizard), true, "Package Creator");
             window.Show();
         }
 
-        private string BuildAddress() {
+        private string BuildAddress()
+        {
             return Address.BuildAddress(_author, "Package", _title);
         }
 
-        public void OnGUI() {
+        public void OnGUI()
+        {
             // Header
             EditorGUILayout.LabelField("Package Settings", EditorStyles.whiteLargeLabel, GUILayout.Height(20));
 
@@ -48,16 +52,19 @@ namespace VAT.Packaging.Editor
             // Spacing
             GUILayout.Space(5);
 
-            if (AssetPackager.Instance.HasPackage(checkAddress)) {
+            if (AssetPackager.Instance.HasPackage(checkAddress))
+            {
                 EditorGUILayout.HelpBox("There's already a package at that address!", MessageType.Error);
             }
-            else if (GUILayout.Button("Create Package", GUILayout.Width(130))) {
+            else if (GUILayout.Button("Create Package", GUILayout.Width(130)))
+            {
                 Internal_CreatePackage();
                 Close();
             }
         }
 
-        private void Internal_CreatePackage() {
+        private void Internal_CreatePackage()
+        {
             Package package = Package.Create(typeof(Package));
             package.PackageInfo = new()
             {
@@ -70,12 +77,14 @@ namespace VAT.Packaging.Editor
             var assetsFolderPath = $"Assets/{CrystAssetManager.CRYST_ASSETS_FOLDER}";
             var packageFolderPath = $"{assetsFolderPath}/{AssetPackager.CRYST_PACKAGES_FOLDER}";
 
-            if (!AssetDatabase.IsValidFolder(packageFolderPath)) {
+            if (!AssetDatabase.IsValidFolder(packageFolderPath))
+            {
                 AssetDatabase.CreateFolder(assetsFolderPath, AssetPackager.CRYST_PACKAGES_FOLDER);
             }
 
             var addressPath = $"{packageFolderPath}/{package.Address}";
-            if (!AssetDatabase.IsValidFolder(addressPath)) {
+            if (!AssetDatabase.IsValidFolder(addressPath))
+            {
                 AssetDatabase.CreateFolder(packageFolderPath, package.Address);
             }
 

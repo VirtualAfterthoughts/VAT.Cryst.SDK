@@ -11,12 +11,17 @@ using UnityEditor.AddressableAssets.Settings;
 using UnityEngine.Assertions.Must;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
 
-namespace VAT.Packaging.Editor {
-    public static class AddressablesManager {
+namespace VAT.Packaging.Editor
+{
+    public static class AddressablesManager
+    {
         private static AddressableAssetSettings _loadedSettings = null;
-        public static AddressableAssetSettings LoadedSettings {
-            get {
-                if (_loadedSettings == null) {
+        public static AddressableAssetSettings LoadedSettings
+        {
+            get
+            {
+                if (_loadedSettings == null)
+                {
                     var defaultSettings = AddressableAssetSettingsDefaultObject.GetSettings(true);
                     _loadedSettings = defaultSettings;
                 }
@@ -25,15 +30,18 @@ namespace VAT.Packaging.Editor {
             }
         }
 
-        public static void SetActiveSettings() {
+        public static void SetActiveSettings()
+        {
             var settings = LoadedSettings;
 
-            if (settings != null) {
+            if (settings != null)
+            {
                 settings.activeProfileId = settings.profileSettings.GetProfileId("Default");
             }
         }
 
-        public static void ClearGroups() {
+        public static void ClearGroups()
+        {
             var settings = LoadedSettings;
             if (settings == null)
                 return;
@@ -50,23 +58,27 @@ namespace VAT.Packaging.Editor {
             if (settings == null)
                 return;
 
-            foreach (var group in settings.groups) {
+            foreach (var group in settings.groups)
+            {
                 if (group == null)
                     continue;
 
                 ConfigureGroup(group);
             }
 
-            if (saveAssets) {
+            if (saveAssets)
+            {
                 AssetDatabase.SaveAssets();
             }
         }
 
-        public static void ConfigureGroup(AddressableAssetGroup group) {
+        public static void ConfigureGroup(AddressableAssetGroup group)
+        {
             group.RemoveSchema<PlayerDataGroupSchema>();
 
             var schema = group.GetSchema<BundledAssetGroupSchema>();
-            if (!schema) {
+            if (!schema)
+            {
                 schema = group.AddSchema<BundledAssetGroupSchema>();
             }
 
@@ -76,7 +88,8 @@ namespace VAT.Packaging.Editor {
             schema.BundleMode = BundledAssetGroupSchema.BundlePackingMode.PackSeparately;
         }
 
-        public static void FixGroups() {
+        public static void FixGroups()
+        {
             Debug.Log("FixGroups -> Configuring groups...");
 
             // Setup the base groups
@@ -89,7 +102,8 @@ namespace VAT.Packaging.Editor {
             ConfigureGroups(true);
         }
 
-        public static void DedupeAssets() {
+        public static void DedupeAssets()
+        {
             Debug.Log("DedupeAssets -> Checking...");
 
             var dedupe = new CheckBundleDupeDependencies();
@@ -97,19 +111,22 @@ namespace VAT.Packaging.Editor {
 
             int warnings = 0;
 
-            foreach (var result in analyzeResults) {
+            foreach (var result in analyzeResults)
+            {
                 if (result.severity == MessageType.Warning)
                     warnings++;
             }
 
-            if (warnings > 0) {
+            if (warnings > 0)
+            {
                 Debug.Log($"DedupeAssets -> {warnings} issues found. Fixing...");
 
                 dedupe.FixIssues(LoadedSettings);
 
                 Debug.Log("DedupeAssets -> Done!");
             }
-            else {
+            else
+            {
                 Debug.Log("DedupeAssets -> No issues found!");
             }
         }
