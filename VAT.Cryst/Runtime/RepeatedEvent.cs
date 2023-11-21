@@ -13,7 +13,7 @@ namespace VAT.Cryst
         [Tooltip("The amount in seconds between each invocation of the event.")]
         [Min(1e-02f)]
         [SerializeField]
-        private float _repeatRate;
+        private float _repeatDelay = 1f;
 
         [Tooltip("The event to be called.")]
         [SerializeField]
@@ -37,27 +37,33 @@ namespace VAT.Cryst
             } 
         }
 
-        public float RepeatRate 
+        public float RepeatDelay
         { 
             get 
             { 
-                return _repeatRate; 
-            } set 
-            { 
-                _repeatRate = Mathf.Max(value, 1e-02f); 
+                return _repeatDelay; 
+            } 
+            set 
+            {
+                _repeatDelay = Mathf.Max(value, 1e-02f); 
             } 
         }
 
-        public void Update()
+        private void Awake()
+        {
+            _repeatDelay = Mathf.Max(_repeatDelay, 1e-02f);
+        }
+
+        private void Update()
         {
             if (IsDisabled)
                 return;
 
             _timer += Time.deltaTime;
 
-            while (_timer >= _repeatRate)
+            while (_timer >= RepeatDelay)
             {
-                _timer -= _repeatRate;
+                _timer -= RepeatDelay;
                 _unityEvent.Invoke();
             }
         }
