@@ -16,8 +16,8 @@ namespace VAT.Pooling
     {
         public static ComponentCache<AssetPoolable> Cache { get; private set; } = new ComponentCache<AssetPoolable>();
 
-        internal AssetPoolableDelegate Internal_PoolSpawnDelegate { get; set; }
-        internal AssetPoolableDelegate Internal_PoolDespawnDelegate { get; set; }
+        internal AssetPoolableDelegate InternalPoolSpawnDelegate { get; set; }
+        internal AssetPoolableDelegate InternalPoolDespawnDelegate { get; set; }
 
         public AssetSpawnDelegate OnSpawnDelegate { get; set; }
         public AssetPoolableDelegate OnDespawnDelegate { get; set; }
@@ -55,7 +55,7 @@ namespace VAT.Pooling
         {
             _id = id;
             OnSpawnDelegate?.Invoke(this, id);
-            Internal_PoolSpawnDelegate?.Invoke(this);
+            InternalPoolSpawnDelegate?.Invoke(this);
         }
 
 #if UNITY_EDITOR
@@ -84,7 +84,7 @@ namespace VAT.Pooling
             _id = 0;
             gameObject.SetActive(false);
             OnDespawnDelegate?.Invoke(this);
-            Internal_PoolDespawnDelegate?.Invoke(this);
+            InternalPoolDespawnDelegate?.Invoke(this);
 
             Transform.EnsureParent(_initialParent);
         }
@@ -110,7 +110,7 @@ namespace VAT.Pooling
         /// </summary>
         public void FlagForRespawning()
         {
-            Internal_PoolDespawnDelegate?.Invoke(this);
+            InternalPoolDespawnDelegate?.Invoke(this);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace VAT.Pooling
         /// </summary>
         public void FlagForDespawning()
         {
-            Internal_PoolSpawnDelegate?.Invoke(this);
+            InternalPoolSpawnDelegate?.Invoke(this);
         }
     }
 }

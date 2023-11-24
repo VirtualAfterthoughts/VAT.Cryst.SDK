@@ -260,7 +260,7 @@ namespace VAT.Shared.Data
         /// </summary>
         public void MoveToState() {
             if (HasTransform)
-                transform.EnsureParent(parent, Internal_OnParented);
+                transform.EnsureParent(parent, InternalOnParented);
         }
 
         /// <summary>
@@ -270,13 +270,13 @@ namespace VAT.Shared.Data
             if (HasTransform) {
                 var initialParent = transform.parent;
                 transform.EnsureParent(parent, () => {
-                    Internal_OnParented();
+                    InternalOnParented();
                     transform.parent = initialParent;
                 });
             }
         }
 
-        private void Internal_OnParented() {
+        private void InternalOnParented() {
             transform.localPosition = localPosition;
             transform.localRotation = localRotation;
             transform.localScale = localScale;

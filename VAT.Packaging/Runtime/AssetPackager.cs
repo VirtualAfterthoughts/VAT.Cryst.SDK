@@ -126,10 +126,10 @@ namespace VAT.Packaging
 #endif
 
             // Play mode/built initialize
-            Internal_InitAsync().Forget();
+            InternalInitAsync().Forget();
         }
 
-        private async UniTaskVoid Internal_InitAsync()
+        private async UniTaskVoid InternalInitAsync()
         {
             // Make sure addressables get initialized
             await Addressables.InitializeAsync();
@@ -167,7 +167,7 @@ namespace VAT.Packaging
         public const string CRYST_TEXT_ASSETS_FOLDER = "Text Assets";
 
         [InitializeOnLoadMethod]
-        private static void Internal_InitializeEditor()
+        private static void InternalInitializeEditor()
         {
             // Initialize asset packager
             CrystAssetManager.HookOnEditorReady(() =>
@@ -184,7 +184,7 @@ namespace VAT.Packaging
 #endif
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
-        private static void Internal_InitializeRuntime()
+        private static void InternalInitializeRuntime()
         {
             _instance = new AssetPackager();
         }

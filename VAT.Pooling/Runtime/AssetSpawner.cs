@@ -48,21 +48,21 @@ namespace VAT.Pooling
         public static void Spawn(Address address, SpawnRules rules, Vector3? position = null, Quaternion? rotation = null, Vector3? scale = null, AssetPoolableDelegate onSpawn = null)
         {
             // Hook the PoolManager incase it hasn't initialized yet
-            PoolManager.HookOnReady(() => { Internal_OnPoolManagerReady(address, rules, position, rotation, scale, onSpawn); });
+            PoolManager.HookOnReady(() => { InternalOnPoolManagerReady(address, rules, position, rotation, scale, onSpawn); });
         }
 
-        private static void Internal_OnPoolManagerReady(Address address, SpawnRules rules, Vector3? position = null, Quaternion? rotation = null, Vector3? scale = null, AssetPoolableDelegate onSpawn = null)
+        private static void InternalOnPoolManagerReady(Address address, SpawnRules rules, Vector3? position = null, Quaternion? rotation = null, Vector3? scale = null, AssetPoolableDelegate onSpawn = null)
         {
             // Get the pool and wait for it to be ready
             if (PoolManager.Instance.FetchPool(address, out var pool))
             {
                 var conditions = new SpawnConditions(rules, position, rotation, scale, onSpawn);
 
-                pool.HookOnReady(() => { Internal_OnPoolReady(pool, conditions); });
+                pool.HookOnReady(() => { InternalOnPoolReady(pool, conditions); });
             }
         }
 
-        private static void Internal_OnPoolReady(AssetPool pool, SpawnConditions conditions)
+        private static void InternalOnPoolReady(AssetPool pool, SpawnConditions conditions)
         {
             // Now that we know the pool is ready, we can spawn our asset
             var poolable = pool.Spawn(conditions.rules, conditions.position, conditions.rotation, conditions.scale);

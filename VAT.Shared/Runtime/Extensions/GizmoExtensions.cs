@@ -75,8 +75,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="isWireframe">Should this draw as a wireframe?</param>
         public static void DrawGameObject(this GameObject go, SimpleTransform transform, bool isWireframe = true) {
             // Draw all of the object's meshes
-            Internal_DrawMeshRenderers(go, transform, isWireframe);
-            Internal_DrawSkinnedMeshes(go, transform, isWireframe);
+            InternalDrawMeshRenderers(go, transform, isWireframe);
+            InternalDrawSkinnedMeshes(go, transform, isWireframe);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace VAT.Shared.Extensions {
             }
         }
 
-        private static void Internal_DrawMeshRenderers(GameObject go, SimpleTransform transform, bool isWireframe = true) {
+        private static void InternalDrawMeshRenderers(GameObject go, SimpleTransform transform, bool isWireframe = true) {
             if (Application.isPlaying)
                 return;
 
@@ -137,7 +137,7 @@ namespace VAT.Shared.Extensions {
             Gizmos.matrix = original;
         }
 
-        private static void Internal_DrawSkinnedMeshes(GameObject go, SimpleTransform transform, bool isWireframe = true) {
+        private static void InternalDrawSkinnedMeshes(GameObject go, SimpleTransform transform, bool isWireframe = true) {
             if (Application.isPlaying)
                 return;
 

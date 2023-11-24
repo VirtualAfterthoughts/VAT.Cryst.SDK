@@ -58,11 +58,11 @@ namespace VAT.Packaging.Editor
             // Build the addressable content
             AddressablesManager.FixGroups();
 
-            Internal_BuildPackage();
+            InternalBuildPackage();
 
             // Copy addressables to desired folder
             string buildPath = ModAddressablesManager.GetBuildPath(package);
-            Internal_CopyBuildToFolder(buildPath);
+            InternalCopyBuildToFolder(buildPath);
 
             // Write the package into a json file
             json.WriteToFile($"{buildPath}/{Package.BUILT_NAME}");
@@ -79,13 +79,13 @@ namespace VAT.Packaging.Editor
             }
         }
 
-        private static void Internal_BuildPackage()
+        private static void InternalBuildPackage()
         {
             AddressablesRuntimeProperties.ClearCachedPropertyValues();
             AddressableAssetSettings.BuildPlayerContent();
         }
 
-        private static void Internal_CopyBuildToFolder(string path)
+        private static void InternalCopyBuildToFolder(string path)
         {
             string buildPath = Addressables.BuildPath;
 

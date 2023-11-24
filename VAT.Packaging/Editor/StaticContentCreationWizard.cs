@@ -113,7 +113,7 @@ namespace VAT.Packaging.Editor
             _address = Address.BuildAddress(_package.PackageInfo.Author, _package.PackageInfo.Title, identifier, _title);
 
             // Verify content creation
-            if (!Internal_ValidateContentSettings())
+            if (!InternalValidateContentSettings())
                 return;
 
             // Spacing
@@ -128,12 +128,12 @@ namespace VAT.Packaging.Editor
             // Allow content creation
             if (GUILayout.Button("Create Content", GUILayout.Width(200)))
             {
-                Internal_CreateContent();
+                InternalCreateContent();
                 Close();
             }
         }
 
-        private bool Internal_ValidateContentSettings()
+        private bool InternalValidateContentSettings()
         {
             GUILayout.Space(5);
 
@@ -174,7 +174,7 @@ namespace VAT.Packaging.Editor
             return isValid;
         }
 
-        private void Internal_CreateContent()
+        private void InternalCreateContent()
         {
             StaticContent content = ContentFactory.Create(_contentType) as StaticContent;
             content.ContentInfo = new ContentInfo()

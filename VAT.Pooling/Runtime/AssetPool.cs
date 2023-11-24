@@ -117,7 +117,7 @@ namespace VAT.Pooling
             _content.MainAsset?.ReleaseAsset();
         }
 
-        private Vector3 Internal_EvaluateScale(Vector3? scale)
+        private Vector3 InternalEvaluateScale(Vector3? scale)
         {
             if (scale.HasValue)
                 return scale.Value;
@@ -125,7 +125,7 @@ namespace VAT.Pooling
                 return _assetScale;
         }
 
-        protected virtual AssetPoolable Internal_Instantiate(bool isActive = false)
+        protected virtual AssetPoolable InternalInstantiate(bool isActive = false)
         {
             if (!_isReady)
                 return null;
@@ -133,8 +133,8 @@ namespace VAT.Pooling
             GameObject go = GameObject.Instantiate(_content.MainAssetT.AssetT, _tempParent);
 
             AssetPoolable poolable = go.AddOrGetComponent<AssetPoolable>();
-            poolable.Internal_PoolSpawnDelegate = Internal_OnSpawned;
-            poolable.Internal_PoolDespawnDelegate = Internal_OnDespawned;
+            poolable.InternalPoolSpawnDelegate = InternalOnSpawned;
+            poolable.InternalPoolDespawnDelegate = InternalOnDespawned;
 
             go.SetActive(isActive);
 
@@ -142,7 +142,7 @@ namespace VAT.Pooling
             return poolable;
         }
 
-        private AssetPoolable Internal_FetchPooled(SpawnRules rules)
+        private AssetPoolable InternalFetchPooled(SpawnRules rules)
         {
             switch (rules.spawnMode)
             {
@@ -174,7 +174,7 @@ namespace VAT.Pooling
             return null;
         }
 
-        private AssetPoolable Internal_FetchSpawned(SpawnRules rules)
+        private AssetPoolable InternalFetchSpawned(SpawnRules rules)
         {
             switch (rules.spawnMode)
             {
@@ -204,9 +204,9 @@ namespace VAT.Pooling
             return null;
         }
 
-        private AssetPoolable Internal_FetchNew()
+        private AssetPoolable InternalFetchNew()
         {
-            var newPoolable = Internal_Instantiate(false);
+            var newPoolable = InternalInstantiate(false);
 
             if (newPoolable != null)
             {
@@ -216,17 +216,17 @@ namespace VAT.Pooling
             return newPoolable;
         }
 
-        private void Internal_OnSpawned(AssetPoolable poolable)
+        private void InternalOnSpawned(AssetPoolable poolable)
         {
-            Internal_MoveToSpawned(poolable);
+            InternalMoveToSpawned(poolable);
         }
 
-        private void Internal_OnDespawned(AssetPoolable poolable)
+        private void InternalOnDespawned(AssetPoolable poolable)
         {
-            Internal_MoveToDespawned(poolable);
+            InternalMoveToDespawned(poolable);
         }
 
-        private void Internal_MoveToSpawned(AssetPoolable poolable)
+        private void InternalMoveToSpawned(AssetPoolable poolable)
         {
             // Clear it from existing lists
             _storedPoolables.Remove(poolable);
@@ -236,7 +236,7 @@ namespace VAT.Pooling
             _spawnedPoolables.Add(poolable);
         }
 
-        private void Internal_MoveToDespawned(AssetPoolable poolable)
+        private void InternalMoveToDespawned(AssetPoolable poolable)
         {
             // Clear it from existing lists
             _spawnedPoolables.Remove(poolable);
@@ -257,16 +257,16 @@ namespace VAT.Pooling
             // Fetch the poolable
             AssetPoolable poolable;
             if (_storedPoolables.Count > 0)
-                poolable = Internal_FetchPooled(rules);
+                poolable = InternalFetchPooled(rules);
             else
             {
                 if (SpawnedCount < rules.maxSpawned || rules.spawnMode == SpawnMode.GROW)
                 {
-                    poolable = Internal_FetchNew();
+                    poolable = InternalFetchNew();
                 }
                 else
                 {
-                    poolable = Internal_FetchSpawned(rules);
+                    poolable = InternalFetchSpawned(rules);
                 }
             }
 
@@ -286,10 +286,10 @@ namespace VAT.Pooling
                 // Use a null check for rotation, since the default value is a 0, 0, 0, 0 quaternion (not good)
                 poolable.Transform.SetPositionAndRotation(position.GetValueOrDefault(), rotation ?? Quaternion.identity);
 
-                poolable.Transform.localScale = Internal_EvaluateScale(scale);
+                poolable.Transform.localScale = InternalEvaluateScale(scale);
 
                 // Move the location of the poolable in the lists
-                Internal_MoveToSpawned(poolable);
+                InternalMoveToSpawned(poolable);
 
                 // Invoke events
                 poolable.OnSpawn((ulong)_lastId);

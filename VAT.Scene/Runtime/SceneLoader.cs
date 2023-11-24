@@ -58,7 +58,7 @@ namespace VAT.Scene
             _status = AssetLoadStatus.LOADING;
 
             // If we have a loading level, load into it first
-            await Internal_EnterLoadLevel();
+            await InternalEnterLoadLevel();
 
             // Make sure the main scene is unloaded first
             await _level.MainAsset.UnloadSceneAsync();
@@ -73,7 +73,7 @@ namespace VAT.Scene
             _status = AssetLoadStatus.DONE;
         }
 
-        private async UniTask Internal_EnterLoadLevel()
+        private async UniTask InternalEnterLoadLevel()
         {
             // Make sure we have a loading screen first
             if (_loadLevel != null && _loadLevel.MainAsset is StaticCrystScene loadScene)

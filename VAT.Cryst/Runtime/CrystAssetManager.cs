@@ -55,7 +55,7 @@ namespace VAT.Cryst {
         }
 
         [InitializeOnLoadMethod]
-        private static void Internal_InitializeEditor() 
+        private static void InternalInitializeEditor() 
         {
             // Create folders
             if (!IsEditorReady) 

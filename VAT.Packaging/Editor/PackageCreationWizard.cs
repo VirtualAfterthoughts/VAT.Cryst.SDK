@@ -58,12 +58,12 @@ namespace VAT.Packaging.Editor
             }
             else if (GUILayout.Button("Create Package", GUILayout.Width(130)))
             {
-                Internal_CreatePackage();
+                InternalCreatePackage();
                 Close();
             }
         }
 
-        private void Internal_CreatePackage()
+        private void InternalCreatePackage()
         {
             Package package = Package.Create(typeof(Package));
             package.PackageInfo = new()

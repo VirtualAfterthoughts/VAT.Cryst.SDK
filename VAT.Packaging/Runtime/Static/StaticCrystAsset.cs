@@ -116,10 +116,10 @@ namespace VAT.Packaging
 
         public void LoadAsset<T>(Action<T> onLoaded) where T : Object
         {
-            Internal_LoadAsset(onLoaded).Forget();
+            InternalLoadAsset(onLoaded).Forget();
         }
 
-        protected async virtual UniTaskVoid Internal_LoadAsset<T>(Action<T> onLoaded) where T : Object
+        protected async virtual UniTaskVoid InternalLoadAsset<T>(Action<T> onLoaded) where T : Object
         {
             var asset = await LoadAssetAsync<T>();
             onLoaded?.Invoke(asset);
@@ -134,7 +134,7 @@ namespace VAT.Packaging
                     return await OperationHandle.Convert<T>().ToUniTask();
 
                 default:
-                    var task = Internal_LoadAssetAsync<T>();
+                    var task = InternalLoadAssetAsync<T>();
                     var result = await task;
 
                     _assetType = result.GetType();
@@ -142,7 +142,7 @@ namespace VAT.Packaging
             }
         }
 
-        protected virtual AsyncOperationHandle<T> Internal_LoadAssetAsync<T>() where T : Object
+        protected virtual AsyncOperationHandle<T> InternalLoadAssetAsync<T>() where T : Object
         {
             AsyncOperationHandle<T> result = default;
             if (!_operationHandle.IsValid())
@@ -156,10 +156,10 @@ namespace VAT.Packaging
 
         public void LoadScene(Action<SceneInstance> onLoaded, LoadSceneMode mode = LoadSceneMode.Single, bool activateOnLoad = true)
         {
-            Internal_LoadScene(onLoaded, mode, activateOnLoad).Forget();
+            InternalLoadScene(onLoaded, mode, activateOnLoad).Forget();
         }
 
-        protected async virtual UniTaskVoid Internal_LoadScene(Action<SceneInstance> onLoaded, LoadSceneMode mode, bool activateOnLoad)
+        protected async virtual UniTaskVoid InternalLoadScene(Action<SceneInstance> onLoaded, LoadSceneMode mode, bool activateOnLoad)
         {
             var scene = await LoadSceneAsync(mode, activateOnLoad);
             onLoaded?.Invoke(scene);
@@ -174,7 +174,7 @@ namespace VAT.Packaging
                     return await OperationHandle.Convert<SceneInstance>().ToUniTask();
 
                 default:
-                    var task = Internal_LoadSceneAsync(mode, activateOnLoad);
+                    var task = InternalLoadSceneAsync(mode, activateOnLoad);
                     var result = await task;
 
                     _assetType = result.GetType();
@@ -182,7 +182,7 @@ namespace VAT.Packaging
             }
         }
 
-        protected virtual AsyncOperationHandle<SceneInstance> Internal_LoadSceneAsync(LoadSceneMode mode, bool activateOnLoad)
+        protected virtual AsyncOperationHandle<SceneInstance> InternalLoadSceneAsync(LoadSceneMode mode, bool activateOnLoad)
         {
             AsyncOperationHandle<SceneInstance> result = default;
             if (!_operationHandle.IsValid())
@@ -212,11 +212,11 @@ namespace VAT.Packaging
             }
             else
             {
-                Internal_UnloadScene(onSceneUnloaded).Forget();
+                InternalUnloadScene(onSceneUnloaded).Forget();
             }
         }
 
-        private async UniTaskVoid Internal_UnloadScene(Action onSceneUnloaded)
+        private async UniTaskVoid InternalUnloadScene(Action onSceneUnloaded)
         {
             await UnloadSceneAsync();
             onSceneUnloaded?.Invoke();

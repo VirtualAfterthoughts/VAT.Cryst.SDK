@@ -15,7 +15,7 @@ namespace VAT.Shared
         }
 
         public static bool HasValue<T>(this SerializedNullableT<T> nullable) where T : struct {
-            return nullable != null && nullable.Internal_GetHasValue();
+            return nullable != null && nullable.InternalGetHasValue();
         }
     }
 
@@ -42,7 +42,7 @@ namespace VAT.Shared
             _hasValue = true;
         }
 
-        internal bool Internal_GetHasValue() => _hasValue;
+        internal bool InternalGetHasValue() => _hasValue;
 
         public override int GetHashCode() {
             return _value.GetHashCode();

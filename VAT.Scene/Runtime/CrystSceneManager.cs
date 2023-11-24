@@ -41,11 +41,11 @@ namespace VAT.Scene
 
             if (level.TryGetContent(out var levelContent))
             {
-                Internal_LoadLevelAsync(levelContent, loadLevelContent).Forget();
+                InternalLoadLevelAsync(levelContent, loadLevelContent).Forget();
             }
         }
 
-        private static async UniTaskVoid Internal_LoadLevelAsync(ILevelContent level, ILevelContent loadLevel)
+        private static async UniTaskVoid InternalLoadLevelAsync(ILevelContent level, ILevelContent loadLevel)
         {
             _sceneSession = new SceneLoader(level, loadLevel);
             await _sceneSession.Load();
