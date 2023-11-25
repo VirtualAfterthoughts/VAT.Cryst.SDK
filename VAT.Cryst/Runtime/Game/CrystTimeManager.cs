@@ -110,7 +110,7 @@ namespace VAT.Cryst.Game
             var current = _timeScale / _physicsRate;
 
             Time.fixedDeltaTime = current;
-            OnFixedDeltaChanged(current, previous);
+            OnFixedDeltaChanged?.Invoke(current, previous);
         }
         
         public static void Pause()
