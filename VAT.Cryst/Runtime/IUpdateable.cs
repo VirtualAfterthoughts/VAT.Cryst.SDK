@@ -5,15 +5,23 @@ using UnityEngine;
 
 namespace VAT.Cryst
 {
-    public interface IUpdateable {
-        void OnUpdate();
+    public interface IEarlyUpdateable
+    {
+        void OnEarlyUpdate(float deltaTime);
     }
 
-    public interface IFixedUpdateable {
-        void OnFixedUpdate();
+    public interface IUpdateable
+    {
+        void OnUpdate(float deltaTime);
     }
 
-    public interface ILateUpdateable {
-        void OnLateUpdate();
+    public interface IFixedUpdateable
+    {
+        void OnFixedUpdate(float deltaTime);
+    }
+
+    public interface ILateUpdateable
+    {
+        void OnLateUpdate(float deltaTime);
     }
 }

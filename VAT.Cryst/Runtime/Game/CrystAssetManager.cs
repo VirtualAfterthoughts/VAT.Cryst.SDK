@@ -10,8 +10,9 @@ using System.IO;
 using UnityEditor;
 #endif
 
-namespace VAT.Cryst {
-    public static class CrystAssetManager 
+namespace VAT.Cryst.Game
+{
+    public static class CrystAssetManager
     {
         public const string CRYST_ASSETS_FOLDER = "_CrystAssets";
 
@@ -28,7 +29,7 @@ namespace VAT.Cryst {
         /// Gets the path of the UnityEditor project.
         /// </summary>
         /// <returns></returns>
-        public static string GetProjectPath() 
+        public static string GetProjectPath()
         {
             string path = Path.GetFullPath(Path.Combine(Application.dataPath, "../"));
             return path;
@@ -39,7 +40,7 @@ namespace VAT.Cryst {
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        public static string GetProjectRelativePath(string path) 
+        public static string GetProjectRelativePath(string path)
         {
             return Path.Combine(PROJECT_RELATIVE_FOLDER, path);
         }
@@ -55,10 +56,10 @@ namespace VAT.Cryst {
         }
 
         [InitializeOnLoadMethod]
-        private static void InternalInitializeEditor() 
+        private static void InternalInitializeEditor()
         {
             // Create folders
-            if (!IsEditorReady) 
+            if (!IsEditorReady)
             {
                 AssetDatabase.CreateFolder(PARENT_FOLDER, CRYST_ASSETS_FOLDER);
 
@@ -69,11 +70,11 @@ namespace VAT.Cryst {
 
         public static void HookOnEditorReady(Action action)
         {
-            if (IsEditorReady) 
+            if (IsEditorReady)
             {
                 action();
             }
-            else 
+            else
             {
                 _onAssetsReady += action;
             }

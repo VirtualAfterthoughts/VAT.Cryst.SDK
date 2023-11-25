@@ -1,7 +1,10 @@
 using UnityEditor;
 using UnityEngine;
-using VAT.Cryst;
+
+using VAT.Cryst.Game;
+
 using VAT.Serialization.JSON;
+
 using VAT.Shared.Extensions;
 
 namespace VAT.Packaging.Editor

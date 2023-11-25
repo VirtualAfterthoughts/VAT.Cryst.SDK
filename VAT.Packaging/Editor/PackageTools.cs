@@ -8,7 +8,7 @@ using UnityEditor;
 using VAT.Serialization.JSON;
 using VAT.Shared.Extensions;
 
-using VAT.Cryst;
+using VAT.Cryst.Game;
 
 namespace VAT.Packaging.Editor
 {

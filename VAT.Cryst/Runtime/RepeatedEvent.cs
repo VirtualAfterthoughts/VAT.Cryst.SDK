@@ -25,28 +25,28 @@ namespace VAT.Cryst
 
         private float _timer;
 
-        public bool IsDisabled 
-        { 
-            get 
-            { 
-                return _isDisabled; 
-            } 
-            set 
-            { 
-                _isDisabled = value; 
-            } 
+        public bool IsDisabled
+        {
+            get
+            {
+                return _isDisabled;
+            }
+            set
+            {
+                _isDisabled = value;
+            }
         }
 
         public float RepeatDelay
-        { 
-            get 
-            { 
-                return _repeatDelay; 
-            } 
-            set 
+        {
+            get
             {
-                _repeatDelay = Mathf.Max(value, 1e-02f); 
-            } 
+                return _repeatDelay;
+            }
+            set
+            {
+                _repeatDelay = Mathf.Max(value, 1e-02f);
+            }
         }
 
         private void Awake()

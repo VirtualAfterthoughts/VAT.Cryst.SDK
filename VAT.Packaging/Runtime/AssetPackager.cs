@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 using VAT.Serialization.JSON;
-using VAT.Cryst;
+using VAT.Cryst.Game;
 
 using Newtonsoft.Json.Linq;
 
