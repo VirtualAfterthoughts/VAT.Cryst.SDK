@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace VAT.Shared.Utilities {
     /// <summary>
-    /// A utility for caching Unity objects to replace GetComponent.
+    /// A utility for caching objects to replace GetComponent.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ComponentCache<T> where T : Object {
+    public class ComponentCache<T> {
         // The internal cache.
         private readonly Dictionary<GameObject, List<T>> _cache = new(new UnityComparer());
 
@@ -25,7 +25,7 @@ namespace VAT.Shared.Utilities {
             if (_cache.ContainsKey(go)) 
                 return _cache[go][0];
             else
-                return null;
+                return default;
         }
 
         /// <summary>

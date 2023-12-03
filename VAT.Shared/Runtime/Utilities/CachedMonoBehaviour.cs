@@ -17,20 +17,28 @@ namespace VAT.Shared {
     /// </summary>
     public class CachedMonoBehaviour : MonoBehaviour, ICachedMonoBehaviour {
         private GameObject _gameObject = null;
+        private bool _hasGameObject = false;
         public GameObject GameObject {
             get  {
-                if (_gameObject == null)
+                if (!_hasGameObject)
+                {
                     _gameObject = base.gameObject;
+                    _hasGameObject = true;
+                }
 
                 return _gameObject;
             } 
         }
 
         private Transform _transform = null;
+        private bool _hasTransform = false;
         public Transform Transform {
             get {
-                if (_transform == null)
+                if (!_hasTransform)
+                {
                     _transform = base.transform;
+                    _hasTransform = true;
+                }
 
                 return _transform;
             }

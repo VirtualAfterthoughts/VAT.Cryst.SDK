@@ -55,6 +55,13 @@ namespace VAT.Cryst.Game
 
         private static void OnEarlyUpdate()
         {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+#endif
+
             float deltaTime = Time.deltaTime;
 
             foreach (var updatable in _earlyUpdateables)
@@ -65,6 +72,13 @@ namespace VAT.Cryst.Game
 
         private static void OnUpdate()
         {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+#endif
+
             float deltaTime = Time.deltaTime;
 
             foreach (var updatable in _updateables)
@@ -75,6 +89,13 @@ namespace VAT.Cryst.Game
 
         private static void OnFixedUpdate()
         {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+#endif
+
             float deltaTime = Time.deltaTime;
 
             foreach (var updatable in _fixedUpdateables)
@@ -85,6 +106,13 @@ namespace VAT.Cryst.Game
 
         private static void OnLateUpdate()
         {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+#endif
+
             float deltaTime = Time.deltaTime;
 
             foreach (var updatable in _lateUpdateables)
