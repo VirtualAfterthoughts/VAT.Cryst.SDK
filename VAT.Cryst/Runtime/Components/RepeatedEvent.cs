@@ -6,7 +6,7 @@ using UnityEngine;
 
 using UnityEngine.Events;
 
-namespace VAT.Cryst
+namespace VAT.Cryst.Components
 {
     public class RepeatedEvent : MonoBehaviour
     {

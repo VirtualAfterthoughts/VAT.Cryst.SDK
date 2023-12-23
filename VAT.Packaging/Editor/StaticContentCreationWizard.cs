@@ -31,6 +31,17 @@ namespace VAT.Packaging.Editor
             window.Show();
         }
 
+        public static void Initialize(Package package, StaticContentIdentifierAttribute identifier, Type contentType, Object mainAsset)
+        {
+            StaticContentCreationWizard window = GetWindow<StaticContentCreationWizard>(true, "Content Creator");
+            window._package = package;
+            window._mainAsset = mainAsset;
+            window._title = mainAsset.name;
+            window._contentType = contentType;
+            window._contentIdentifier = identifier;
+            window.Show();
+        }
+
         private void LoadContentTypes(GenericMenu menu)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -218,7 +229,6 @@ namespace VAT.Packaging.Editor
 
             // Show file in editor
             Selection.SetActiveObjectWithContext(content, content);
-
         }
     }
 }

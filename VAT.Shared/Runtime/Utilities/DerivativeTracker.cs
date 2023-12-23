@@ -10,7 +10,7 @@ namespace VAT.Shared.Utilities {
             SetMaxDerivative(count);
         }
 
-        public abstract void OnReset();
+        public abstract void Reset();
 
         public abstract void SetMaxDerivative(int count);
     }
@@ -24,7 +24,7 @@ namespace VAT.Shared.Utilities {
 
         public DerivativeTrackerT(int count) : base(count) { }
 
-        public override void OnReset() {
+        public override void Reset() {
             for (var i = 0; i < _length; i++) {
                 _array[i] = Default;
             }

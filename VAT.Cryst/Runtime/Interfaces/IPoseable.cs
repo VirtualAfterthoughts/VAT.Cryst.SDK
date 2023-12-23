@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace VAT.Cryst
+namespace VAT.Cryst.Interfaces
 {
     public interface IPoseableT<TReference>
     {

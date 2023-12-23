@@ -40,7 +40,9 @@ namespace VAT.Packaging
         public StaticCrystScene MainScene { get { return _mainAsset; } set { _mainAsset = value; } }
 
 #if UNITY_EDITOR
-        public override string Group => "Levels";
+        public override string EditorAssetGroup => "Level";
+
+        public override Type EditorAssetType => typeof(SceneAsset);
 #endif
     }
 }

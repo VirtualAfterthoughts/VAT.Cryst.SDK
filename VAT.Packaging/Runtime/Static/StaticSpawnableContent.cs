@@ -11,7 +11,7 @@ namespace VAT.Packaging
     public class StaticSpawnableContent : StaticGameObjectContent, ISpawnableContent
     {
 #if UNITY_EDITOR
-        public override string Group => "Spawnables";
+        public override string EditorAssetGroup => "Spawnable";
 #endif
     }
 }

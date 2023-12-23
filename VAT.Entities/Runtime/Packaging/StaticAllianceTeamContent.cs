@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using VAT.Packaging;
 
-namespace VAT.Packaging
+namespace VAT.Entities
 {
-    [StaticContentIdentifier("Audio Clip", typeof(AudioClip))]
-    public class StaticAudioClipContent : StaticContentT<AudioClip>, IAudioClipContent
+    [StaticContentIdentifier("Alliance Team", typeof(AllianceTeam))]
+    public class StaticAllianceTeamContent : StaticContentT<AllianceTeam>
     {
         [SerializeField]
-        private StaticCrystAudioClip _mainAsset;
+        private StaticCrystAllianceTeam _mainAsset;
 
         public override StaticCrystAsset StaticAsset
         {
@@ -22,15 +23,15 @@ namespace VAT.Packaging
             {
                 if (value != null && value.GetType() == typeof(StaticCrystAsset))
                 {
-                    _mainAsset = new StaticCrystAudioClip(value.AssetGUID);
+                    _mainAsset = new StaticCrystAllianceTeam(value.AssetGUID);
                 }
                 else
                 {
-                    _mainAsset = value as StaticCrystAudioClip;
+                    _mainAsset = value as StaticCrystAllianceTeam;
                 }
             }
         }
 
-        public StaticCrystAudioClip MainAudioClip { get { return _mainAsset; } set { _mainAsset = value; } }
+        public StaticCrystAllianceTeam MainAllianceTeam { get { return _mainAsset; } set { _mainAsset = value; } }
     }
 }

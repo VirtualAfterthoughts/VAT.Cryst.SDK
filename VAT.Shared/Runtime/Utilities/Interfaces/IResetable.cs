@@ -11,6 +11,6 @@ namespace VAT.Shared.Utilities {
         /// <summary>
         /// Resets the state.
         /// </summary>
-        void OnReset();
+        void Reset();
     }
 }

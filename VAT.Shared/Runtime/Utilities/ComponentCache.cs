@@ -22,10 +22,25 @@ namespace VAT.Shared.Utilities {
         /// <param name="go"></param>
         /// <returns></returns>
         public T Get(GameObject go) {
-            if (_cache.ContainsKey(go)) 
+            if (Has(go)) 
                 return _cache[go][0];
             else
                 return default;
+        }
+
+        /// <summary>
+        /// Returns all components from the given GameObject.
+        /// </summary>
+        /// <param name="go"></param>
+        /// <returns></returns>
+        public List<T> GetAll(GameObject go)
+        {
+            if (!Has(go))
+            {
+                return _cache[go] = new();
+            }
+
+            return _cache[go];
         }
 
         /// <summary>
@@ -35,7 +50,7 @@ namespace VAT.Shared.Utilities {
         /// <param name="comp"></param>
         /// <returns></returns>
         public bool TryGet(GameObject go, out T comp) {
-            if (_cache.ContainsKey(go)) {
+            if (Has(go)) {
                 comp = _cache[go][0];
                 return true;
             }
@@ -46,12 +61,22 @@ namespace VAT.Shared.Utilities {
         }
 
         /// <summary>
+        /// Returns true if the GameObject has one of these components.
+        /// </summary>
+        /// <param name="go"></param>
+        /// <returns></returns>
+        public bool Has(GameObject go)
+        {
+            return _cache.ContainsKey(go);
+        }
+
+        /// <summary>
         /// Adds the component to the cache.
         /// </summary>
         /// <param name="go"></param>
         /// <param name="comp"></param>
         public void Add(GameObject go, T comp) {
-            if (_cache.ContainsKey(go) && !_cache[go].Contains(comp)) {
+            if (Has(go) && !_cache[go].Contains(comp)) {
                 _cache[go].Add(comp);
             }
             else {
@@ -71,7 +96,7 @@ namespace VAT.Shared.Utilities {
         /// <param name="go"></param>
         /// <param name="comp"></param>
         public void Remove(GameObject go, T comp) {
-            if (_cache.ContainsKey(go))
+            if (Has(go))
                 _cache[go].Remove(comp);
         }
     }

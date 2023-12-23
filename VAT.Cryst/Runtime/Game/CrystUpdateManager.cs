@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.LowLevel;
+
 using VAT.Cryst.Extensions;
+using VAT.Cryst.Interfaces;
 
 namespace VAT.Cryst.Game
 {

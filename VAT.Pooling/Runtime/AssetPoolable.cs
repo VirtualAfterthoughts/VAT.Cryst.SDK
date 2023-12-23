@@ -19,8 +19,8 @@ namespace VAT.Pooling
         internal AssetPoolableDelegate InternalPoolSpawnDelegate { get; set; }
         internal AssetPoolableDelegate InternalPoolDespawnDelegate { get; set; }
 
-        public AssetSpawnDelegate OnSpawnDelegate { get; set; }
-        public AssetPoolableDelegate OnDespawnDelegate { get; set; }
+        public event AssetSpawnDelegate OnSpawnDelegate;
+        public event AssetPoolableDelegate OnDespawnDelegate;
 
         private bool _isLocked = false;
         public bool IsLocked => _isLocked;

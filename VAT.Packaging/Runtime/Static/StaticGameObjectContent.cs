@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-using Object = UnityEngine.Object;
-
 namespace VAT.Packaging
 {
     public class StaticGameObjectContent : StaticContentT<GameObject>
@@ -34,9 +32,5 @@ namespace VAT.Packaging
         }
 
         public StaticCrystGameObject MainGameObject { get { return _mainAsset; } set { _mainAsset = value; } }
-
-#if UNITY_EDITOR
-        public override string Group => "GameObjects";
-#endif
     }
 }

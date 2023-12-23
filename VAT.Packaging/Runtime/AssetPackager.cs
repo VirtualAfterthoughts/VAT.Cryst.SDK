@@ -81,7 +81,15 @@ namespace VAT.Packaging
         public void Init()
         {
             if (_isInitializing)
+            {
                 return;
+            }
+
+            // Make sure this is the singleton incase it failed to set
+            if (_instance != this)
+            {
+                _instance = this;
+            }
 
             _isInitializing = true;
 

@@ -32,9 +32,5 @@ namespace VAT.Packaging
         }
 
         public StaticCrystScriptableObject MainScriptableObject { get { return _mainAsset; } set { _mainAsset = value; } }
-
-#if UNITY_EDITOR
-        public override string Group => "ScriptableObjects";
-#endif
     }
 }

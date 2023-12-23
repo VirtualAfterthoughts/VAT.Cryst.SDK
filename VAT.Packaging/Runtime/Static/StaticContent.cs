@@ -1,12 +1,16 @@
 using Newtonsoft.Json.Linq;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEditor;
 using UnityEngine;
 
 using VAT.Serialization.JSON;
 using VAT.Shared.Extensions;
+
+using Object = UnityEngine.Object;
 
 namespace VAT.Packaging
 {
@@ -85,7 +89,9 @@ namespace VAT.Packaging
         }
 
 #if UNITY_EDITOR
-        public virtual string Group => string.Empty;
+        public virtual string EditorAssetGroup => string.Empty;
+
+        public virtual Type EditorAssetType => typeof(Object);
 
         public void OnValidate()
         {
@@ -99,7 +105,7 @@ namespace VAT.Packaging
 
             if (isBuilding && MainAsset != null && StaticAsset.EditorAsset && MainPackage != null)
             {
-                var groupName = $"{Address.CleanAddress(MainPackage.Info.Title)} {Group}";
+                var groupName = $"{Address.CleanAddress(MainPackage.Info.Title)} {EditorAssetGroup}";
 
                 StaticAsset.EditorAsset.MarkAsAddressable(groupName, Address, null);
             }
@@ -131,5 +137,11 @@ namespace VAT.Packaging
     public abstract class StaticContentT<T> : StaticContent, IContentT<T> where T : Object
     {
         public IWeakAssetT<T> MainAssetT => MainAsset as IWeakAssetT<T>;
+
+#if UNITY_EDITOR
+        public override string EditorAssetGroup => typeof(T).Name;
+
+        public override Type EditorAssetType => typeof(T);
+#endif
     }
 }

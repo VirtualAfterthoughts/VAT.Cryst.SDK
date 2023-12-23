@@ -1,9 +1,9 @@
 {
-    "name": "VAT.Cryst",
-    "rootNamespace": "VAT.Cryst",
+    "name": "VAT.Entities",
+    "rootNamespace": "VAT.Entities",
     "references": [
-        "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:2c5da6b5cc71c8446a65082f325dc51b"
+        "GUID:90a83c14fcb3592428d0406e14f847a0",
+        "GUID:3ce54b0e800c3e34aa59d41654dd0af8"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
