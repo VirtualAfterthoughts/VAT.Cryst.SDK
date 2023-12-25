@@ -26,5 +26,11 @@ namespace VAT.Zones
         public virtual void OnSecondaryZoneEntered(EntityIdentifier identifier) { }
 
         public virtual void OnSecondaryZoneExited(EntityIdentifier identifier) { }
+
+#if UNITY_EDITOR
+        public virtual void OnEditorZoneEnabled() { }
+
+        public virtual void OnEditorZoneDisabled() { }
+#endif
     }
 }

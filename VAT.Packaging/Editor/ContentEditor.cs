@@ -53,8 +53,31 @@ namespace VAT.Packaging.Editor
                 EditorGUILayout.HelpBox("Developer Note: No serializable property is detected with the name \"_mainAsset\". Please add a field under this name or create a custom editor.", MessageType.Error);
             }
 
+            OnDrawExtraProperties();
+
             // Apply changes
             serializedObject.ApplyModifiedProperties();
+        }
+
+        protected virtual void OnDrawExtraProperties() { }
+    }
+
+    [CustomEditor(typeof(StaticLevelContent), true)]
+    [CanEditMultipleObjects]
+    public class StaticLevelContentEditor : StaticContentEditor
+    {
+        private SerializedProperty _chunkScenes;
+
+        protected override void OnEnable()
+        {
+            _chunkScenes = serializedObject.FindProperty("_chunkScenes");
+
+            base.OnEnable();
+        }
+
+        protected override void OnDrawExtraProperties()
+        {
+            EditorGUILayout.PropertyField(_chunkScenes);
         }
     }
 }

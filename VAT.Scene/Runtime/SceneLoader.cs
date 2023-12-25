@@ -25,8 +25,6 @@ namespace VAT.Scene
         private SceneInstance _mainSceneInstance;
         private UniTask<SceneInstance> _sceneTask;
 
-        private bool _isValid;
-
         public ILevelContent Level => _level;
 
         public AssetLoadStatus Status => _status;
@@ -35,13 +33,12 @@ namespace VAT.Scene
 
         public SceneInstance MainSceneInstance => _mainSceneInstance;
 
-        public bool IsValid => _isValid;
+        private readonly Dictionary<IWeakAsset, int> _additiveScenes = new();
 
         public SceneLoader()
         {
             this._type = SceneType.UNKNOWN;
             this._status = AssetLoadStatus.IDLE;
-            this._isValid = false;
         }
 
         public SceneLoader(ILevelContent level, ILevelContent loadLevel)
@@ -80,6 +77,51 @@ namespace VAT.Scene
             {
                 await loadScene.LoadSceneAsync(LoadSceneMode.Single, true);
             }
+        }
+
+        public async UniTask Unload()
+        {
+            _additiveScenes.Clear();
+
+            if (_type != SceneType.UNKNOWN)
+            {
+                _status = AssetLoadStatus.IDLE;
+
+                await _level.MainAsset.UnloadSceneAsync();
+            }
+        }
+
+        public async UniTask LoadAdditive(IWeakAsset asset)
+        {
+            if (!_additiveScenes.ContainsKey(asset))
+            {
+                _additiveScenes.Add(asset, 1);
+                await asset.LoadSceneAsync(LoadSceneMode.Additive);
+
+            }
+            else
+            {
+                _additiveScenes[asset]++;
+            }
+        }
+
+        public async UniTask<bool> UnloadAdditive(IWeakAsset asset, bool forceUnload = false)
+        {
+            if (_additiveScenes.ContainsKey(asset))
+            {
+                _additiveScenes[asset]--;
+
+                if (forceUnload || _additiveScenes[asset] <= 0)
+                {
+                    _additiveScenes.Remove(asset);
+
+                    await asset.UnloadSceneAsync();
+
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

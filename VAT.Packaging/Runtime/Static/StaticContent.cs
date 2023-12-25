@@ -54,10 +54,17 @@ namespace VAT.Packaging
             }
         }
 
+        public virtual List<StaticPackedAsset> CollectPackedAssets()
+        {
+            return new List<StaticPackedAsset>();
+        }
+
+        protected virtual void OnUnpackPackedAssets(List<StaticPackedAsset> packedAssets) { }
+
         protected override void OnPack(JSONPacker packer, JObject json)
         {
 #if UNITY_EDITOR
-            ValidateAsset(true);
+            ValidateAssets(true);
 #endif
 
             if (StaticAsset != null)
@@ -69,6 +76,18 @@ namespace VAT.Packaging
             {
                 json.Add("package", packer.PackReference(_package));
             }
+
+            var packedAssets = CollectPackedAssets();
+            var packedAssetJArray = new JArray();
+
+            foreach (var asset in packedAssets)
+            {
+                JObject assetJObject = new();
+                asset.Pack(packer, assetJObject);
+                packedAssetJArray.Add(assetJObject);
+            }
+
+            json.Add("packedAssets", packedAssetJArray);
 
             base.OnPack(packer, json);
         }
@@ -85,6 +104,21 @@ namespace VAT.Packaging
                 unpacker.TryCreateFromReference(package, out _package, Package.Create);
             }
 
+            if (json.TryGetValue("packedAssets", out var packedAssets))
+            {
+                List<StaticPackedAsset> assetList = new();
+
+                foreach (var packedAsset in (JArray)packedAssets)
+                {
+                    var asset = new StaticPackedAsset();
+                    asset.Unpack(unpacker, packedAsset);
+
+                    assetList.Add(asset);
+                }
+
+                OnUnpackPackedAssets(assetList);
+            }
+
             base.OnUnpack(unpacker, json);
         }
 
@@ -93,23 +127,38 @@ namespace VAT.Packaging
 
         public virtual Type EditorAssetType => typeof(Object);
 
+        public virtual string AddressableGroupName
+        {
+            get
+            {
+                return $"{Address.CleanAddress(MainPackage.Info.Title)} {EditorAssetGroup}";
+            }
+        }
+
         public void OnValidate()
         {
             // Save asset info
-            ValidateAsset(false);
+            ValidateAssets(false);
         }
 
-        public void ValidateAsset(bool isBuilding = false)
+        public void ValidateAssets(bool isBuilding = false)
         {
-            StaticAsset.ValidateGUID();
+            ValidateAsset(StaticAsset, Address, isBuilding);
 
-            if (isBuilding && MainAsset != null && StaticAsset.EditorAsset && MainPackage != null)
+            OnValidateAssets(isBuilding);
+        }
+
+        protected void ValidateAsset(StaticCrystAsset asset, Address address, bool isBuilding = false)
+        {
+            asset.ValidateGUID();
+
+            if (isBuilding && asset != null && asset.EditorAsset && MainPackage != null)
             {
-                var groupName = $"{Address.CleanAddress(MainPackage.Info.Title)} {EditorAssetGroup}";
-
-                StaticAsset.EditorAsset.MarkAsAddressable(groupName, Address, null);
+                asset.EditorAsset.MarkAsAddressable(AddressableGroupName, address, null);
             }
         }
+
+        protected virtual void OnValidateAssets(bool isBuilding = false) { }
 
         public void SetAsset(Object asset)
         {

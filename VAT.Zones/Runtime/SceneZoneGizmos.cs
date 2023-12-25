@@ -12,6 +12,7 @@ namespace VAT.Zones
 {
     public partial class SceneZone : CachedMonoBehaviour
     {
+        private ZoneState _lastEditorState = ZoneState.NONE;
         private ZoneState EditorState
         {
             get
@@ -47,9 +48,38 @@ namespace VAT.Zones
             Refresh();
         }
 
+        private void OnUpdateEditorComponents()
+        {
+            var state = EditorState;
+            if (_lastEditorState != state)
+            {
+                foreach (var component in _zoneComponents)
+                {
+                    bool currentHasFlag = (component.TriggerFlags & state) != 0;
+                    bool previousHasFlag = (component.TriggerFlags & _lastEditorState) != 0;
+
+                    if (currentHasFlag && !previousHasFlag)
+                    {
+                        component.OnEditorZoneEnabled();
+                    }
+                    else if (!currentHasFlag && previousHasFlag)
+                    {
+                        component.OnEditorZoneDisabled();
+                    }
+                }
+
+                _lastEditorState = state;
+            }
+        }
+
         private void OnDrawGizmos()
         {
             Refresh();
+
+            if (!Application.isPlaying)
+            {
+                OnUpdateEditorComponents();
+            }
 
             Gizmos.color = Color.gray;
 

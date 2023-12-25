@@ -1,4 +1,3 @@
-using Codice.CM.Common.Tree;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -17,43 +16,55 @@ namespace VAT.Packaging.Editor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var asset = property.GetPropertyInstance() as StaticCrystAsset;
+            var guidProperty = property.FindPropertyRelative("_guid");
+
             EditorGUI.BeginProperty(position, label, property);
             position.width -= 24;
 
             if (isDrawingGUID)
             {
-                OnDrawGUID(position, label, property.serializedObject, asset);
+                OnDrawGUID(position, label, guidProperty, asset);
             }
             else
             {
-                OnDrawAsset(position, label, property.serializedObject, asset);
+                OnDrawAsset(position, label, guidProperty, asset);
             }
 
             OnDrawAddressToggle(position, label);
             EditorGUI.EndProperty();
+
+            property.serializedObject.ApplyModifiedProperties();
         }
 
-        protected virtual void OnDrawGUID(Rect position, GUIContent label, SerializedObject serializedObject, StaticCrystAsset asset)
+        protected virtual void OnDrawGUID(Rect position, GUIContent label, SerializedProperty guidProperty, StaticCrystAsset asset)
         {
             EditorGUI.BeginChangeCheck();
-            string result = EditorGUI.TextField(position, label, asset.AssetGUID);
+            string result = EditorGUI.TextField(position, label, guidProperty.stringValue);
 
             if (EditorGUI.EndChangeCheck())
             {
-                asset.ValidateGUID(result);
-                EditorUtility.SetDirty(serializedObject.targetObject);
+                guidProperty.stringValue = result;
+                asset.ValidateGUID();
             }
         }
 
-        protected virtual void OnDrawAsset(Rect position, GUIContent label, SerializedObject serializedObject, StaticCrystAsset asset)
+        protected virtual void OnDrawAsset(Rect position, GUIContent label, SerializedProperty guidProperty, StaticCrystAsset asset)
         {
             EditorGUI.BeginChangeCheck();
             var result = EditorGUI.ObjectField(position, label, asset.EditorAsset, asset.AssetType, false);
 
             if (EditorGUI.EndChangeCheck())
             {
-                asset.ValidateGUID(result);
-                EditorUtility.SetDirty(serializedObject.targetObject);
+                if (result == null)
+                {
+                    guidProperty.stringValue = null;
+                }
+                else if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(result, out string guid, out long _))
+                {
+                    guidProperty.stringValue = guid;
+                }
+
+                asset.ValidateGUID();
             }
         }
 

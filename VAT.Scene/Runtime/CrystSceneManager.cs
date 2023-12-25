@@ -47,6 +47,13 @@ namespace VAT.Scene
 
         private static async UniTaskVoid InternalLoadLevelAsync(ILevelContent level, ILevelContent loadLevel)
         {
+            // Unload the active session
+            if (_sceneSession != null && _sceneSession.Status == AssetLoadStatus.DONE)
+            {
+                await _sceneSession.Unload();
+            }
+
+            // Create a new session and load the scene
             _sceneSession = new SceneLoader(level, loadLevel);
             await _sceneSession.Load();
         }

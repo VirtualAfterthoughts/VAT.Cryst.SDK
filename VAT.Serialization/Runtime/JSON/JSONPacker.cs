@@ -54,7 +54,7 @@ namespace VAT.Serialization.JSON
 
             // Serialize objects
             var objectsJson = new JObject();
-            List<IJSONPackable> packedJson = new List<IJSONPackable>();
+            List<IJSONPackable> packedJson = new();
 
             for (var i = 0; i < RECURSION_CAP; i++) {
                 var referenceCopy = new Dictionary<ReferenceId, IJSONPackable>(_references);
@@ -69,8 +69,10 @@ namespace VAT.Serialization.JSON
 
                     // Pack the type as well if we can
                     if (_typesInverse.TryGetValue(pair.Value.GetType(), out var id)) {
-                        var typeObject = new JObject();
-                        typeObject.Add("type", id.ToString());
+                        var typeObject = new JObject
+                        {
+                            { "type", id.ToString() }
+                        };
 
                         newObject.Add("isType", typeObject);
                     }
