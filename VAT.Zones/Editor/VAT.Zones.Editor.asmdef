@@ -1,0 +1,19 @@
+{
+    "name": "VAT.Zones.Editor",
+    "rootNamespace": "VAT.Zones.Editor",
+    "references": [
+        "GUID:84d431fa850d520449ad3756f3ac927f",
+        "GUID:2c5da6b5cc71c8446a65082f325dc51b"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

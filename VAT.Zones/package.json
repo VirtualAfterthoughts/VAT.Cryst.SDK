@@ -1,0 +1,19 @@
+{
+    "name": "com.virtualafterthoughts.zones",
+	"version": "1.0.0",
+    "displayName": "VAT Zones",
+    "description": "Tools for setting up zones to trigger events, load chunks, and more.",
+	"unity": "2021.3",
+	"dependencies": {
+    },
+	"keywords": [
+		"vat",
+		"virtualafterthoughts"
+	],
+	"license": "MIT",
+	"author": {
+		"name": "VirtualAfterThoughts"
+	},
+	"unityRelease": "15f1",
+	"hideInEditor": false
+}

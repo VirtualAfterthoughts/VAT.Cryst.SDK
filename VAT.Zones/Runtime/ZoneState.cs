@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace VAT.Entities
+namespace VAT.Zones
 {
     [Flags]
-    public enum EntityType
+    public enum ZoneState
     {
-        PLAYER = 1 << 0,
-        NPC = 1 << 1,
+        NONE = 0,
+        PRIMARY = 1 << 0,
+        SECONDARY = 1 << 1,
     }
 }

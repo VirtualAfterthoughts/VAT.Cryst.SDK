@@ -1,0 +1,17 @@
+{
+    "name": "VAT.Zones",
+    "rootNamespace": "VAT.Zones",
+    "references": [
+        "GUID:2c5da6b5cc71c8446a65082f325dc51b",
+        "GUID:005565b7d7d189d489e6c8ea78e83a9c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

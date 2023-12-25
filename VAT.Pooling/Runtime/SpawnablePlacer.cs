@@ -113,7 +113,16 @@ namespace VAT.Pooling
             GameObject go = new("Spawnable Placer", typeof(SpawnablePlacer));
             go.transform.localScale = Vector3.one;
 
-            GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
+            if (menuCommand.context == null && SceneView.GetAllSceneCameras().Length > 0)
+            {
+                var camera = SceneView.GetAllSceneCameras()[0].transform;
+                go.transform.position = camera.position + camera.forward * 10f;
+            }
+            else
+            {
+                GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
+            }
+
             Selection.activeObject = go;
 
             Undo.RegisterCreatedObjectUndo(go, "Create Spawnable Placer");
