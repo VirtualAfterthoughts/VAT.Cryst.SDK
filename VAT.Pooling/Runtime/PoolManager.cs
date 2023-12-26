@@ -88,6 +88,9 @@ namespace VAT.Pooling
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         private static void RuntimeInitialize()
         {
+            _instance = null;
+            IsReady = false;
+
             AssetPackager.HookOnReady(OnAssetPackagerReady);
         }
 
