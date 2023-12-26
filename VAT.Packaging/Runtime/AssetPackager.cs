@@ -313,5 +313,20 @@ namespace VAT.Packaging
         {
             return _loadedContent.Values;
         }
+
+        public IReadOnlyCollection<T> GetContents<T>() where T : IContent
+        {
+            List<T> contents = new();
+
+            foreach (var content in _loadedContent.Values)
+            {
+                if (content is T value)
+                {
+                    contents.Add(value);
+                }
+            }
+
+            return contents;
+        }
     }
 }
