@@ -13,7 +13,7 @@ namespace VAT.Zones
     public sealed class ZoneEvents : ZoneComponent
     {
         [Serializable]
-        public class ZoneEvent : UnityEvent<EntityIdentifier> { }
+        public class ZoneEvent : UnityEvent<EntityTracker> { }
 
         [Serializable]
         public struct ZoneEventGroup
@@ -41,24 +41,24 @@ namespace VAT.Zones
             onZoneDisabled.Invoke();
         }
 
-        public override void OnPrimaryZoneEntered(EntityIdentifier identifier)
+        public override void OnPrimaryZoneEntered(EntityTracker tracker)
         {
-            primaryEvents.onEntered.Invoke(identifier);
+            primaryEvents.onEntered.Invoke(tracker);
         }
 
-        public override void OnPrimaryZoneExited(EntityIdentifier identifier)
+        public override void OnPrimaryZoneExited(EntityTracker tracker)
         {
-            primaryEvents.onExited.Invoke(identifier);
+            primaryEvents.onExited.Invoke(tracker);
         }
 
-        public override void OnSecondaryZoneEntered(EntityIdentifier identifier)
+        public override void OnSecondaryZoneEntered(EntityTracker tracker)
         {
-            secondaryEvents.onEntered.Invoke(identifier);
+            secondaryEvents.onEntered.Invoke(tracker);
         }
 
-        public override void OnSecondaryZoneExited(EntityIdentifier identifier)
+        public override void OnSecondaryZoneExited(EntityTracker tracker)
         {
-            secondaryEvents.onExited.Invoke(identifier);
+            secondaryEvents.onExited.Invoke(tracker);
         }
     }
 }

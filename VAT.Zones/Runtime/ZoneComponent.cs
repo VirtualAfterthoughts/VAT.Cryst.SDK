@@ -19,13 +19,13 @@ namespace VAT.Zones
 
         public abstract void OnZoneDisabled();
 
-        public virtual void OnPrimaryZoneEntered(EntityIdentifier identifier) { }
+        public virtual void OnPrimaryZoneEntered(EntityTracker tracker) { }
 
-        public virtual void OnPrimaryZoneExited(EntityIdentifier identifier) { }
+        public virtual void OnPrimaryZoneExited(EntityTracker tracker) { }
 
-        public virtual void OnSecondaryZoneEntered(EntityIdentifier identifier) { }
+        public virtual void OnSecondaryZoneEntered(EntityTracker tracker) { }
 
-        public virtual void OnSecondaryZoneExited(EntityIdentifier identifier) { }
+        public virtual void OnSecondaryZoneExited(EntityTracker tracker) { }
 
 #if UNITY_EDITOR
         public virtual void OnEditorZoneEnabled() { }

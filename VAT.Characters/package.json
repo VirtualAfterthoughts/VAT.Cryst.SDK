@@ -1,8 +1,8 @@
 {
-    "name": "com.virtualafterthoughts.entities",
+    "name": "com.virtualafterthoughts.characters",
 	"version": "1.0.0",
-    "displayName": "VAT Entities",
-    "description": "A system for identifying and handling different types of objects at runtime.",
+    "displayName": "VAT Characters",
+    "description": "A system for creating Player and NPC rigs with alliances, abilities, and more.",
 	"unity": "2021.3",
 	"dependencies": {
     },

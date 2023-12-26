@@ -1,2 +1,2 @@
 # Virtual Afterthoughts Entities
-A system for building Player and NPC rigs with identification, alliances, and more.
+A system for identifying and handling different types of objects at runtime.

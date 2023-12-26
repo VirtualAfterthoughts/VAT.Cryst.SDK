@@ -9,7 +9,19 @@ namespace VAT.Entities
     [Flags]
     public enum EntityType
     {
-        PLAYER = 1 << 0,
-        NPC = 1 << 1,
+        /// <summary>
+        /// A generalized entity, such as an object or particle.
+        /// </summary>
+        MISC = 1 << 0,
+        
+        /// <summary>
+        /// A player.
+        /// </summary>
+        PLAYER = 1 << 1,
+
+        /// <summary>
+        /// A non-player character.
+        /// </summary>
+        NPC = 1 << 2,
     }
 }

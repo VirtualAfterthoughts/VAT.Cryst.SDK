@@ -12,8 +12,8 @@ namespace VAT.Zones
 {
     public partial class SceneZone : CachedMonoBehaviour
     {
-        private readonly List<EntityIdentifier> _primaryEntities = new();
-        private readonly Dictionary<EntityIdentifier, int> _secondaryEntities = new();
+        private readonly List<EntityTracker> _primaryEntities = new();
+        private readonly Dictionary<EntityTracker, int> _secondaryEntities = new();
 
         private ZoneState _state;
         public ZoneState State
@@ -26,60 +26,60 @@ namespace VAT.Zones
 
         private void OnTriggerEnter(Collider other)
         {
-            if (EntityIdentifier.Cache.TryGet(other.gameObject, out var identifier))
+            if (EntityTracker.Cache.TryGet(other.gameObject, out var tracker))
             {
-                OnEntityEnter(identifier);
+                OnEntityEnter(tracker);
             }
         }
 
-        private void OnEntityEnter(EntityIdentifier identifier)
+        private void OnEntityEnter(EntityTracker tracker)
         {
-            if (identifier.EntityType == _entityMask)
+            if (tracker.Entity.EntityType == _entityMask)
             {
-                if (!PrimaryContains(identifier))
+                if (!PrimaryContains(tracker))
                 {
-                    OnPrimaryZoneEntered(identifier);
+                    OnPrimaryZoneEntered(tracker);
                 }
 
                 foreach (var adjacent in _adjacentZones)
                 {
-                    adjacent.OnSecondaryZoneEntered(identifier);
+                    adjacent.OnSecondaryZoneEntered(tracker);
                 }
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (EntityIdentifier.Cache.TryGet(other.gameObject, out var identifier))
+            if (EntityTracker.Cache.TryGet(other.gameObject, out var tracker))
             {
-                OnEntityExit(identifier);
+                OnEntityExit(tracker);
             }
         }
 
-        private void OnEntityExit(EntityIdentifier identifier)
+        private void OnEntityExit(EntityTracker tracker)
         {
-            if (PrimaryContains(identifier))
+            if (PrimaryContains(tracker))
             {
-                OnPrimaryZoneExited(identifier);
+                OnPrimaryZoneExited(tracker);
             }
 
             foreach (var adjacent in _adjacentZones)
             {
-                if (adjacent.SecondaryContains(identifier))
+                if (adjacent.SecondaryContains(tracker))
                 {
-                    adjacent.OnSecondaryZoneExited(identifier);
+                    adjacent.OnSecondaryZoneExited(tracker);
                 }
             }
         }
 
-        public bool PrimaryContains(EntityIdentifier identifier)
+        public bool PrimaryContains(EntityTracker tracker)
         {
-            return _primaryEntities.Contains(identifier);
+            return _primaryEntities.Contains(tracker);
         }
 
-        public bool SecondaryContains(EntityIdentifier identifier)
+        public bool SecondaryContains(EntityTracker tracker)
         {
-            return _secondaryEntities.ContainsKey(identifier);
+            return _secondaryEntities.ContainsKey(tracker);
         }
 
         private void OnUpdateZoneState()
@@ -120,56 +120,56 @@ namespace VAT.Zones
             }
         }
 
-        private void OnPrimaryZoneEntered(EntityIdentifier identifier)
+        private void OnPrimaryZoneEntered(EntityTracker tracker)
         {
-            _primaryEntities.Add(identifier);
+            _primaryEntities.Add(tracker);
 
             OnUpdateZoneState();
 
             foreach (var component in _zoneComponents)
             {
-                component.OnPrimaryZoneEntered(identifier);
+                component.OnPrimaryZoneEntered(tracker);
             }
         }
 
-        private void OnSecondaryZoneEntered(EntityIdentifier identifier)
+        private void OnSecondaryZoneEntered(EntityTracker tracker)
         {
-            if (!_secondaryEntities.ContainsKey(identifier))
-                _secondaryEntities[identifier] = 0;
+            if (!_secondaryEntities.ContainsKey(tracker))
+                _secondaryEntities[tracker] = 0;
 
-            _secondaryEntities[identifier]++;
+            _secondaryEntities[tracker]++;
 
             OnUpdateZoneState();
 
             foreach (var component in _zoneComponents)
             {
-                component.OnSecondaryZoneEntered(identifier);
+                component.OnSecondaryZoneEntered(tracker);
             }
         }
-        private void OnPrimaryZoneExited(EntityIdentifier identifier)
+        private void OnPrimaryZoneExited(EntityTracker tracker)
         {
-            _primaryEntities.Remove(identifier);
+            _primaryEntities.Remove(tracker);
 
             OnUpdateZoneState();
 
             foreach (var component in _zoneComponents)
             {
-                component.OnPrimaryZoneExited(identifier);
+                component.OnPrimaryZoneExited(tracker);
             }
         }
 
-        private void OnSecondaryZoneExited(EntityIdentifier identifier)
+        private void OnSecondaryZoneExited(EntityTracker tracker)
         {
-            _secondaryEntities[identifier]--;
+            _secondaryEntities[tracker]--;
 
-            if (_secondaryEntities[identifier] <= 0)
-                _secondaryEntities.Remove(identifier);
+            if (_secondaryEntities[tracker] <= 0)
+                _secondaryEntities.Remove(tracker);
 
             OnUpdateZoneState();
 
             foreach (var component in _zoneComponents)
             {
-                component.OnSecondaryZoneExited(identifier);
+                component.OnSecondaryZoneExited(tracker);
             }
         }
     }
