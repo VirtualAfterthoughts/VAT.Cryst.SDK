@@ -63,7 +63,7 @@ namespace VAT.Packaging.Editor
 
             foreach (var content in AssetPackager.Instance.GetContents())
             {
-                if (content is StaticContent staticContent)
+                if (content is StaticContent staticContent && staticContent.StaticAsset.EditorAsset != null)
                 {
                     var asset = staticContent.StaticAsset.EditorAsset;
                     _assetToContent[asset] = staticContent;

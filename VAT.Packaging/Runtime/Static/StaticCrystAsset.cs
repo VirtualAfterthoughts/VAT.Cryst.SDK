@@ -21,7 +21,19 @@ namespace VAT.Packaging
     {
 #if UNITY_EDITOR
         protected Object _editorAsset;
-        public virtual Object EditorAsset { get { return _editorAsset; } set { _editorAsset = value; } }
+        public virtual Object EditorAsset { 
+            get 
+            { 
+                if (_editorAsset == null)
+                    ValidateGUID();
+
+                return _editorAsset; 
+            } 
+            set 
+            {
+                _editorAsset = value; 
+            } 
+        }
 #endif
 
         public virtual Object Asset
