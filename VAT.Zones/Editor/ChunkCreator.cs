@@ -13,7 +13,7 @@ namespace VAT.Zones.Editor
 {
     public static class ChunkCreator
     {
-        private const string _itemName = "GameObject/Crystalline/Chunks/Create New Chunk";
+        private const string _itemName = "GameObject/Crystalline/Chunks/Create Chunk";
 
         [MenuItem(_itemName, true)]
         public static bool ValidateItem()
