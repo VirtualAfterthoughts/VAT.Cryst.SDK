@@ -152,9 +152,10 @@ namespace VAT.Packaging
         {
             asset.ValidateGUID();
 
-            if (isBuilding && asset != null && asset.EditorAsset && MainPackage != null)
+            var editorAsset = asset.EditorAsset;
+            if (isBuilding && editorAsset && !editorAsset.IsAddressable())
             {
-                asset.EditorAsset.MarkAsAddressable(AddressableGroupName, address, null);
+                editorAsset.MarkAsAddressable(AddressableGroupName, address, null);
             }
         }
 

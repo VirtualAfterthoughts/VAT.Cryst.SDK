@@ -18,6 +18,23 @@ namespace VAT.Shared.Extensions {
     public static partial class AddressableExtensions {
 #if UNITY_EDITOR
         /// <summary>
+        /// Returns if this asset is marked as addressable.
+        /// </summary>
+        /// <param name="asset"></param>
+        /// <returns></returns>
+        public static bool IsAddressable(this Object asset)
+        {
+            var settings = AddressableAssetSettingsDefaultObject.Settings;
+            if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(asset, out var guid, out long localId))
+            {
+                var entry = settings.FindAssetEntry(guid);
+                return entry != null;
+            }
+            
+            return false;
+        }
+
+        /// <summary>
         /// Marks this asset as addressable.
         /// </summary>
         /// <param name="asset">The asset.</param>
