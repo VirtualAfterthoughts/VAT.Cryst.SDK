@@ -45,7 +45,10 @@ namespace VAT.Zones
 
         private void OnValidate()
         {
-            Refresh();
+            if (!Application.isPlaying)
+            {
+                Refresh();
+            }
         }
 
         private void OnUpdateEditorComponents()
@@ -74,7 +77,10 @@ namespace VAT.Zones
 
         private void OnDrawGizmos()
         {
-            Refresh();
+            if (!Application.isPlaying)
+            {
+                Refresh();
+            }
 
             if (!Application.isPlaying)
             {
