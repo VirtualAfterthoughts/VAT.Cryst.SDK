@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -15,6 +16,8 @@ namespace VAT.Entities
 
         public CrystEntity Entity => _entity;
 
+        public event Action<EntityTracker> OnEnabled, OnDisabled;
+
         private void Awake()
         {
             _entity = GetComponentInParent<CrystEntity>(true);
@@ -25,16 +28,23 @@ namespace VAT.Entities
                 enabled = false;
                 return;
             }
+
+            Cache.Add(gameObject, this);
+        }
+
+        private void OnDestroy()
+        {
+            Cache.Remove(gameObject, this);
         }
 
         private void OnEnable()
         {
-            Cache.Add(gameObject, this);
+            OnEnabled?.Invoke(this);
         }
 
         private void OnDisable()
         {
-            Cache.Remove(gameObject, this);
+            OnDisabled?.Invoke(this);
         }
     }
 }

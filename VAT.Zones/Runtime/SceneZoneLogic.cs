@@ -32,24 +32,28 @@ namespace VAT.Zones
             }
         }
 
+        public bool IsMasked(EntityType type)
+        {
+            return (_entityMask & type) != 0;
+        }
+
         private void OnEntityEnter(EntityTracker tracker)
         {
+            tracker.OnDisabled += OnEntityExit;
+
             foreach (var component in _zoneComponents)
             {
                 component.OnEntityEnter(tracker);
             }
 
-            if (tracker.Entity.EntityType == _entityMask)
+            if (!PrimaryContains(tracker))
             {
-                if (!PrimaryContains(tracker))
-                {
-                    OnPrimaryZoneEntered(tracker);
-                }
+                OnPrimaryZoneEntered(tracker);
+            }
 
-                foreach (var adjacent in _adjacentZones)
-                {
-                    adjacent.OnSecondaryZoneEntered(tracker);
-                }
+            foreach (var adjacent in _adjacentZones)
+            {
+                adjacent.OnSecondaryZoneEntered(tracker);
             }
         }
 
@@ -63,6 +67,8 @@ namespace VAT.Zones
 
         private void OnEntityExit(EntityTracker tracker)
         {
+            tracker.OnDisabled -= OnEntityExit;
+
             foreach (var component in _zoneComponents)
             {
                 component.OnEntityExit(tracker);
@@ -132,6 +138,9 @@ namespace VAT.Zones
 
         private void OnPrimaryZoneEntered(EntityTracker tracker)
         {
+            if (!IsMasked(tracker.Entity.EntityType))
+                return;
+
             _primaryEntities.Add(tracker);
 
             OnUpdateZoneState();
@@ -144,6 +153,9 @@ namespace VAT.Zones
 
         private void OnSecondaryZoneEntered(EntityTracker tracker)
         {
+            if (!IsMasked(tracker.Entity.EntityType))
+                return;
+
             if (!_secondaryEntities.ContainsKey(tracker))
                 _secondaryEntities[tracker] = 0;
 

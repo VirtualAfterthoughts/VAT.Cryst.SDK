@@ -36,8 +36,8 @@ namespace VAT.Entities
 
             OnUnloaded?.Invoke();
 
-            gameObject.SetActive(false);
             _isUnloaded = true;
+            gameObject.SetActive(false);
         }
     }
 }

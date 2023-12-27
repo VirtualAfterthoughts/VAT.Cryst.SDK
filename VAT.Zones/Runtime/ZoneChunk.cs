@@ -24,7 +24,7 @@ namespace VAT.Zones
         private StaticCrystChunk _chunk;
         private bool _hasChunk = false;
 
-        private List<EntityTracker> _entities = new();
+        private readonly List<EntityTracker> _entities = new();
 
         private void Awake()
         {
@@ -38,9 +38,13 @@ namespace VAT.Zones
 
         public override void OnEntityEnter(EntityTracker tracker)
         {
+            var entity = tracker.Entity;
+            if (entity.EntityType == EntityType.PLAYER)
+                return;
+
             _entities.TryAdd(tracker);
 
-            if (tracker.Entity.EntityType != EntityType.PLAYER && !CrystSceneManager.SceneSession.IsAdditiveLoaded(_chunk.Scene))
+            if (!CrystSceneManager.SceneSession.IsAdditiveLoaded(_chunk.Scene))
             {
                 tracker.Entity.Unload();
             }
@@ -48,6 +52,9 @@ namespace VAT.Zones
 
         public override void OnEntityExit(EntityTracker tracker)
         {
+            if (tracker.Entity.IsUnloaded)
+                return;
+
             _entities.Remove(tracker);
         }
 
@@ -59,10 +66,7 @@ namespace VAT.Zones
 
                 foreach (var entity in _entities)
                 {
-                    if (entity.Entity.EntityType != EntityType.PLAYER)
-                    {
-                        entity.Entity.Load();
-                    }
+                    entity.Entity.Load();
                 }
             }
         }
@@ -75,10 +79,7 @@ namespace VAT.Zones
 
                 foreach (var entity in _entities)
                 {
-                    if (entity.Entity.EntityType != EntityType.PLAYER)
-                    {
-                        entity.Entity.Unload();
-                    }
+                    entity.Entity.Unload();
                 }
             }
         }

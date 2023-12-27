@@ -47,6 +47,8 @@ namespace VAT.Pooling
         private void Awake()
         {
             Cache.Add(gameObject, this);
+            IDespawnable.Cache.Add(gameObject, this);
+            IRespawnable.Cache.Add(gameObject, this);
 
             _initialParent = Transform.parent;
             _spawnTransform = Transform;
@@ -54,7 +56,9 @@ namespace VAT.Pooling
 
         private void OnDestroy()
         {
-            Cache.Remove(gameObject);
+            Cache.Remove(gameObject, this);
+            IDespawnable.Cache.Remove(gameObject, this);
+            IRespawnable.Cache.Remove(gameObject, this);
         }
 
 #if UNITY_EDITOR

@@ -15,9 +15,9 @@ namespace VAT.Zones
 
         public ZoneState TriggerFlags => _triggerFlags;
 
-        public abstract void OnZoneEnabled();
+        public virtual void OnZoneEnabled() { }
 
-        public abstract void OnZoneDisabled();
+        public virtual void OnZoneDisabled() { }
 
         public virtual void OnEntityEnter(EntityTracker tracker) { }
 
