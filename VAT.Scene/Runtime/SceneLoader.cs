@@ -91,6 +91,11 @@ namespace VAT.Scene
             }
         }
 
+        public bool IsAdditiveLoaded(IWeakAsset asset)
+        {
+            return _additiveScenes.ContainsKey(asset);
+        }
+
         public async UniTask LoadAdditive(IWeakAsset asset)
         {
             if (!_additiveScenes.ContainsKey(asset))

@@ -19,6 +19,10 @@ namespace VAT.Zones
 
         public abstract void OnZoneDisabled();
 
+        public virtual void OnEntityEnter(EntityTracker tracker) { }
+
+        public virtual void OnEntityExit(EntityTracker tracker) { }
+
         public virtual void OnPrimaryZoneEntered(EntityTracker tracker) { }
 
         public virtual void OnPrimaryZoneExited(EntityTracker tracker) { }

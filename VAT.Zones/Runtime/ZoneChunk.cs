@@ -9,9 +9,10 @@ using UnityEditor.SceneManagement;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using VAT.Entities;
 using VAT.Packaging;
 using VAT.Scene;
+using VAT.Shared.Extensions;
 
 namespace VAT.Zones
 {
@@ -23,6 +24,8 @@ namespace VAT.Zones
         private StaticCrystChunk _chunk;
         private bool _hasChunk = false;
 
+        private List<EntityTracker> _entities = new();
+
         private void Awake()
         {
             AssetPackager.HookOnReady(OnReady);
@@ -33,11 +36,34 @@ namespace VAT.Zones
             _hasChunk = _chunkReference.TryGetChunk(out _chunk);
         }
 
+        public override void OnEntityEnter(EntityTracker tracker)
+        {
+            _entities.TryAdd(tracker);
+
+            if (tracker.Entity.EntityType != EntityType.PLAYER && !CrystSceneManager.SceneSession.IsAdditiveLoaded(_chunk.Scene))
+            {
+                tracker.Entity.Unload();
+            }
+        }
+
+        public override void OnEntityExit(EntityTracker tracker)
+        {
+            _entities.Remove(tracker);
+        }
+
         public override void OnZoneEnabled()
         {
             if (_hasChunk)
             {
                 CrystSceneManager.SceneSession.LoadAdditive(_chunk.Scene).Forget();
+
+                foreach (var entity in _entities)
+                {
+                    if (entity.Entity.EntityType != EntityType.PLAYER)
+                    {
+                        entity.Entity.Load();
+                    }
+                }
             }
         }
 
@@ -46,6 +72,14 @@ namespace VAT.Zones
             if (_hasChunk)
             {
                 CrystSceneManager.SceneSession.UnloadAdditive(_chunk.Scene, false).Forget();
+
+                foreach (var entity in _entities)
+                {
+                    if (entity.Entity.EntityType != EntityType.PLAYER)
+                    {
+                        entity.Entity.Unload();
+                    }
+                }
             }
         }
 

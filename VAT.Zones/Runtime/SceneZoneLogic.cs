@@ -34,6 +34,11 @@ namespace VAT.Zones
 
         private void OnEntityEnter(EntityTracker tracker)
         {
+            foreach (var component in _zoneComponents)
+            {
+                component.OnEntityEnter(tracker);
+            }
+
             if (tracker.Entity.EntityType == _entityMask)
             {
                 if (!PrimaryContains(tracker))
@@ -58,6 +63,11 @@ namespace VAT.Zones
 
         private void OnEntityExit(EntityTracker tracker)
         {
+            foreach (var component in _zoneComponents)
+            {
+                component.OnEntityExit(tracker);
+            }
+
             if (PrimaryContains(tracker))
             {
                 OnPrimaryZoneExited(tracker);
