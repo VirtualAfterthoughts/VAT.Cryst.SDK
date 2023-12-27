@@ -3,7 +3,10 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using VAT.Cryst;
+
 using VAT.Shared;
+using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 using VAT.Shared.Utilities;
 
@@ -12,7 +15,7 @@ namespace VAT.Pooling
     public delegate void AssetPoolableDelegate(AssetPoolable poolable);
     public delegate void AssetSpawnDelegate(AssetPoolable poolable, ulong id);
 
-    public class AssetPoolable : CachedMonoBehaviour
+    public class AssetPoolable : CachedMonoBehaviour, IDespawnable, IRespawnable
     {
         public static ComponentCache<AssetPoolable> Cache { get; private set; } = new ComponentCache<AssetPoolable>();
 
@@ -26,6 +29,7 @@ namespace VAT.Pooling
         public bool IsLocked => _isLocked;
 
         private Transform _initialParent;
+        private SimpleTransform _spawnTransform = SimpleTransform.Default;
 
         public virtual bool CanSpawn
         {
@@ -43,7 +47,9 @@ namespace VAT.Pooling
         private void Awake()
         {
             Cache.Add(gameObject, this);
+
             _initialParent = Transform.parent;
+            _spawnTransform = Transform;
         }
 
         private void OnDestroy()
@@ -51,11 +57,36 @@ namespace VAT.Pooling
             Cache.Remove(gameObject);
         }
 
+#if UNITY_EDITOR
+        [ContextMenu("Respawn")]
+#endif
+        public void Respawn()
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+#endif
+
+            if (!CanDespawn)
+                return;
+
+            OnDespawn();
+
+            Transform.SetPositionAndRotation(_spawnTransform.position, _spawnTransform.rotation);
+
+            GameObject.SetActive(true);
+            OnSpawn(_id);
+        }
+
         internal virtual void OnSpawn(ulong id)
         {
             _id = id;
             OnSpawnDelegate?.Invoke(this, id);
             InternalPoolSpawnDelegate?.Invoke(this);
+
+            _spawnTransform = Transform;
         }
 
 #if UNITY_EDITOR
