@@ -31,7 +31,7 @@ namespace VAT.Zones
 
         private void OnDespawnEntity(EntityTracker tracker, ZoneState state)
         {
-            var entity = tracker.Entity.gameObject;
+            var entity = tracker.Entity.GetEntityGameObject();
 
             if ((TriggerFlags & state) != 0)
             {

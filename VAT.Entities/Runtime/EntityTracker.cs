@@ -12,19 +12,19 @@ namespace VAT.Entities
     {
         public static ComponentCache<EntityTracker> Cache = new();
 
-        private CrystEntity _entity = null;
+        private IEntity _entity = null;
 
-        public CrystEntity Entity => _entity;
+        public IEntity Entity => _entity;
 
         public event Action<EntityTracker> OnEnabled, OnDisabled;
 
         private void Awake()
         {
-            _entity = GetComponentInParent<CrystEntity>(true);
+            _entity = GetComponentInParent<IEntity>(true);
 
             if (_entity == null)
             {
-                Debug.LogError($"Entity Tracker {name} is not a child of a CrystEntity!", this);
+                Debug.LogError($"Entity Tracker {name} is not a child of an Entity!", this);
                 enabled = false;
                 return;
             }
