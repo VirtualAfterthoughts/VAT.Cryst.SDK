@@ -251,18 +251,7 @@ namespace VAT.Packaging
     public class StaticCrystAssetT<T> : StaticCrystAsset, IWeakAssetT<T> where T : Object
     {
 #if UNITY_EDITOR
-        [SerializeField]
-        private T _packedAsset = null;
-
-        public override Object EditorAsset { get => _packedAsset; set => _packedAsset = value as T; }
-
-        public T EditorAssetT { get => _packedAsset; set => _packedAsset = value; }
-
-        public StaticCrystAssetT(T packedAsset)
-        {
-            _packedAsset = packedAsset;
-            ValidateGUID();
-        }
+        public T EditorAssetT => EditorAsset as T;
 #endif
 
         public T AssetT => base.Asset as T;

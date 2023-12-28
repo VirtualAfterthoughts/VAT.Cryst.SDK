@@ -27,15 +27,17 @@ namespace VAT.Packaging.Editor
         private static Dictionary<Type, List<ContentIdentifier>> _assetTypeToIdentifier;
         private static Dictionary<Object, StaticContent> _assetToContent;
 
+        private static bool _ready = false;
+
         static PackagingPostHeaderGUI()
         {
             Editor.finishedDefaultHeaderGUI += OnPostHeaderGUI;
-
-            AssetPackager.HookOnReady(OnReady);
         }
 
         private static void OnReady()
         {
+            _ready = true;
+
             _package = AssetPackager.Instance.GetPackages().FirstOrDefault();
 
             _assetTypeToIdentifier = new();
@@ -74,15 +76,24 @@ namespace VAT.Packaging.Editor
         private static void OnPostHeaderGUI(Editor editor)
         {
             if (!AssetPackager.IsReady)
-                return;
-
-            using (new GUILayout.VerticalScope())
             {
-                if (editor.targets.Length > 0)
+                return;
+            }
+            else if (!_ready)
+            {
+                OnReady();
+            }
+
+            if (EditorUtility.IsPersistent(Selection.activeObject))
+            {
+                using (new GUILayout.VerticalScope())
                 {
-                    foreach (var target in editor.targets)
+                    if (editor.targets.Length > 0)
                     {
-                        OnDrawUnityObject(target);
+                        foreach (var target in editor.targets)
+                        {
+                            OnDrawPersistentObject(target);
+                        }
                     }
                 }
             }
@@ -90,11 +101,8 @@ namespace VAT.Packaging.Editor
 
         private static Package _package;
 
-        private static void OnDrawUnityObject(Object obj)
+        private static void OnDrawPersistentObject(Object obj)
         {
-            if (obj is GameObject go && go.scene.IsValid())
-                return;
-
             if (_assetToContent.TryGetValue(obj, out var content))
             {
                 EditorGUI.BeginDisabledGroup(true);
