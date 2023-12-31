@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Cryst;
 using VAT.Entities;
+using VAT.Cryst;
 
-namespace VAT.Zones
+namespace VAT.Misc
 {
-    public sealed class ZoneDespawner : ZoneComponent
+    [RequireComponent(typeof(Collider))]
+    public sealed class EntityDespawner : MonoBehaviour
     {
         public enum DespawnType
         {
@@ -17,35 +18,39 @@ namespace VAT.Zones
         }
 
         [SerializeField]
+        private EntityType _entityMask = ~EntityType.PLAYER;
+
+        [SerializeField]
         private DespawnType _despawnType = DespawnType.DESPAWN;
 
-        public override void OnPrimaryZoneEntered(EntityTracker tracker)
-        {
-            OnDespawnEntity(tracker, ZoneState.PRIMARY);
-        }
 
-        public override void OnSecondaryZoneEntered(EntityTracker tracker)
+        private void OnTriggerEnter(Collider other)
         {
-            OnDespawnEntity(tracker, ZoneState.SECONDARY);
-        }
-
-        private void OnDespawnEntity(EntityTracker tracker, ZoneState state)
-        {
-            var entity = tracker.Entity.GetEntityGameObject();
-
-            if ((TriggerFlags & state) != 0)
+            if (EntityTracker.Cache.TryGet(other.gameObject, out var tracker))
             {
+                OnDespawnEntity(tracker);
+            }
+        }
+
+        private void OnDespawnEntity(EntityTracker tracker)
+        {
+            var entity = tracker.Entity;
+
+            if ((_entityMask & entity.EntityType) != 0)
+            {
+                var entityGameObject = entity.GetEntityGameObject();
+
                 switch (_despawnType)
                 {
                     default:
                     case DespawnType.DESPAWN:
-                        if (IDespawnable.Cache.TryGet(entity, out var despawnable))
+                        if (IDespawnable.Cache.TryGet(entityGameObject, out var despawnable))
                         {
                             despawnable.Despawn();
                         }
                         break;
                     case DespawnType.RESPAWN:
-                        if (IRespawnable.Cache.TryGet(entity, out var respawnable))
+                        if (IRespawnable.Cache.TryGet(entityGameObject, out var respawnable))
                         {
                             respawnable.Respawn();
                         }
