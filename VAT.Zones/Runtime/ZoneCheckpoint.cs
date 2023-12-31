@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.Events;
+
 using VAT.Cryst;
 using VAT.Entities;
+using VAT.Shared.Data;
 
 namespace VAT.Zones
 {
@@ -13,7 +15,7 @@ namespace VAT.Zones
         [SerializeField]
         private UnityEvent<EntityTracker> _onCheckpointActivate;
 
-        public SimpleCheckpoint CheckpointTransform => new(transform.position, transform.rotation);
+        public SimpleTransform CheckpointTransform => SimpleTransform.Create(transform.position, transform.rotation);
 
         private bool _hasBeenUsed = false;
 
