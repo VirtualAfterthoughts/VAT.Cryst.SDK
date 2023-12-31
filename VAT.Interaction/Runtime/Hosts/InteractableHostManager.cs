@@ -7,7 +7,7 @@ namespace VAT.Interaction
 {
     public class InteractableHostManager : MonoBehaviour, IHostManager
     {
-        public IReadOnlyList<IHost> Hosts => throw new System.NotImplementedException();
+        public IReadOnlyList<IHost> Hosts => _hosts;
 
         private readonly List<IHost> _hosts = new();
 

@@ -6,6 +6,8 @@ using UnityEngine;
 using VAT.Shared.Extensions;
 using VAT.Shared;
 using VAT.Packaging;
+using VAT.Shared.Data;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -90,6 +92,17 @@ namespace VAT.Pooling
                 if (content.MainAssetT != null && content.MainAssetT.EditorAssetT != null)
                 {
                     var go = content.MainAssetT.EditorAssetT;
+                    SimpleTransform transform;
+
+                    if (!_useScale)
+                    {
+                        transform = SimpleTransform.Create(this.transform.position, this.transform.rotation, go.transform.lossyScale);
+                    }
+                    else
+                    {
+                        transform = this.transform;
+                    }
+
                     go.DrawGameObject(transform, Color.green, false);
                     return;
                 }
