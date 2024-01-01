@@ -16,7 +16,27 @@ namespace VAT.Packaging.Editor
         {
             this.shippable = shippable;
             this.displayName = shippable.Info.Title;
-            this.icon = EditorGUIUtility.GetIconForObject(shippable);
+
+            Texture2D icon;
+            if (shippable is Content content && content.MainAsset.EditorAsset != null)
+            {
+                var obj = content.MainAsset.EditorAsset;
+
+                if (obj is GameObject go)
+                {
+                    icon = AssetPreview.GetAssetPreview(go);
+                }
+                else
+                {
+                    icon = AssetPreview.GetMiniThumbnail(obj);
+                }
+            }
+            else
+            {
+                icon = EditorGUIUtility.GetIconForObject(shippable);
+            }
+
+            this.icon = icon;
         }
     }
 }
