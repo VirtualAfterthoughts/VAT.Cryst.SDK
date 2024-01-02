@@ -12,5 +12,15 @@ namespace VAT.Packaging
 #if UNITY_EDITOR
         public override Type EditorContentType => typeof(StaticLevelContent);
 #endif
+
+        public LevelContentReference() 
+        {
+            _address = Address.EMPTY;
+        }
+
+        public LevelContentReference(Address address)
+        {
+            _address = address;
+        }
     }
 }

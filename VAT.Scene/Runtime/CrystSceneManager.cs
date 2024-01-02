@@ -9,35 +9,30 @@ using VAT.Packaging;
 
 namespace VAT.Scene
 {
+    public struct SceneLoadOptions
+    {
+        public static readonly SceneLoadOptions Default = new()
+        {
+            loadLevel = new LevelContentReference(),
+        };
+
+        public LevelContentReference loadLevel;
+    }
+
     public static class CrystSceneManager
     {
         private static SceneLoader _sceneSession = new();
 
         public static SceneLoader SceneSession => _sceneSession;
 
-        public static void LoadLevel(string levelAddress)
-        {
-            var level = new LevelContentReference() { Address = levelAddress };
-
-            LoadLevel(level, null);
-        }
-
-        public static void LoadLevel(string levelAddress, string loadLevelAddress)
-        {
-            var level = new LevelContentReference() { Address = levelAddress };
-            var loadLevel = new LevelContentReference() { Address = loadLevelAddress };
-
-            LoadLevel(level, loadLevel);
-        }
-
         public static void LoadLevel(LevelContentReference level)
         {
-            LoadLevel(level, null);
+            LoadLevel(level, SceneLoadOptions.Default);
         }
 
-        public static void LoadLevel(LevelContentReference level, LevelContentReference loadLevel)
+        public static void LoadLevel(LevelContentReference level, SceneLoadOptions options)
         {
-            loadLevel.TryGetContent(out var loadLevelContent);
+            options.loadLevel.TryGetContent(out var loadLevelContent);
 
             if (level.TryGetContent(out var levelContent))
             {

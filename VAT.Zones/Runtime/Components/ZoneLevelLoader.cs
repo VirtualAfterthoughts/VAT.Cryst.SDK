@@ -12,10 +12,10 @@ namespace VAT.Zones
     public sealed class ZoneLevelLoader : ZoneComponent
     {
         [SerializeField]
-        private LevelContentReference _levelContentReference;
+        private LevelContentReference _level;
 
         [SerializeField]
-        private LevelContentReference _loadLevelContentReference;
+        private LevelContentReference _loadLevel;
 
         [SerializeField]
         private UnityEvent<ILevelContent> _onLoadLevel;
@@ -34,11 +34,16 @@ namespace VAT.Zones
                 return;
             }
 
-            if (_levelContentReference.TryGetContent(out var content))
+            if (_level.TryGetContent(out var content))
             {
                 _onLoadLevel?.Invoke(content);
 
-                CrystSceneManager.LoadLevel(_levelContentReference, _loadLevelContentReference);
+                var options = new SceneLoadOptions()
+                {
+                    loadLevel = _loadLevel,
+                };
+
+                CrystSceneManager.LoadLevel(_level, options);
 
                 _hasLoadedLevel = true;
             }

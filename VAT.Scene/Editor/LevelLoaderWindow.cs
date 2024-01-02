@@ -51,7 +51,12 @@ namespace VAT.Scene.Editor
                     if (_loadLevel != null)
                         loadLevel = _loadLevel.Address;
 
-                    CrystSceneManager.LoadLevel(level, loadLevel);
+                    var options = new SceneLoadOptions()
+                    {
+                        loadLevel = new LevelContentReference(loadLevel),
+                    };
+
+                    CrystSceneManager.LoadLevel(new LevelContentReference(level), options);
                 }
                 else
                 {
