@@ -20,13 +20,27 @@ namespace VAT.Zones
         [SerializeField]
         private UnityEvent<ILevelContent> _onLoadLevel;
 
+        private bool _hasLoadedLevel = false;
+
+        public override void OnZoneEnabled()
+        {
+            LoadLevel();
+        }
+
         public void LoadLevel()
         {
+            if (_hasLoadedLevel)
+            {
+                return;
+            }
+
             if (_levelContentReference.TryGetContent(out var content))
             {
                 _onLoadLevel?.Invoke(content);
 
                 CrystSceneManager.LoadLevel(_levelContentReference, _loadLevelContentReference);
+
+                _hasLoadedLevel = true;
             }
             else
             {

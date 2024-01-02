@@ -42,7 +42,13 @@ namespace VAT.Packaging
 
         public StaticCrystScene MainScene { get { return _mainAsset; } set { _mainAsset = value; } }
 
-        public List<StaticCrystChunk> Chunks { get { return _chunkScenes; } }
+        public List<StaticCrystChunk> Chunks { 
+            get {
+                _chunkScenes ??= new();
+
+                return _chunkScenes; 
+            } 
+        }
 
         public bool TryGetChunk(string name, out StaticCrystChunk chunk)
         {
