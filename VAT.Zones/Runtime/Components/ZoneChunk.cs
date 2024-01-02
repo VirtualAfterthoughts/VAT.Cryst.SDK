@@ -44,7 +44,7 @@ namespace VAT.Zones
 
             _entities.TryAdd(tracker);
 
-            if (!CrystSceneManager.SceneSession.IsAdditiveLoaded(_chunk.Scene))
+            if (_hasChunk && !CrystSceneManager.SceneSession.IsAdditiveLoaded(_chunk.Scene))
             {
                 tracker.Entity.Unload();
             }
