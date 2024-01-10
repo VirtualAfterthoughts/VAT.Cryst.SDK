@@ -2,7 +2,8 @@
     "name": "VAT.Entities.Editor",
     "rootNamespace": "VAT.Entities.Editor",
     "references": [
-        "GUID:005565b7d7d189d489e6c8ea78e83a9c"
+        "GUID:005565b7d7d189d489e6c8ea78e83a9c",
+        "GUID:2c5da6b5cc71c8446a65082f325dc51b"
     ],
     "includePlatforms": [
         "Editor"

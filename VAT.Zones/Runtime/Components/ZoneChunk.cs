@@ -24,7 +24,7 @@ namespace VAT.Zones
         private StaticCrystChunk _chunk;
         private bool _hasChunk = false;
 
-        private readonly List<EntityTracker> _entities = new();
+        private readonly List<CrystEntityTracker> _entities = new();
 
         private void Awake()
         {
@@ -36,10 +36,10 @@ namespace VAT.Zones
             _hasChunk = _chunkReference.TryGetChunk(out _chunk);
         }
 
-        public override void OnEntityEnter(EntityTracker tracker)
+        public override void OnEntityEnter(CrystEntityTracker tracker)
         {
             var entity = tracker.Entity;
-            if (entity.EntityType == EntityType.PLAYER)
+            if (entity.EntityType == CrystEntityType.PLAYER)
                 return;
 
             _entities.TryAdd(tracker);
@@ -50,7 +50,7 @@ namespace VAT.Zones
             }
         }
 
-        public override void OnEntityExit(EntityTracker tracker)
+        public override void OnEntityExit(CrystEntityTracker tracker)
         {
             if (tracker.Entity.IsUnloaded)
                 return;

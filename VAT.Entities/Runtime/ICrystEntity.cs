@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace VAT.Entities
 {
-    public interface IEntity
+    public interface ICrystEntity
     {
-        EntityType EntityType { get; }
+        CrystEntityType EntityType { get; }
 
         event Action OnLoaded, OnUnloaded;
 

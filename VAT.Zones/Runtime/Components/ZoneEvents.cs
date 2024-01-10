@@ -13,7 +13,7 @@ namespace VAT.Zones
     public sealed class ZoneEvents : ZoneComponent
     {
         [Serializable]
-        public class ZoneEvent : UnityEvent<EntityTracker> { }
+        public class ZoneEvent : UnityEvent<CrystEntityTracker> { }
 
         [Serializable]
         public struct ZoneEventGroup
@@ -41,22 +41,22 @@ namespace VAT.Zones
             onZoneDisabled.Invoke();
         }
 
-        public override void OnPrimaryZoneEntered(EntityTracker tracker)
+        public override void OnPrimaryZoneEntered(CrystEntityTracker tracker)
         {
             primaryEvents.onEntered.Invoke(tracker);
         }
 
-        public override void OnPrimaryZoneExited(EntityTracker tracker)
+        public override void OnPrimaryZoneExited(CrystEntityTracker tracker)
         {
             primaryEvents.onExited.Invoke(tracker);
         }
 
-        public override void OnSecondaryZoneEntered(EntityTracker tracker)
+        public override void OnSecondaryZoneEntered(CrystEntityTracker tracker)
         {
             secondaryEvents.onEntered.Invoke(tracker);
         }
 
-        public override void OnSecondaryZoneExited(EntityTracker tracker)
+        public override void OnSecondaryZoneExited(CrystEntityTracker tracker)
         {
             secondaryEvents.onExited.Invoke(tracker);
         }

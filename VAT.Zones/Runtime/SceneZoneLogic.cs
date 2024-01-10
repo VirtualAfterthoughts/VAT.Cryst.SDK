@@ -12,8 +12,8 @@ namespace VAT.Zones
 {
     public partial class SceneZone : CachedMonoBehaviour
     {
-        private readonly List<EntityTracker> _primaryEntities = new();
-        private readonly Dictionary<EntityTracker, int> _secondaryEntities = new();
+        private readonly List<CrystEntityTracker> _primaryEntities = new();
+        private readonly Dictionary<CrystEntityTracker, int> _secondaryEntities = new();
 
         private ZoneState _state;
         public ZoneState State
@@ -26,18 +26,18 @@ namespace VAT.Zones
 
         private void OnTriggerEnter(Collider other)
         {
-            if (EntityTracker.Cache.TryGet(other.gameObject, out var tracker))
+            if (CrystEntityTracker.Cache.TryGet(other.gameObject, out var tracker))
             {
                 OnEntityEnter(tracker);
             }
         }
 
-        public bool IsMasked(EntityType type)
+        public bool IsMasked(CrystEntityType type)
         {
             return (_entityMask & type) != 0;
         }
 
-        private void OnEntityEnter(EntityTracker tracker)
+        private void OnEntityEnter(CrystEntityTracker tracker)
         {
             tracker.OnDisabled += OnEntityExit;
 
@@ -59,13 +59,13 @@ namespace VAT.Zones
 
         private void OnTriggerExit(Collider other)
         {
-            if (EntityTracker.Cache.TryGet(other.gameObject, out var tracker))
+            if (CrystEntityTracker.Cache.TryGet(other.gameObject, out var tracker))
             {
                 OnEntityExit(tracker);
             }
         }
 
-        private void OnEntityExit(EntityTracker tracker)
+        private void OnEntityExit(CrystEntityTracker tracker)
         {
             tracker.OnDisabled -= OnEntityExit;
 
@@ -88,12 +88,12 @@ namespace VAT.Zones
             }
         }
 
-        public bool PrimaryContains(EntityTracker tracker)
+        public bool PrimaryContains(CrystEntityTracker tracker)
         {
             return _primaryEntities.Contains(tracker);
         }
 
-        public bool SecondaryContains(EntityTracker tracker)
+        public bool SecondaryContains(CrystEntityTracker tracker)
         {
             return _secondaryEntities.ContainsKey(tracker);
         }
@@ -136,7 +136,7 @@ namespace VAT.Zones
             }
         }
 
-        private void OnPrimaryZoneEntered(EntityTracker tracker)
+        private void OnPrimaryZoneEntered(CrystEntityTracker tracker)
         {
             if (!IsMasked(tracker.Entity.EntityType))
                 return;
@@ -151,7 +151,7 @@ namespace VAT.Zones
             }
         }
 
-        private void OnSecondaryZoneEntered(EntityTracker tracker)
+        private void OnSecondaryZoneEntered(CrystEntityTracker tracker)
         {
             if (!IsMasked(tracker.Entity.EntityType))
                 return;
@@ -168,7 +168,7 @@ namespace VAT.Zones
                 component.OnSecondaryZoneEntered(tracker);
             }
         }
-        private void OnPrimaryZoneExited(EntityTracker tracker)
+        private void OnPrimaryZoneExited(CrystEntityTracker tracker)
         {
             _primaryEntities.Remove(tracker);
 
@@ -180,7 +180,7 @@ namespace VAT.Zones
             }
         }
 
-        private void OnSecondaryZoneExited(EntityTracker tracker)
+        private void OnSecondaryZoneExited(CrystEntityTracker tracker)
         {
             _secondaryEntities[tracker]--;
 

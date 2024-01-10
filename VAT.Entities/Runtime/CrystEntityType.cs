@@ -7,7 +7,7 @@ using UnityEngine;
 namespace VAT.Entities
 {
     [Flags]
-    public enum EntityType
+    public enum CrystEntityType
     {
         /// <summary>
         /// A generalized entity, such as an object or particle.

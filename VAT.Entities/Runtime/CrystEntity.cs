@@ -5,15 +5,15 @@ using UnityEngine;
 
 namespace VAT.Entities
 {
-    public class CrystEntity : MonoBehaviour, IEntity
+    public class CrystEntity : MonoBehaviour, ICrystEntity
     {
         [SerializeField]
-        private EntityType _entityType = EntityType.MISC;
+        private CrystEntityType _entityType = CrystEntityType.MISC;
 
         [SerializeField]
         private bool _autoSetupTrackers = true;
 
-        public EntityType EntityType => _entityType;
+        public CrystEntityType EntityType => _entityType;
 
         private bool _isUnloaded = false;
 
@@ -27,9 +27,9 @@ namespace VAT.Entities
             {
                 foreach (var collider in GetComponentsInChildren<Collider>())
                 {
-                    if (!collider.TryGetComponent<EntityTracker>(out _))
+                    if (!collider.TryGetComponent<CrystEntityTracker>(out _))
                     {
-                        collider.gameObject.AddComponent<EntityTracker>();
+                        collider.gameObject.AddComponent<CrystEntityTracker>();
                     }
                 }
             }

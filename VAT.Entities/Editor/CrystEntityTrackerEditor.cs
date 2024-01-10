@@ -6,19 +6,19 @@ namespace VAT.Entities.Editor
 {
     using UnityEditor;
 
-    [CustomEditor(typeof(EntityTracker))]
-    public class EntityTrackerEditor : Editor
+    [CustomEditor(typeof(CrystEntityTracker))]
+    public class CrystEntityTrackerEditor : Editor
     {
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
 
-            var tracker = (EntityTracker)target;
+            var tracker = (CrystEntityTracker)target;
 
             var entity = tracker.GetComponentInParent<CrystEntity>(true);
             if (!entity)
             {
-                EditorGUILayout.HelpBox("This EntityTracker is not part of a CrystEntity! Please add a CrystEntity to the root GameObject.", MessageType.Error);
+                EditorGUILayout.HelpBox("This CrystEntityTracker is not part of a CrystEntity! Please add a CrystEntity to the root GameObject.", MessageType.Error);
             }
             else
             {

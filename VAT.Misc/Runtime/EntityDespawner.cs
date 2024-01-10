@@ -18,7 +18,7 @@ namespace VAT.Misc
         }
 
         [SerializeField]
-        private EntityType _entityMask = ~EntityType.PLAYER;
+        private CrystEntityType _entityMask = ~CrystEntityType.PLAYER;
 
         [SerializeField]
         private DespawnType _despawnType = DespawnType.DESPAWN;
@@ -26,13 +26,13 @@ namespace VAT.Misc
 
         private void OnTriggerEnter(Collider other)
         {
-            if (EntityTracker.Cache.TryGet(other.gameObject, out var tracker))
+            if (CrystEntityTracker.Cache.TryGet(other.gameObject, out var tracker))
             {
                 OnDespawnEntity(tracker);
             }
         }
 
-        private void OnDespawnEntity(EntityTracker tracker)
+        private void OnDespawnEntity(CrystEntityTracker tracker)
         {
             var entity = tracker.Entity;
 

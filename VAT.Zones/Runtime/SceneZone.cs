@@ -29,7 +29,7 @@ namespace VAT.Zones
         private BoxCollider _zoneCollider;
 
         [SerializeField]
-        private EntityType _entityMask = EntityType.PLAYER;
+        private CrystEntityType _entityMask = CrystEntityType.PLAYER;
 
         [SerializeField]
         private SceneZone[] _adjacentZones;

@@ -8,19 +8,19 @@ using VAT.Shared.Utilities;
 namespace VAT.Entities
 {
     [RequireComponent(typeof(Collider))]
-    public class EntityTracker : MonoBehaviour
+    public class CrystEntityTracker : MonoBehaviour
     {
-        public static ComponentCache<EntityTracker> Cache = new();
+        public static ComponentCache<CrystEntityTracker> Cache = new();
 
-        private IEntity _entity = null;
+        private ICrystEntity _entity = null;
 
-        public IEntity Entity => _entity;
+        public ICrystEntity Entity => _entity;
 
-        public event Action<EntityTracker> OnEnabled, OnDisabled;
+        public event Action<CrystEntityTracker> OnEnabled, OnDisabled;
 
         private void Awake()
         {
-            _entity = GetComponentInParent<IEntity>(true);
+            _entity = GetComponentInParent<ICrystEntity>(true);
 
             if (_entity == null)
             {

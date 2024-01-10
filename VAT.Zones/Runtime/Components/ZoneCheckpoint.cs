@@ -13,13 +13,13 @@ namespace VAT.Zones
     public sealed class ZoneCheckpoint : ZoneComponent, ICheckpoint
     {
         [SerializeField]
-        private UnityEvent<EntityTracker> _onCheckpointActivate;
+        private UnityEvent<CrystEntityTracker> _onCheckpointActivate;
 
         public SimpleTransform CheckpointTransform => SimpleTransform.Create(transform.position, transform.rotation);
 
         private bool _hasBeenUsed = false;
 
-        public override void OnPrimaryZoneEntered(EntityTracker tracker)
+        public override void OnPrimaryZoneEntered(CrystEntityTracker tracker)
         {
             if (_hasBeenUsed)
                 return;
