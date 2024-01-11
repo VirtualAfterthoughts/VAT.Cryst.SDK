@@ -6,13 +6,15 @@ using UnityEngine;
 
 namespace VAT.Entities
 {
-    public interface ICrystEntity
+    public interface ICrystEntity : IFreezable
     {
         CrystEntityType EntityType { get; }
 
         event Action OnLoaded, OnUnloaded;
 
         bool IsUnloaded { get; }
+
+        CrystEntityHierarchy Hierarchy { get; }
 
         GameObject GetEntityGameObject();
 

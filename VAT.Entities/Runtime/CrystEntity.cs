@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace VAT.Entities
 {
+    [SelectionBase]
     public class CrystEntity : MonoBehaviour, ICrystEntity
     {
         [SerializeField]
@@ -18,6 +19,9 @@ namespace VAT.Entities
         private bool _isUnloaded = false;
 
         public bool IsUnloaded => _isUnloaded;
+
+        private readonly CrystEntityHierarchy _hierarchy = new();
+        public CrystEntityHierarchy Hierarchy => _hierarchy;
 
         public event Action OnLoaded, OnUnloaded;
 
@@ -40,6 +44,7 @@ namespace VAT.Entities
             return gameObject;
         }
 
+        [ContextMenu("Load")]
         public void Load()
         {
             if (!IsUnloaded)
@@ -51,6 +56,7 @@ namespace VAT.Entities
             OnLoaded?.Invoke();
         }
 
+        [ContextMenu("Unload")]
         public void Unload()
         {
             if (IsUnloaded)
@@ -60,6 +66,24 @@ namespace VAT.Entities
 
             _isUnloaded = true;
             gameObject.SetActive(false);
+        }
+
+        [ContextMenu("Freeze")]
+        public void Freeze()
+        {
+            foreach (var body in _hierarchy.Bodies)
+            {
+                body.Freeze();
+            }
+        }
+
+        [ContextMenu("Unfreeze")]
+        public void Unfreeze()
+        {
+            foreach (var body in _hierarchy.Bodies)
+            {
+                body.Unfreeze();
+            }
         }
     }
 }

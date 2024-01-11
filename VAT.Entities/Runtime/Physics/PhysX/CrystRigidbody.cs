@@ -97,6 +97,22 @@ namespace VAT.Entities.PhysX
             }
         }
 
+        public override void Freeze()
+        {
+            if (HasBody)
+            {
+                _rigidbody.isKinematic = true;
+            }
+        }
+
+        public override void Unfreeze()
+        {
+           if (_hasBody)
+            {
+                _rigidbody.isKinematic = _info.isKinematic;
+            }
+        }
+
 #if UNITY_EDITOR
         private void Reset() {
             _hasBody = TryGetComponent(out _rigidbody);

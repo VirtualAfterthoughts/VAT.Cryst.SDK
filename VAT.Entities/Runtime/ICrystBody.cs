@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace VAT.Entities
 {
-    public interface ICrystBody
+    public interface ICrystBody : IFreezable
     {
         float Mass { get; set; }
 
