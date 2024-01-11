@@ -107,7 +107,7 @@ namespace VAT.Entities.PhysX
 
         public override void Unfreeze()
         {
-           if (_hasBody)
+            if (_hasBody)
             {
                 _rigidbody.isKinematic = _info.isKinematic;
             }
