@@ -9,9 +9,11 @@ namespace VAT.Entities
     public class CrystEntity : MonoBehaviour, ICrystEntity
     {
         [SerializeField]
+        [Tooltip("The type of entity this is. Defaults to MISC.")]
         private CrystEntityType _entityType = CrystEntityType.MISC;
 
         [SerializeField]
+        [Tooltip("Disable this if you want to manually add CrystEntityTrackers to colliders. Defaults to true.")]
         private bool _autoSetupTrackers = true;
 
         public CrystEntityType EntityType => _entityType;
