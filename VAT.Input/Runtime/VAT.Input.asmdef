@@ -1,0 +1,17 @@
+{
+    "name": "VAT.Input",
+    "rootNamespace": "VAT.Input",
+    "references": [
+        "GUID:2c5da6b5cc71c8446a65082f325dc51b",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
