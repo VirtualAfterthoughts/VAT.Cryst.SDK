@@ -73,6 +73,8 @@ namespace VAT.Avatars.Skeletal
             velocity = PhysicsExtensions.GetLinearVelocity(_lastFeetCenter, postFeetPos);
             _lastFeetCenter = postFeetPos;
 
+            velocity.y = 0f;
+
             // Presolve the locomotors
             for (var i = 0; i < Locomotors.Length; i++) {
                 Locomotors[i].PreSolve(_sacrum.Transform, _feetCenter.Transform, velocity);
