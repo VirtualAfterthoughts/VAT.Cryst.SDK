@@ -63,10 +63,7 @@ namespace VAT.Avatars.Muscular
             var kneeTarget = Knee.Parent.TransformBone(_leg.Knee.Parent, _leg.Knee);
             Knee.Solve(kneeTarget);
 
-            var dataTransform = SimpleTransform.Create(_pivotData.Transform.position, _leg.Knee.rotation);
-            var pivotTransform = SimpleTransform.Create(_pivot.Transform.position, Knee.Transform.rotation);
-            
-            var position = pivotTransform.TransformPoint(dataTransform.InverseTransformPoint(_leg.Knee.position));
+            Knee.SetConnectedAnchor(kneeTarget.position);
 
             var dataKnee = _leg.Knee.Transform;
             var physKnee = Knee.Transform;
@@ -76,8 +73,6 @@ namespace VAT.Avatars.Muscular
 
             var footVelocity = physKnee.TransformDirection(dataKnee.InverseTransformDirection(PhysicsExtensions.GetLinearVelocity(_lastDistance, distance)));
             _lastDistance = distance;
-
-            Knee.SetConnectedAnchor(position);
 
             var footTarget = Knee.TransformBone(_leg.Knee, _leg.Foot);
             Fender.Solve(footTarget);
