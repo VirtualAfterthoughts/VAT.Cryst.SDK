@@ -203,7 +203,7 @@ namespace VAT.Avatars.Skeletal
 
             _threshold = Mathf.Lerp(0.6f, 0.43f, _velocity.magnitude / (12f * _legMultiplier));
 
-            _stepSpeed = Mathf.Lerp(1f, 2f, _velocity.magnitude / (12f * _legMultiplier)) * _legMultiplier;
+            _stepSpeed = Mathf.Lerp(0.5f, 2f, _velocity.magnitude / (12f * _legMultiplier)) * _legMultiplier;
 
             // Get the resting foot position and rotation
             _resting = SimpleTransform.Create(feetCenter.position + feetCenter.right * _hipOffset, feetCenter.rotation);
