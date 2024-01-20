@@ -55,8 +55,9 @@ namespace VAT.Avatars.Nervous {
             {
                 Handedness.LEFT => new IArm[] { LeftArm },
                 Handedness.RIGHT => new IArm[] { RightArm },
+                Handedness.BOTH => new IArm[] { LeftArm, RightArm },
                 _ => Array.Empty<IArm>(),
-            };
+            };;
         }
 
         public readonly SimpleTransform[] GetHeads()
