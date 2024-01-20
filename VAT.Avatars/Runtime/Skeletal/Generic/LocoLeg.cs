@@ -23,6 +23,8 @@ namespace VAT.Avatars.Skeletal
 
         public Vector3 velocity;
 
+        private Vector3 _trackedDebt;
+
         private Vector3 _localHead;
 
         public override void BindPose() {
@@ -42,7 +44,7 @@ namespace VAT.Avatars.Skeletal
 
             _avatarPayload.TryGetHead(out SimpleTransform head);
 
-            velocity = PhysicsExtensions.GetLinearVelocity(root.TransformPoint(_localHead), head.position);
+            _trackedDebt += (Vector3)PhysicsExtensions.GetLinearVelocity(root.TransformPoint(_localHead), head.position);
             _localHead = root.InverseTransformPoint(head.position);
 
             var parent = Knee.Parent;
@@ -54,6 +56,10 @@ namespace VAT.Avatars.Skeletal
 
             float distanceToFloor = root.InverseTransformPoint(Knee.position).y;
             Foot.localPosition = down() * distanceToFloor;
+
+            var debt = _trackedDebt * 0.25f;
+            velocity = debt;
+            _trackedDebt -= debt;
 
             if (_avatarPayload.TryGetInput(out var input)) {
                 var movement = input.GetMovement();
