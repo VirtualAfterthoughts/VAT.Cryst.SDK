@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars.Muscular;
+using VAT.Avatars.REWORK;
 using VAT.Avatars.Skeletal;
 
 namespace VAT.Avatars.Art
 {
-    public class HumanoidArtHand : HumanoidArtBoneGroupT<HumanoidHandDescriptor, HumanoidHand, HumanoidPhysArm>
+    public class HumanoidArtHand : HumanoidArtBoneGroupT<HumanoidHandDescriptor, IHumanHand>
     {
         public override int BoneCount => 1;
 
-        public ArtBone Hand => Bones[0];
+        public ArtBone Hand => Bones[0] as ArtBone;
 
         private HumanoidArtFinger[] _fingers = null;
         public HumanoidArtFinger[] Fingers => _fingers;
@@ -29,7 +30,7 @@ namespace VAT.Avatars.Art
 
         public override void Solve()
         {
-            Hand.Solve(PhysGroup.Hand.Transform);
+            Hand.Solve(BoneGroup.Hand.Transform);
 
             for (var i = 0; i < _fingers.Length; i++) {
                 _fingers[i].Solve();
@@ -43,34 +44,34 @@ namespace VAT.Avatars.Art
             }
         }
 
-        public override void WriteData(HumanoidHand dataGroup, HumanoidPhysArm physGroup) {
-            base.WriteData(dataGroup, physGroup);
+        public override void WriteData(IHumanHand boneGroup) {
+            base.WriteData(boneGroup);
 
-            int fingerIndex = 0;
-            for (var i = 0; i < _fingers.Length; i++) {
-                if (fingerIndex >= dataGroup.Fingers.Length) {
-                    fingerIndex = 0;
-                }
-
-                _fingers[i].WriteData(dataGroup.Fingers[fingerIndex], physGroup);
-                
-                fingerIndex++;
-            }
+            // int fingerIndex = 0;
+            // for (var i = 0; i < _fingers.Length; i++) {
+            //     if (fingerIndex >= dataGroup.Fingers.Length) {
+            //         fingerIndex = 0;
+            //     }
+            // 
+            //     _fingers[i].WriteData(dataGroup.Fingers[fingerIndex], physGroup);
+            //     
+            //     fingerIndex++;
+            // }
         }
 
-        public override void WriteOffsets(HumanoidHand dataGroup) {
-            Hand.WriteOffset(dataGroup.Hand);
+        public override void WriteOffsets(IHumanHand boneGroup) {
+            Hand.WriteOffset(boneGroup.Hand);
 
-            int fingerIndex = 0;
-            for (var i = 0; i < _fingers.Length; i++) {
-                if (fingerIndex >= dataGroup.Fingers.Length) {
-                    fingerIndex = 0;
-                }
-
-                _fingers[i].WriteOffsets(dataGroup.Fingers[fingerIndex]);
-
-                fingerIndex++;
-            }
+            // int fingerIndex = 0;
+            // for (var i = 0; i < _fingers.Length; i++) {
+            //     if (fingerIndex >= boneGroup.Fingers.Length) {
+            //         fingerIndex = 0;
+            //     }
+            // 
+            //     _fingers[i].WriteOffsets(boneGroup.Fingers[fingerIndex]);
+            // 
+            //     fingerIndex++;
+            // }
         }
 
         public override void WriteTransforms(HumanoidHandDescriptor artDescriptorGroup)

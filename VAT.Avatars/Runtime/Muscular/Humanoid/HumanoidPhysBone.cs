@@ -59,16 +59,6 @@ namespace VAT.Avatars.Muscular
             InsertCollider(_meshCollider);
         }
 
-        public override void SetMass(float kg) {
-            Rigidbody rigidbody = ConfigurableJoint.Rigidbody;
-            rigidbody.mass = kg;
-
-            rigidbody.inertiaTensor = 0.1f * kg * Vector3.one;
-            rigidbody.inertiaTensorRotation = Quaternion.identity;
-
-            rigidbody.ResetCenterOfMass();
-        }
-
         public void ConfigureJoint() {
             // Setup positional forces
             JointDrive positionDrive = default;
@@ -82,8 +72,8 @@ namespace VAT.Avatars.Muscular
             joint.slerpDrive = new JointDrive()
             {
                 positionSpring = 5e+06f,
-                positionDamper = 1e+05f,
-                maximumForce = 12000f * mass,
+                positionDamper = 2e+05f,
+                maximumForce = 1200f * mass,
             };
         }
 

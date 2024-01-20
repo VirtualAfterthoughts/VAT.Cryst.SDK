@@ -8,11 +8,15 @@ using VAT.Input;
 
 using VAT.Avatars.Nervous;
 
+using VAT.Avatars.REWORK;
+
 namespace VAT.Avatars.Skeletal
 {
     public abstract class DataBoneSkeleton : ISkeleton, IRigT<DataBone> {
         public abstract DataBoneGroup[] BoneGroups { get; }
         public abstract int BoneGroupCount { get; }
+
+        IBoneGroup[] ISkeleton.BoneGroups => BoneGroups;
 
         public virtual void Write(IAvatarPayload payload) {
             foreach (var group in BoneGroups) {
@@ -87,6 +91,11 @@ namespace VAT.Avatars.Skeletal
                     group.DrawGizmos();
                 }
             }
+        }
+
+        void ISkeleton.Deinitiate()
+        {
+            
         }
 #endif
     }

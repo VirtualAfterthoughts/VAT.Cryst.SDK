@@ -21,7 +21,7 @@ namespace VAT.Avatars
         public HumanoidAvatarHand(HumanoidHand hand, HumanoidPhysArm physArm) {
             Handedness = physArm.isLeft ? Handedness.LEFT : Handedness.RIGHT;
             DataHand = hand.Hand;
-            PhysHand = physArm.Hand;
+            PhysHand = physArm.Hand.Hand;
         }
     }
 }

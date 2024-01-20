@@ -9,12 +9,16 @@ using VAT.Cryst;
 using VAT.Input;
 using VAT.Shared.Data;
 
+using VAT.Avatars.REWORK;
+
 namespace VAT.Avatars.Muscular
 {
     public abstract class PhysBoneSkeleton : ISkeleton, IRigT<PhysBone> {
         public abstract int BoneGroupCount { get; }
 
         public abstract PhysBoneGroup[] BoneGroups { get; }
+
+        IBoneGroup[] ISkeleton.BoneGroups => BoneGroups;
 
         public abstract void Initiate();
 
@@ -84,5 +88,20 @@ namespace VAT.Avatars.Muscular
         public abstract PhysBone GetRoot();
 
         public abstract SimpleTransform GetFloor();
+
+        void ISkeleton.Initiate()
+        {
+            throw new NotImplementedException();
+        }
+
+        void ISkeleton.Deinitiate()
+        {
+            throw new NotImplementedException();
+        }
+
+        void ISkeleton.Solve()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

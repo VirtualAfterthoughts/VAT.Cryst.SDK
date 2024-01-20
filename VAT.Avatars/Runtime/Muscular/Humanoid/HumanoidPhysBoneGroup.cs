@@ -12,7 +12,7 @@ namespace VAT.Avatars.Muscular
     public abstract class HumanoidPhysBoneGroup : PhysBoneGroupT<HumanoidPhysBone> {
         public void SetTransformRoot(Transform root) {
             for (var i = 0; i < BoneCount; i++)
-                Bones[i].SetTransformRoot(root);
+                (Bones[i] as HumanoidPhysBone).SetTransformRoot(root);
 
             for (var i = 0; i < SubGroupCount; i++) {
                 if (SubGroups[i] is HumanoidPhysBoneGroup group)

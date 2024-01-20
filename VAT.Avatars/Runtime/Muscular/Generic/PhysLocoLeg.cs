@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-
+using VAT.Avatars.REWORK;
 using VAT.Avatars.Skeletal;
 
 using VAT.Cryst.Interfaces;
@@ -18,12 +18,12 @@ namespace VAT.Avatars.Muscular
     {
         public override int BoneCount => 3;
 
-        public RigidbodyPhysBone Knee => Bones[0];
-        public RigidbodyPhysBone Fender => Bones[1];
-        public RigidbodyPhysBone Foot => Bones[2];
+        public RigidbodyPhysBone Knee => Bones[0] as RigidbodyPhysBone;
+        public RigidbodyPhysBone Fender => Bones[1] as RigidbodyPhysBone;
+        public RigidbodyPhysBone Foot => Bones[2] as RigidbodyPhysBone;
 
         public PhysBone _pivot;
-        public DataBone _pivotData;
+        public IBone _pivotData;
 
         private LocoLeg _leg;
 
@@ -63,7 +63,7 @@ namespace VAT.Avatars.Muscular
             var kneeTarget = Knee.Parent.TransformBone(_leg.Knee.Parent, _leg.Knee);
             Knee.Solve(kneeTarget);
 
-            var dataTransform = SimpleTransform.Create(_pivotData.position, _leg.Knee.rotation);
+            var dataTransform = SimpleTransform.Create(_pivotData.Transform.position, _leg.Knee.rotation);
             var pivotTransform = SimpleTransform.Create(_pivot.Transform.position, Knee.Transform.rotation);
             
             var position = pivotTransform.TransformPoint(dataTransform.InverseTransformPoint(_leg.Knee.position));

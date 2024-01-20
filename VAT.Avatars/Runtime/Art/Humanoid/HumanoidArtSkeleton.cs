@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars.Muscular;
+using VAT.Avatars.REWORK;
 using VAT.Avatars.Skeletal;
 
 namespace VAT.Avatars.Art
 {
-    public class HumanoidArtSkeleton : ArtBoneSkeletonT<HumanoidArtBoneGroup, HumanoidArtDescriptor, HumanoidDataSkeleton, HumanoidPhysSkeleton> {
+    public class HumanoidArtSkeleton : ArtBoneSkeletonT<HumanoidArtDescriptor, IHumanSkeleton> {
         private HumanoidArtBoneGroup[] _groups = null;
-        public override HumanoidArtBoneGroup[] BoneGroups => _groups;
+        public override IBoneGroup[] BoneGroups => _groups;
 
         public override int BoneGroupCount => 6;
 
@@ -47,27 +48,27 @@ namespace VAT.Avatars.Art
             RightLeg.WriteTransforms(artDescriptor.rightLegDescriptor);
         }
 
-        public override void WriteData(HumanoidDataSkeleton dataSkeleton, HumanoidPhysSkeleton physSkeleton)
+        public override void WriteData(IHumanSkeleton skeleton)
         {
-            Neck.WriteData(dataSkeleton.Neck, physSkeleton.Neck);
-            Spine.WriteData(dataSkeleton.Spine, physSkeleton.Spine);
+            Neck.WriteData(skeleton.Neck);
+            Spine.WriteData(skeleton.Spine);
 
-            LeftArm.WriteData(dataSkeleton.LeftArm, physSkeleton.LeftArm);
-            RightArm.WriteData(dataSkeleton.RightArm, physSkeleton.RightArm);
+            LeftArm.WriteData(skeleton.LeftArm);
+            RightArm.WriteData(skeleton.RightArm);
 
-            LeftLeg.WriteData(dataSkeleton.LeftLeg, physSkeleton.LeftLeg);
-            RightLeg.WriteData(dataSkeleton.RightLeg, physSkeleton.RightLeg);
+            LeftLeg.WriteData(skeleton.LeftLeg);
+            RightLeg.WriteData(skeleton.RightLeg);
         }
 
-        public override void WriteOffsets(HumanoidDataSkeleton dataSkeleton) {
-            Neck.WriteOffsets(dataSkeleton.Neck);
-            Spine.WriteOffsets(dataSkeleton.Spine);
+        public override void WriteOffsets(IHumanSkeleton skeleton) {
+            Neck.WriteOffsets(skeleton.Neck);
+            Spine.WriteOffsets(skeleton.Spine);
 
-            LeftArm.WriteOffsets(dataSkeleton.LeftArm);
-            RightArm.WriteOffsets(dataSkeleton.RightArm);
+            LeftArm.WriteOffsets(skeleton.LeftArm);
+            RightArm.WriteOffsets(skeleton.RightArm);
 
-            LeftLeg.WriteOffsets(dataSkeleton.LeftLeg);
-            RightLeg.WriteOffsets(dataSkeleton.RightLeg);
+            LeftLeg.WriteOffsets(skeleton.LeftLeg);
+            RightLeg.WriteOffsets(skeleton.RightLeg);
         }
 
         public override void Solve() {

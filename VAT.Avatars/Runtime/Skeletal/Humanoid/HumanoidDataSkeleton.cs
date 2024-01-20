@@ -8,10 +8,11 @@ using VAT.Avatars.Proportions;
 using VAT.Avatars.Nervous;
 
 using VAT.Input;
+using VAT.Avatars.REWORK;
 
 namespace VAT.Avatars.Skeletal
 {
-    public class HumanoidDataSkeleton : DataBoneSkeleton
+    public class HumanoidDataSkeleton : DataBoneSkeleton, IHumanSkeleton
     {
         private DataBoneGroup[] _groups = null;
         public override DataBoneGroup[] BoneGroups => _groups;
@@ -25,6 +26,20 @@ namespace VAT.Avatars.Skeletal
         public HumanoidLeg LeftLeg => BoneGroups[4] as HumanoidLeg;
         public HumanoidLeg RightLeg => BoneGroups[5] as HumanoidLeg;
         public LocoLeg LocoLeg => BoneGroups[6] as LocoLeg;
+
+        IHumanNeck IHumanSkeleton.Neck => Neck;
+
+        IHumanSpine IHumanSkeleton.Spine => Spine;
+
+        IHumanArm IHumanSkeleton.LeftArm => LeftArm;
+
+        IHumanArm IHumanSkeleton.RightArm => RightArm;
+
+        IHumanLeg IHumanSkeleton.LeftLeg => LeftLeg;
+
+        IHumanLeg IHumanSkeleton.RightLeg => RightLeg;
+
+        IBoneGroup IHumanSkeleton.LocoLeg => LocoLeg;
 
         public bool ShimbleWam;
         public float3 Flof;

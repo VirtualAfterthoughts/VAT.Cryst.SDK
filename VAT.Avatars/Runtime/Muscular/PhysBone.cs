@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 using VAT.Avatars.Skeletal;
+using VAT.Avatars.REWORK;
 using VAT.Entities;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
@@ -60,7 +61,11 @@ namespace VAT.Avatars.Muscular
             }
         }
 
-        public virtual void MatchBone(DataBone bone) {
+        IBone IBone.Parent => Parent;
+
+        int IBone.ChildCount => _children.Count;
+
+        public virtual void MatchBone(IBone bone) {
             Transform = bone.Transform;
             Joint.RecalculateJointSpace();
         }
@@ -114,6 +119,11 @@ namespace VAT.Avatars.Muscular
 
             _children.Remove(child);
             child._parent = null;
+        }
+
+        IBone IBone.GetChild(int index)
+        {
+            return _children[index];
         }
     }
 }

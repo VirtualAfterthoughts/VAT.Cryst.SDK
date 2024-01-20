@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars.Nervous;
+using VAT.Avatars.REWORK;
 using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Skeletal
 {
-    public abstract class DataBoneGroup
+    public abstract class DataBoneGroup : IBoneGroup
     {
         protected DataBone[] _bones = null;
         public virtual DataBone[] Bones => _bones;
@@ -20,6 +21,10 @@ namespace VAT.Avatars.Skeletal
 
         public virtual DataBone FirstBone => Bones[0];
         public virtual DataBone LastBone => Bones[BoneCount - 1];
+
+        IBone[] IBoneGroup.Bones => Bones;
+
+        IBoneGroup[] IBoneGroup.SubGroups => SubGroups;
 
         protected IAvatarPayload _avatarPayload;
 

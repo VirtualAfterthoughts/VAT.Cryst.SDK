@@ -7,6 +7,8 @@ using VAT.Shared.Extensions;
 
 using static Unity.Mathematics.math;
 
+using VAT.Avatars.REWORK;
+
 namespace VAT.Avatars.Skeletal {
     using Unity.Mathematics;
     using VAT.Shared.Data;
@@ -136,6 +138,13 @@ namespace VAT.Avatars.Skeletal {
             return _children[index];
         }
 
+        IBone IBone.GetChild(int index)
+        {
+            return _children[index];
+        }
+
         public int ChildCount { get { return _children.Count; } }
+
+        IBone IBone.Parent => Parent;
     }
 }

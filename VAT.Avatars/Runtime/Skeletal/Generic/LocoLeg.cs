@@ -57,7 +57,7 @@ namespace VAT.Avatars.Skeletal
 
             if (_avatarPayload.TryGetInput(out var input)) {
                 var movement = input.GetMovement();
-                velocity += (Vector3)mul(Knee.rotation, new Vector3(movement.x, 0f, movement.y)) * 4f;
+                velocity += movement * 4f;
             }
         }
 

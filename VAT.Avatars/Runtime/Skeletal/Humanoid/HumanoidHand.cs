@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using VAT.Avatars.Data;
 using VAT.Avatars.Proportions;
+using VAT.Avatars.REWORK;
 
 namespace VAT.Avatars.Skeletal
 {
-    public class HumanoidHand : DataBoneGroup
+    public class HumanoidHand : DataBoneGroup, IHumanHand
     {
         public override int BoneCount => 1;
 
@@ -20,6 +21,8 @@ namespace VAT.Avatars.Skeletal
         public HumanoidFinger[] Fingers => _fingers;
 
         public override int SubGroupCount => _fingerCount;
+
+        IBone IHumanHand.Hand => Hand;
 
         public HumanoidHand() {
             _fingers = Array.Empty<HumanoidFinger>();

@@ -4,8 +4,9 @@ using System.Collections.Generic;
 namespace VAT.Avatars.Muscular
 {
     using UnityEngine;
+    using VAT.Avatars.REWORK;
 
-    public abstract class PhysBoneGroup {
+    public abstract class PhysBoneGroup : IBoneGroup {
         public abstract int BoneCount { get; }
 
         public virtual int SubGroupCount => 0;
@@ -14,6 +15,9 @@ namespace VAT.Avatars.Muscular
         public virtual PhysBone LastBone => GetBone(BoneCount - 1);
 
         public virtual bool PivotAtParent => false;
+
+        public abstract IBone[] Bones { get; }
+        public abstract IBoneGroup[] SubGroups { get; }
 
         public abstract void Initiate();
 
@@ -70,14 +74,17 @@ namespace VAT.Avatars.Muscular
     public abstract class PhysBoneGroupT<TBone> : PhysBoneGroup 
         where TBone : PhysBone 
     {
+        public override IBone[] Bones => TBones;
+        public override IBoneGroup[] SubGroups => PhysSubGroups;
+
         protected TBone[] _bones = null;
-        public virtual TBone[] Bones => _bones;
+        public virtual TBone[] TBones => _bones;
 
         protected PhysBoneGroup[] _subGroups = null;
-        public virtual PhysBoneGroup[] SubGroups => _subGroups;
+        public virtual PhysBoneGroup[] PhysSubGroups => _subGroups;
 
-        public virtual TBone GenericFirstBone => Bones[0];
-        public virtual TBone GenericLastBone => Bones[BoneCount - 1];
+        public virtual TBone GenericFirstBone => TBones[0];
+        public virtual TBone GenericLastBone => TBones[BoneCount - 1];
 
         public override void Initiate() {
             _bones = new TBone[BoneCount];
@@ -85,11 +92,11 @@ namespace VAT.Avatars.Muscular
         }
 
         public override PhysBone GetBone(int index) {
-            return Bones[index];
+            return TBones[index];
         }
 
         public override PhysBoneGroup GetSubGroup(int index) {
-            return SubGroups[index];
+            return PhysSubGroups[index];
         }
     }
 }

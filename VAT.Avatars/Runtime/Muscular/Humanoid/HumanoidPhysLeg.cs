@@ -16,19 +16,25 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
+    using VAT.Avatars.REWORK;
 
-
-    public class HumanoidPhysLeg : HumanoidPhysBoneGroup, IPoseableT<HumanoidLeg>
+    public class HumanoidPhysLeg : HumanoidPhysBoneGroup, IPoseableT<IHumanLeg>, IHumanLeg
     {
         public bool isLeft = false;
 
         public override int BoneCount => 3;
 
-        public HumanoidPhysBone Hip => Bones[0];
-        public HumanoidPhysBone Knee => Bones[1];
-        public HumanoidPhysBone Ankle => Bones[2];
+        public HumanoidPhysBone Hip => Bones[0] as HumanoidPhysBone;
+        public HumanoidPhysBone Knee => Bones[1] as HumanoidPhysBone;
+        public HumanoidPhysBone Ankle => Bones[2] as HumanoidPhysBone;
 
-        private HumanoidLeg _leg;
+        IBone IHumanLeg.Hip => Hip;
+
+        IBone IHumanLeg.Knee => Knee;
+
+        IBone IHumanLeg.Ankle => Ankle;
+
+        private IHumanLeg _leg;
 
         public override void Initiate()
         {
@@ -74,7 +80,7 @@ namespace VAT.Avatars.Muscular
             Ankle.Rigidbody.Rigidbody.detectCollisions = false;
         }
 
-        public void MatchPose(HumanoidLeg leg)
+        public void MatchPose(IHumanLeg leg)
         {
             _leg = leg;
 

@@ -16,16 +16,23 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
+    using VAT.Avatars.REWORK;
 
-    public class HumanoidPhysNeck : HumanoidPhysBoneGroup, IPoseableT<HumanoidNeck>
+    public class HumanoidPhysNeck : HumanoidPhysBoneGroup, IPoseableT<IHumanNeck>, IHumanNeck
     {
         public override int BoneCount => 3;
 
-        public HumanoidPhysBone C4Vertebra => Bones[0];
-        public HumanoidPhysBone C1Vertebra => Bones[1];
-        public HumanoidPhysBone Skull => Bones[2];
+        public HumanoidPhysBone C4Vertebra => Bones[0] as HumanoidPhysBone;
+        public HumanoidPhysBone C1Vertebra => Bones[1] as HumanoidPhysBone;
+        public HumanoidPhysBone Skull => Bones[2] as HumanoidPhysBone;
 
-        private HumanoidNeck _neck;
+        IBone IHumanNeck.C4Vertebra => C4Vertebra;
+
+        IBone IHumanNeck.C1Vertebra => C1Vertebra;
+
+        IBone IHumanNeck.Skull => Skull;
+
+        private IHumanNeck _neck;
 
         public override void Initiate() {
             base.Initiate();
@@ -45,7 +52,7 @@ namespace VAT.Avatars.Muscular
             return Skull.Transform;
         }
 
-        public void MatchPose(HumanoidNeck neck) {
+        public void MatchPose(IHumanNeck neck) {
             _neck = neck;
 
             C4Vertebra.MatchBone(neck.C4Vertebra);

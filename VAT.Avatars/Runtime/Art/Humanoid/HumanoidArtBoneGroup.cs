@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using VAT.Avatars.Muscular;
+using VAT.Avatars.REWORK;
 using VAT.Avatars.Skeletal;
 
 namespace VAT.Avatars.Art
@@ -17,24 +18,19 @@ namespace VAT.Avatars.Art
         }
     }
 
-    public abstract class HumanoidArtBoneGroupT<TArtGroup, TDataGroup, TPhysGroup> : HumanoidArtBoneGroup
+    public abstract class HumanoidArtBoneGroupT<TArtGroup, TBoneGroup> : HumanoidArtBoneGroup
         where TArtGroup : IArtDescriptorGroup
-        where TDataGroup : DataBoneGroup
-        where TPhysGroup : PhysBoneGroup
+        where TBoneGroup : IBoneGroup
     {
-        protected TDataGroup _dataGroup;
-        public TDataGroup DataGroup => _dataGroup;
-
-        protected TPhysGroup _physGroup;
-        public TPhysGroup PhysGroup => _physGroup;
+        protected TBoneGroup _boneGroup;
+        public TBoneGroup BoneGroup => _boneGroup;
 
         public abstract void WriteTransforms(TArtGroup artDescriptorGroup);
 
-        public virtual void WriteData(TDataGroup dataGroup, TPhysGroup physGroup) {
-            _dataGroup = dataGroup;
-            _physGroup = physGroup;
+        public virtual void WriteData(TBoneGroup boneGroup) {
+            _boneGroup = boneGroup;
         }
 
-        public abstract void WriteOffsets(TDataGroup dataGroup);
+        public abstract void WriteOffsets(TBoneGroup dataGroup);
     }
 }

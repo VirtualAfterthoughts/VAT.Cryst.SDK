@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars.Proportions;
+using VAT.Avatars.REWORK;
 using VAT.Avatars.Skeletal;
 using VAT.Cryst;
 using VAT.Input;
@@ -12,7 +13,7 @@ using VAT.Shared.Data;
 
 namespace VAT.Avatars.Muscular
 {
-    public class HumanoidPhysSkeleton : PhysBoneSkeleton
+    public class HumanoidPhysSkeleton : PhysBoneSkeleton, IHumanSkeleton
     {
         private PhysBoneGroup[] _groups = null;
         public override PhysBoneGroup[] BoneGroups => _groups;
@@ -27,7 +28,21 @@ namespace VAT.Avatars.Muscular
         public HumanoidPhysLeg RightLeg => BoneGroups[5] as HumanoidPhysLeg;
         public PhysLocoLeg LocoLeg => BoneGroups[6] as PhysLocoLeg;
 
-        private HumanoidDataSkeleton _skeleton = null;
+        IHumanNeck IHumanSkeleton.Neck => Neck;
+
+        IHumanSpine IHumanSkeleton.Spine => Spine;
+
+        IHumanArm IHumanSkeleton.LeftArm => LeftArm;
+
+        IHumanArm IHumanSkeleton.RightArm => RightArm;
+
+        IHumanLeg IHumanSkeleton.LeftLeg => LeftLeg;
+
+        IHumanLeg IHumanSkeleton.RightLeg => RightLeg;
+
+        IBoneGroup IHumanSkeleton.LocoLeg => LocoLeg;
+
+        private IHumanSkeleton _skeleton = null;
 
         public override void Initiate()
         {
@@ -83,11 +98,14 @@ namespace VAT.Avatars.Muscular
         {
             base.Solve();
 
-            _skeleton.ShimbleWam = true;
-            _skeleton.Flof = Neck.Skull.Transform.InverseTransformPoint(GetFloor().position);
+            if (_skeleton is HumanoidDataSkeleton temp)
+            {
+                temp.ShimbleWam = true;
+                temp.Flof = Neck.Skull.Transform.InverseTransformPoint(GetFloor().position);
+            }
         }
 
-        public void MatchPose(HumanoidDataSkeleton skeleton) {
+        public void MatchPose(IHumanSkeleton skeleton) {
             _skeleton = skeleton;
 
             Spine.MatchPose(skeleton.Spine);
@@ -99,7 +117,7 @@ namespace VAT.Avatars.Muscular
             LeftLeg.MatchPose(skeleton.LeftLeg);
             RightLeg.MatchPose(skeleton.RightLeg);
 
-            LocoLeg.MatchPose(skeleton.LocoLeg);
+            LocoLeg.MatchPose(skeleton.LocoLeg as LocoLeg);
 
             LocoLeg._pivotData = skeleton.Neck.Skull;
 
@@ -126,10 +144,10 @@ namespace VAT.Avatars.Muscular
                     result = null;
                     return false;
                 case Handedness.LEFT:
-                    result = LeftArm.Hand;
+                    result = LeftArm.Hand.Hand;
                     return true;
                 case Handedness.RIGHT:
-                    result = RightArm.Hand;
+                    result = RightArm.Hand.Hand;
                     return true;
             }
         }

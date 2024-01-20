@@ -3,11 +3,13 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using VAT.Avatars.REWORK;
 using VAT.Shared.Data;
 
 namespace VAT.Avatars.Art
 {
-    public class ArtBone : IBone {
+    public class ArtBone : IBone
+    {
         private IArtReference _artReference = null;
         public IArtReference ArtReference => _artReference;
 
@@ -18,6 +20,10 @@ namespace VAT.Avatars.Art
             get { return ArtReference.Transform; }
             set { ArtReference.Transform = value; }
         }
+
+        IBone IBone.Parent => throw new System.NotImplementedException();
+
+        int IBone.ChildCount => 0;
 
         public void WriteReference(IArtReference reference) {
             _artReference = reference;
@@ -32,6 +38,11 @@ namespace VAT.Avatars.Art
         public void Solve(SimpleTransform target) {
             if (HasReference)
                 Transform = target.Transform(ArtReference.ArtOffset);
+        }
+
+        IBone IBone.GetChild(int index)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

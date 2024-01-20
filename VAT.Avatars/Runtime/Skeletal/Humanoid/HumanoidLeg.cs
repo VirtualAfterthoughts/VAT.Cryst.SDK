@@ -12,8 +12,9 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
+    using VAT.Avatars.REWORK;
 
-    public class HumanoidLeg : HumanoidBoneGroup
+    public class HumanoidLeg : HumanoidBoneGroup, IHumanLeg
     {
         public bool isLeft = false;
 
@@ -23,6 +24,12 @@ namespace VAT.Avatars.Skeletal
         public DataBone Toe => Bones[3];
 
         public override int BoneCount => 4;
+
+        IBone IHumanLeg.Hip => Hip;
+
+        IBone IHumanLeg.Knee => Knee;
+
+        IBone IHumanLeg.Ankle => Ankle;
 
         private int _legIndex;
 

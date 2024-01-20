@@ -6,13 +6,13 @@ using Unity.Mathematics;
 using UnityEngine;
 
 using VAT.Avatars.Proportions;
-
+using VAT.Avatars.REWORK;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Skeletal
 {
-    public class HumanoidNeck : HumanoidBoneGroup
+    public class HumanoidNeck : HumanoidBoneGroup, IHumanNeck
     {
         public DataBone EyeCenter => Bones[0];
         public DataBone Skull => Bones[1];
@@ -20,6 +20,12 @@ namespace VAT.Avatars.Skeletal
         public DataBone C4Vertebra => Bones[3];
 
         public override int BoneCount => 4;
+
+        IBone IHumanNeck.C4Vertebra => C4Vertebra;
+
+        IBone IHumanNeck.C1Vertebra => C1Vertebra;
+
+        IBone IHumanNeck.Skull => Skull;
 
         private HumanoidGeneralProportions _generalProportions;
         private HumanoidNeckProportions _neckProportions;

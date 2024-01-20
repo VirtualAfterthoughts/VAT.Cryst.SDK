@@ -5,6 +5,8 @@ using UnityEngine;
 
 using VAT.Shared.Data;
 
+using VAT.Avatars.REWORK;
+
 namespace VAT.Avatars.Art
 {
     public interface IArtReference {

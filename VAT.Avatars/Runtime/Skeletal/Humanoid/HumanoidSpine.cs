@@ -8,10 +8,11 @@ using VAT.Avatars.Proportions;
 using VAT.Avatars.Nervous;
 
 using VAT.Shared.Data;
+using VAT.Avatars.REWORK;
 
 namespace VAT.Avatars.Skeletal
 {
-    public class HumanoidSpine : HumanoidBoneGroup
+    public class HumanoidSpine : HumanoidBoneGroup, IHumanSpine
     {
         public DataBone T1Vertebra => Bones[0];
         public DataBone T7Vertebra => Bones[1];
@@ -29,6 +30,17 @@ namespace VAT.Avatars.Skeletal
         public AnimationCurve SacrumUpOffset = new(new(0f, 0f), new(0.5f, 1f), new(1f, 0f));
 
         public HumanoidNeck Neck => _neck;
+
+        IBone IHumanSpine.Root => Root;
+
+        IBone IHumanSpine.Sacrum => Sacrum;
+
+        IBone IHumanSpine.L1Vertebra => L1Vertebra;
+
+        IBone IHumanSpine.T7Vertebra => T7Vertebra;
+
+        IBone IHumanSpine.T1Vertebra => T1Vertebra;
+
         private HumanoidNeck _neck;
 
         private HumanoidGeneralProportions _generalProportions;

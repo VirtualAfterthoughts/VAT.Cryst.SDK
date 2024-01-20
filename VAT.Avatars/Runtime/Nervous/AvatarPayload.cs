@@ -8,10 +8,28 @@ using VAT.Input;
 using VAT.Shared.Data;
 
 namespace VAT.Avatars.Nervous {
-    public interface IAvatarPayload : IRigTransform {
+    public interface IAvatarPayload {
+        public bool TryGetHead(out SimpleTransform result);
+
+        public SimpleTransform[] GetHeads();
+
+        public bool TryGetArm(Handedness handedness, out IArm result);
+
+        public IArm[] GetArms(Handedness handedness);
+
+        public bool TryGetPelvis(out SimpleTransform result);
+
+        public SimpleTransform[] GetPelvises();
+
+        public bool TryGetFoot(Handedness handedness, out SimpleTransform result);
+
+        public SimpleTransform[] GetFeet(Handedness handedness);
+
+        public SimpleTransform GetRoot();
+
         void SetRoot(SimpleTransform root);
 
-        bool TryGetInput(out IBodyInput input);
+        bool TryGetInput(out IAvatarInput input);
     }
 
     public struct BasicAvatarPayload : IAvatarPayload
@@ -20,38 +38,38 @@ namespace VAT.Avatars.Nervous {
 
         public SimpleTransform Head { get; set; }
 
-        public SimpleTransform LeftHand { get; set; }
+        public IArm LeftArm { get; set; }
 
-        public SimpleTransform RightHand { get; set; }
+        public IArm RightArm { get; set; }
 
-        public IBodyInput Input { get; set; }
+        public IAvatarInput Input { get; set; }
 
-        readonly SimpleTransform[] IRigT<SimpleTransform>.GetFeet(Handedness handedness)
+        public readonly SimpleTransform[] GetFeet(Handedness handedness)
         {
             return Array.Empty<SimpleTransform>();
         }
 
-        readonly SimpleTransform[] IRigT<SimpleTransform>.GetHands(Handedness handedness)
+        public readonly IArm[] GetArms(Handedness handedness)
         {
             return handedness switch
             {
-                Handedness.LEFT => new SimpleTransform[] { LeftHand },
-                Handedness.RIGHT => new SimpleTransform[] { RightHand },
-                _ => Array.Empty<SimpleTransform>(),
+                Handedness.LEFT => new IArm[] { LeftArm },
+                Handedness.RIGHT => new IArm[] { RightArm },
+                _ => Array.Empty<IArm>(),
             };
         }
 
-        readonly SimpleTransform[] IRigT<SimpleTransform>.GetHeads()
+        public readonly SimpleTransform[] GetHeads()
         {
             return new SimpleTransform[] { Head };
         }
 
-        readonly SimpleTransform[] IRigT<SimpleTransform>.GetPelvises()
+        public readonly SimpleTransform[] GetPelvises()
         {
             return Array.Empty<SimpleTransform>();
         }
 
-        readonly SimpleTransform IRigT<SimpleTransform>.GetRoot()
+        public readonly SimpleTransform GetRoot()
         {
             return Root;
         }
@@ -61,41 +79,41 @@ namespace VAT.Avatars.Nervous {
             Root = value;
         }
 
-        readonly bool IRigT<SimpleTransform>.TryGetFoot(Handedness handedness, out SimpleTransform result)
+        public readonly bool TryGetFoot(Handedness handedness, out SimpleTransform result)
         {
             result = SimpleTransform.Default;
             return false;
         }
 
-        readonly bool IRigT<SimpleTransform>.TryGetHand(Handedness handedness, out SimpleTransform result)
+        public readonly bool TryGetArm(Handedness handedness, out IArm result)
         {
             switch (handedness)
             {
                 default:
-                    result = SimpleTransform.Default;
+                    result = default;
                     return false;
                 case Handedness.LEFT:
-                    result = LeftHand;
+                    result = LeftArm;
                     return true;
                 case Handedness.RIGHT:
-                    result = RightHand;
+                    result = RightArm;
                     return true;
             }
         }
 
-        readonly bool IRigT<SimpleTransform>.TryGetHead(out SimpleTransform result)
+        public readonly bool TryGetHead(out SimpleTransform result)
         {
             result = Head;
             return true;
         }
 
-        readonly bool IRigT<SimpleTransform>.TryGetPelvis(out SimpleTransform result)
+        public readonly bool TryGetPelvis(out SimpleTransform result)
         {
             result = SimpleTransform.Default;
             return false;
         }
 
-        public readonly bool TryGetInput(out IBodyInput input)
+        public readonly bool TryGetInput(out IAvatarInput input)
         {
             input = Input;
             return input != null;

@@ -12,9 +12,10 @@ using VAT.Shared.Math;
 namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
+    using VAT.Avatars.REWORK;
     using VAT.Input;
 
-    public class HumanoidArm : HumanoidBoneGroup
+    public class HumanoidArm : HumanoidBoneGroup, IHumanArm
     {
         public bool isLeft = false;
 
@@ -31,6 +32,16 @@ namespace VAT.Avatars.Skeletal
 
         public override int SubGroupCount => 1;
 
+        IBone IHumanArm.Clavicle => Clavicle;
+
+        IBone IHumanArm.Scapula => Scapula;
+
+        IBone IHumanArm.UpperArm => UpperArm;
+
+        IBone IHumanArm.Elbow => Elbow;
+
+        IHumanHand IHumanArm.Hand => Hand;
+
         private HumanoidSpine _spine;
 
         private HumanoidNeckProportions _neckProportions;
@@ -38,6 +49,9 @@ namespace VAT.Avatars.Skeletal
         private HumanoidArmProportions _armProportions;
 
         private SimpleTransform _target;
+
+        private bool _hasElbow;
+        private SimpleTransform _elbowTarget;
 
         private Vector3 _armVector;
         private Vector3 _armUp;
@@ -114,13 +128,32 @@ namespace VAT.Avatars.Skeletal
 
         public override void Solve() {
             Handedness handedness = isLeft ? Handedness.LEFT : Handedness.RIGHT;
-            _avatarPayload.TryGetHand(handedness, out _target);
+            _avatarPayload.TryGetArm(handedness, out var arm);
+
+            if (arm.TryGetHand(out var hand))
+            {
+                _target = hand.Transform;
+            }
+
+            _hasElbow = arm.TryGetElbow(out var elbow);
+            if (_hasElbow)
+            {
+                _elbowTarget = elbow.Transform;
+            }
 
             ClavicleSolve();
             ScapulaSolve();
             ArmSolve();
-            ElbowRelax();
-            ElbowLimit();
+
+            if (_hasElbow)
+            {
+                WristSolve();
+            }
+            else
+            {
+                ElbowRelax();
+                ElbowLimit();
+            }
 
             Hand.Solve();
         }
@@ -222,7 +255,17 @@ namespace VAT.Avatars.Skeletal
             float armPerc = (1f - Mathf.Clamp01(a / (b + c) + 0.6f)) * 10f;
             _armUp = Vector3.Lerp(_armUp, Vector3.zero, armPerc);
 
-            UpperArm.rotation = Quaternion.LookRotation(_armVector, -crossRelax + _armUp);
+            Vector3 up = -crossRelax + _armUp;
+
+            if (_hasElbow)
+            {
+                Vector3 elbowVector = _elbowTarget.position - UpperArm.position;
+                elbowVector.Normalize();
+
+                up = -elbowVector;
+            }
+
+            UpperArm.rotation = Quaternion.LookRotation(_armVector, up);
             UpperArm.rotation = Quaternion.AngleAxis(A * Mathf.Rad2Deg, UpperArm.right) * UpperArm.rotation;
             _armUp = Vector3.Lerp(Clavicle.up, UpperArm.up, 0.85f);
 
@@ -282,7 +325,7 @@ namespace VAT.Avatars.Skeletal
                 time *= 1f - Mathf.Clamp01((num - 50f) / 20f);
 
                 _limitSmooth = Mathf.Lerp(_limitSmooth, time, Time.deltaTime * 12f);
-                UpperArm.rotation = Quaternion.AngleAxis(_limitSmooth, _armVector * mult) * UpperArm.rotation;
+                UpperArm.rotation = Quaternion.AngleAxis(_limitSmooth * 0.5f, _armVector * mult) * UpperArm.rotation;
 
                 WristSolve();
             }

@@ -16,19 +16,34 @@ using VAT.Shared.Data;
 namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
+    using UnityEngine.XR;
+    using VAT.Avatars.REWORK;
 
-    public class HumanoidPhysArm : HumanoidPhysBoneGroup, IPoseableT<HumanoidArm>
+    public class HumanoidPhysArm : HumanoidPhysBoneGroup, IPoseableT<IHumanArm>, IHumanArm
     {
         public bool isLeft = false;
-        public override int BoneCount => 5;
+        public override int BoneCount => 4;
 
-        public HumanoidPhysBone Clavicle => Bones[0];
-        public HumanoidPhysBone Scapula => Bones[1];
-        public HumanoidPhysBone UpperArm => Bones[2];
-        public HumanoidPhysBone Elbow => Bones[3];
-        public HumanoidPhysBone Hand => Bones[4];
+        public override int SubGroupCount => 1;
 
-        private HumanoidArm _arm;
+        public HumanoidPhysBone Clavicle => TBones[0];
+        public HumanoidPhysBone Scapula => TBones[1];
+        public HumanoidPhysBone UpperArm => TBones[2];
+        public HumanoidPhysBone Elbow => TBones[3];
+
+        public HumanoidPhysHand Hand => SubGroups[0] as HumanoidPhysHand;
+
+        IBone IHumanArm.Clavicle => Clavicle;
+
+        IBone IHumanArm.Scapula => Scapula;
+
+        IBone IHumanArm.UpperArm => UpperArm;
+
+        IBone IHumanArm.Elbow => Elbow;
+
+        IHumanHand IHumanArm.Hand => Hand;
+
+        private IHumanArm _arm;
 
         public override void Initiate() {
             base.Initiate();
@@ -38,7 +53,8 @@ namespace VAT.Avatars.Muscular
             _bones[1] = new HumanoidPhysBone($"{prefix} Shoulder Blade", Clavicle, HumanoidConstants.ScapulaLimits);
             _bones[2] = new HumanoidPhysBone($"{prefix} Upper Arm", Scapula, HumanoidConstants.UpperArmLimits);
             _bones[3] = new HumanoidPhysBone($"{prefix} Elbow", UpperArm, HumanoidConstants.ElbowLimits);
-            _bones[4] = new HumanoidPhysBone($"{prefix} Hand", Elbow, HumanoidConstants.HandLimits);
+
+            _subGroups[0] = new HumanoidPhysHand(this);
 
             Elbow.ConfigurableJoint.ConfigurableJoint.axis = Vector3.down * (isLeft ? -1f : 1f);
             Elbow.ConfigurableJoint.ConfigurableJoint.secondaryAxis = Vector3.forward;
@@ -50,7 +66,7 @@ namespace VAT.Avatars.Muscular
             Scapula.Solve(Scapula.Parent.TransformBone(_arm.Scapula.Parent, _arm.Scapula));
             UpperArm.Solve(UpperArm.Parent.TransformBone(_arm.UpperArm.Parent, _arm.UpperArm));
             Elbow.Solve(Elbow.Parent.TransformBone(_arm.Elbow.Parent, _arm.Elbow));
-            Hand.Solve(Elbow.TransformBone(_arm.Elbow, _arm.Hand.Hand));
+            Hand.Hand.Solve(Elbow.TransformBone(_arm.Elbow, _arm.Hand.Hand));
         }
 
         public void WriteProportions(HumanoidArmProportions proportions)
@@ -59,10 +75,10 @@ namespace VAT.Avatars.Muscular
             Scapula.SetMesh(GenerateShoulderBladeMesh(proportions));
             UpperArm.SetMesh(GenerateUpperArmMesh(proportions));
             Elbow.SetMesh(GenerateElbowMesh(proportions));
-            Hand.SetMesh(GenerateHandMesh(proportions));
+            Hand.Hand.SetMesh(GenerateHandMesh(proportions));
         }
 
-        public void MatchPose(HumanoidArm arm)
+        public void MatchPose(IHumanArm arm)
         {
             _arm = arm;
 
@@ -70,7 +86,7 @@ namespace VAT.Avatars.Muscular
             Scapula.MatchBone(arm.Scapula);
             UpperArm.MatchBone(arm.UpperArm);
             Elbow.MatchBone(arm.Elbow);
-            Hand.MatchBone(arm.Hand.Hand);
+            Hand.Hand.MatchBone(arm.Hand.Hand);
         }
 
         public Mesh GenerateClavicleMesh(HumanoidArmProportions proportions)

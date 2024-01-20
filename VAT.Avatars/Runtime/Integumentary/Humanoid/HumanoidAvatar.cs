@@ -148,7 +148,7 @@ namespace VAT.Avatars.Integumentary
             GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.SetTransformRoot(_physicsRoot);
 
             // Properly initiate the art skeleton
-            GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.WriteData(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton, GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton);
+            GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.WriteData(GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton);
             WriteArtOffsets();
 
             // Match physics skeleton to default pose

@@ -32,7 +32,7 @@ namespace VAT.Avatars.Vitals
             _arm.Scapula.ConfigureJoint();
             _arm.UpperArm.ConfigureJoint();
             _arm.Elbow.ConfigureJoint();
-            _arm.Hand.ConfigureJoint();
+            _arm.Hand.Hand.ConfigureJoint();
         }
 
         public override void ApplyVitals() {
@@ -43,7 +43,7 @@ namespace VAT.Avatars.Vitals
             _arm.Scapula.SetMass(individualShoulderMass);
             _arm.UpperArm.SetMass(UpperArmMass);
             _arm.Elbow.SetMass(ElbowMass);
-            _arm.Hand.SetMass(HandMass);
+            _arm.Hand.Hand.SetMass(HandMass);
         }
 
         public override void CalculateVitals() {

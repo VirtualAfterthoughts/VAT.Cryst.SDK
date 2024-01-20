@@ -42,7 +42,7 @@ namespace VAT.Avatars.Posing
 
             _artHand = new HumanoidArtHand();
             _artHand.Initiate();
-            _artHand.WriteData(_hand, null);
+            _artHand.WriteData(_hand);
             _artHand.WriteTransforms(descriptor);
 
             _hand.NeutralPose();

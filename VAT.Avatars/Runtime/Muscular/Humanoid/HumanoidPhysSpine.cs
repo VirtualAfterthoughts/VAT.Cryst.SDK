@@ -16,22 +16,33 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
+    using VAT.Avatars.REWORK;
 
-    public class HumanoidPhysSpine : HumanoidPhysBoneGroup, IPoseableT<HumanoidSpine>
+    public class HumanoidPhysSpine : HumanoidPhysBoneGroup, IHumanSpine
     {
         public override int BoneCount => 5;
 
-        public HumanoidPhysBone Root => Bones[0];
-        public HumanoidPhysBone Sacrum => Bones[1];
-        public HumanoidPhysBone L1Vertebra => Bones[2];
-        public HumanoidPhysBone T7Vertebra => Bones[3];
-        public HumanoidPhysBone T1Vertebra => Bones[4];
+        public HumanoidPhysBone Root => Bones[0] as HumanoidPhysBone;
+        public HumanoidPhysBone Sacrum => Bones[1] as HumanoidPhysBone;
+        public HumanoidPhysBone L1Vertebra => Bones[2] as HumanoidPhysBone;
+        public HumanoidPhysBone T7Vertebra => Bones[3] as HumanoidPhysBone;
+        public HumanoidPhysBone T1Vertebra => Bones[4] as HumanoidPhysBone;
 
         public override PhysBone FirstBone => Sacrum;
 
         public override bool PivotAtParent => true;
 
-        private HumanoidSpine _spine;
+        IBone IHumanSpine.Sacrum => Sacrum;
+
+        IBone IHumanSpine.L1Vertebra => L1Vertebra;
+
+        IBone IHumanSpine.T7Vertebra => T7Vertebra;
+
+        IBone IHumanSpine.T1Vertebra => T1Vertebra;
+
+        IBone IHumanSpine.Root => Root;
+
+        private IHumanSpine _spine;
 
         public override void Initiate()
         {
@@ -52,7 +63,7 @@ namespace VAT.Avatars.Muscular
             T1Vertebra.SetMesh(GenerateUpperChestMesh(proportions, neck));
         }
 
-        public void MatchPose(HumanoidSpine spine)
+        public void MatchPose(IHumanSpine spine)
         {
             _spine = spine;
 
@@ -74,7 +85,7 @@ namespace VAT.Avatars.Muscular
             // var targetUp = _spine.Root.up;
 
             // Quaternion targetRotation = Quaternion.FromToRotation(up, targetUp) * Root.transform.rotation;
-            var targetRotation = _spine.Root.rotation;
+            var targetRotation = _spine.Root.Transform.rotation;
 
             var startRotation = Root.Transform.rotation;
             Quaternion desiredRotation = targetRotation;
