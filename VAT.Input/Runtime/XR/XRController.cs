@@ -2,21 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Input.Unity;
 using VAT.Input.XR;
 
 namespace VAT.Input
 {
     public class XRController : IInputController
     {
-        private readonly XRTrigger _trigger;
-        private readonly XRTrigger _grip;
+        private readonly UnityTrigger _trigger;
+        private readonly UnityTrigger _grip;
 
-        private readonly XRButton _primaryButton;
-        private readonly XRButton _secondaryButton;
+        private readonly UnityButton _primaryButton;
+        private readonly UnityButton _secondaryButton;
         
-        private readonly XRTrackpad _thumbstick;
-        private readonly XRTrackpad _trackpad;
+        private readonly UnityTrackpad _thumbstick;
+        private readonly UnityTrackpad _trackpad;
 
         public XRController(Handedness handedness, XRInputActions actions)
         {
@@ -25,26 +25,26 @@ namespace VAT.Input
                 case Handedness.LEFT:
                     var left = actions.ControllerLeft;
 
-                    _trigger = new XRTrigger(left.TriggerAxis, left.TriggerPressed);
-                    _grip = new XRTrigger(left.GripAxis, left.GripForce, left.GripPressed);
+                    _trigger = new UnityTrigger(left.TriggerAxis, left.TriggerPressed);
+                    _grip = new UnityTrigger(left.GripAxis, left.GripForce, left.GripPressed);
 
-                    _primaryButton = new XRButton(left.PrimaryButtonPressed, left.PrimaryButtonTouched);
-                    _secondaryButton = new XRButton(left.SecondaryButtonPressed, left.SecondaryButtonTouched);
+                    _primaryButton = new UnityButton(left.PrimaryButtonPressed, left.PrimaryButtonTouched);
+                    _secondaryButton = new UnityButton(left.SecondaryButtonPressed, left.SecondaryButtonTouched);
 
-                    _thumbstick = new XRTrackpad(left.ThumbstickAxis, left.ThumbstickPressed, left.ThumbstickTouched);
-                    _trackpad = new XRTrackpad(left.TrackpadAxis, left.TrackpadPressed, left.TrackpadTouched);
+                    _thumbstick = new UnityTrackpad(left.ThumbstickAxis, left.ThumbstickPressed, left.ThumbstickTouched);
+                    _trackpad = new UnityTrackpad(left.TrackpadAxis, left.TrackpadPressed, left.TrackpadTouched);
                     break;
                 case Handedness.RIGHT:
                     var right = actions.ControllerRight;
 
-                    _trigger = new XRTrigger(right.TriggerAxis, right.TriggerPressed);
-                    _grip = new XRTrigger(right.GripAxis, right.GripForce, right.GripPressed);
+                    _trigger = new UnityTrigger(right.TriggerAxis, right.TriggerPressed);
+                    _grip = new UnityTrigger(right.GripAxis, right.GripForce, right.GripPressed);
 
-                    _primaryButton = new XRButton(right.PrimaryButtonPressed, right.PrimaryButtonTouched);
-                    _secondaryButton = new XRButton(right.SecondaryButtonPressed, right.SecondaryButtonTouched);
+                    _primaryButton = new UnityButton(right.PrimaryButtonPressed, right.PrimaryButtonTouched);
+                    _secondaryButton = new UnityButton(right.SecondaryButtonPressed, right.SecondaryButtonTouched);
 
-                    _thumbstick = new XRTrackpad(right.ThumbstickAxis, right.ThumbstickPressed, right.ThumbstickTouched);
-                    _trackpad = new XRTrackpad(right.TrackpadAxis, right.TrackpadPressed, right.TrackpadTouched);
+                    _thumbstick = new UnityTrackpad(right.ThumbstickAxis, right.ThumbstickPressed, right.ThumbstickTouched);
+                    _trackpad = new UnityTrackpad(right.TrackpadAxis, right.TrackpadPressed, right.TrackpadTouched);
                     break;
             }
         }

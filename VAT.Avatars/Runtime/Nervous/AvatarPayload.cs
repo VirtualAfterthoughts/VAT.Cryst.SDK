@@ -29,7 +29,7 @@ namespace VAT.Avatars.Nervous {
 
         void SetRoot(SimpleTransform root);
 
-        bool TryGetInput(out IAvatarInput input);
+        bool TryGetInput(out IBasicInput input);
     }
 
     public struct BasicAvatarPayload : IAvatarPayload
@@ -42,7 +42,7 @@ namespace VAT.Avatars.Nervous {
 
         public IArm RightArm { get; set; }
 
-        public IAvatarInput Input { get; set; }
+        public IBasicInput Input { get; set; }
 
         public readonly SimpleTransform[] GetFeet(Handedness handedness)
         {
@@ -114,7 +114,7 @@ namespace VAT.Avatars.Nervous {
             return false;
         }
 
-        public readonly bool TryGetInput(out IAvatarInput input)
+        public readonly bool TryGetInput(out IBasicInput input)
         {
             input = Input;
             return input != null;

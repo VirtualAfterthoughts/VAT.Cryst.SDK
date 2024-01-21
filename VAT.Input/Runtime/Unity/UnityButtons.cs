@@ -6,14 +6,14 @@ using UnityEngine.InputSystem;
 
 using VAT.Cryst.Extensions;
 
-namespace VAT.Input.XR
+namespace VAT.Input.Unity
 {
-    public class XRButton : IInputButton
+    public class UnityButton : IInputButton
     {
         private bool _isPressed;
         private bool _isTouched;
 
-        public XRButton(InputAction pressedAction, InputAction touchedAction)
+        public UnityButton(InputAction pressedAction, InputAction touchedAction)
         {
             pressedAction.AddCallback(Pressed_callback);
             touchedAction.AddCallback(Touched_callback);
@@ -21,12 +21,12 @@ namespace VAT.Input.XR
 
         private void Pressed_callback(InputAction.CallbackContext context)
         {
-            _isPressed = context.ReadValue<bool>();
+            _isPressed = context.performed;
         }
 
         private void Touched_callback(InputAction.CallbackContext context)
         {
-            _isTouched = context.ReadValue<bool>();
+            _isTouched = context.performed;
         }
 
         public bool GetPressed()
@@ -40,13 +40,13 @@ namespace VAT.Input.XR
         }
     }
 
-    public class XRTrackpad : IInputTrackpad
+    public class UnityTrackpad : IInputTrackpad
     {
         private Vector2 _axis;
         private bool _isPressed;
         private bool _isTouched;
 
-        public XRTrackpad(InputAction axisAction, InputAction pressedAction, InputAction touchedAction)
+        public UnityTrackpad(InputAction axisAction, InputAction pressedAction, InputAction touchedAction)
         {
             axisAction.AddCallback(Axis_callback);
             pressedAction.AddCallback(Pressed_callback);
@@ -60,12 +60,12 @@ namespace VAT.Input.XR
 
         private void Pressed_callback(InputAction.CallbackContext context)
         {
-            _isPressed = context.ReadValue<bool>();
+            _isPressed = context.performed;
         }
 
         private void Touched_callback(InputAction.CallbackContext context)
         {
-            _isTouched = context.ReadValue<bool>();
+            _isTouched = context.performed;
         }
 
         public Vector2 GetAxis()
@@ -84,16 +84,16 @@ namespace VAT.Input.XR
         }
     }
 
-    public class XRTrigger : IInputTrigger
+    public class UnityTrigger : IInputTrigger
     {
         private float _axis;
         private float _force;
         private bool _isPressed;
 
-        public XRTrigger(InputAction axisAction, InputAction pressedAction) 
+        public UnityTrigger(InputAction axisAction, InputAction pressedAction) 
             : this(axisAction, axisAction, pressedAction)  { }
 
-        public XRTrigger(InputAction axisAction, InputAction forceAction, InputAction pressedAction)
+        public UnityTrigger(InputAction axisAction, InputAction forceAction, InputAction pressedAction)
         {
             axisAction.AddCallback(Axis_callback);
             forceAction.AddCallback(Force_callback);
@@ -112,7 +112,7 @@ namespace VAT.Input.XR
 
         private void Pressed_callback(InputAction.CallbackContext context)
         {
-            _isPressed = context.ReadValue<bool>();
+            _isPressed = context.performed;
         }
 
         public float GetAxis()

@@ -45,5 +45,16 @@ namespace VAT.Characters
 
             return LastRig.TryGetTrackedRig(out rig);
         }
+
+        public virtual bool TryGetInput(out IBasicInput input)
+        {
+            if (RigIndex <= 0)
+            {
+                input = null;
+                return false;
+            }
+
+            return LastRig.TryGetInput(out input);
+        }
     }
 }

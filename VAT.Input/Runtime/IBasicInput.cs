@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace VAT.Avatars
+namespace VAT.Input
 {
-    public interface IAvatarInput
+    public interface IBasicInput
     {
         Vector3 GetMovement();
 

@@ -99,18 +99,18 @@ namespace VAT.Avatars.Example
             }
         }
 
-        public class AvatarInput : IAvatarInput
+        public class AvatarInput : IBasicInput
         {
             public AvatarInput()
             {
             }
 
-            bool IAvatarInput.GetJump()
+            bool IBasicInput.GetJump()
             {
                 return false;
             }
 
-            Vector3 IAvatarInput.GetMovement()
+            Vector3 IBasicInput.GetMovement()
             {
                 return Vector3.zero;
             }
