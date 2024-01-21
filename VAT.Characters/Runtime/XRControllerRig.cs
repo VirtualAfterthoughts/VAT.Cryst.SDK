@@ -13,6 +13,28 @@ using VAT.Shared.Data;
 
 namespace VAT.Characters
 {
+    public readonly struct XRInput : IBasicInput
+    {
+        private readonly Vector3 _movement;
+        private readonly bool _jump;
+
+        public XRInput(Vector3 movement, bool jump)
+        {
+            _movement = movement;
+            _jump = jump;
+        }
+
+        public readonly bool GetJump()
+        {
+            return _jump;
+        }
+
+        public readonly Vector3 GetMovement()
+        {
+            return _movement;
+        }
+    }
+
     public struct XRHand : IHand
     {
         public SimpleTransform Transform { get => _transform; set => _transform = value; }
@@ -109,6 +131,21 @@ namespace VAT.Characters
                     vrRoot.localPosition = vrPos;
                 }
             }
+        }
+
+        public override bool TryGetInput(out IBasicInput input)
+        {
+            _api.LeftController.TryGetThumbstick(out var thumbstick);
+
+            var movementAxis = thumbstick.GetAxis();
+            var movement = _head.rotation * new Vector3(movementAxis.x, 0f, movementAxis.y);
+
+            _api.RightController.TryGetPrimaryButton(out var button);
+
+            var jump = button.GetPressed();
+
+            input = new PancakeInput(movement, jump);
+            return true;
         }
 
         public override bool TryGetArm(Handedness handedness, out IArm arm)
