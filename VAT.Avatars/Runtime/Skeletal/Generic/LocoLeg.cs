@@ -38,6 +38,8 @@ namespace VAT.Avatars.Skeletal
             _length = length;
         }
 
+        private float _jumpPull = 0f;
+
         public override void Solve()
         {
             SimpleTransform root = _avatarPayload.GetRoot();
@@ -55,7 +57,7 @@ namespace VAT.Avatars.Skeletal
             Knee.rotation = Quaternion.LookRotation(flattened, up);
 
             float distanceToFloor = root.InverseTransformPoint(Knee.position).y;
-            Foot.localPosition = down() * distanceToFloor;
+            Foot.localPosition = down() * Mathf.Clamp(distanceToFloor, 0f, _length);
 
             var debt = _trackedDebt * 0.25f;
             velocity = debt;
@@ -64,6 +66,13 @@ namespace VAT.Avatars.Skeletal
             if (_avatarPayload.TryGetInput(out var input)) {
                 var movement = input.GetMovement();
                 velocity += movement * 4f;
+
+                if (input.GetJump())
+                    _jumpPull = Mathf.Lerp(_jumpPull, 0.7f, Time.deltaTime * 4f);
+                else
+                    _jumpPull = Mathf.Lerp(_jumpPull, 0f, Time.deltaTime * 24f);
+
+                Foot.localPosition += math.up() * _jumpPull;
             }
         }
 

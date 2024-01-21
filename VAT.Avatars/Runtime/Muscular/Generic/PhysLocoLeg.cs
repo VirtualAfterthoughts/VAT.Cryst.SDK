@@ -1,4 +1,3 @@
-using log4net.Util;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -30,6 +29,8 @@ namespace VAT.Avatars.Muscular
         private SphereCollider _locoBall;
 
         public Vector3 _targetVelocity = Vector3.forward * 0f;
+
+        private Vector3 _fenderDebt = Vector3.zero;
 
         public override void Initiate()
         {
@@ -82,7 +83,12 @@ namespace VAT.Avatars.Muscular
             var currentTarget = space.InverseTransformTargetPosition(footTarget.position, CrystSpace.WORLD);
 
             space.RawTargetPosition = currentTarget;
-            space.RawTargetVelocity = PhysicsExtensions.GetLinearVelocity(previousTarget, currentTarget);
+
+            _fenderDebt += (Vector3)PhysicsExtensions.GetLinearVelocity(previousTarget, currentTarget);
+
+            var debt = _fenderDebt * 0.5f;
+            _fenderDebt -= debt;
+            space.RawTargetVelocity = debt;
 
             var vel = _leg.Knee.Transform.InverseTransformDirection(_leg.velocity);
             vel.y = 0f;
