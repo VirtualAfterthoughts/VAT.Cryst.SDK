@@ -38,7 +38,11 @@ namespace VAT.Avatars.Skeletal
             _length = length;
         }
 
-        private float _jumpPull = 0f;
+        public float _spineDebtMultiplier = 1f;
+        public float _footShrink = 0f;
+        public float _jumpPull = 0f;
+        public float _jumpMultiplier = 1f;
+        private float _timeSinceJump = 0f;
 
         public override void Solve()
         {
@@ -68,11 +72,44 @@ namespace VAT.Avatars.Skeletal
                 velocity += movement * 4f;
 
                 if (input.GetJump())
-                    _jumpPull = Mathf.Lerp(_jumpPull, 0.7f, Time.deltaTime * 4f);
+                {
+                    _jumpPull = Mathf.Lerp(_jumpPull, 0.3f, Time.deltaTime * 4f);
+
+                    _jumpMultiplier = 1f;
+                    _timeSinceJump = 0f;
+                    _footShrink = 0f;
+                    _spineDebtMultiplier = 1f;
+                }
                 else
+                {
                     _jumpPull = Mathf.Lerp(_jumpPull, 0f, Time.deltaTime * 24f);
 
-                Foot.localPosition += math.up() * _jumpPull;
+                    if (_timeSinceJump < 0.25f)
+                    {
+                        _jumpMultiplier = Mathf.Lerp(0f, 20f, _timeSinceJump / 0.25f);
+                        _spineDebtMultiplier = Mathf.Lerp(0f, 1f, _timeSinceJump / 0.25f);
+                    }
+                    else
+                    {
+                        _jumpMultiplier = 1f;
+                        _spineDebtMultiplier = 1f;
+                    }
+
+                    if (_timeSinceJump > 0.15f && _timeSinceJump < 1f)
+                    {
+                        _footShrink = 0.3f;
+                    }
+                    else
+                    {
+                        _footShrink = 0f;
+                    }
+
+                    _jumpMultiplier = Mathf.Lerp(_jumpMultiplier, 1f, Time.deltaTime * 6f);
+
+                    _timeSinceJump += Time.deltaTime;
+                }
+
+                Foot.localPosition *= 1f - _jumpPull;
             }
         }
 

@@ -61,6 +61,8 @@ namespace VAT.Avatars.Muscular
 
         public override void Solve()
         {
+            _locoBall.radius = 0.2f * (1f - _leg._footShrink);
+
             var kneeTarget = Knee.Parent.TransformBone(_leg.Knee.Parent, _leg.Knee);
             Knee.Solve(kneeTarget);
 
@@ -75,6 +77,8 @@ namespace VAT.Avatars.Muscular
             var footVelocity = physKnee.TransformDirection(dataKnee.InverseTransformDirection(PhysicsExtensions.GetLinearVelocity(_lastDistance, distance)));
             _lastDistance = distance;
 
+            footVelocity *= _leg._spineDebtMultiplier;
+
             var footTarget = Knee.TransformBone(_leg.Knee, _leg.Foot);
             Fender.Solve(footTarget);
 
@@ -88,7 +92,7 @@ namespace VAT.Avatars.Muscular
 
             var debt = _fenderDebt * 0.5f;
             _fenderDebt -= debt;
-            space.RawTargetVelocity = debt;
+            space.RawTargetVelocity = debt * _leg._jumpMultiplier;
 
             var vel = _leg.Knee.Transform.InverseTransformDirection(_leg.velocity);
             vel.y = 0f;

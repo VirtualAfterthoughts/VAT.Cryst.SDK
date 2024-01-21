@@ -99,12 +99,12 @@ namespace VAT.Avatars.Muscular
                     spring = 5e+06f,
                     damper = 1e+06f,
                 };
-                _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Limited);
+                _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
 
-                _configurableJoint.ConfigurableJoint.SetAngularLimits(_limits);
-                _configurableJoint.ConfigurableJoint.angularXMotion = _limits.IsFree(Axis.X) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
-                _configurableJoint.ConfigurableJoint.angularYMotion = _limits.IsFree(Axis.Y) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
-                _configurableJoint.ConfigurableJoint.angularZMotion = _limits.IsFree(Axis.Z) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
+                // _configurableJoint.ConfigurableJoint.SetAngularLimits(_limits);
+                // _configurableJoint.ConfigurableJoint.angularXMotion = _limits.IsFree(Axis.X) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
+                // _configurableJoint.ConfigurableJoint.angularYMotion = _limits.IsFree(Axis.Y) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
+                // _configurableJoint.ConfigurableJoint.angularZMotion = _limits.IsFree(Axis.Z) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
             }
             else {
                 Joint.ConnectedBody = null;
