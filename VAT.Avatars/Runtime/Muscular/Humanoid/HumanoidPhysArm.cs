@@ -41,6 +41,9 @@ namespace VAT.Avatars.Muscular
 
         IBone IHumanArm.Elbow => Elbow;
 
+        private RelativeBone _relativeWrist = null;
+        IBone IHumanArm.Wrist => _relativeWrist;
+
         IHumanHand IHumanArm.Hand => Hand;
 
         private IHumanArm _arm;
@@ -87,6 +90,8 @@ namespace VAT.Avatars.Muscular
             UpperArm.MatchBone(arm.UpperArm);
             Elbow.MatchBone(arm.Elbow);
             Hand.Hand.MatchBone(arm.Hand.Hand);
+
+            _relativeWrist = new RelativeBone(Elbow, arm.Elbow, arm.Wrist);
         }
 
         public Mesh GenerateClavicleMesh(HumanoidArmProportions proportions)

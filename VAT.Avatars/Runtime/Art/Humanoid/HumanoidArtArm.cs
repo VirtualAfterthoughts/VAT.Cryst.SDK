@@ -38,17 +38,17 @@ namespace VAT.Avatars.Art
             // Twist upper arm and elbow
             SimpleTransform upperArm = BoneGroup.UpperArm.Transform;
             SimpleTransform elbow = BoneGroup.Elbow.Transform;
-            //SimpleTransform wrist = BoneGroup.Hand.TransformBone(BoneGroup.Hand.Hand, BoneGroup.Wrist);
+            SimpleTransform wrist = BoneGroup.Wrist.Transform;
 
-            //float twistAngle = Vector3.SignedAngle(elbow.up, wrist.up, elbow.forward);
+            float twistAngle = Vector3.SignedAngle(elbow.up, wrist.up, elbow.forward);
 
-            //elbow.rotation = Quaternion.AngleAxis(twistAngle, elbow.forward) * elbow.rotation;
+            elbow.rotation = Quaternion.AngleAxis(twistAngle, elbow.forward) * elbow.rotation;
 
-            //upperArm.rotation = Quaternion.AngleAxis(twistAngle * 0.45f, upperArm.forward) * upperArm.rotation;
+            upperArm.rotation = Quaternion.AngleAxis(twistAngle * 0.45f, upperArm.forward) * upperArm.rotation;
 
             UpperArm.Solve(upperArm);
             LowerArm.Solve(elbow);
-            //Wrist.Solve(wrist);
+            Wrist.Solve(wrist);
             //Carpal.Solve(PhysGroup.Hand.TransformBone(DataGroup.Hand.Hand, DataGroup.Carpal));
 
             Hand.Solve();

@@ -11,6 +11,7 @@ namespace VAT.Avatars.REWORK
         public IBone Scapula { get; }
         public IBone UpperArm { get; }
         public IBone Elbow { get; }
+        public IBone Wrist { get; }
         public IHumanHand Hand { get; }
     }
 }

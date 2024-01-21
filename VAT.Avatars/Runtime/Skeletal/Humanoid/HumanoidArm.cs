@@ -40,6 +40,8 @@ namespace VAT.Avatars.Skeletal
 
         IBone IHumanArm.Elbow => Elbow;
 
+        IBone IHumanArm.Wrist => Wrist;
+
         IHumanHand IHumanArm.Hand => Hand;
 
         private HumanoidSpine _spine;
