@@ -3,7 +3,9 @@
     "rootNamespace": "VAT.Input",
     "references": [
         "GUID:2c5da6b5cc71c8446a65082f325dc51b",
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:da0c0cee52ead1942830bb1939fcf23c",
+        "GUID:e40ba710768534012815d3193fa296cb"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

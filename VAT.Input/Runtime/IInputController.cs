@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace VAT.Input
 {
-    public interface IInputHand
+    public interface IInputController
     {
         bool TryGetTrigger(out IInputTrigger trigger);
 
@@ -16,6 +16,6 @@ namespace VAT.Input
 
         bool TryGetPrimaryButton(out IInputButton primaryButton);
 
-        bool TryGetSecondaryButton(out IInputButton primaryButton);
+        bool TryGetSecondaryButton(out IInputButton secondaryButton);
     }
 }

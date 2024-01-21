@@ -12,6 +12,28 @@ namespace VAT.Characters
     using VAT.Input;
     using VAT.Shared.Data;
 
+    public struct AvatarRigInput : IAvatarInput
+    {
+        private Vector3 _movement;
+        private bool _jump;
+
+        public AvatarRigInput(Vector3 movement, bool jump)
+        {
+            _movement = movement;
+            _jump = jump;
+        }
+
+        public bool GetJump()
+        {
+            return _jump;
+        }
+
+        public Vector3 GetMovement()
+        {
+            return _movement;
+        }
+    }
+
     public class AvatarRig : CrystRig
     {
         public Avatar avatar;
@@ -31,12 +53,27 @@ namespace VAT.Characters
             LastRig.TryGetArm(Handedness.LEFT, out var leftArm);
             LastRig.TryGetArm(Handedness.RIGHT, out var rightArm);
 
+            AvatarRigInput input = default;
+
+            if (leftArm.TryGetHand(out var leftHand) && leftHand.TryGetInputController(out var controller))
+            {
+                controller.TryGetThumbstick(out var thumbstick);
+                var axis = thumbstick.GetAxis();
+                var movement = new Vector3(axis.x, 0f, axis.y);
+
+                avatar.Anatomy.Skeleton.PhysBoneSkeleton.TryGetHead(out var physHead);
+                movement = (Quaternion)physHead.Transform.rotation * movement;
+
+                input = new AvatarRigInput(movement, false);
+            }
+
             return new BasicAvatarPayload()
             {
                 Root = root,
                 Head = root.Transform(head.Transform),
                 LeftArm = root.TransformLimb(leftArm),
                 RightArm = root.TransformLimb(rightArm),
+                Input = input,
             };
         }
 

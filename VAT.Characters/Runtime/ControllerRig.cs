@@ -13,9 +13,9 @@ namespace VAT.Characters
 {
     public abstract class ControllerRig : CrystRig {
         [Header("References")]
-        [SerializeField] private Transform _leftWrist;
-        [SerializeField] private Transform _rightWrist;
-        [SerializeField] private Transform _head;
+        [SerializeField] protected Transform _leftWrist;
+        [SerializeField] protected Transform _rightWrist;
+        [SerializeField] protected Transform _head;
 
         public override bool TryGetTrackedRig(out CrystRig rig)
         {

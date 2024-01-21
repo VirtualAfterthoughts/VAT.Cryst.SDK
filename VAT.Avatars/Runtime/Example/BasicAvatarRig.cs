@@ -27,7 +27,7 @@ namespace VAT.Avatars.Example
                 _transform = transform;
             }
 
-            public bool TryGetInput(out IInputHand input)
+            public bool TryGetInputController(out IInputController input)
             {
                 input = default;
                 return false;

@@ -1,0 +1,692 @@
+{
+    "name": "XRInputActions",
+    "maps": [
+        {
+            "name": "HMD",
+            "id": "973adddd-7e16-44f2-93f4-5b768c217105",
+            "actions": [
+                {
+                    "name": "CenterEyePosition",
+                    "type": "Value",
+                    "id": "29ceceb5-cf27-4947-bf48-3e1d4065c996",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CenterEyeRotation",
+                    "type": "Value",
+                    "id": "14450f94-f7f8-4f24-874f-fff6d600f383",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c86d4df6-60fd-4672-82ef-605bea611bae",
+                    "path": "<XRHMD>/centerEyePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CenterEyePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "96fac988-8061-4159-81cd-2c4af003a337",
+                    "path": "<XRHMD>/centerEyeRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CenterEyeRotation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "ControllerLeft",
+            "id": "e2fbc867-e8e5-4896-92f7-f19ed880cb49",
+            "actions": [
+                {
+                    "name": "TriggerAxis",
+                    "type": "Value",
+                    "id": "21763553-9779-4c07-b99d-e836cd10badc",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TriggerPressed",
+                    "type": "Button",
+                    "id": "8ffcab54-554d-4f10-8310-2c03b94fa221",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "GripAxis",
+                    "type": "Value",
+                    "id": "cfdc0736-0b61-4100-b704-f390c233b1a8",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "GripPressed",
+                    "type": "Button",
+                    "id": "755ef796-6efe-485c-99d9-f939255e334a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "GripForce",
+                    "type": "Value",
+                    "id": "3694b4e8-dcf2-4e30-a490-3cddb8bab69c",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PrimaryButtonPressed",
+                    "type": "Button",
+                    "id": "af3514c2-6c5b-48c6-a85c-a6a1f0ad29ce",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PrimaryButtonTouched",
+                    "type": "Button",
+                    "id": "f5e96c56-2625-4d14-ac7d-9f173cda2385",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryButtonPressed",
+                    "type": "Button",
+                    "id": "ea52817a-d3bc-4565-a849-f5492d81bd7c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryButtonTouched",
+                    "type": "Button",
+                    "id": "a0970f74-a388-4469-b8b3-723f3dac58b2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ThumbstickAxis",
+                    "type": "Value",
+                    "id": "7d81304b-c149-4c30-8e06-046e0b2ece41",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ThumbstickPressed",
+                    "type": "Button",
+                    "id": "8ef1602d-ca53-40b5-9448-3ec63248bd03",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ThumbstickTouched",
+                    "type": "Button",
+                    "id": "2ce38186-5ad6-434d-b8d5-256f02856c10",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TrackpadAxis",
+                    "type": "Value",
+                    "id": "00e03b81-d415-4e00-b8c7-27d2b5738352",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TrackpadPressed",
+                    "type": "Button",
+                    "id": "e9728a16-1f90-42c2-8a6b-6da548186654",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TrackpadTouched",
+                    "type": "Button",
+                    "id": "01b86b72-1ec3-4225-868a-bceb64b7963d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f318b43f-fdf5-4335-9159-06499e3403c3",
+                    "path": "<XRController>{LeftHand}/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TriggerAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "63b998e9-1329-47fb-8e7d-ebeb62495838",
+                    "path": "<XRController>{LeftHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TriggerPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d8468245-785c-453a-ab5c-0126da09dcc1",
+                    "path": "<XRController>{LeftHand}/grip",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d4a67c07-a27b-42ad-a6be-4948ee311708",
+                    "path": "<XRController>{LeftHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "68e26aba-5002-476a-948b-348d11bc0260",
+                    "path": "<XRController>{LeftHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryButtonPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1adc7e94-56de-4714-927a-acf141e09ada",
+                    "path": "<XRController>{LeftHand}/primaryTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryButtonTouched",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1500a367-ac50-4774-8ff0-99519ea3584e",
+                    "path": "<XRController>{LeftHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryButtonPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3b90a999-7b3b-4bfa-8387-bb273563bd92",
+                    "path": "<XRController>{LeftHand}/secondaryTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryButtonTouched",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec6bb6e0-8fe6-414a-8109-4b4b2b9f0f46",
+                    "path": "<XRController>{LeftHand}/thumbstick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbstickAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dcdf37e0-5ed1-4d59-8e12-e39c4567f5c8",
+                    "path": "<XRController>{LeftHand}/thumbstickClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbstickPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1718b7c9-0cf1-4fbc-8fb9-dae68b080d31",
+                    "path": "<XRController>{LeftHand}/thumbstickTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbstickTouched",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0115bc48-63b2-4e9b-9eb0-496bc05c31ef",
+                    "path": "<ValveIndexController>{LeftHand}/gripForce",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripForce",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ab95bff9-1fda-473f-815c-82e62cf30a43",
+                    "path": "<OculusTouchController>{LeftHand}/grip",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripForce",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4eb96f56-add1-4727-81f1-d16bcd17f985",
+                    "path": "<XRController>{LeftHand}/trackpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TrackpadAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d7e92ad-1739-4be6-8179-17e7cedca87d",
+                    "path": "<XRController>{LeftHand}/trackpadPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TrackpadPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "454e25e6-04ee-4d8a-abfa-18788d037b37",
+                    "path": "<XRController>{LeftHand}/trackpadTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TrackpadTouched",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "ControllerRight",
+            "id": "a9684dce-4475-4dea-97e1-7607ebdc2c4e",
+            "actions": [
+                {
+                    "name": "TriggerAxis",
+                    "type": "Value",
+                    "id": "d9378094-ea78-43cb-81e7-820db6bff3d7",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TriggerPressed",
+                    "type": "Button",
+                    "id": "8383f4be-cb4c-464a-aebf-934bb4ab8ef5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "GripAxis",
+                    "type": "Value",
+                    "id": "e84a147d-1812-4e8b-88bc-5577e60deff8",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "GripPressed",
+                    "type": "Button",
+                    "id": "4a65766f-65b1-42d4-9529-3300f4760b3c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "GripForce",
+                    "type": "Value",
+                    "id": "9cb564e1-a152-4cb6-a36d-e6156dd644fa",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PrimaryButtonPressed",
+                    "type": "Button",
+                    "id": "1c6d3cf6-c62c-447e-9547-fc9fb67e666a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PrimaryButtonTouched",
+                    "type": "Button",
+                    "id": "ed7b06db-5141-4df1-b731-4158449ed369",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryButtonPressed",
+                    "type": "Button",
+                    "id": "041e1b29-4e82-46c0-8f21-6546069d8f3e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondaryButtonTouched",
+                    "type": "Button",
+                    "id": "e2ff70d6-4b96-43f8-85a6-98a6d64d2c92",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ThumbstickAxis",
+                    "type": "Value",
+                    "id": "2813fefd-cf83-4d7e-ae87-6186711a5226",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ThumbstickPressed",
+                    "type": "Button",
+                    "id": "af1d06df-b705-4366-90b6-f2840d0ea9be",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ThumbstickTouched",
+                    "type": "Button",
+                    "id": "0fa33267-6700-43ad-b7ac-a1de5f03b158",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TrackpadAxis",
+                    "type": "Value",
+                    "id": "2c6d69bf-148f-4f90-9193-45f7754e68bd",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "TrackpadPressed",
+                    "type": "Button",
+                    "id": "e5066554-2724-402a-8cc8-618174faa4f4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TrackpadTouched",
+                    "type": "Button",
+                    "id": "59b94e5d-83f1-41ad-9bb5-695f2e9203c0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f9f7e95b-5644-4ba9-96fd-907c79973ee2",
+                    "path": "<XRController>{RightHand}/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TriggerAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c4a0912d-bbe5-4dbf-93db-338903c3e6f9",
+                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TriggerPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e48d9ba4-1852-4c7a-938d-6e04768c911e",
+                    "path": "<XRController>{RightHand}/grip",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f227b527-400c-47dd-b69c-abf6f9a3ca7e",
+                    "path": "<XRController>{RightHand}/gripPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5eb32936-9b30-444b-9cd1-19887376305e",
+                    "path": "<ValveIndexController>{RightHand}/gripForce",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripForce",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c5e54b3-4f0e-4669-a1a4-4e228ec0b162",
+                    "path": "<OculusTouchController>{RightHand}/grip",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripForce",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "88e2f87c-5759-491b-8061-f9fc06c39ee4",
+                    "path": "<XRController>{RightHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryButtonPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f3a2bf5-db19-4819-a5ca-425a979b3963",
+                    "path": "<XRController>{RightHand}/primaryTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryButtonTouched",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3482be10-7a1a-45b3-b599-ddd86d7d3e2d",
+                    "path": "<XRController>{RightHand}/secondaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryButtonPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dc24c4d4-76f9-460b-b41e-69efb15cde94",
+                    "path": "<XRController>{RightHand}/secondaryTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryButtonTouched",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ed507f1b-51e0-4d45-898c-9818df23d8e9",
+                    "path": "<XRController>{RightHand}/thumbstick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbstickAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "45a25cb4-1aab-4ef4-a246-60b146e914b7",
+                    "path": "<XRController>{RightHand}/thumbstickClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbstickPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "47714e79-c98e-41f9-a4ca-f5b0aba3516b",
+                    "path": "<XRController>{RightHand}/thumbstickTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ThumbstickTouched",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7bc349b3-46fa-45dc-843c-39608a54d571",
+                    "path": "<XRController>{RightHand}/trackpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TrackpadAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9ced1a33-53e0-4720-bcc1-9274d14d6165",
+                    "path": "<XRController>{RightHand}/trackpadPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TrackpadPressed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2aa92fee-a199-405c-92bb-d576254eec3f",
+                    "path": "<XRController>{RightHand}/trackpadTouched",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TrackpadTouched",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
