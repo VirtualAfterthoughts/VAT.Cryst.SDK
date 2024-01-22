@@ -27,7 +27,7 @@ namespace VAT.Interaction
             normal.Normalize();
 
             var direction = (point - (Vector3)grabPoint.position);
-            Ray ray = new Ray(grabPoint.position, direction.normalized);
+            Ray ray = new(grabPoint.position, direction.normalized);
             if (_testCollider.Raycast(ray, out var hitInfo, float.PositiveInfinity))
             {
                 normal = hitInfo.normal;

@@ -127,7 +127,7 @@ namespace VAT.Interaction
 
             // Setup joint parameters
             joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Limited);
-            joint.linearLimitSpring = new SoftJointLimitSpring() { spring = 5e+06f, damper = 1e+06f };
+            joint.linearLimitSpring = new SoftJointLimitSpring() { spring = 5e+06f, damper = 5e+06f };
 
             return joint;
         }
