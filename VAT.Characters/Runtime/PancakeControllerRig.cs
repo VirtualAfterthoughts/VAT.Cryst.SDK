@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Avatars;
 using VAT.Input;
 using VAT.Input.Desktop;
+using VAT.Shared.Data;
 
 namespace VAT.Characters
 {
@@ -30,13 +31,78 @@ namespace VAT.Characters
         }
     }
 
+    public struct PancakeHand : IHand
+    {
+        public SimpleTransform Transform { get => _transform; set => _transform = value; }
+
+        private SimpleTransform _transform;
+        private DesktopController _controller;
+
+        public PancakeHand(SimpleTransform transform, DesktopController controller)
+        {
+            _transform = transform;
+            _controller = controller;
+        }
+
+        public bool TryGetInputController(out IInputController controller)
+        {
+            controller = _controller;
+            return true;
+        }
+    }
+
+    public struct PancakeArm : IArm
+    {
+        private IJoint[] _joints;
+
+        public int JointCount => 1;
+
+        public PancakeArm(PancakeHand hand)
+        {
+            _joints = new IJoint[] { hand };
+        }
+
+        public IJoint GetJoint(int index)
+        {
+            return _joints[index];
+        }
+
+        public void SetJoint(int index, IJoint joint)
+        {
+            _joints[index] = joint;
+        }
+
+        public bool TryGetElbow(out IJoint elbow)
+        {
+            elbow = default;
+            return false;
+        }
+
+        public bool TryGetHand(out IHand hand)
+        {
+            hand = (PancakeHand)GetJoint(0);
+            return true;
+        }
+
+        public bool TryGetUpperArm(out IJoint upperArm)
+        {
+            upperArm = default;
+            return false;
+        }
+    }
+
     public class PancakeControllerRig : ControllerRig {
         private DesktopInputActions _inputActions;
+        private DesktopController _leftController;
+        private DesktopController _rightController;
 
         public override void OnAwake()
         {
             _inputActions = new DesktopInputActions();
             _inputActions.Enable();
+
+            _leftController = new DesktopController(Handedness.LEFT, _inputActions);
+            _rightController = new DesktopController(Handedness.RIGHT, _inputActions);
         }
 
         public override void OnUpdate(float deltaTime)
@@ -54,7 +120,7 @@ namespace VAT.Characters
             float speed = 150f * deltaTime;
             Cursor.lockState = CursorLockMode.Locked;
 
-            var action = _inputActions.Desktop.Look;
+            var action = _inputActions.Gameplay.Look;
             var lookDelta = action.ReadValue<Vector2>();
 
             if (action.activeControl?.device.description.deviceClass == "Mouse")
@@ -71,13 +137,29 @@ namespace VAT.Characters
 
         public override bool TryGetInput(out IBasicInput input)
         {
-            var movementAxis = _inputActions.Desktop.Movement.ReadValue<Vector2>();
+            var movementAxis = _inputActions.Gameplay.Movement.ReadValue<Vector2>();
             var movement = _head.rotation * new Vector3(movementAxis.x, 0f, movementAxis.y);
 
-            var jump = _inputActions.Desktop.Jump.ReadValue<float>();
+            var jump = _inputActions.Gameplay.Jump.ReadValue<float>();
 
             input = new PancakeInput(movement, jump >= 0.5f);
             return true;
+        }
+
+        public override bool TryGetArm(Handedness handedness, out IArm arm)
+        {
+            switch (handedness)
+            {
+                default:
+                    arm = default;
+                    return false;
+                case Handedness.LEFT:
+                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(_leftWrist), _leftController));
+                    return true;
+                case Handedness.RIGHT:
+                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(_rightWrist), _rightController));
+                    return true;
+            }
         }
     }
 }

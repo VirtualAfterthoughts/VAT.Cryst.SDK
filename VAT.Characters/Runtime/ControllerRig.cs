@@ -25,7 +25,10 @@ namespace VAT.Characters
 
         public override bool TryGetHead(out IJoint head)
         {
-            head = new BasicJoint(SimpleTransform.Create(transform).InverseTransform(_head));
+            var simpleTransform = SimpleTransform.Create(transform).InverseTransform(_head);
+            simpleTransform.lossyScale = Vector3.one;
+
+            head = new BasicJoint(simpleTransform);
             return true;
         }
 

@@ -26,7 +26,7 @@ namespace VAT.Input.Desktop
     ""name"": ""DesktopInputActions"",
     ""maps"": [
         {
-            ""name"": ""Desktop"",
+            ""name"": ""Gameplay"",
             ""id"": ""744695b2-b289-439b-ae55-47c3ec6d0362"",
             ""actions"": [
                 {
@@ -136,15 +136,77 @@ namespace VAT.Input.Desktop
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""HandLeft"",
+            ""id"": ""bb41bb27-9c25-4496-bb27-4c70647a4f99"",
+            ""actions"": [
+                {
+                    ""name"": ""GripAxis"",
+                    ""type"": ""Button"",
+                    ""id"": ""21884fa6-2737-438f-846b-8456a3f5d39b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""030fb394-96b7-4f18-8636-f8f54dae227d"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GripAxis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""HandRight"",
+            ""id"": ""b6664450-66a1-4762-8dfb-d119a44908b1"",
+            ""actions"": [
+                {
+                    ""name"": ""GripAxis"",
+                    ""type"": ""Button"",
+                    ""id"": ""efdfc0a6-c4ba-4705-8a99-eadc06f0f79e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""74e2881d-88cb-4b3c-9077-2b88d058c054"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GripAxis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
 }");
-            // Desktop
-            m_Desktop = asset.FindActionMap("Desktop", throwIfNotFound: true);
-            m_Desktop_Movement = m_Desktop.FindAction("Movement", throwIfNotFound: true);
-            m_Desktop_Jump = m_Desktop.FindAction("Jump", throwIfNotFound: true);
-            m_Desktop_Look = m_Desktop.FindAction("Look", throwIfNotFound: true);
+            // Gameplay
+            m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
+            m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
+            m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
+            m_Gameplay_Look = m_Gameplay.FindAction("Look", throwIfNotFound: true);
+            // HandLeft
+            m_HandLeft = asset.FindActionMap("HandLeft", throwIfNotFound: true);
+            m_HandLeft_GripAxis = m_HandLeft.FindAction("GripAxis", throwIfNotFound: true);
+            // HandRight
+            m_HandRight = asset.FindActionMap("HandRight", throwIfNotFound: true);
+            m_HandRight_GripAxis = m_HandRight.FindAction("GripAxis", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -201,39 +263,39 @@ namespace VAT.Input.Desktop
             return asset.FindBinding(bindingMask, out action);
         }
 
-        // Desktop
-        private readonly InputActionMap m_Desktop;
-        private IDesktopActions m_DesktopActionsCallbackInterface;
-        private readonly InputAction m_Desktop_Movement;
-        private readonly InputAction m_Desktop_Jump;
-        private readonly InputAction m_Desktop_Look;
-        public struct DesktopActions
+        // Gameplay
+        private readonly InputActionMap m_Gameplay;
+        private IGameplayActions m_GameplayActionsCallbackInterface;
+        private readonly InputAction m_Gameplay_Movement;
+        private readonly InputAction m_Gameplay_Jump;
+        private readonly InputAction m_Gameplay_Look;
+        public struct GameplayActions
         {
             private @DesktopInputActions m_Wrapper;
-            public DesktopActions(@DesktopInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Movement => m_Wrapper.m_Desktop_Movement;
-            public InputAction @Jump => m_Wrapper.m_Desktop_Jump;
-            public InputAction @Look => m_Wrapper.m_Desktop_Look;
-            public InputActionMap Get() { return m_Wrapper.m_Desktop; }
+            public GameplayActions(@DesktopInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Movement => m_Wrapper.m_Gameplay_Movement;
+            public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
+            public InputAction @Look => m_Wrapper.m_Gameplay_Look;
+            public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
             public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(DesktopActions set) { return set.Get(); }
-            public void SetCallbacks(IDesktopActions instance)
+            public static implicit operator InputActionMap(GameplayActions set) { return set.Get(); }
+            public void SetCallbacks(IGameplayActions instance)
             {
-                if (m_Wrapper.m_DesktopActionsCallbackInterface != null)
+                if (m_Wrapper.m_GameplayActionsCallbackInterface != null)
                 {
-                    @Movement.started -= m_Wrapper.m_DesktopActionsCallbackInterface.OnMovement;
-                    @Movement.performed -= m_Wrapper.m_DesktopActionsCallbackInterface.OnMovement;
-                    @Movement.canceled -= m_Wrapper.m_DesktopActionsCallbackInterface.OnMovement;
-                    @Jump.started -= m_Wrapper.m_DesktopActionsCallbackInterface.OnJump;
-                    @Jump.performed -= m_Wrapper.m_DesktopActionsCallbackInterface.OnJump;
-                    @Jump.canceled -= m_Wrapper.m_DesktopActionsCallbackInterface.OnJump;
-                    @Look.started -= m_Wrapper.m_DesktopActionsCallbackInterface.OnLook;
-                    @Look.performed -= m_Wrapper.m_DesktopActionsCallbackInterface.OnLook;
-                    @Look.canceled -= m_Wrapper.m_DesktopActionsCallbackInterface.OnLook;
+                    @Movement.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
+                    @Movement.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
+                    @Movement.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnMovement;
+                    @Jump.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnJump;
+                    @Jump.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnJump;
+                    @Jump.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnJump;
+                    @Look.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
+                    @Look.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
+                    @Look.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
                 }
-                m_Wrapper.m_DesktopActionsCallbackInterface = instance;
+                m_Wrapper.m_GameplayActionsCallbackInterface = instance;
                 if (instance != null)
                 {
                     @Movement.started += instance.OnMovement;
@@ -248,12 +310,86 @@ namespace VAT.Input.Desktop
                 }
             }
         }
-        public DesktopActions @Desktop => new DesktopActions(this);
-        public interface IDesktopActions
+        public GameplayActions @Gameplay => new GameplayActions(this);
+
+        // HandLeft
+        private readonly InputActionMap m_HandLeft;
+        private IHandLeftActions m_HandLeftActionsCallbackInterface;
+        private readonly InputAction m_HandLeft_GripAxis;
+        public struct HandLeftActions
+        {
+            private @DesktopInputActions m_Wrapper;
+            public HandLeftActions(@DesktopInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @GripAxis => m_Wrapper.m_HandLeft_GripAxis;
+            public InputActionMap Get() { return m_Wrapper.m_HandLeft; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(HandLeftActions set) { return set.Get(); }
+            public void SetCallbacks(IHandLeftActions instance)
+            {
+                if (m_Wrapper.m_HandLeftActionsCallbackInterface != null)
+                {
+                    @GripAxis.started -= m_Wrapper.m_HandLeftActionsCallbackInterface.OnGripAxis;
+                    @GripAxis.performed -= m_Wrapper.m_HandLeftActionsCallbackInterface.OnGripAxis;
+                    @GripAxis.canceled -= m_Wrapper.m_HandLeftActionsCallbackInterface.OnGripAxis;
+                }
+                m_Wrapper.m_HandLeftActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @GripAxis.started += instance.OnGripAxis;
+                    @GripAxis.performed += instance.OnGripAxis;
+                    @GripAxis.canceled += instance.OnGripAxis;
+                }
+            }
+        }
+        public HandLeftActions @HandLeft => new HandLeftActions(this);
+
+        // HandRight
+        private readonly InputActionMap m_HandRight;
+        private IHandRightActions m_HandRightActionsCallbackInterface;
+        private readonly InputAction m_HandRight_GripAxis;
+        public struct HandRightActions
+        {
+            private @DesktopInputActions m_Wrapper;
+            public HandRightActions(@DesktopInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @GripAxis => m_Wrapper.m_HandRight_GripAxis;
+            public InputActionMap Get() { return m_Wrapper.m_HandRight; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(HandRightActions set) { return set.Get(); }
+            public void SetCallbacks(IHandRightActions instance)
+            {
+                if (m_Wrapper.m_HandRightActionsCallbackInterface != null)
+                {
+                    @GripAxis.started -= m_Wrapper.m_HandRightActionsCallbackInterface.OnGripAxis;
+                    @GripAxis.performed -= m_Wrapper.m_HandRightActionsCallbackInterface.OnGripAxis;
+                    @GripAxis.canceled -= m_Wrapper.m_HandRightActionsCallbackInterface.OnGripAxis;
+                }
+                m_Wrapper.m_HandRightActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @GripAxis.started += instance.OnGripAxis;
+                    @GripAxis.performed += instance.OnGripAxis;
+                    @GripAxis.canceled += instance.OnGripAxis;
+                }
+            }
+        }
+        public HandRightActions @HandRight => new HandRightActions(this);
+        public interface IGameplayActions
         {
             void OnMovement(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
+        }
+        public interface IHandLeftActions
+        {
+            void OnGripAxis(InputAction.CallbackContext context);
+        }
+        public interface IHandRightActions
+        {
+            void OnGripAxis(InputAction.CallbackContext context);
         }
     }
 }

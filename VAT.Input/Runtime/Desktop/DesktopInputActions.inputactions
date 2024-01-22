@@ -2,7 +2,7 @@
     "name": "DesktopInputActions",
     "maps": [
         {
-            "name": "Desktop",
+            "name": "Gameplay",
             "id": "744695b2-b289-439b-ae55-47c3ec6d0362",
             "actions": [
                 {
@@ -108,6 +108,62 @@
                     "processors": "",
                     "groups": "",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "HandLeft",
+            "id": "bb41bb27-9c25-4496-bb27-4c70647a4f99",
+            "actions": [
+                {
+                    "name": "GripAxis",
+                    "type": "Button",
+                    "id": "21884fa6-2737-438f-846b-8456a3f5d39b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "030fb394-96b7-4f18-8636-f8f54dae227d",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "HandRight",
+            "id": "b6664450-66a1-4762-8dfb-d119a44908b1",
+            "actions": [
+                {
+                    "name": "GripAxis",
+                    "type": "Button",
+                    "id": "efdfc0a6-c4ba-4705-8a99-eadc06f0f79e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "74e2881d-88cb-4b3c-9077-2b88d058c054",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GripAxis",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

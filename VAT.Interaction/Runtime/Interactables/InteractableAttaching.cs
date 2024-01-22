@@ -126,7 +126,8 @@ namespace VAT.Interaction
             transform.SetPositionAndRotation(initialTransform.position, initialTransform.rotation);
 
             // Setup joint parameters
-            joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
+            joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Limited);
+            joint.linearLimitSpring = new SoftJointLimitSpring() { spring = 5e+06f, damper = 1e+06f };
 
             return joint;
         }

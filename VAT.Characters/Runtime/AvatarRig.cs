@@ -19,6 +19,22 @@ namespace VAT.Characters
         public override void OnAwake()
         {
             avatar.Initiate();
+
+            var hands = avatar.GetHands();
+
+            TryGetTrackedRig(out var rig);
+
+            foreach (var hand in hands)
+            {
+                rig.TryGetArm(hand.Handedness, out var arm);
+                arm.TryGetHand(out var thing);
+                thing.TryGetInputController(out var controller);
+
+                var go = hand.PhysHand.UnityGameObject;
+                var interactor = go.AddComponent<CrystInteractor>();
+                interactor.handedness = hand.Handedness;
+                interactor.controller = controller;
+            }
         }
 
         protected virtual IAvatarPayload GetPayload()
@@ -26,6 +42,7 @@ namespace VAT.Characters
             avatar.transform.position = LastRig.transform.position;
 
             var root = SimpleTransform.Create(avatar.transform);
+            root.lossyScale = Vector3.one;
 
             LastRig.TryGetHead(out var head);
             LastRig.TryGetArm(Handedness.LEFT, out var leftArm);
