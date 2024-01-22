@@ -26,10 +26,19 @@ namespace VAT.Interaction
             var normal = -(point - (Vector3)grabPoint.position);
             normal.Normalize();
 
-            var forward = (Vector3)grabPoint.forward;
-            Vector3.OrthoNormalize(ref normal, ref forward);
+            var direction = (point - (Vector3)grabPoint.position);
+            Ray ray = new Ray(grabPoint.position, direction.normalized);
+            if (_testCollider.Raycast(ray, out var hitInfo, float.PositiveInfinity))
+            {
+                normal = hitInfo.normal;
+                point = hitInfo.point;
+            }
 
-            return SimpleTransform.Create(point, Quaternion.LookRotation(forward, normal));
+            var forward = (Vector3)grabPoint.forward;
+            var up = (Vector3)grabPoint.up;
+            Vector3.OrthoNormalize(ref normal, ref forward, ref up);
+
+            return SimpleTransform.Create(point, Quaternion.LookRotation(forward, up));
         }
     }
 }
