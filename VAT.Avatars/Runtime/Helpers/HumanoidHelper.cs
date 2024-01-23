@@ -40,6 +40,8 @@ namespace VAT.Avatars.Helpers
 
         public static void CalculateHand(ref HandProportions proportions, HumanoidHand hand, HumanoidHandDescriptor descriptor)
         {
+            proportions.handedness = descriptor.isLeft ? Input.Handedness.LEFT : Input.Handedness.RIGHT;
+
             proportions.fingerProportions = new FingerProportions[5];
 
             proportions.fingerProportions[0] = Internal_CalculateFinger(hand, descriptor.thumb, Vector3.left);

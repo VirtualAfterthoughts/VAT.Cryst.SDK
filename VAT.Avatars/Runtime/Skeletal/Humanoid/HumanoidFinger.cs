@@ -114,6 +114,7 @@ namespace VAT.Avatars.Skeletal
             normalized.position *= new float3(wrist.radius.x, wrist.radius.y, fingerLength);
             openPoint = normalized;
         }
+
         public override void Attach(DataBoneGroup group) {
             base.Attach(group);
             _hand = group.LastBone;

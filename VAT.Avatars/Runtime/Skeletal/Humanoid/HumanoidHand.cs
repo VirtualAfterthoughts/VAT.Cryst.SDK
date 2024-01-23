@@ -6,6 +6,8 @@ using UnityEngine;
 using VAT.Avatars.Data;
 using VAT.Avatars.Proportions;
 using VAT.Avatars.REWORK;
+using VAT.Input;
+using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -14,6 +16,10 @@ namespace VAT.Avatars.Skeletal
         public override int BoneCount => 1;
 
         public DataBone Hand => Bones[0];
+
+        public DataBone Palm = null;
+
+        private Handedness _handedness = Handedness.LEFT;
 
         private int _fingerCount = 0;
         private HumanoidFinger[] _fingers;
@@ -32,6 +38,13 @@ namespace VAT.Avatars.Skeletal
 
         public HumanoidHand(DataBoneGroup parent) : this() {
             Attach(parent);
+        }
+
+        public override void Initiate()
+        {
+            base.Initiate();
+
+            Palm = new DataBone(Hand);
         }
 
         public PoseData GetData() {
@@ -53,6 +66,18 @@ namespace VAT.Avatars.Skeletal
         }
 
         public void WriteProportions(HandProportions proportions) {
+            _handedness = proportions.handedness;
+
+            Palm.localPosition = 0.7f * proportions.wristEllipsoid.height * Vector3.forward + Vector3.down * proportions.wristEllipsoid.radius.y;
+
+            float angle;
+            if (_handedness == Handedness.LEFT)
+                angle = -90f;
+            else
+                angle = 90f;
+
+            Palm.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
             _fingerCount = proportions.FingerCount;
             _fingers = new HumanoidFinger[_fingerCount];
 
@@ -74,5 +99,23 @@ namespace VAT.Avatars.Skeletal
                 _fingers[i].Solve();
             }
         }
+
+#if UNITY_EDITOR
+        public override void DrawGizmos()
+        {
+            base.DrawGizmos();
+
+            using var color = TempGizmoColor.Create();
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(Palm.position, 0.005f);
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(Palm.position, Palm.position + Palm.forward * 0.1f);
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(Palm.position, Palm.position + Palm.up * 0.1f);
+        }
+#endif
     }
 }

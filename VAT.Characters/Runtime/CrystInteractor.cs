@@ -16,7 +16,7 @@ namespace VAT.Characters
         public CrystRigidbody rb;
         public Handedness handedness;
         public IInputController controller;
-        public Transform palm;
+        public SimpleTransform palm = SimpleTransform.Default;
 
         private void Start()
         {
@@ -35,7 +35,7 @@ namespace VAT.Characters
 
         public override SimpleTransform GetGrabPoint()
         {
-            return palm;
+            return SimpleTransform.Create(transform).Transform(palm);
         }
 
         public void LateUpdate()
