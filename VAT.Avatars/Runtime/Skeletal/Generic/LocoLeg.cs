@@ -73,7 +73,7 @@ namespace VAT.Avatars.Skeletal
 
                 if (input.GetJump())
                 {
-                    _jumpPull = Mathf.Lerp(_jumpPull, 0.3f, Time.deltaTime * 4f);
+                    _jumpPull = Mathf.Lerp(_jumpPull, 0.25f, Time.deltaTime * 12f);
 
                     _jumpMultiplier = 1f;
                     _timeSinceJump = 0f;
