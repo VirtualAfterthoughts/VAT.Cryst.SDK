@@ -18,6 +18,7 @@ using VAT.Avatars.Art;
 using VAT.Shared;
 using VAT.Shared.Extensions;
 using VAT.Avatars.Posing;
+using VAT.Input;
 
 namespace VAT.Avatars.Integumentary
 {
@@ -179,12 +180,12 @@ namespace VAT.Avatars.Integumentary
             GameObject.Destroy(_physicsRoot);
         }
 
-        protected override IAvatarHand[] CreateHands() {
-            var array = new IAvatarHand[2];
+        protected override AvatarArm[] CreateArms() {
+            var array = new AvatarArm[2];
             var skeleton = GenericAnatomy.GenericSkeleton;
 
-            array[0] = new HumanoidAvatarHand(skeleton.GenericDataBoneSkeleton.LeftArm.Hand, skeleton.GenericPhysBoneSkeleton.LeftArm);
-            array[1] = new HumanoidAvatarHand(skeleton.GenericDataBoneSkeleton.RightArm.Hand, skeleton.GenericPhysBoneSkeleton.RightArm);
+            array[0] = new AvatarArm(Handedness.LEFT, skeleton.GenericDataBoneSkeleton.LeftArm, skeleton.GenericPhysBoneSkeleton.LeftArm);
+            array[1] = new AvatarArm(Handedness.RIGHT, skeleton.GenericDataBoneSkeleton.RightArm, skeleton.GenericPhysBoneSkeleton.RightArm);
 
             return array;
         }

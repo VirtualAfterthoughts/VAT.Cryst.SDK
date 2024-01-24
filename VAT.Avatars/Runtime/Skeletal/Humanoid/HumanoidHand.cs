@@ -11,7 +11,7 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Skeletal
 {
-    public class HumanoidHand : DataBoneGroup, IHumanHand
+    public class HumanoidHand : DataBoneGroup, IHandGroup
     {
         public override int BoneCount => 1;
 
@@ -28,7 +28,9 @@ namespace VAT.Avatars.Skeletal
 
         public override int SubGroupCount => _fingerCount;
 
-        IBone IHumanHand.Hand => Hand;
+        IBone IHandGroup.Hand => Hand;
+
+        IBone IHandGroup.Palm => Palm;
 
         public HumanoidHand() {
             _fingers = Array.Empty<HumanoidFinger>();

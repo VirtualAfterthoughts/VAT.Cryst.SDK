@@ -37,14 +37,14 @@ namespace VAT.Avatars.Muscular
 
         IBone IHumanArm.Scapula => Scapula;
 
-        IBone IHumanArm.UpperArm => UpperArm;
+        IBone IArmGroup.UpperArm => UpperArm;
 
-        IBone IHumanArm.Elbow => Elbow;
+        IBone IArmGroup.Elbow => Elbow;
 
         private RelativeBone _relativeWrist = null;
         IBone IHumanArm.Wrist => _relativeWrist;
 
-        IHumanHand IHumanArm.Hand => Hand;
+        IHandGroup IArmGroup.Hand => Hand;
 
         private IHumanArm _arm;
 
@@ -89,7 +89,7 @@ namespace VAT.Avatars.Muscular
             Scapula.MatchBone(arm.Scapula);
             UpperArm.MatchBone(arm.UpperArm);
             Elbow.MatchBone(arm.Elbow);
-            Hand.Hand.MatchBone(arm.Hand.Hand);
+            Hand.MatchPose(arm.Hand);
 
             _relativeWrist = new RelativeBone(Elbow, arm.Elbow, arm.Wrist);
         }

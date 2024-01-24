@@ -8,6 +8,7 @@ namespace VAT.Characters
     using VAT.Avatars;
     using VAT.Avatars.Example;
     using VAT.Avatars.Integumentary;
+    using VAT.Avatars.Muscular;
     using VAT.Avatars.Nervous;
     using VAT.Input;
     using VAT.Shared.Data;
@@ -20,20 +21,21 @@ namespace VAT.Characters
         {
             avatar.Initiate();
 
-            var hands = avatar.GetHands();
+            var arms = avatar.GetArms();
 
             TryGetTrackedRig(out var rig);
 
-            foreach (var hand in hands)
+            foreach (var arm in arms)
             {
-                rig.TryGetArm(hand.Handedness, out var arm);
-                arm.TryGetHand(out var thing);
+                rig.TryGetArm(arm.Handedness, out var rigArm);
+                rigArm.TryGetHand(out var thing);
                 thing.TryGetInputController(out var controller);
 
-                var go = hand.PhysHand.UnityGameObject;
+                var go = ((PhysBone)arm.PhysArm.Hand.Hand).UnityGameObject;
                 var interactor = go.AddComponent<CrystInteractor>();
-                interactor.handedness = hand.Handedness;
+                interactor.handedness = arm.Handedness;
                 interactor.controller = controller;
+                interactor.arm = arm;
             }
         }
 

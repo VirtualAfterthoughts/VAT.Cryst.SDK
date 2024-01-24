@@ -36,13 +36,13 @@ namespace VAT.Avatars.Skeletal
 
         IBone IHumanArm.Scapula => Scapula;
 
-        IBone IHumanArm.UpperArm => UpperArm;
+        IBone IArmGroup.UpperArm => UpperArm;
 
-        IBone IHumanArm.Elbow => Elbow;
+        IBone IArmGroup.Elbow => Elbow;
 
         IBone IHumanArm.Wrist => Wrist;
 
-        IHumanHand IHumanArm.Hand => Hand;
+        IHandGroup IArmGroup.Hand => Hand;
 
         private HumanoidSpine _spine;
 

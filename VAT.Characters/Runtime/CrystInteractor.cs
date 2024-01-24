@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Avatars.Integumentary;
 using VAT.Entities.PhysX;
 
 using VAT.Input;
@@ -16,7 +16,7 @@ namespace VAT.Characters
         public CrystRigidbody rb;
         public Handedness handedness;
         public IInputController controller;
-        public SimpleTransform palm = SimpleTransform.Default;
+        public AvatarArm arm;
 
         private void Start()
         {
@@ -35,7 +35,7 @@ namespace VAT.Characters
 
         public override SimpleTransform GetGrabPoint()
         {
-            return SimpleTransform.Create(transform).Transform(palm);
+            return arm.PhysArm.Hand.Palm.Transform;
         }
 
         public void LateUpdate()

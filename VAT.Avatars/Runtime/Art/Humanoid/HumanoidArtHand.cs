@@ -9,7 +9,7 @@ using VAT.Avatars.Skeletal;
 
 namespace VAT.Avatars.Art
 {
-    public class HumanoidArtHand : HumanoidArtBoneGroupT<HumanoidHandDescriptor, IHumanHand>
+    public class HumanoidArtHand : HumanoidArtBoneGroupT<HumanoidHandDescriptor, IHandGroup>
     {
         public override int BoneCount => 1;
 
@@ -44,7 +44,7 @@ namespace VAT.Avatars.Art
             }
         }
 
-        public override void WriteData(IHumanHand boneGroup) {
+        public override void WriteData(IHandGroup boneGroup) {
             base.WriteData(boneGroup);
 
             // int fingerIndex = 0;
@@ -59,7 +59,7 @@ namespace VAT.Avatars.Art
             // }
         }
 
-        public override void WriteOffsets(IHumanHand boneGroup) {
+        public override void WriteOffsets(IHandGroup boneGroup) {
             Hand.WriteOffset(boneGroup.Hand);
 
             // int fingerIndex = 0;

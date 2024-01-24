@@ -7,13 +7,16 @@ using VAT.Cryst.Interfaces;
 
 namespace VAT.Avatars.Muscular
 {
-    public class HumanoidPhysHand : HumanoidPhysBoneGroup, IHumanHand
+    public class HumanoidPhysHand : HumanoidPhysBoneGroup, IHandGroup
     {
         public override int BoneCount => 1;
 
         public HumanoidPhysBone Hand => TBones[0];
 
-        IBone IHumanHand.Hand => Hand;
+        IBone IHandGroup.Hand => Hand;
+
+        IBone IHandGroup.Palm => _relativePalm;
+        private RelativeBone _relativePalm;
 
         public HumanoidPhysHand()
         {
@@ -30,6 +33,13 @@ namespace VAT.Avatars.Muscular
             base.Initiate();
 
             _bones[0] = new HumanoidPhysBone($"Hand", null, HumanoidConstants.HandLimits);
+        }
+
+        public void MatchPose(IHandGroup hand)
+        {
+            Hand.MatchBone(hand.Hand);
+
+            _relativePalm = new RelativeBone(Hand, hand.Hand, hand.Palm);
         }
 
         public override void Solve()
