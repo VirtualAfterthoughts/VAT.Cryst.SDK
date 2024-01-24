@@ -110,7 +110,7 @@ namespace VAT.Avatars.Skeletal
         {
             var radius = _proportions.knuckleEllipsoid.radius;
             var height = _proportions.wristEllipsoid.height;
-            Vector3 size = new(0f, radius.x, height * 0.5f);
+            Vector3 size = new(0f, radius.x * 1.25f, height * 0.5f);
 
             return size;
         }
@@ -125,7 +125,7 @@ namespace VAT.Avatars.Skeletal
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(Palm.position, 0.005f);
 
-            using (var matrix = TempGizmoMatrix.Create())
+            using (var matrix = TempGizmoMatrix.Create()) 
             {
                 Gizmos.matrix = Palm.Transform.localToWorldMatrix;
 
