@@ -21,6 +21,8 @@ namespace VAT.Avatars.Skeletal
 
         private Handedness _handedness = Handedness.LEFT;
 
+        private HandProportions _proportions;
+
         private int _fingerCount = 0;
         private HumanoidFinger[] _fingers;
         public override DataBoneGroup[] SubGroups => _fingers;
@@ -68,6 +70,8 @@ namespace VAT.Avatars.Skeletal
         }
 
         public void WriteProportions(HandProportions proportions) {
+            _proportions = proportions;
+
             _handedness = proportions.handedness;
 
             Palm.localPosition = 0.7f * proportions.wristEllipsoid.height * Vector3.forward + Vector3.down * proportions.wristEllipsoid.radius.y;
@@ -102,6 +106,15 @@ namespace VAT.Avatars.Skeletal
             }
         }
 
+        public Vector3 GetPalmSize()
+        {
+            var radius = _proportions.knuckleEllipsoid.radius;
+            var height = _proportions.wristEllipsoid.height;
+            Vector3 size = new(0f, radius.x, height * 0.5f);
+
+            return size;
+        }
+
 #if UNITY_EDITOR
         public override void DrawGizmos()
         {
@@ -111,6 +124,13 @@ namespace VAT.Avatars.Skeletal
 
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(Palm.position, 0.005f);
+
+            using (var matrix = TempGizmoMatrix.Create())
+            {
+                Gizmos.matrix = Palm.Transform.localToWorldMatrix;
+
+                Gizmos.DrawWireCube(Vector3.zero, GetPalmSize());
+            }
 
             Gizmos.color = Color.blue;
             Gizmos.DrawLine(Palm.position, Palm.position + Palm.forward * 0.1f);

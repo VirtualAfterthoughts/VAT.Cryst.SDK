@@ -10,6 +10,7 @@ namespace VAT.Characters
     using VAT.Avatars.Integumentary;
     using VAT.Avatars.Muscular;
     using VAT.Avatars.Nervous;
+
     using VAT.Input;
     using VAT.Shared.Data;
 
