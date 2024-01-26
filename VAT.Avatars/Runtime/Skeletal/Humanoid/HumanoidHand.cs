@@ -121,7 +121,7 @@ namespace VAT.Avatars.Skeletal
             var size = GetPalmSize();
             var size2D = new Vector2(size.y, size.z) * 0.5f;
 
-            var palmPos = Palm.position + (Palm.forward * size2D.y + Palm.up * size2D.x);
+            var palmPos = Palm.position + Palm.forward * size2D.y * position.y + Palm.up * size2D.x * position.x;
             return SimpleTransform.Create(palmPos, Palm.rotation);
         }
 
@@ -133,6 +133,8 @@ namespace VAT.Avatars.Skeletal
             using var color = TempGizmoColor.Create();
 
             Gizmos.color = Color.red;
+            Gizmos.DrawSphere(GetPointOnPalm(Vector2.up).position, 0.005f);
+
             Gizmos.DrawSphere(Palm.position, 0.005f);
 
             using (var matrix = TempGizmoMatrix.Create()) 
