@@ -50,7 +50,7 @@ namespace VAT.Avatars.Vitals
             // Calculate mass
             float density = 1.1f * 1000f;
 
-            _boneMasses[0] = Internal_CalculateMass(_spineProportions.chestEllipsoid, density * 0.1f);
+            _boneMasses[0] = Internal_CalculateMass(_spineProportions.chestEllipsoid, density);
             _boneMasses[1] = Internal_CalculateMass(_proportions.upperArmEllipsoid, density);
             _boneMasses[2] = Internal_CalculateMass(_proportions.elbowEllipsoid, density);
             _boneMasses[3] = Internal_CalculateMass(_proportions.handProportions.wristEllipsoid, density * 3f);
