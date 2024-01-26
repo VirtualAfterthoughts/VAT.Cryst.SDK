@@ -4,6 +4,7 @@ using UnityEngine;
 using VAT.Avatars.Constants;
 using VAT.Avatars.REWORK;
 using VAT.Cryst.Interfaces;
+using VAT.Shared.Data;
 
 namespace VAT.Avatars.Muscular
 {
@@ -17,6 +18,8 @@ namespace VAT.Avatars.Muscular
 
         IBone IHandGroup.Palm => _relativePalm;
         private RelativeBone _relativePalm;
+
+        private IHandGroup _hand;
 
         public HumanoidPhysHand()
         {
@@ -37,6 +40,8 @@ namespace VAT.Avatars.Muscular
 
         public void MatchPose(IHandGroup hand)
         {
+            _hand = hand;
+
             Hand.MatchBone(hand.Hand);
 
             _relativePalm = new RelativeBone(Hand, hand.Hand, hand.Palm);
@@ -45,6 +50,11 @@ namespace VAT.Avatars.Muscular
         public override void Solve()
         {
             throw new System.NotImplementedException();
+        }
+
+        public SimpleTransform GetPointOnPalm(Vector2 position)
+        {
+            return _relativePalm.Transform.Transform(_hand.Palm.Transform.InverseTransform(_hand.GetPointOnPalm(position)));
         }
     }
 }

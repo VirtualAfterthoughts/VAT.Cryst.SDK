@@ -7,6 +7,7 @@ using VAT.Avatars.Data;
 using VAT.Avatars.Proportions;
 using VAT.Avatars.REWORK;
 using VAT.Input;
+using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Skeletal
@@ -113,6 +114,15 @@ namespace VAT.Avatars.Skeletal
             Vector3 size = new(0f, radius.x * 1.25f, height * 0.5f);
 
             return size;
+        }
+
+        public SimpleTransform GetPointOnPalm(Vector2 position)
+        {
+            var size = GetPalmSize();
+            var size2D = new Vector2(size.y, size.z) * 0.5f;
+
+            var palmPos = Palm.position + (Palm.forward * size2D.y + Palm.up * size2D.x);
+            return SimpleTransform.Create(palmPos, Palm.rotation);
         }
 
 #if UNITY_EDITOR

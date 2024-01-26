@@ -35,7 +35,7 @@ namespace VAT.Characters
 
         public override SimpleTransform GetGrabPoint()
         {
-            return arm.PhysArm.Hand.Palm.Transform;
+            return arm.PhysArm.Hand.GetPointOnPalm(Vector2.up);
         }
 
         public void LateUpdate()
