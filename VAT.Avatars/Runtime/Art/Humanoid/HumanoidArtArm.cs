@@ -6,6 +6,7 @@ using UnityEngine;
 using VAT.Avatars.Muscular;
 using VAT.Avatars.REWORK;
 using VAT.Avatars.Skeletal;
+
 using VAT.Shared.Data;
 
 namespace VAT.Avatars.Art
@@ -39,6 +40,7 @@ namespace VAT.Avatars.Art
             SimpleTransform upperArm = BoneGroup.UpperArm.Transform;
             SimpleTransform elbow = BoneGroup.Elbow.Transform;
             SimpleTransform wrist = BoneGroup.Wrist.Transform;
+            SimpleTransform carpal = BoneGroup.Carpal.Transform;
 
             float twistAngle = Vector3.SignedAngle(elbow.up, wrist.up, elbow.forward);
 
@@ -49,7 +51,7 @@ namespace VAT.Avatars.Art
             UpperArm.Solve(upperArm);
             LowerArm.Solve(elbow);
             Wrist.Solve(wrist);
-            //Carpal.Solve(PhysGroup.Hand.TransformBone(DataGroup.Hand.Hand, DataGroup.Carpal));
+            Carpal.Solve(carpal);
 
             Hand.Solve();
         }
@@ -66,8 +68,8 @@ namespace VAT.Avatars.Art
             ShoulderBlade.WriteOffset(boneGroup.Scapula);
             UpperArm.WriteOffset(boneGroup.UpperArm);
             LowerArm.WriteOffset(boneGroup.Elbow);
-            //Wrist.WriteOffset(boneGroup.Wrist);
-            //Carpal.WriteOffset(boneGroup.Carpal);
+            Wrist.WriteOffset(boneGroup.Wrist);
+            Carpal.WriteOffset(boneGroup.Carpal);
 
             Hand.WriteOffsets(boneGroup.Hand);
         }

@@ -105,6 +105,12 @@ namespace VAT.Avatars.Muscular
             }
         }
 
+        public void WriteReferences(IHumanSkeleton skeleton)
+        {
+            LeftArm.Hand.MatchFingers(skeleton.LeftArm.Hand);
+            RightArm.Hand.MatchFingers(skeleton.RightArm.Hand);
+        }
+
         public void MatchPose(IHumanSkeleton skeleton) {
             _skeleton = skeleton;
 

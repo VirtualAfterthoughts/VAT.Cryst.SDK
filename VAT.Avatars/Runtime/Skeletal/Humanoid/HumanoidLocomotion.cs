@@ -60,7 +60,6 @@ namespace VAT.Avatars.Skeletal
             // Position the feet center
             SimpleTransform root = _payload.GetRoot();
 
-            Time.timeScale = 1f;
             Time.fixedDeltaTime = Time.timeScale / 144f;
 
             float feetAngle = Vector3.Angle(root.up, _sacrum.up);

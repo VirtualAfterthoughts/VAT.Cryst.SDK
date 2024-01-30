@@ -85,6 +85,8 @@ namespace VAT.Avatars.Editor {
 
                 if (GUILayout.Button("Create Hand Poser")) {
                     HumanoidAvatar instance = Instantiate(_avatar);
+                    instance.transform.SetPositionAndRotation(_avatar.transform.position, _avatar.transform.rotation);
+
                     instance.Initiate();
                     instance.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.Transform = _avatar.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.Transform;
 

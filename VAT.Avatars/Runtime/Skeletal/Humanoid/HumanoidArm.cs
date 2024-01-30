@@ -13,6 +13,7 @@ namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
     using VAT.Avatars.REWORK;
+    using VAT.Cryst.Delegates;
     using VAT.Input;
 
     public class HumanoidArm : HumanoidBoneGroup, IHumanArm
@@ -41,6 +42,8 @@ namespace VAT.Avatars.Skeletal
         IBone IArmGroup.Elbow => Elbow;
 
         IBone IHumanArm.Wrist => Wrist;
+
+        IBone IHumanArm.Carpal => Carpal;
 
         IHandGroup IArmGroup.Hand => Hand;
 
@@ -81,6 +84,8 @@ namespace VAT.Avatars.Skeletal
         public AnimationCurve ClavicleYCurve = new AnimationCurve(new Keyframe(-1f, -5.24f, 0f, 0f), new Keyframe(0f, 0f, 0f, 0f), new Keyframe(1f, 5.63f, 0f, 0f));
 
         public AnimationCurve ClavicleZCurve = new AnimationCurve(new Keyframe(-1.2f, -15f, 0f, 0f), new Keyframe(-0.8f, -5f, 18f, 18f), new Keyframe(0f, 0f, 0f, 0f), new Keyframe(0.8f, 15.7f, 65f, 65f), new Keyframe(1.2f, 45f, 0f, 0f));
+
+        public event TargetProcessorCallback OnProcessTarget;
 
         public override void Initiate()
         {
@@ -135,6 +140,11 @@ namespace VAT.Avatars.Skeletal
             if (arm.TryGetHand(out var hand))
             {
                 _target = hand.Transform;
+            }
+
+            if (OnProcessTarget != null)
+            {
+                _target = OnProcessTarget(_target);
             }
 
             _hasElbow = arm.TryGetElbow(out var elbow);
@@ -211,32 +221,9 @@ namespace VAT.Avatars.Skeletal
             // cos(y) = a^2 + b^2 - c^2 / 2ab
             // Find angle between any two lengths let a be length 1 and b be length 2
 
-            // Remap shoulder position
             var shoulderPosition = UpperArm.position;
 
             var target = _target.position;
-            var line = new LineData(target, target + _target.forward * (_armProportions.handProportions.wristEllipsoid.height + _armProportions.handProportions.knuckleEllipsoid.height));
-
-            var upperChestTransform = _spine.T1Vertebra.Transform;
-            upperChestTransform.position += upperChestTransform.up * _spineProportions.upperChestEllipsoid.height * -0.5f;
-
-            var chestTransform = _spine.T7Vertebra.Transform;
-            chestTransform.position += chestTransform.up * _spineProportions.chestEllipsoid.height * -0.5f;
-
-            var spineTransform = _spine.L1Vertebra.Transform;
-            spineTransform.position += spineTransform.up * _spineProportions.spineEllipsoid.height * -0.5f;
-
-            var closest = BodyRemapping.BlendClosest(target,
-                new BodyRemapGroup(_spine.Neck.Skull.Transform, _neckProportions.skullEllipsoid),
-                new BodyRemapGroup(_spine.Neck.C1Vertebra.Transform, _neckProportions.upperNeckEllipsoid),
-                new BodyRemapGroup(_spine.Neck.C4Vertebra.Transform, _neckProportions.lowerNeckEllipsoid),
-                new BodyRemapGroup(upperChestTransform, _spineProportions.upperChestEllipsoid),
-                new BodyRemapGroup(chestTransform, _spineProportions.chestEllipsoid),
-                new BodyRemapGroup(spineTransform, _spineProportions.spineEllipsoid),
-                new BodyRemapGroup(_spine.Sacrum.Transform, _spineProportions.pelvisEllipsoid)
-                );
-
-            target += GetDepenetration(line, closest.transform, closest.ellipsoid);
 
             Vector3 newVector = target - shoulderPosition;
 

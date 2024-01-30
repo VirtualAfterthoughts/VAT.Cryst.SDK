@@ -148,6 +148,8 @@ namespace VAT.Avatars.Integumentary
 
             GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.SetTransformRoot(_physicsRoot);
 
+            GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.WriteReferences(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton);
+
             // Properly initiate the art skeleton
             GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.WriteData(GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton);
             WriteArtOffsets();

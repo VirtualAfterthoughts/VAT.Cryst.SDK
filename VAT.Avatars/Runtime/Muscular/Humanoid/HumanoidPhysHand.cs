@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,10 @@ namespace VAT.Avatars.Muscular
         IBone IHandGroup.Hand => Hand;
 
         IBone IHandGroup.Palm => _relativePalm;
+
+        private RelativeFinger[] _fingers;
+        public IFingerGroup[] Fingers => _fingers;
+
         private RelativeBone _relativePalm;
 
         private IHandGroup _hand;
@@ -36,6 +41,16 @@ namespace VAT.Avatars.Muscular
             base.Initiate();
 
             _bones[0] = new HumanoidPhysBone($"Hand", null, HumanoidConstants.HandLimits);
+        }
+
+        public void MatchFingers(IHandGroup hand)
+        {
+            _fingers = new RelativeFinger[hand.Fingers.Length];
+
+            for (var i = 0; i < _fingers.Length; i++)
+            {
+                _fingers[i] = new RelativeFinger(Hand, hand.Hand, hand.Fingers[i]);
+            }
         }
 
         public void MatchPose(IHandGroup hand)

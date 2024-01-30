@@ -10,5 +10,6 @@ namespace VAT.Avatars.REWORK
         public IBone Clavicle { get; }
         public IBone Scapula { get; }
         public IBone Wrist { get; }
+        public IBone Carpal { get; }
     }
 }

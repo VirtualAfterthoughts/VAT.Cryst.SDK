@@ -18,6 +18,7 @@ namespace VAT.Avatars.Muscular
     using Unity.Mathematics;
     using UnityEngine.XR;
     using VAT.Avatars.REWORK;
+    using VAT.Cryst.Delegates;
 
     public class HumanoidPhysArm : HumanoidPhysBoneGroup, IPoseableT<IHumanArm>, IHumanArm
     {
@@ -46,7 +47,22 @@ namespace VAT.Avatars.Muscular
 
         IHandGroup IArmGroup.Hand => Hand;
 
+        private RelativeBone _relativeCarpal = null;
+        public IBone Carpal => _relativeCarpal;
+
         private IHumanArm _arm;
+
+        public event TargetProcessorCallback OnProcessTarget
+        {
+            add
+            {
+                _arm.OnProcessTarget += value;
+            }
+            remove
+            {
+                _arm.OnProcessTarget -= value;
+            }
+        }
 
         public override void Initiate() {
             base.Initiate();
@@ -92,6 +108,7 @@ namespace VAT.Avatars.Muscular
             Hand.MatchPose(arm.Hand);
 
             _relativeWrist = new RelativeBone(Elbow, arm.Elbow, arm.Wrist);
+            _relativeCarpal = new RelativeBone(Elbow, arm.Elbow, arm.Carpal);
         }
 
         public Mesh GenerateClavicleMesh(HumanoidArmProportions proportions)

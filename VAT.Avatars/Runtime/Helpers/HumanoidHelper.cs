@@ -31,7 +31,12 @@ namespace VAT.Avatars.Helpers
                 proportions.upperArmEllipsoid.height = distance(descriptor.lowerArm.transform.position, arm.UpperArm.position);
             }
             
-            if (descriptor.hand.hand.HasTransform) {
+            if (descriptor.wrist.HasTransform)
+            {
+                proportions.elbowEllipsoid.height = distance(descriptor.wrist.transform.position, arm.Elbow.position);
+            }
+            else if (descriptor.hand.hand.HasTransform) 
+            {
                 proportions.elbowEllipsoid.height = distance(descriptor.hand.hand.transform.position, arm.Elbow.position);
             }
             
@@ -50,7 +55,7 @@ namespace VAT.Avatars.Helpers
             proportions.fingerProportions[3] = Internal_CalculateFinger(hand, descriptor.ring, Vector3.up);
             proportions.fingerProportions[4] = Internal_CalculateFinger(hand, descriptor.pinky, Vector3.up);
 
-            proportions.wristEllipsoid.height = distance(descriptor.hand.transform.position, descriptor.middle.proximal.transform.position);
+            proportions.wristEllipsoid.height = distance(hand.Hand.position, descriptor.middle.proximal.transform.position);
             Vector3 fingerDirection = descriptor.middle.distal.transform.position - descriptor.middle.proximal.transform.position;
             proportions.knuckleEllipsoid.height = fingerDirection.magnitude + proportions.fingerProportions[2].distalEllipsoid.height;
         }

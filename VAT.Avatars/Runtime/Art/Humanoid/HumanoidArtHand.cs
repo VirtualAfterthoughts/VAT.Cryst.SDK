@@ -32,46 +32,44 @@ namespace VAT.Avatars.Art
         {
             Hand.Solve(BoneGroup.Hand.Transform);
 
-            for (var i = 0; i < _fingers.Length; i++) {
-                _fingers[i].Solve();
-            }
+            SolveFingers();
         }
 
-        public void SolveDataFingers() {
+        public void SolveFingers() {
             for (var i = 0; i < _fingers.Length; i++)
             {
-                _fingers[i].SolveData();
+                _fingers[i].Solve();
             }
         }
 
         public override void WriteData(IHandGroup boneGroup) {
             base.WriteData(boneGroup);
 
-            // int fingerIndex = 0;
-            // for (var i = 0; i < _fingers.Length; i++) {
-            //     if (fingerIndex >= dataGroup.Fingers.Length) {
-            //         fingerIndex = 0;
-            //     }
-            // 
-            //     _fingers[i].WriteData(dataGroup.Fingers[fingerIndex], physGroup);
-            //     
-            //     fingerIndex++;
-            // }
+            int fingerIndex = 0;
+            for (var i = 0; i < _fingers.Length; i++) {
+                if (fingerIndex >= boneGroup.Fingers.Length) {
+                    fingerIndex = 0;
+                }
+            
+                _fingers[i].WriteData(boneGroup.Fingers[fingerIndex]);
+                
+                fingerIndex++;
+            }
         }
 
         public override void WriteOffsets(IHandGroup boneGroup) {
             Hand.WriteOffset(boneGroup.Hand);
 
-            // int fingerIndex = 0;
-            // for (var i = 0; i < _fingers.Length; i++) {
-            //     if (fingerIndex >= boneGroup.Fingers.Length) {
-            //         fingerIndex = 0;
-            //     }
-            // 
-            //     _fingers[i].WriteOffsets(boneGroup.Fingers[fingerIndex]);
-            // 
-            //     fingerIndex++;
-            // }
+            int fingerIndex = 0;
+            for (var i = 0; i < _fingers.Length; i++) {
+                if (fingerIndex >= boneGroup.Fingers.Length) {
+                    fingerIndex = 0;
+                }
+            
+                _fingers[i].WriteOffsets(boneGroup.Fingers[fingerIndex]);
+            
+                fingerIndex++;
+            }
         }
 
         public override void WriteTransforms(HumanoidHandDescriptor artDescriptorGroup)

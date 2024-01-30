@@ -35,6 +35,8 @@ namespace VAT.Avatars.Skeletal
 
         IBone IHandGroup.Palm => Palm;
 
+        IFingerGroup[] IHandGroup.Fingers => _fingers;
+
         public HumanoidHand() {
             _fingers = Array.Empty<HumanoidFinger>();
 
@@ -97,7 +99,10 @@ namespace VAT.Avatars.Skeletal
             }
 
             if (_fingerCount > 0)
+            {
                 _fingers[0].defaultRotation = proportions.fingerProportions[0].metaCarpalTransform.rotation;
+                _fingers[0].isThumb = true;
+            }
         }
 
         public override void Solve()

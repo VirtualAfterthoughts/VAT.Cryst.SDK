@@ -7,13 +7,13 @@ using UnityEngine;
 using UnityEngine.XR;
 using VAT.Avatars.Data;
 using VAT.Avatars.Proportions;
-
+using VAT.Avatars.REWORK;
 using VAT.Shared.Data;
 using VAT.Shared.Utilities;
 
 namespace VAT.Avatars.Skeletal
 {
-    public class HumanoidFinger : DataBoneGroup
+    public class HumanoidFinger : DataBoneGroup, IFingerGroup
     {
         private int _boneCount = 5;
         public override int BoneCount => _boneCount;
@@ -35,6 +35,12 @@ namespace VAT.Avatars.Skeletal
 
         public SimpleTransform NeutralEndBone => _hand.Transform.Transform(defaultEnd);
 
+        IBone IFingerGroup.Proximal => Proximal;
+
+        IBone IFingerGroup.Middle => Middle;
+
+        IBone IFingerGroup.Distal => Distal;
+
         public SimpleTransform defaultEnd;
 
         public Vector3 forward;
@@ -46,6 +52,8 @@ namespace VAT.Avatars.Skeletal
         public SimpleTransform openPoint;
 
         public SimpleTransform closedPoint;
+
+        public bool isThumb;
 
         public float curl;
 

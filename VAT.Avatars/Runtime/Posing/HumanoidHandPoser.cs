@@ -62,7 +62,7 @@ namespace VAT.Avatars.Posing
         public void Solve() {
             _hand.Solve();
 
-            _artHand.SolveDataFingers();
+            _artHand.SolveFingers();
         }
 
         public override void WriteArtOffsets()
