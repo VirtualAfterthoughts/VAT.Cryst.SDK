@@ -145,8 +145,56 @@ namespace VAT.Avatars.Skeletal
         private Quaternion[] openRotations;
         private Quaternion[] closedRotations;
 
+        public float splay;
+        public float curl01 = 1f;
+        public float curl02 = 1f;
+        public float curl03 = 1f;
+
+        public static float Remap(float value)
+        {
+            float from1 = -1f;
+            float to1 = 1f;
+
+            float from2 = 0f;
+            float to2 = 1f;
+
+            return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+        }
+
+        private float GetSplayAngle(float splay)
+        {
+            return Mathf.LerpUnclamped(-30f, 30f, Remap(splay));
+        }
+
+        private float GetCurlAngle(float curl)
+        {
+            return Mathf.LerpUnclamped(-90f, 90f, Remap(curl));
+        }
+
         public override void Solve()
         {
+            if (isThumb)
+                return;
+            
+            Vector3 fwd = Proximal.position - MetaCarpal.Parent.position;
+            Vector3 handUp = MetaCarpal.Parent.up;
+            Vector3.OrthoNormalize(ref handUp, ref fwd);
+
+            Proximal.rotation = Quaternion.LookRotation(fwd, handUp);
+            // Splay
+            Proximal.rotation = Quaternion.AngleAxis(GetSplayAngle(splay), handUp) * Proximal.rotation;
+
+            // Curl 01
+            Proximal.rotation = Quaternion.AngleAxis(GetCurlAngle(curl01), Proximal.right) * Proximal.rotation;
+
+            // Curl 02
+            Middle.localRotation = Quaternion.AngleAxis(GetCurlAngle(curl02), Vector3.right);
+
+            // Curl 03
+            Distal.localRotation = Quaternion.AngleAxis(GetCurlAngle(curl03), Vector3.right);
+
+            return;
+
             var target = NeutralEndBone.Transform(this.openPoint);
             var right = MetaCarpal.Parent.Transform.TransformDirection(this.right);
             var up = MetaCarpal.Parent.Transform.TransformDirection(this.up);

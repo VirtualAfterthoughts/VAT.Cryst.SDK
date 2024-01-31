@@ -88,7 +88,7 @@ namespace VAT.Avatars.Editor {
                     instance.transform.SetPositionAndRotation(_avatar.transform.position, _avatar.transform.rotation);
 
                     instance.Initiate();
-                    instance.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.Transform = _avatar.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.Transform;
+                    instance.EditorUpdateEyeCenter();
 
                     if (instance.TryCreateHandPoser(out var poser)) {
                         // Rename poser

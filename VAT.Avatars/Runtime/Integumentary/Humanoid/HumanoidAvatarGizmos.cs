@@ -27,9 +27,16 @@ namespace VAT.Avatars.Integumentary
         protected override void OnValidate() {
             base.OnValidate();
 
-            if (Initiated) {
+            EditorUpdateEyeCenter();
+        }
+
+        public void EditorUpdateEyeCenter()
+        {
+            if (Initiated)
+            {
                 float3? eyeCenterRaw = EditorGetEyeCenter();
-                if (eyeCenterRaw.HasValue) {
+                if (eyeCenterRaw.HasValue)
+                {
                     GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenterRaw.Value;
                     GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.rotation = transform.rotation;
                 }
