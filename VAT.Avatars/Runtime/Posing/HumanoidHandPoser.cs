@@ -27,6 +27,8 @@ namespace VAT.Avatars.Posing
         [HideInInspector]
         public HumanoidHandDescriptor descriptor;
 
+        public HandPoseData handPoseData;
+
         public HumanoidHand Hand => _hand;
 
         private HumanoidHand _hand;
@@ -60,6 +62,7 @@ namespace VAT.Avatars.Posing
         }
 
         public void Solve() {
+            _hand.ApplyData(handPoseData);
             _hand.Solve();
 
             _artHand.SolveFingers();

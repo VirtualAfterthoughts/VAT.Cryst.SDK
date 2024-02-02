@@ -66,12 +66,16 @@ namespace VAT.Avatars.Helpers
 
             finger.metaCarpalTransform = SimpleTransform.Default;
             finger.proximalTransform = SimpleTransform.Default;
+            finger.middleTransform = SimpleTransform.Default;
 
             Vector3 offset = descriptor.middle.Transform.position - descriptor.proximal.Transform.position;
             up = hand.Hand.Transform.TransformVector(up);
 
             quaternion direction = Quaternion.LookRotation(offset.normalized, up);
             quaternion worldToLocal = inverse(direction);
+
+            Vector3 endOffset = descriptor.distal.Transform.position - descriptor.middle.Transform.position;
+            quaternion endDirection = Quaternion.LookRotation(endOffset.normalized, up);
 
             if (descriptor.metaCarpal.HasTransform)
             {
@@ -82,8 +86,11 @@ namespace VAT.Avatars.Helpers
             }
             else if (descriptor.proximal.HasTransform)
             {
-                finger.metaCarpalTransform.rotation = hand.Hand.Transform.InverseTransformRotation(direction);
-                finger.metaCarpalTransform.position = hand.Hand.Transform.InverseTransformPoint(descriptor.proximal.Transform.position);
+                var metaCarpal = SimpleTransform.Create(descriptor.proximal.Transform.position, direction);
+
+                finger.metaCarpalTransform = hand.Hand.Transform.InverseTransform(metaCarpal);
+
+                finger.middleTransform.rotation = metaCarpal.InverseTransformRotation(endDirection);
             }
 
             finger.phalanxCount = descriptor.distal ? 3 : 2;

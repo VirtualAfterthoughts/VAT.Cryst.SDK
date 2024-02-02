@@ -16,6 +16,8 @@ namespace VAT.Avatars.Proportions
 
         public SimpleTransform proximalTransform;
 
+        public SimpleTransform middleTransform;
+
         public Ellipsoid proximalEllipsoid;
 
         public Ellipsoid middleEllipsoid;

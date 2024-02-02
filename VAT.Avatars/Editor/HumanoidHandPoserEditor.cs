@@ -10,7 +10,6 @@ using VAT.Shared.Data;
 namespace VAT.Avatars.Editor
 {
     using UnityEditor;
-    using VAT.Avatars.Data;
 
     [CustomEditor(typeof(HumanoidHandPoser))]
     public sealed class HumanoidHandPoserEditor : Editor
@@ -18,10 +17,11 @@ namespace VAT.Avatars.Editor
         private HumanoidHandPoser _poser;
         private int? _fingerIndex = null;
 
-        private HumanoidHandPose _selectedPose;
+        private SerializedProperty _handPoseData;
 
         private void OnEnable() {
             _poser = target as HumanoidHandPoser;
+            _handPoseData = serializedObject.FindProperty(nameof(_poser.handPoseData));
         }
 
         public override void OnInspectorGUI() {
@@ -32,32 +32,13 @@ namespace VAT.Avatars.Editor
             if (_poser.Generated) {
                 EditorGUILayout.HelpBox("No issues found!", MessageType.Info);
 
-                if (GUILayout.Button("Create Hand Pose")) {
-                    var pose = CreateInstance<HumanoidHandPose>();
-                    pose.data = _poser.Hand.GetData();
-                    AssetDatabase.CreateAsset(pose, "Assets/New Pose.asset");
-                }
-
-                if (GUILayout.Button("Save Hand Pose")) {
-                    _selectedPose.data = _poser.Hand.GetData();
-                    AssetDatabase.SaveAssetIfDirty(_selectedPose);
-                }
-
-                _selectedPose = (HumanoidHandPose)EditorGUILayout.ObjectField("Hand Pose", _selectedPose, typeof(HumanoidHandPose), false);
-
-                if (GUILayout.Button("Apply Hand Pose")) {
-                    _poser.Hand.SetData(_selectedPose.data);
-                }
-
                 if (GUILayout.Button("Reset Hand Pose")) {
                     _poser.Hand.NeutralPose();
                 }
 
                 EditorGUI.BeginChangeCheck();
-                for (var i = 0; i < _poser.Hand.Fingers.Length; i++) {
-                    var finger = _poser.Hand.Fingers[i];
-                    finger.curl = EditorGUILayout.Slider($"Finger {i} Curl", finger.curl, 0f, 1f);
-                }
+
+                EditorGUILayout.PropertyField(_handPoseData, true);
 
                 if (EditorGUI.EndChangeCheck()) {
                     _poser.Solve();
@@ -66,6 +47,8 @@ namespace VAT.Avatars.Editor
             else {
                 EditorGUILayout.HelpBox("This poser is invalid! Please generate it from an avatar.", MessageType.Error);
             }
+
+            serializedObject.ApplyModifiedProperties();
         }
 
         public void OnSceneGUI() {

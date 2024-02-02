@@ -5,7 +5,6 @@ using Unity.Mathematics;
 
 using UnityEngine;
 using UnityEngine.XR;
-using VAT.Avatars.Data;
 using VAT.Avatars.Proportions;
 using VAT.Avatars.REWORK;
 using VAT.Shared.Data;
@@ -66,6 +65,8 @@ namespace VAT.Avatars.Skeletal
             Proximal.localPosition = _proportions.proximalTransform.position;
             Proximal.localRotation = _proportions.proximalTransform.rotation;
 
+            Middle.localRotation = _proportions.middleTransform.rotation;
+
             _proximalLength = _proportions.proximalEllipsoid.height;
             _middleLength = _proportions.middleEllipsoid.height;
             _distalLength = _proportions.distalEllipsoid.height;
@@ -99,13 +100,6 @@ namespace VAT.Avatars.Skeletal
                 openRotations[i] = rotation;
                 closedRotations[i] = rotation;
             }
-        }
-
-        public FingerPose GetPose() {
-            return new FingerPose()
-            {
-                point = NormalizeTarget()
-            };
         }
 
         public SimpleTransform NormalizeTarget() {
@@ -146,9 +140,12 @@ namespace VAT.Avatars.Skeletal
         private Quaternion[] closedRotations;
 
         public float splay;
-        public float curl01 = 1f;
-        public float curl02 = 1f;
-        public float curl03 = 1f;
+        public float stretched;
+        public float spread;
+        public float twist;
+        public float curl01 = 0.2f;
+        public float curl02 = 0.2f;
+        public float curl03 = 0.2f;
 
         public static float Remap(float value)
         {
@@ -173,23 +170,39 @@ namespace VAT.Avatars.Skeletal
 
         public override void Solve()
         {
-            if (isThumb)
-                return;
-            
-            Vector3 fwd = Proximal.position - MetaCarpal.Parent.position;
+            Vector3 fwd = MetaCarpal.Parent.forward;
             Vector3 handUp = MetaCarpal.Parent.up;
-            Vector3.OrthoNormalize(ref handUp, ref fwd);
+
+            if (isThumb)
+            {
+                MetaCarpal.localRotation = Quaternion.AngleAxis(90f, Vector3.forward);
+                MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(0f, -60f, Remap(stretched)), MetaCarpal.up) * MetaCarpal.rotation;
+                MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(10f, -60f, Remap(spread)), MetaCarpal.right) * MetaCarpal.rotation;
+                MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(-20f, 60f, Remap(twist)), MetaCarpal.forward) * MetaCarpal.rotation;
+                Proximal.localRotation = Quaternion.identity;
+                Middle.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(curl02)), Vector3.right);
+                Distal.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(curl03)), Vector3.right);
+                return;
+            }
+
+            //Proximal.localRotation = Quaternion.AngleAxis(90f, Vector3.right);
+            //Middle.localRotation = Quaternion.AngleAxis(90f, Vector3.right);
+            //Distal.localRotation = Quaternion.AngleAxis(90f, Vector3.right);
+
+            //Vector3 fwd = Proximal.position - MetaCarpal.Parent.position;
+            //Vector3 handUp = MetaCarpal.Parent.up;
+            //Vector3.OrthoNormalize(ref handUp, ref fwd);
 
             Proximal.rotation = Quaternion.LookRotation(fwd, handUp);
             // Splay
-            Proximal.rotation = Quaternion.AngleAxis(GetSplayAngle(splay), handUp) * Proximal.rotation;
-
+            Proximal.rotation = Quaternion.AngleAxis(-GetSplayAngle(splay), handUp) * Proximal.rotation;
+            
             // Curl 01
             Proximal.rotation = Quaternion.AngleAxis(GetCurlAngle(curl01), Proximal.right) * Proximal.rotation;
-
+            
             // Curl 02
             Middle.localRotation = Quaternion.AngleAxis(GetCurlAngle(curl02), Vector3.right);
-
+            
             // Curl 03
             Distal.localRotation = Quaternion.AngleAxis(GetCurlAngle(curl03), Vector3.right);
 

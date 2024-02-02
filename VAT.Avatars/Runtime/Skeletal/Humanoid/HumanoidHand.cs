@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using VAT.Avatars.Data;
+
 using VAT.Avatars.Proportions;
 using VAT.Avatars.REWORK;
 using VAT.Input;
@@ -54,24 +54,6 @@ namespace VAT.Avatars.Skeletal
             Palm = new DataBone(Hand);
         }
 
-        public PoseData GetData() {
-            var poseData = new PoseData() {
-                fingers = new FingerPose[_fingerCount]
-            };
-
-            for (var i = 0; i < _fingerCount; i++) {
-                poseData.fingers[i] = _fingers[i].GetPose();
-            }
-
-            return poseData;
-        }
-
-        public void SetData(PoseData data) {
-            for (var i = 0; i < _fingerCount; i++) {
-                _fingers[i].SetTarget(data.fingers[i].point);
-            }
-        }
-
         public void WriteProportions(HandProportions proportions) {
             _proportions = proportions;
 
@@ -109,6 +91,29 @@ namespace VAT.Avatars.Skeletal
         {
             for (var i = 0; i < _fingerCount; i++) {
                 _fingers[i].Solve();
+            }
+        }
+
+        public void ApplyData(HandPoseData data)
+        {
+            for (var i = 0; i < data.thumbs.Length; i++)
+            {
+                if (data.thumbs[i].phalanges.Length <= 0)
+                    continue;
+
+                Fingers[0].stretched = data.thumbs[i].stretched;
+                Fingers[0].spread = data.thumbs[i].spread;
+                Fingers[0].twist = data.thumbs[i].twist;
+                Fingers[0].curl02 = data.thumbs[i].phalanges[0].curl;
+                Fingers[0].curl03 = data.thumbs[i].phalanges[1].curl;
+            }
+
+            for (var i = 0; i < data.fingers.Length; i++)
+            {
+                Fingers[i + 1].splay = data.fingers[i].splay;
+                Fingers[i + 1].curl01 = data.fingers[i].phalanges[0].curl;
+                Fingers[i + 1].curl02 = data.fingers[i].phalanges[1].curl;
+                Fingers[i + 1].curl03 = data.fingers[i].phalanges[2].curl;
             }
         }
 
