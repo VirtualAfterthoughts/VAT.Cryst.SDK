@@ -13,5 +13,13 @@ namespace VAT.Avatars
         public float splay;
 
         public PhalanxPoseData[] phalanges;
+
+        public static FingerPoseData Create(int phalanxCount)
+        {
+            return new FingerPoseData
+            {
+                phalanges = new PhalanxPoseData[phalanxCount],
+            };
+        }
     }
 }

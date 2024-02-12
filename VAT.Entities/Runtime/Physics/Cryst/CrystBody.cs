@@ -37,10 +37,33 @@ namespace VAT.Entities
         public abstract float3 Velocity { get; set; }
         public abstract float3 AngularVelocity { get; set; }
 
+        private Collider[] _colliders = null;
+
         private void Awake() {
             Cache.Add(GameObject, this);
 
+            if (HasBody)
+            {
+                CollectColliders();
+            }
+
             OnBodyAwake();
+        }
+
+        public void CollectColliders()
+        {
+            var children = GetComponentsInChildren<Collider>(true);
+            List<Collider> result = new();
+
+            foreach (var child in children)
+            {
+                if (child.GetComponentInParent<CrystBody>(true) == this)
+                {
+                    result.Add(child);
+                }
+            }
+
+            _colliders = result.ToArray();
         }
 
         private void OnDestroy() {
@@ -82,15 +105,29 @@ namespace VAT.Entities
 
         public abstract void AddTorque(float3 torque, CrystForceMode mode = CrystForceMode.Force);
 
+        [ContextMenu("Create Body")]
         /// <summary>
         /// Recreates the physics body if it does not currently exist.
         /// </summary>
-        public abstract void CreateItem();
+        public void CreateItem()
+        {
+            OnCreateItem();
 
+            CollectColliders();
+        }
+
+        protected abstract void OnCreateItem();
+
+        [ContextMenu("Destroy Body")]
         /// <summary>
         /// Destroys the physics body.
         /// </summary>
-        public abstract void DestroyItem();
+        public void DestroyItem()
+        {
+            OnDestroyItem();
+        }
+
+        protected abstract void OnDestroyItem();
 
         /// <summary>
         /// Applies any changes to the rigidbody's properties.
@@ -99,5 +136,10 @@ namespace VAT.Entities
 
         public abstract void Freeze();
         public abstract void Unfreeze();
+
+        public Collider[] GetColliders()
+        {
+            return _colliders;
+        }
     }
 }

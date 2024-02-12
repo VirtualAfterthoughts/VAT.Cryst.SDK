@@ -48,10 +48,14 @@ namespace VAT.Characters
             _controller = controller;
         }
 
-        public bool TryGetInputController(out IInputController controller)
+        public IInputController GetInputControllerOrDefault()
         {
-            controller = _controller;
-            return true;
+            return _controller;
+        }
+
+        public IInputHand GetInputHandOrDefault()
+        {
+            return default;
         }
     }
 
@@ -109,7 +113,7 @@ namespace VAT.Characters
         {
             if (TryGetArm(Handedness.RIGHT, out var arm) && arm.TryGetHand(out var hand))
             {
-                hand.TryGetInputController(out var controller);
+                var controller = hand.GetInputControllerOrDefault();
                 controller.TryGetThumbstick(out var thumbstick);
 
                 float turnAxis = thumbstick.GetAxis().x;

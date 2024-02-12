@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using VAT.Input;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
@@ -9,7 +10,9 @@ namespace VAT.Interaction
 {
     public abstract class Grip : MonoBehaviour, IInteractable
     {
-        private Dictionary<IInteractor, ConfigurableJoint> _joints = new Dictionary<IInteractor, ConfigurableJoint>();
+        private Dictionary<IInteractor, ConfigurableJoint> _joints = new();
+
+        public HandPose pose;
 
         public abstract void DisableInteraction();
         public abstract void EnableInteraction();
@@ -53,10 +56,11 @@ namespace VAT.Interaction
         private void LockJoint(IInteractor interactor)
         {
             var joint = _joints[interactor];
-            joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
+            joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
 
             joint.linearLimit = new SoftJointLimit() { limit = 0.05f };
-            joint.xDrive = joint.yDrive = joint.zDrive = joint.slerpDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
+            joint.xDrive = joint.yDrive = joint.zDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
+            joint.slerpDrive = new JointDrive() { positionSpring = 9000f, positionDamper = 1000f, maximumForce = 1200f };
         }
 
         private void AttachJoint(IInteractor interactor)
@@ -76,15 +80,17 @@ namespace VAT.Interaction
             rb.transform.rotation = grabPointRotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
 
             var joint = rb.GameObject.AddComponent<ConfigurableJoint>();
-            joint.SetJointMotion(ConfigurableJointMotion.Free, ConfigurableJointMotion.Free);
+            joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
             joint.rotationDriveMode = RotationDriveMode.Slerp;
 
-            joint.xDrive = joint.yDrive = joint.zDrive = new JointDrive() { positionSpring = 1200f, positionDamper = 100f, maximumForce = 1200f };
+            joint.xDrive = joint.yDrive = joint.zDrive = new JointDrive() { positionSpring = 50000f, positionDamper = 1000f, maximumForce = float.MaxValue };
             joint.connectedBody = host.GetRigidbody();
 
             joint.autoConfigureConnectedAnchor = false;
             joint.SetWorldAnchor(interactor.GetGrabPoint().position);
             joint.SetWorldConnectedAnchor(GetTargetInWorld(interactor).position);
+
+            joint.linearLimit = new SoftJointLimit() { limit = Vector3.Distance(joint.GetWorldAnchor(), joint.GetWorldConnectedAnchor()) };
 
             _joints[interactor] = joint;
         }

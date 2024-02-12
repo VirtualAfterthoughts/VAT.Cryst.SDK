@@ -37,17 +37,23 @@ namespace VAT.Characters
 
         private SimpleTransform _transform;
         private DesktopController _controller;
+        private DesktopHand _hand;
 
-        public PancakeHand(SimpleTransform transform, DesktopController controller)
+        public PancakeHand(SimpleTransform transform, DesktopController controller, DesktopHand hand)
         {
             _transform = transform;
             _controller = controller;
+            _hand = hand;
         }
 
-        public bool TryGetInputController(out IInputController controller)
+        public IInputController GetInputControllerOrDefault()
         {
-            controller = _controller;
-            return true;
+            return _controller;
+        }
+
+        public IInputHand GetInputHandOrDefault()
+        {
+            return _hand;
         }
     }
 
@@ -96,6 +102,9 @@ namespace VAT.Characters
         private DesktopController _leftController;
         private DesktopController _rightController;
 
+        private DesktopHand _leftHand;
+        private DesktopHand _rightHand;
+
         public override void OnAwake()
         {
             _inputActions = new DesktopInputActions();
@@ -103,6 +112,9 @@ namespace VAT.Characters
 
             _leftController = new DesktopController(Handedness.LEFT, _inputActions);
             _rightController = new DesktopController(Handedness.RIGHT, _inputActions);
+
+            _leftHand = new DesktopHand(_leftController);
+            _rightHand = new DesktopHand(_rightController);
         }
 
         public override void OnUpdate(float deltaTime)
@@ -110,6 +122,9 @@ namespace VAT.Characters
             base.OnUpdate(deltaTime);
 
             SolveCamera(deltaTime);
+
+            _leftHand.Update();
+            _rightHand.Update();
         }
 
         private Vector2 _headAxis;
@@ -154,10 +169,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(_leftWrist), _leftController));
+                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(_leftWrist), _leftController, _leftHand));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(_rightWrist), _rightController));
+                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(_rightWrist), _rightController, _rightHand));
                     return true;
             }
         }

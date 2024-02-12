@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using UnityEngine;
 
 using VAT.Avatars.Proportions;
@@ -26,16 +26,23 @@ namespace VAT.Avatars.Skeletal
 
         private int _fingerCount = 0;
         private HumanoidFinger[] _fingers;
-        public override DataBoneGroup[] SubGroups => _fingers;
+
+        private int _thumbCount = 0;
+        private HumanoidThumb[] _thumbs;
+
+        private new DataBoneGroup[] _subGroups = null;
+        public override DataBoneGroup[] SubGroups => _subGroups;
         public HumanoidFinger[] Fingers => _fingers;
 
-        public override int SubGroupCount => _fingerCount;
+        public override int SubGroupCount => _fingerCount + _thumbCount;
 
         IBone IHandGroup.Hand => Hand;
 
         IBone IHandGroup.Palm => Palm;
 
         IFingerGroup[] IHandGroup.Fingers => _fingers;
+
+        IThumbGroup[] IHandGroup.Thumbs => _thumbs;
 
         public HumanoidHand() {
             _fingers = Array.Empty<HumanoidFinger>();
@@ -72,19 +79,30 @@ namespace VAT.Avatars.Skeletal
             _fingerCount = proportions.FingerCount;
             _fingers = new HumanoidFinger[_fingerCount];
 
+            _thumbCount = proportions.ThumbCount;
+            _thumbs = new HumanoidThumb[_thumbCount];
+
             for (var i = 0; i < _fingerCount; i++) {
                 var finger = new HumanoidFinger();
                 finger.Initiate();
                 finger.Attach(this);
                 finger.WriteProportions(proportions.fingerProportions[i], proportions);
+                finger.isLeft = _handedness == Handedness.LEFT;
                 _fingers[i] = finger;
             }
 
-            if (_fingerCount > 0)
+            for (var i = 0; i < _thumbCount; i++)
             {
-                _fingers[0].defaultRotation = proportions.fingerProportions[0].metaCarpalTransform.rotation;
-                _fingers[0].isThumb = true;
+                var thumb = new HumanoidThumb();
+                thumb.Initiate();
+                thumb.Attach(this);
+                thumb.WriteProportions(proportions.thumbProportions[i], proportions);
+                thumb.isLeft = _handedness == Handedness.LEFT;
+                thumb.defaultRotation = proportions.thumbProportions[i].metaCarpalTransform.rotation;
+                _thumbs[i] = thumb;
             }
+
+            _subGroups = _fingers.Concat<DataBoneGroup>(_thumbs).ToArray();
         }
 
         public override void Solve()
@@ -92,28 +110,10 @@ namespace VAT.Avatars.Skeletal
             for (var i = 0; i < _fingerCount; i++) {
                 _fingers[i].Solve();
             }
-        }
 
-        public void ApplyData(HandPoseData data)
-        {
-            for (var i = 0; i < data.thumbs.Length; i++)
+            for (var i = 0; i < _thumbCount; i++)
             {
-                if (data.thumbs[i].phalanges.Length <= 0)
-                    continue;
-
-                Fingers[0].stretched = data.thumbs[i].stretched;
-                Fingers[0].spread = data.thumbs[i].spread;
-                Fingers[0].twist = data.thumbs[i].twist;
-                Fingers[0].curl02 = data.thumbs[i].phalanges[0].curl;
-                Fingers[0].curl03 = data.thumbs[i].phalanges[1].curl;
-            }
-
-            for (var i = 0; i < data.fingers.Length; i++)
-            {
-                Fingers[i + 1].splay = data.fingers[i].splay;
-                Fingers[i + 1].curl01 = data.fingers[i].phalanges[0].curl;
-                Fingers[i + 1].curl02 = data.fingers[i].phalanges[1].curl;
-                Fingers[i + 1].curl03 = data.fingers[i].phalanges[2].curl;
+                _thumbs[i].Solve();
             }
         }
 
@@ -133,6 +133,51 @@ namespace VAT.Avatars.Skeletal
 
             var palmPos = Palm.position + Palm.forward * size2D.y * position.y + Palm.up * size2D.x * position.x;
             return SimpleTransform.Create(palmPos, Palm.rotation);
+        }
+
+        public void SetOpenPose(HandPoseData data)
+        {
+            var fingers = data.RemapFingers(_fingerCount);
+            var thumbs = data.RemapThumbs(_thumbCount);
+
+            for (var i = 0; i < _fingerCount; i++)
+            {
+                Fingers[i].openPose = fingers[i];
+            }
+
+            for (var i = 0; i < _thumbCount; i++)
+            {
+                _thumbs[i].openPose = thumbs[i];
+            }
+        }
+
+        public void SetClosedPose(HandPoseData data)
+        {
+            var fingers = data.RemapFingers(_fingerCount);
+            var thumbs = data.RemapThumbs(_thumbCount);
+
+            for (var i = 0; i < _fingerCount; i++)
+            {
+                Fingers[i].closedPose = fingers[i];
+            }
+
+            for (var i = 0; i < _thumbCount; i++)
+            {
+                _thumbs[i].closedPose = thumbs[i];
+            }
+        }
+
+        public void SetBlendPose(HandPoseData data)
+        {
+            for (var i = 0; i < Fingers.Length; i++)
+            {
+                Fingers[i].blendPose = data.fingers[i];
+            }
+
+            for (var i = 0; i < _thumbs.Length; i++)
+            {
+                _thumbs[i].blendPose = data.thumbs[i];
+            }
         }
 
 #if UNITY_EDITOR

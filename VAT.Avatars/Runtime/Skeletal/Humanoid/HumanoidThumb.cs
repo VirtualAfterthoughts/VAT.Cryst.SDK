@@ -13,7 +13,7 @@ using VAT.Shared.Utilities;
 
 namespace VAT.Avatars.Skeletal
 {
-    public class HumanoidFinger : DataBoneGroup, IFingerGroup
+    public class HumanoidThumb : DataBoneGroup, IThumbGroup
     {
         private int _boneCount = 5;
         public override int BoneCount => _boneCount;
@@ -35,11 +35,11 @@ namespace VAT.Avatars.Skeletal
 
         public SimpleTransform NeutralEndBone => _hand.Transform.Transform(defaultEnd);
 
-        IBone IFingerGroup.Proximal => Proximal;
+        IBone IThumbGroup.Proximal => Proximal;
 
-        IBone IFingerGroup.Middle => Middle;
+        IBone IThumbGroup.Middle => Middle;
 
-        IBone IFingerGroup.Distal => Distal;
+        IBone IThumbGroup.Distal => Distal;
 
         public SimpleTransform defaultEnd;
 
@@ -51,9 +51,9 @@ namespace VAT.Avatars.Skeletal
         {
             base.Initiate();
 
-            openPose = FingerPoseData.Create(3);
-            closedPose = FingerPoseData.Create(3);
-            blendPose = FingerPoseData.Create(3);
+            openPose = ThumbPoseData.Create(2);
+            closedPose = ThumbPoseData.Create(2);
+            blendPose = ThumbPoseData.Create(2);
         }
 
         public override void BindPose() {
@@ -101,9 +101,9 @@ namespace VAT.Avatars.Skeletal
             _handProportions = handProportions;
         }
 
-        public FingerPoseData openPose;
-        public FingerPoseData closedPose;
-        public FingerPoseData blendPose;
+        public ThumbPoseData openPose;
+        public ThumbPoseData closedPose;
+        public ThumbPoseData blendPose;
 
         public static float Remap(float value)
         {
@@ -116,36 +116,18 @@ namespace VAT.Avatars.Skeletal
             return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         }
 
-        private float GetSplayAngle(float splay)
-        {
-            return Mathf.LerpUnclamped(-30f, 30f, Remap(splay));
-        }
-
-        private float GetCurlAngle(float curl)
-        {
-            return Mathf.LerpUnclamped(-90f, 90f, Remap(curl));
-        }
-
         public void CalculateIKTargets()
         {
             float leftMult = (isLeft ? -1f : 1f);
 
-            Vector3 fwd = MetaCarpal.Parent.forward;
-            Vector3 handUp = MetaCarpal.Parent.up;
+            MetaCarpal.localRotation = Quaternion.AngleAxis(90f * leftMult, Vector3.forward);
+            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(0f, -60f, Remap(Mathf.Lerp(openPose.stretched, closedPose.stretched, blendPose.phalanges[0].curl))) * leftMult, MetaCarpal.up) * MetaCarpal.rotation;
+            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(10f, -60f, Remap(Mathf.Lerp(openPose.spread, closedPose.spread, blendPose.phalanges[0].curl))), MetaCarpal.right) * MetaCarpal.rotation;
+            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(-20f, 60f, Remap(Mathf.Lerp(openPose.twist, closedPose.twist, blendPose.phalanges[0].curl))) * leftMult, MetaCarpal.forward) * MetaCarpal.rotation;
 
-            Proximal.rotation = Quaternion.LookRotation(fwd, handUp);
-
-            // Splay
-            Proximal.rotation = Quaternion.AngleAxis(-GetSplayAngle(Mathf.Lerp(openPose.splay, closedPose.splay, blendPose.phalanges[0].curl)) * leftMult, handUp) * Proximal.rotation;
-
-            // Curl 01
-            Proximal.rotation = Quaternion.AngleAxis(GetCurlAngle(Mathf.Lerp(openPose.phalanges[0].curl, closedPose.phalanges[0].curl, blendPose.phalanges[0].curl)), Proximal.right) * Proximal.rotation;
-
-            // Curl 02
-            Middle.localRotation = Quaternion.AngleAxis(GetCurlAngle(Mathf.Lerp(openPose.phalanges[1].curl, closedPose.phalanges[1].curl, blendPose.phalanges[1].curl)), Vector3.right);
-
-            // Curl 03
-            Distal.localRotation = Quaternion.AngleAxis(GetCurlAngle(Mathf.Lerp(openPose.phalanges[2].curl, closedPose.phalanges[2].curl, blendPose.phalanges[2].curl)), Vector3.right);
+            Proximal.localRotation = Quaternion.identity;
+            Middle.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(Mathf.Lerp(openPose.phalanges[0].curl, closedPose.phalanges[0].curl, blendPose.phalanges[0].curl))), Vector3.right);
+            Distal.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(Mathf.Lerp(openPose.phalanges[1].curl, closedPose.phalanges[1].curl, blendPose.phalanges[1].curl))), Vector3.right);
         }
 
         public override void Solve()

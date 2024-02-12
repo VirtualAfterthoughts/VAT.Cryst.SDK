@@ -18,8 +18,6 @@ namespace VAT.Characters
     {
         public Avatar avatar;
 
-        private CrystInteractor right;
-
         public override void OnAwake()
         {
             avatar.Initiate();
@@ -32,18 +30,15 @@ namespace VAT.Characters
             {
                 rig.TryGetArm(arm.Handedness, out var rigArm);
                 rigArm.TryGetHand(out var thing);
-                thing.TryGetInputController(out var controller);
 
                 // add interactor
                 var bone = (PhysBone)arm.PhysArm.Hand.Hand;
 
                 var interactor = bone.UnityGameObject.AddComponent<CrystInteractor>();
-                interactor.controller = controller;
+                interactor.controller = thing.GetInputControllerOrDefault();
+                interactor.hand = thing.GetInputHandOrDefault();
                 interactor.arm = arm;
                 interactor.handedness = arm.Handedness;
-
-                if (interactor.handedness == Handedness.RIGHT)
-                    right = interactor;
             }
         }
 

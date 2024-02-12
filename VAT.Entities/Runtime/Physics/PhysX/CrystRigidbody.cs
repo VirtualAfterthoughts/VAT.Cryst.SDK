@@ -57,8 +57,7 @@ namespace VAT.Entities.PhysX
             Rigidbody.AddTorque(torque, ConvertForceMode(mode));
         }
 
-        [ContextMenu("Create Rigidbody")]
-        public override void CreateItem()
+        protected override void OnCreateItem()
         {
             if (!HasBody) {
                 _rigidbody = gameObject.AddOrGetComponent<Rigidbody>();
@@ -68,8 +67,7 @@ namespace VAT.Entities.PhysX
             }
         }
 
-        [ContextMenu("Destroy Rigidbody")]
-        public override void DestroyItem()
+        protected override void OnDestroyItem()
         {
             if (HasBody) {
                 _info = SimpleRigidbody.Create(_rigidbody);

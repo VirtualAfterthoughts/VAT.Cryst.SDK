@@ -12,6 +12,7 @@ namespace VAT.Avatars.Proportions
     public struct HandProportions : IBoneGroupProportions
     {
         public int FingerCount => fingerProportions.Length;
+        public int ThumbCount => thumbProportions.Length;
 
         public Handedness handedness;
 
@@ -20,5 +21,7 @@ namespace VAT.Avatars.Proportions
         public Ellipsoid knuckleEllipsoid;
 
         public FingerProportions[] fingerProportions;
+
+        public FingerProportions[] thumbProportions;
     }
 }

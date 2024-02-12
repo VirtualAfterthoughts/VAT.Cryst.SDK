@@ -62,7 +62,7 @@ namespace VAT.Avatars.Posing
         }
 
         public void Solve() {
-            _hand.ApplyData(handPoseData);
+            _hand.SetOpenPose(handPoseData);
             _hand.Solve();
 
             _artHand.SolveFingers();

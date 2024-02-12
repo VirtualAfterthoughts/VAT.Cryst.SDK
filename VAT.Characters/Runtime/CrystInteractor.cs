@@ -15,6 +15,7 @@ namespace VAT.Characters
         public CrystRigidbody rb;
         public Handedness handedness;
         public IInputController controller;
+        public IInputHand hand;
         public AvatarArm arm;
 
         private Grip _attachedGrip;
@@ -118,6 +119,8 @@ namespace VAT.Characters
 
         public void LateUpdate()
         {
+            arm.DataArm.Hand.SetBlendPose(hand.GetHandPose());
+
             controller.TryGetGrip(out var grip);
 
             OnUpdateHover();
@@ -153,6 +156,11 @@ namespace VAT.Characters
 
         public void AttachGrip(Grip grip)
         {
+            if (grip.pose != null)
+            {
+                arm.DataArm.Hand.SetClosedPose(grip.pose.data);
+            }
+
             grip.OnAttachBegin(this);
             _attachedGrip = grip;
             _isSnatching = true;

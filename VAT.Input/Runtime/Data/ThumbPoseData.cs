@@ -19,5 +19,13 @@ namespace VAT.Avatars
         public float twist;
 
         public PhalanxPoseData[] phalanges;
+
+        public static ThumbPoseData Create(int phalanxCount)
+        {
+            return new ThumbPoseData
+            {
+                phalanges = new PhalanxPoseData[phalanxCount],
+            };
+        }
     }
 }

@@ -47,13 +47,16 @@ namespace VAT.Avatars.Helpers
         {
             proportions.handedness = descriptor.isLeft ? Input.Handedness.LEFT : Input.Handedness.RIGHT;
 
-            proportions.fingerProportions = new FingerProportions[5];
+            proportions.thumbProportions = new FingerProportions[1];
 
-            proportions.fingerProportions[0] = Internal_CalculateFinger(hand, descriptor.thumb, Vector3.left);
-            proportions.fingerProportions[1] = Internal_CalculateFinger(hand, descriptor.index, Vector3.up);
-            proportions.fingerProportions[2] = Internal_CalculateFinger(hand, descriptor.middle, Vector3.up);
-            proportions.fingerProportions[3] = Internal_CalculateFinger(hand, descriptor.ring, Vector3.up);
-            proportions.fingerProportions[4] = Internal_CalculateFinger(hand, descriptor.pinky, Vector3.up);
+            proportions.thumbProportions[0] = Internal_CalculateFinger(hand, descriptor.thumb, Vector3.left);
+
+            proportions.fingerProportions = new FingerProportions[4];
+
+            proportions.fingerProportions[0] = Internal_CalculateFinger(hand, descriptor.index, Vector3.up);
+            proportions.fingerProportions[1] = Internal_CalculateFinger(hand, descriptor.middle, Vector3.up);
+            proportions.fingerProportions[2] = Internal_CalculateFinger(hand, descriptor.ring, Vector3.up);
+            proportions.fingerProportions[3] = Internal_CalculateFinger(hand, descriptor.pinky, Vector3.up);
 
             proportions.wristEllipsoid.height = distance(hand.Hand.position, descriptor.middle.proximal.transform.position);
             Vector3 fingerDirection = descriptor.middle.distal.transform.position - descriptor.middle.proximal.transform.position;

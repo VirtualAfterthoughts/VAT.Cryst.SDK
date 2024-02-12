@@ -9,6 +9,8 @@ namespace VAT.Avatars
 {
     public interface IHand : IJoint
     {
-        bool TryGetInputController(out IInputController controller);
+        IInputController GetInputControllerOrDefault();
+
+        IInputHand GetInputHandOrDefault();
     }
 }

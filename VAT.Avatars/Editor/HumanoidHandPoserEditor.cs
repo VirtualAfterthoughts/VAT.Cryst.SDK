@@ -55,44 +55,7 @@ namespace VAT.Avatars.Editor
             if (_poser.Initiated) {
                 Handles.color = new Color(255, 87, 51, 255) / 255;
 
-                for (var i = 0; i < _poser.Hand.Fingers.Length; i++) {
-                    DrawFinger(i);
-                }
-
                 _poser.Solve();
-            }
-        }
-
-        private void DrawFinger(int i) {
-            var finger = _poser.Hand.Fingers[i];
-
-            if (i == _fingerIndex) {
-                ShowFinger(finger);
-            }
-            else {
-                float size = 0.005f;
-                var button = Handles.Button(finger.End.position, finger.End.rotation, size, size * 2f, Handles.SphereHandleCap);
-                if (button) {
-                    _fingerIndex = i;
-                }
-            }
-        }
-
-        private void ShowFinger(HumanoidFinger finger)
-        {
-            var target = finger.NeutralEndBone.Transform(finger.openPoint);
-
-            Vector3 position = target.position;
-            Quaternion rotation = target.rotation;
-
-            EditorGUI.BeginChangeCheck();
-
-            Handles.TransformHandle(ref position, ref rotation);
-
-            if (EditorGUI.EndChangeCheck())
-            {
-                rotation.Normalize();
-                finger.openPoint = finger.NeutralEndBone.InverseTransform(SimpleTransform.Create(position, rotation));
             }
         }
     }

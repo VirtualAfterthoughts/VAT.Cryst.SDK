@@ -16,5 +16,7 @@ namespace VAT.Entities
         float3 AngularVelocity { get; set; }
 
         bool HasBody { get; }
+
+        Collider[] GetColliders();
     }
 }

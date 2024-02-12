@@ -15,6 +15,14 @@ namespace VAT.Avatars.REWORK
 
         public IFingerGroup[] Fingers { get; }
 
+        public IThumbGroup[] Thumbs { get; }
+
         SimpleTransform GetPointOnPalm(Vector2 position);
+
+        void SetOpenPose(HandPoseData data);
+
+        void SetClosedPose(HandPoseData data);
+
+        void SetBlendPose(HandPoseData data);
     }
 }

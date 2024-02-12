@@ -15,13 +15,23 @@ namespace VAT.Avatars.Art
 
         public ArtBone Hand => Bones[0] as ArtBone;
 
+        private HumanoidArtThumb[] _thumbs = null;
+        public HumanoidArtThumb[] Thumbs => _thumbs;
+
         private HumanoidArtFinger[] _fingers = null;
         public HumanoidArtFinger[] Fingers => _fingers;
 
         public override void Initiate() {
             base.Initiate();
 
-            _fingers = new HumanoidArtFinger[5];
+            _thumbs = new HumanoidArtThumb[1];
+            for (var i = 0; i < _thumbs.Length; i++)
+            {
+                _thumbs[i] = new HumanoidArtThumb();
+                _thumbs[i].Initiate();
+            }
+
+            _fingers = new HumanoidArtFinger[4];
             for (var i = 0; i < _fingers.Length; i++) {
                 _fingers[i] = new HumanoidArtFinger();
                 _fingers[i].Initiate();
@@ -40,35 +50,37 @@ namespace VAT.Avatars.Art
             {
                 _fingers[i].Solve();
             }
+
+            for (var i = 0; i < _thumbs.Length; i++)
+            {
+                _thumbs[i].Solve();
+            }
         }
 
         public override void WriteData(IHandGroup boneGroup) {
             base.WriteData(boneGroup);
 
-            int fingerIndex = 0;
-            for (var i = 0; i < _fingers.Length; i++) {
-                if (fingerIndex >= boneGroup.Fingers.Length) {
-                    fingerIndex = 0;
-                }
-            
-                _fingers[i].WriteData(boneGroup.Fingers[fingerIndex]);
-                
-                fingerIndex++;
+            for (var i = 0; i < _fingers.Length; i++)
+            {
+                _fingers[i].WriteData(boneGroup.Fingers[i]);
+            }
+
+            for (var i = 0; i < _thumbs.Length; i++)
+            {
+                _thumbs[i].WriteData(boneGroup.Thumbs[i]);
             }
         }
 
         public override void WriteOffsets(IHandGroup boneGroup) {
             Hand.WriteOffset(boneGroup.Hand);
 
-            int fingerIndex = 0;
             for (var i = 0; i < _fingers.Length; i++) {
-                if (fingerIndex >= boneGroup.Fingers.Length) {
-                    fingerIndex = 0;
-                }
-            
-                _fingers[i].WriteOffsets(boneGroup.Fingers[fingerIndex]);
-            
-                fingerIndex++;
+                _fingers[i].WriteOffsets(boneGroup.Fingers[i]);
+            }
+
+            for (var i = 0; i < _thumbs.Length; i++)
+            {
+                _thumbs[i].WriteOffsets(boneGroup.Thumbs[i]);
             }
         }
 
@@ -76,11 +88,12 @@ namespace VAT.Avatars.Art
         {
             Hand.WriteReference(artDescriptorGroup.hand);
 
-            _fingers[0].WriteTransforms(artDescriptorGroup.thumb);
-            _fingers[1].WriteTransforms(artDescriptorGroup.index);
-            _fingers[2].WriteTransforms(artDescriptorGroup.middle);
-            _fingers[3].WriteTransforms(artDescriptorGroup.ring);
-            _fingers[4].WriteTransforms(artDescriptorGroup.pinky);
+            _thumbs[0].WriteTransforms(artDescriptorGroup.thumb);
+
+            _fingers[0].WriteTransforms(artDescriptorGroup.index);
+            _fingers[1].WriteTransforms(artDescriptorGroup.middle);
+            _fingers[2].WriteTransforms(artDescriptorGroup.ring);
+            _fingers[3].WriteTransforms(artDescriptorGroup.pinky);
         }
     }
 }

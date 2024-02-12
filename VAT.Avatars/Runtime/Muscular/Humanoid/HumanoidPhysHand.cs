@@ -22,6 +22,9 @@ namespace VAT.Avatars.Muscular
         private RelativeFinger[] _fingers;
         public IFingerGroup[] Fingers => _fingers;
 
+        private RelativeThumb[] _thumbs;
+        public IThumbGroup[] Thumbs => _thumbs;
+
         private RelativeBone _relativePalm;
 
         private IHandGroup _hand;
@@ -51,6 +54,13 @@ namespace VAT.Avatars.Muscular
             {
                 _fingers[i] = new RelativeFinger(Hand, hand.Hand, hand.Fingers[i]);
             }
+
+            _thumbs = new RelativeThumb[hand.Thumbs.Length];
+
+            for (var i = 0; i < _thumbs.Length; i++)
+            {
+                _thumbs[i] = new RelativeThumb(Hand, hand.Hand, hand.Thumbs[i]);
+            }
         }
 
         public void MatchPose(IHandGroup hand)
@@ -70,6 +80,21 @@ namespace VAT.Avatars.Muscular
         public SimpleTransform GetPointOnPalm(Vector2 position)
         {
             return _relativePalm.Transform.Transform(_hand.Palm.Transform.InverseTransform(_hand.GetPointOnPalm(position)));
+        }
+
+        public void SetOpenPose(HandPoseData data)
+        {
+            _hand.SetOpenPose(data);
+        }
+
+        public void SetClosedPose(HandPoseData data)
+        {
+            _hand.SetClosedPose(data);
+        }
+
+        public void SetBlendPose(HandPoseData data)
+        {
+            _hand.SetBlendPose(data);
         }
     }
 }

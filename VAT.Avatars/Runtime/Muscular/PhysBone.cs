@@ -100,10 +100,14 @@ namespace VAT.Avatars.Muscular
 
         public void InsertCollider(Collider collider) {
             _colliders.Add(collider);
+
+            Body.CollectColliders();
         }
 
         public void RemoveCollider(Collider collider) {
             _colliders.Remove(collider);
+
+            Body.CollectColliders();
         }
 
         private void Internal_InsertChild(PhysBone child) {
