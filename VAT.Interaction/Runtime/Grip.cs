@@ -53,6 +53,12 @@ namespace VAT.Interaction
             DetachJoint(interactor);
         }
 
+        public void UpdateJoint(IInteractor interactor)
+        {
+            var joint = _joints[interactor];
+            joint.xDrive = joint.yDrive = joint.zDrive = new JointDrive() { positionSpring = Mathf.Lerp(joint.xDrive.positionSpring, 5000f, Time.deltaTime * 0.5f), positionDamper = 0f, maximumForce = float.PositiveInfinity };
+        }
+
         private void LockJoint(IInteractor interactor)
         {
             var joint = _joints[interactor];
@@ -77,13 +83,14 @@ namespace VAT.Interaction
             // Match grab rotation, so that the joint initializes with proper target
             // Since we can't set anchorRotation in Unity
             var grabPointRotation = hostTransform.TransformRotation(target.rotation);
+            var initialRotation = rb.transform.rotation;
             rb.transform.rotation = grabPointRotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
 
             var joint = rb.GameObject.AddComponent<ConfigurableJoint>();
             joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
             joint.rotationDriveMode = RotationDriveMode.Slerp;
 
-            joint.xDrive = joint.yDrive = joint.zDrive = new JointDrive() { positionSpring = 50000f, positionDamper = 1000f, maximumForce = float.MaxValue };
+            joint.xDrive = joint.yDrive = joint.zDrive = new JointDrive() { positionSpring = 5f, positionDamper = 0f, maximumForce = float.MaxValue };
             joint.connectedBody = host.GetRigidbody();
 
             joint.autoConfigureConnectedAnchor = false;
@@ -93,6 +100,8 @@ namespace VAT.Interaction
             joint.linearLimit = new SoftJointLimit() { limit = Vector3.Distance(joint.GetWorldAnchor(), joint.GetWorldConnectedAnchor()) };
 
             _joints[interactor] = joint;
+
+            rb.transform.rotation = initialRotation;
         }
 
         private void DetachJoint(IInteractor interactor)

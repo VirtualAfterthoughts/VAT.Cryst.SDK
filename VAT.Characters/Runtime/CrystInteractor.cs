@@ -76,6 +76,10 @@ namespace VAT.Characters
         private SimpleTransform OnProcessTarget(in SimpleTransform target)
         {
             var values = GetValues();
+
+            var goal = values.Item1;
+            goal.rotation = target.rotation;
+
             return SimpleTransform.Lerp(target, values.Item1, values.Item2);
         }
 
@@ -105,6 +109,8 @@ namespace VAT.Characters
                 var target = _attachedGrip.GetTargetInWorld(this);
                 target.lossyScale = 1f;
                 var grabPoint = GetGrabPoint();
+                grabPoint.rotation = target.rotation;
+
                 var self = target.Transform(grabPoint.InverseTransform(transform));
                 lastTar = self;
                 _lerp = Mathf.Lerp(_lerp, 1f, Time.deltaTime * 12f);
@@ -139,6 +145,8 @@ namespace VAT.Characters
                 _snatchTime += Time.deltaTime;
 
                 float distance = math.length(_attachedGrip.GetTargetInWorld(this).position - GetGrabPoint().position);
+
+                _attachedGrip.UpdateJoint(this);
 
                 if (distance <= 0.05f)
                 {
