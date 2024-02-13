@@ -8,6 +8,33 @@ namespace VAT.Avatars
 {
     public static class HandPoseCreator
     {
+        public static HandPoseData Lerp(HandPoseData a, HandPoseData b, float t)
+        {
+            HandPoseData data = new()
+            {
+                fingers = a.RemapFingers(b.fingers.Length),
+                thumbs = a.RemapThumbs(b.thumbs.Length)
+            };
+
+            for (var i = 0; i < data.fingers.Length; i++)
+            {
+                for (var j = 0; j < data.fingers[i].phalanges.Length; j++)
+                {
+                    data.fingers[i].phalanges[j].curl = Mathf.Lerp(data.fingers[i].phalanges[j].curl, b.fingers[i].phalanges[j].curl, t);
+                }
+            }
+
+            for (var i = 0; i < data.thumbs.Length; i++)
+            {
+                for (var j = 0; j < data.thumbs[i].phalanges.Length; j++)
+                {
+                    data.thumbs[i].phalanges[j].curl = Mathf.Lerp(data.thumbs[i].phalanges[j].curl, b.thumbs[i].phalanges[j].curl, t);
+                }
+            }
+
+            return data;
+        }
+
         public static void SetCurls(PhalanxPoseData[] phalanges, in float curl)
         {
             for (var i = 0; i < phalanges.Length; i++)
@@ -74,10 +101,21 @@ namespace VAT.Avatars
 
             for (var i = 0; i < fingerCount; i++)
             {
-                var pose = new FingerPoseData();
+                PhalanxPoseData[] phalanges = new PhalanxPoseData[fingers[i].phalanges.Length];
 
-                pose.splay = fingers[i].splay;
-                pose.phalanges = fingers[i].phalanges;
+                for (var j = 0; j < phalanges.Length; j++)
+                {
+                    phalanges[j] = new PhalanxPoseData()
+                    {
+                        curl = fingers[i].phalanges[j].curl,
+                    };
+                }
+
+                var pose = new FingerPoseData
+                {
+                    splay = fingers[i].splay,
+                    phalanges = phalanges
+                };
 
                 data[i] = pose;
             }
@@ -91,12 +129,23 @@ namespace VAT.Avatars
 
             for (var i = 0; i < thumbCount; i++)
             {
-                var pose = new ThumbPoseData();
+                PhalanxPoseData[] phalanges = new PhalanxPoseData[thumbs[i].phalanges.Length];
 
-                pose.spread = thumbs[i].spread;
-                pose.twist = thumbs[i].twist;
-                pose.stretched = thumbs[i].stretched;
-                pose.phalanges = thumbs[i].phalanges;
+                for (var j = 0; j < phalanges.Length; j++)
+                {
+                    phalanges[j] = new PhalanxPoseData()
+                    {
+                        curl = thumbs[i].phalanges[j].curl,
+                    };
+                }
+
+                var pose = new ThumbPoseData
+                {
+                    spread = thumbs[i].spread,
+                    twist = thumbs[i].twist,
+                    stretched = thumbs[i].stretched,
+                    phalanges = phalanges
+                };
 
                 data[i] = pose;
             }

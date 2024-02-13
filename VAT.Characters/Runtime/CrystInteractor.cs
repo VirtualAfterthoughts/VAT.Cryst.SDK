@@ -21,10 +21,11 @@ namespace VAT.Characters
         public HandPoseData openPose;
         public HandPoseData closedPose;
 
+        public float grabRadius = 0.2f;
+
         private Grip _attachedGrip;
 
         private bool _isSnatching = false;
-        private float _snatchTime = 0f;
 
         private IInteractable _hoveringInteractable;
         public IInteractable HoveringInteractable
@@ -148,9 +149,15 @@ namespace VAT.Characters
 
             if (_isSnatching)
             {
-                _snatchTime += Time.deltaTime;
-
                 float distance = math.length(_attachedGrip.GetTargetInWorld(this).position - GetGrabPoint().position);
+
+                if (_attachedGrip.pose != null)
+                {
+                    var targetPose = _attachedGrip.pose.data;
+                    var newPose = HandPoseCreator.Lerp(openPose, targetPose, Mathf.Pow(distance / grabRadius - 1f, 2f));
+
+                    arm.DataArm.Hand.SetClosedPose(newPose);
+                }
 
                 _attachedGrip.UpdateJoint(this);
 
@@ -159,26 +166,19 @@ namespace VAT.Characters
                     _isSnatching = false;
                     _attachedGrip.OnAttachEnd(this);
 
-                    _snatchTime = 0.2f;
+                    if (_attachedGrip.pose != null)
+                    {
+                        arm.DataArm.Hand.SetClosedPose(_attachedGrip.pose.data);
+                    }
                 }
-            }
-            else
-            {
-                _snatchTime -= Time.deltaTime;
             }
         }
 
         public void AttachGrip(Grip grip)
         {
-            if (grip.pose != null)
-            {
-                arm.DataArm.Hand.SetClosedPose(grip.pose.data);
-            }
-
             grip.OnAttachBegin(this);
             _attachedGrip = grip;
             _isSnatching = true;
-            _snatchTime = 0f;
 
             HoveringInteractable = null;
         }
@@ -209,7 +209,7 @@ namespace VAT.Characters
                 return;
 
             var grabPoint = GetGrabPoint();
-            var colliders = Physics.OverlapSphere(grabPoint.position, 0.2f, ~0, QueryTriggerInteraction.Collide);
+            var colliders = Physics.OverlapSphere(grabPoint.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
             IInteractable interactable = null;
 
             foreach (var collider in colliders)
