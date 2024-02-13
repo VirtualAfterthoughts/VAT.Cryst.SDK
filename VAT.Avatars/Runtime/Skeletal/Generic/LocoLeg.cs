@@ -82,7 +82,7 @@ namespace VAT.Avatars.Skeletal
                 }
                 else
                 {
-                    _jumpPull = Mathf.Lerp(_jumpPull, 0f, Time.deltaTime * 24f);
+                    _jumpPull = Mathf.Lerp(_jumpPull, 0f, Time.deltaTime * 6f);
 
                     if (_timeSinceJump < 0.25f)
                     {
