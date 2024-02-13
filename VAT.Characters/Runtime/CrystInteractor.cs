@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using VAT.Avatars;
 using VAT.Avatars.Integumentary;
 using VAT.Entities.PhysX;
 using VAT.Input;
@@ -17,6 +18,8 @@ namespace VAT.Characters
         public IInputController controller;
         public IInputHand hand;
         public AvatarArm arm;
+        public HandPoseData openPose;
+        public HandPoseData closedPose;
 
         private Grip _attachedGrip;
 
@@ -71,6 +74,9 @@ namespace VAT.Characters
         private void Start()
         {
             arm.DataArm.OnProcessTarget += OnProcessTarget;
+
+            arm.DataArm.Hand.SetOpenPose(openPose);
+            arm.DataArm.Hand.SetClosedPose(closedPose);
         }
 
         private SimpleTransform OnProcessTarget(in SimpleTransform target)
@@ -179,6 +185,9 @@ namespace VAT.Characters
 
         public void DetachGrips()
         {
+            arm.DataArm.Hand.SetOpenPose(openPose);
+            arm.DataArm.Hand.SetClosedPose(closedPose);
+
             if (_attachedGrip)
             {
                 DetachGrip(_attachedGrip);

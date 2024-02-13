@@ -116,18 +116,45 @@ namespace VAT.Avatars.Skeletal
             return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         }
 
+        private float _lastStretched = 0f;
+        private float _lastSpread = 0f;
+        private float _lastTwist = 0f;
+        private float _lastCurl01 = 0f;
+        private float _lastCurl02 = 0f;
+
         public void CalculateIKTargets()
         {
             float leftMult = (isLeft ? -1f : 1f);
 
+            // Calculate values
+            float stretched = Mathf.Lerp(openPose.stretched, closedPose.stretched, blendPose.phalanges[0].curl);
+            float spread = Mathf.Lerp(openPose.spread, closedPose.spread, blendPose.phalanges[0].curl);
+            float twist = Mathf.Lerp(openPose.twist, closedPose.twist, blendPose.phalanges[0].curl);
+            float curl01 = Mathf.Lerp(openPose.phalanges[0].curl, closedPose.phalanges[0].curl, blendPose.phalanges[0].curl);
+            float curl02 = Mathf.Lerp(openPose.phalanges[1].curl, closedPose.phalanges[1].curl, blendPose.phalanges[1].curl);
+
+            float lerp = Time.deltaTime * 40f;
+
+            stretched = Mathf.Lerp(_lastStretched, stretched, lerp);
+            spread = Mathf.Lerp(_lastSpread, spread, lerp);
+            twist = Mathf.Lerp(_lastTwist, twist, lerp);
+            curl01 = Mathf.Lerp(_lastCurl01, curl01, lerp);
+            curl02 = Mathf.Lerp(_lastCurl02, curl02, lerp);
+
+            _lastStretched = stretched;
+            _lastSpread = spread;
+            _lastTwist = twist;
+            _lastCurl01 = curl01;
+            _lastCurl02 = curl02;
+
             MetaCarpal.localRotation = Quaternion.AngleAxis(90f * leftMult, Vector3.forward);
-            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(0f, -60f, Remap(Mathf.Lerp(openPose.stretched, closedPose.stretched, blendPose.phalanges[0].curl))) * leftMult, MetaCarpal.up) * MetaCarpal.rotation;
-            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(10f, -60f, Remap(Mathf.Lerp(openPose.spread, closedPose.spread, blendPose.phalanges[0].curl))), MetaCarpal.right) * MetaCarpal.rotation;
-            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(-20f, 60f, Remap(Mathf.Lerp(openPose.twist, closedPose.twist, blendPose.phalanges[0].curl))) * leftMult, MetaCarpal.forward) * MetaCarpal.rotation;
+            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(0f, -60f, Remap(stretched)) * leftMult, MetaCarpal.up) * MetaCarpal.rotation;
+            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(10f, -60f, Remap(spread)), MetaCarpal.right) * MetaCarpal.rotation;
+            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(-20f, 60f, Remap(twist)) * leftMult, MetaCarpal.forward) * MetaCarpal.rotation;
 
             Proximal.localRotation = Quaternion.identity;
-            Middle.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(Mathf.Lerp(openPose.phalanges[0].curl, closedPose.phalanges[0].curl, blendPose.phalanges[0].curl))), Vector3.right);
-            Distal.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(Mathf.Lerp(openPose.phalanges[1].curl, closedPose.phalanges[1].curl, blendPose.phalanges[1].curl))), Vector3.right);
+            Middle.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(curl01)), Vector3.right);
+            Distal.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(curl02)), Vector3.right);
         }
 
         public override void Solve()

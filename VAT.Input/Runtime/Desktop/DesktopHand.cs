@@ -23,17 +23,11 @@ namespace VAT.Input
             };
         }
 
-        private float _lastCurl = 0f;
-
         public void Update()
         {
             _controller.TryGetGrip(out var grip);
 
             float curl = grip.GetAxis();
-
-            curl = Mathf.Lerp(_lastCurl, curl, Time.deltaTime * 12f);
-
-            _lastCurl = curl;
 
             for (var i = 0; i < _handPose.fingers.Length; i++)
             {

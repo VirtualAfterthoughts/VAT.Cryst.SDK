@@ -18,6 +18,9 @@ namespace VAT.Characters
     {
         public Avatar avatar;
 
+        public HandPose openPose;
+        public HandPose closedPose;
+
         public override void OnAwake()
         {
             avatar.Initiate();
@@ -39,6 +42,9 @@ namespace VAT.Characters
                 interactor.hand = thing.GetInputHandOrDefault();
                 interactor.arm = arm;
                 interactor.handedness = arm.Handedness;
+
+                interactor.openPose = openPose.data;
+                interactor.closedPose = closedPose.data;
             }
         }
 
