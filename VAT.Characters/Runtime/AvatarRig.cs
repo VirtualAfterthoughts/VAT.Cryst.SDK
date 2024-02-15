@@ -12,6 +12,7 @@ namespace VAT.Characters
     using VAT.Avatars.Nervous;
 
     using VAT.Input;
+    using VAT.Interaction;
     using VAT.Shared.Data;
 
     public class AvatarRig : CrystRig
@@ -45,6 +46,11 @@ namespace VAT.Characters
 
                 interactor.openPose = openPose.data;
                 interactor.closedPose = closedPose.data;
+
+                foreach (var physBone in arm.PhysArm.Bones)
+                {
+                    interactor.hosts.Add(((PhysBone)physBone).UnityGameObject.AddComponent<InteractableHost>());
+                }
             }
         }
 

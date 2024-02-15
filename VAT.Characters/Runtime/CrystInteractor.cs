@@ -8,11 +8,13 @@ using VAT.Entities.PhysX;
 using VAT.Input;
 using VAT.Interaction;
 using VAT.Shared.Data;
+using VAT.Shared.Extensions;
 
 namespace VAT.Characters
 {
     public class CrystInteractor : MonoBehaviour, IInteractor
     {
+        public List<InteractableHost> hosts = new List<InteractableHost>();
         public CrystRigidbody rb;
         public Handedness handedness;
         public IInputController controller;
@@ -78,10 +80,20 @@ namespace VAT.Characters
 
             arm.DataArm.Hand.SetOpenPose(openPose);
             arm.DataArm.Hand.SetClosedPose(closedPose);
+
+            _lastTarget = transform;
         }
+
+        private float _pinAmount = 0f;
+        private SimpleTransform _lastTarget = SimpleTransform.Default;
 
         private SimpleTransform OnProcessTarget(in SimpleTransform target)
         {
+            Vector3 velocity = PhysicsExtensions.GetLinearVelocity(_lastTarget.position, target.position);
+            _pinAmount = Mathf.Lerp(_pinAmount, 0f, Mathf.Clamp01(velocity.magnitude * 0.5f - 0.05f));
+
+            _lastTarget = target;
+
             var values = GetValues();
 
             var goal = values.Item1;
@@ -125,7 +137,7 @@ namespace VAT.Characters
             }
             else
             {
-                _lerp = Mathf.Lerp(_lerp, 0f, Time.deltaTime * 12f);
+                _lerp = Mathf.Lerp(_lerp, _pinAmount, Time.deltaTime * 12f);
                 return (lastTar, _lerp);
             }
         }
@@ -170,6 +182,8 @@ namespace VAT.Characters
                     {
                         arm.DataArm.Hand.SetClosedPose(_attachedGrip.pose.data);
                     }
+
+                    ResetPin();
                 }
             }
         }
@@ -179,6 +193,8 @@ namespace VAT.Characters
             grip.OnAttachBegin(this);
             _attachedGrip = grip;
             _isSnatching = true;
+
+            ToggleCollsion(grip, true);
 
             HoveringInteractable = null;
         }
@@ -194,13 +210,42 @@ namespace VAT.Characters
                 _attachedGrip = null;
                 _isSnatching = false;
             }
+
+            ResetPin();
+        }
+
+        private void ResetPin()
+        {
+            _pinAmount = 0.8f;
+            lastTar = transform;
         }
 
         public void DetachGrip(Grip grip)
         {
             grip.OnDetached(this);
 
+            ToggleCollsion(grip, false);
+
             _attachedGrip = null;
+        }
+
+        public void ToggleCollsion(Grip grip, bool ignore)
+        {
+            var gripHost = grip.GetHostOrDefault();
+
+            if (gripHost != null)
+            {
+                foreach (var host in hosts)
+                {
+                    foreach (var col1 in host.Colliders)
+                    {
+                        foreach (var col2 in gripHost.GetColliders())
+                        {
+                            Physics.IgnoreCollision(col1, col2, ignore);
+                        }
+                    }
+                }
+            }
         }
 
         protected void OnUpdateHover()

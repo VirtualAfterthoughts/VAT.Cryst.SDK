@@ -41,11 +41,13 @@ namespace VAT.Characters
 
         private SimpleTransform _transform;
         private XRController _controller;
+        private Input.XRHand _hand;
 
-        public XRHand(SimpleTransform transform, XRController controller)
+        public XRHand(SimpleTransform transform, XRController controller, Input.XRHand hand)
         {
             _transform = transform;
             _controller = controller;
+            _hand = hand;
         }
 
         public IInputController GetInputControllerOrDefault()
@@ -55,7 +57,7 @@ namespace VAT.Characters
 
         public IInputHand GetInputHandOrDefault()
         {
-            return default;
+            return _hand;
         }
     }
 
@@ -160,10 +162,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(_leftWrist), _api.LeftController));
+                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(_leftWrist), _api.LeftController, _api.LeftHand));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(_rightWrist), _api.RightController));
+                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(_rightWrist), _api.RightController, _api.RightHand));
                     return true;
             }
         }

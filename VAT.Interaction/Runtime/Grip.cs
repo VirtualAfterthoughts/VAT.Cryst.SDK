@@ -14,6 +14,8 @@ namespace VAT.Interaction
 
         public HandPose pose;
 
+        private IHost _host = null;
+
         public abstract void DisableInteraction();
         public abstract void EnableInteraction();
         public abstract float GetPriority(IInteractor interactor);
@@ -21,9 +23,21 @@ namespace VAT.Interaction
         public abstract void OnHoverBegin(IInteractor interactor);
         public abstract void OnHoverEnd(IInteractor interactor);
 
-        private GameObject GetHostGameObject()
+        public GameObject GetHostGameObject()
         {
-            return GetComponentInParent<InteractableHost>().gameObject;
+            if (_host != null)
+            {
+                return _host.GetGameObject();
+            }
+            else
+            {
+                return gameObject;
+            }
+        }
+
+        public GameObject GetGameObject()
+        {
+            return gameObject;
         }
 
         public SimpleTransform GetInteractorInHost(IInteractor interactor)
@@ -74,8 +88,6 @@ namespace VAT.Interaction
             var rb = interactor.GetRigidbody();
             rb.CreateItem();
 
-            var host = GetComponentInParent<InteractableHost>();
-
             var grabPoint = interactor.GetGrabPoint();
             var target = GetInteractorInHost(interactor);
             var hostTransform = GetHostGameObject().transform;
@@ -91,7 +103,13 @@ namespace VAT.Interaction
             joint.rotationDriveMode = RotationDriveMode.Slerp;
 
             joint.xDrive = joint.yDrive = joint.zDrive = new JointDrive() { positionSpring = 5f, positionDamper = 0f, maximumForce = float.MaxValue };
-            joint.connectedBody = host.GetRigidbody();
+
+            var host = GetHostOrDefault();
+
+            if (host != null)
+            {
+                joint.connectedBody = host.GetRigidbodyOrDefault();
+            }
 
             joint.autoConfigureConnectedAnchor = false;
             joint.SetWorldAnchor(interactor.GetGrabPoint().position);
@@ -109,6 +127,21 @@ namespace VAT.Interaction
             var joint = _joints[interactor];
             _joints.Remove(interactor);
             GameObject.Destroy(joint);
+        }
+
+        public void RegisterHost(IHost host)
+        {
+            _host = host;
+        }
+
+        public void UnregisterHost()
+        {
+            _host = null;
+        }
+
+        public IHost GetHostOrDefault()
+        {
+            return _host;
         }
     }
 }
