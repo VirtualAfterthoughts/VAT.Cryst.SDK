@@ -14,6 +14,14 @@ namespace VAT.Avatars
 
         public PhalanxPoseData[] phalanges;
 
+        public readonly float GetCurl()
+        {
+            if (phalanges.Length <= 0)
+                return 0f;
+
+            return phalanges[0].curl;
+        }
+
         public static FingerPoseData Create(int phalanxCount)
         {
             return new FingerPoseData

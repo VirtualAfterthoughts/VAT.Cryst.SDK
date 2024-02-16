@@ -23,7 +23,10 @@ namespace VAT.Characters
         public HandPoseData openPose;
         public HandPoseData closedPose;
 
-        public float grabRadius = 0.2f;
+        public float grabCurl = 0.8f;
+        public float releaseCurl = 0.7f;
+
+        public float grabRadius = 0.086848f;
 
         private Grip _attachedGrip;
 
@@ -142,22 +145,34 @@ namespace VAT.Characters
             }
         }
 
+        private bool _wasGripPose = false;
+
         public void LateUpdate()
         {
-            arm.DataArm.Hand.SetBlendPose(hand.GetHandPose());
+            var blendPose = hand.GetHandPose();
+            arm.DataArm.Hand.SetBlendPose(blendPose);
 
-            controller.TryGetGrip(out var grip);
+            float maxCurl = 0f;
+
+            foreach (var finger in blendPose.fingers)
+            {
+                maxCurl = Mathf.Max(maxCurl, finger.GetCurl());
+            }
+
+            bool gripPose = maxCurl > grabCurl;
 
             OnUpdateHover();
 
-            if (grip.GetAxis() > 0.6f && !_attachedGrip && HoveringInteractable is Grip grp)
+            if (gripPose && !_wasGripPose && !_attachedGrip && HoveringInteractable is Grip grp)
             {
                 AttachGrip(grp);
             }
-            else if (grip.GetAxis() < 0.4f && _attachedGrip)
+            else if (maxCurl < releaseCurl && _attachedGrip)
             {
                 DetachGrips();
             }
+
+            _wasGripPose = gripPose;
 
             if (_isSnatching)
             {
@@ -254,7 +269,9 @@ namespace VAT.Characters
                 return;
 
             var grabPoint = GetGrabPoint();
-            var colliders = Physics.OverlapSphere(grabPoint.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
+            float radius = grabRadius;
+            Vector3 direction = Vector3.Lerp(-transform.up, transform.forward, 0.5f);
+            var colliders = Physics.OverlapSphere((Vector3)grabPoint.position + (direction * radius), radius, ~0, QueryTriggerInteraction.Collide);
             IInteractable interactable = null;
 
             foreach (var collider in colliders)
@@ -267,6 +284,17 @@ namespace VAT.Characters
             }
 
             HoveringInteractable = interactable;
+        }
+
+        public void OnDrawGizmosSelected()
+        {
+            if (_attachedGrip)
+                return;
+
+            var grabPoint = GetGrabPoint();
+            float radius = grabRadius;
+            Vector3 direction = Vector3.Lerp(-transform.up, transform.forward, 0.5f);
+            Gizmos.DrawWireSphere((Vector3)grabPoint.position + (direction * radius), grabRadius);
         }
 
         public CrystRigidbody GetRigidbody()
