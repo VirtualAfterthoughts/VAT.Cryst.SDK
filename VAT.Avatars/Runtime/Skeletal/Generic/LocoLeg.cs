@@ -60,12 +60,12 @@ namespace VAT.Avatars.Skeletal
 
             Knee.rotation = Quaternion.LookRotation(flattened, up);
 
-            float distanceToFloor = root.InverseTransformPoint(Knee.position).y;
-            Foot.localPosition = down() * Mathf.Clamp(distanceToFloor, 0f, _length);
-
             var debt = _trackedDebt * 0.25f;
             velocity = debt;
             _trackedDebt -= debt;
+
+            float distanceToFloor = root.InverseTransformPoint(Knee.position).y;
+            float extension = 0f;
 
             if (_avatarPayload.TryGetInput(out var input)) {
                 var movement = input.GetMovement();
@@ -73,7 +73,7 @@ namespace VAT.Avatars.Skeletal
 
                 if (input.GetJump())
                 {
-                    _jumpPull = Mathf.Lerp(_jumpPull, 0.25f, Time.deltaTime * 24f);
+                    _jumpPull = Mathf.Lerp(_jumpPull, 0.3f, Time.deltaTime * 24f);
 
                     _jumpMultiplier = 1f;
                     _timeSinceJump = 0f;
@@ -82,17 +82,17 @@ namespace VAT.Avatars.Skeletal
                 }
                 else
                 {
-                    _jumpPull = Mathf.Lerp(_jumpPull, 0f, Time.deltaTime * 6f);
-
                     if (_timeSinceJump < 0.25f)
                     {
                         _jumpMultiplier = Mathf.Lerp(0f, 20f, _timeSinceJump / 0.25f);
                         _spineDebtMultiplier = Mathf.Lerp(0f, 1f, _timeSinceJump / 0.25f);
+                        _jumpPull = Mathf.Lerp(_jumpPull, -0.5f, _timeSinceJump / 0.25f);
                     }
                     else
                     {
                         _jumpMultiplier = 1f;
                         _spineDebtMultiplier = 1f;
+                        _jumpPull = Mathf.Lerp(_jumpPull, 0f, Time.deltaTime * 6f);
                     }
 
                     if (_timeSinceJump > 0.15f && _timeSinceJump < 1f)
@@ -109,8 +109,12 @@ namespace VAT.Avatars.Skeletal
                     _timeSinceJump += Time.deltaTime;
                 }
 
-                Foot.localPosition *= 1f - _jumpPull;
+                float offset = _jumpPull * _length;
+                distanceToFloor -= offset;
+                extension = Mathf.Abs(offset);
             }
+
+            Foot.localPosition = down() * Mathf.Clamp(distanceToFloor, 0f, _length + extension);
         }
 
 #if UNITY_EDITOR
