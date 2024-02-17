@@ -39,8 +39,8 @@ namespace VAT.Input.XR
             
             if (xrHandSubsystem != null)
             {
-                LeftHand = new XRHand();
-                RightHand = new XRHand();
+                LeftHand = new XRHand(new XRHandPoseProvider(Handedness.LEFT, xrHandSubsystem));
+                RightHand = new XRHand(new XRHandPoseProvider(Handedness.RIGHT, xrHandSubsystem));
             }
         }
     }

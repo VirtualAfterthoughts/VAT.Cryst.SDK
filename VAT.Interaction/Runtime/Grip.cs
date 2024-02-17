@@ -80,7 +80,7 @@ namespace VAT.Interaction
 
             joint.linearLimit = new SoftJointLimit() { limit = 0.05f };
             joint.xDrive = joint.yDrive = joint.zDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
-            joint.slerpDrive = new JointDrive() { positionSpring = 9000f, positionDamper = 1000f, maximumForce = 1200f };
+            joint.slerpDrive = new JointDrive() { positionSpring = 9000f, positionDamper = 500f, maximumForce = 1200f };
         }
 
         private void AttachJoint(IInteractor interactor)

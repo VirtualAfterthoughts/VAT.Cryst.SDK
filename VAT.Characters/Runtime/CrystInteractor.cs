@@ -93,7 +93,7 @@ namespace VAT.Characters
         private SimpleTransform OnProcessTarget(in SimpleTransform target)
         {
             Vector3 velocity = PhysicsExtensions.GetLinearVelocity(_lastTarget.position, target.position);
-            _pinAmount = Mathf.Lerp(_pinAmount, 0f, Mathf.Clamp01(velocity.magnitude * 0.5f - 0.05f));
+            _pinAmount = Mathf.Lerp(_pinAmount, 0f, Mathf.Clamp01(velocity.magnitude * 0.3f - 0.05f));
 
             _lastTarget = target;
 
@@ -140,7 +140,7 @@ namespace VAT.Characters
             }
             else
             {
-                _lerp = Mathf.Lerp(_lerp, _pinAmount, Time.deltaTime * 12f);
+                _lerp = Mathf.Lerp(_lerp, _pinAmount, Time.deltaTime * 32f);
                 return (lastTar, _lerp);
             }
         }
@@ -231,7 +231,7 @@ namespace VAT.Characters
 
         private void ResetPin()
         {
-            _pinAmount = 0.8f;
+            _pinAmount = 1f;
             lastTar = transform;
         }
 
