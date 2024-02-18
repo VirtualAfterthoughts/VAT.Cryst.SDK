@@ -9,6 +9,7 @@ using VAT.Avatars.Nervous;
 
 using VAT.Input;
 using VAT.Avatars.REWORK;
+using VAT.Shared.Data;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -95,7 +96,8 @@ namespace VAT.Avatars.Skeletal
             _payload.TryGetHead(out var head);
 
             if (ShimbleWam) {
-                var thing = head.TransformPoint(Flof);
+                var relativeTransform = SimpleTransform.Create(head.position, LocoLeg.Knee.rotation);
+                var thing = relativeTransform.TransformPoint(Flof);
                 var rot = _payload.GetRoot();
                 rot.position.y = thing.y;
                 _payload.SetRoot(rot);

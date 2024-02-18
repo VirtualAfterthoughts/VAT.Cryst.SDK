@@ -101,7 +101,9 @@ namespace VAT.Avatars.Muscular
             if (_skeleton is HumanoidDataSkeleton temp)
             {
                 temp.ShimbleWam = true;
-                temp.Flof = Neck.Skull.Transform.InverseTransformPoint(GetFloor().position);
+                var relativeTransform = Neck.Skull.Transform;
+                relativeTransform.rotation = LocoLeg.Knee.Transform.rotation;
+                temp.Flof = relativeTransform.InverseTransformPoint(GetFloor().position);
             }
         }
 
