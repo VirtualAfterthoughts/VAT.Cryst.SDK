@@ -10,6 +10,7 @@ using VAT.Input;
 using VAT.Input.XR;
 
 using VAT.Shared.Data;
+using VAT.Shared.Extensions;
 
 namespace VAT.Characters
 {
@@ -144,7 +145,8 @@ namespace VAT.Characters
             _api.LeftController.TryGetThumbstick(out var thumbstick);
 
             var movementAxis = thumbstick.GetAxis();
-            var movement = _head.rotation * new Vector3(movementAxis.x, 0f, movementAxis.y);
+            var flattenedHead = Quaternion.LookRotation(_head.forward.FlattenNeck(_head.up, transform.up), transform.up);
+            var movement = flattenedHead * new Vector3(movementAxis.x, 0f, movementAxis.y);
 
             _api.RightController.TryGetPrimaryButton(out var button);
 

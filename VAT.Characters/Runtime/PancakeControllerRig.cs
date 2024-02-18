@@ -6,6 +6,7 @@ using VAT.Avatars;
 using VAT.Input;
 using VAT.Input.Desktop;
 using VAT.Shared.Data;
+using VAT.Shared.Extensions;
 
 namespace VAT.Characters
 {
@@ -153,7 +154,8 @@ namespace VAT.Characters
         public override bool TryGetInput(out IBasicInput input)
         {
             var movementAxis = _inputActions.Gameplay.Movement.ReadValue<Vector2>();
-            var movement = _head.rotation * new Vector3(movementAxis.x, 0f, movementAxis.y);
+            var flattenedHead = Quaternion.LookRotation(_head.forward.FlattenNeck(_head.up, transform.up), transform.up);
+            var movement = flattenedHead * new Vector3(movementAxis.x, 0f, movementAxis.y);
 
             var jump = _inputActions.Gameplay.Jump.ReadValue<float>();
 
