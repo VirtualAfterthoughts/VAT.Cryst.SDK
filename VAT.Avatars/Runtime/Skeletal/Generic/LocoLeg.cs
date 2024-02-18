@@ -73,7 +73,7 @@ namespace VAT.Avatars.Skeletal
 
                 if (input.GetJump())
                 {
-                    _jumpPull = Mathf.Lerp(_jumpPull, 0.3f, Time.deltaTime * 24f);
+                    _jumpPull = Mathf.Lerp(_jumpPull, 0.4f, Time.deltaTime * 8f);
 
                     _jumpMultiplier = 1f;
                     _timeSinceJump = 0f;
@@ -84,9 +84,9 @@ namespace VAT.Avatars.Skeletal
                 {
                     if (_timeSinceJump < 0.25f)
                     {
-                        _jumpMultiplier = Mathf.Lerp(0f, 20f, _timeSinceJump / 0.25f);
+                        _jumpMultiplier = Mathf.Lerp(0f, 5f, _timeSinceJump / 0.25f);
                         _spineDebtMultiplier = Mathf.Lerp(0f, 1f, _timeSinceJump / 0.25f);
-                        _jumpPull = Mathf.Lerp(_jumpPull, -0.5f, _timeSinceJump / 0.25f);
+                        _jumpPull = Mathf.Lerp(0.4f, -0.5f, _timeSinceJump / 0.1f);
                     }
                     else
                     {
@@ -103,8 +103,6 @@ namespace VAT.Avatars.Skeletal
                     {
                         _footShrink = 0f;
                     }
-
-                    _jumpMultiplier = Mathf.Lerp(_jumpMultiplier, 1f, Time.deltaTime * 6f);
 
                     _timeSinceJump += Time.deltaTime;
                 }

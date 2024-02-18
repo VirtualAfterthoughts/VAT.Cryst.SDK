@@ -163,6 +163,18 @@ namespace VAT.Characters
 
             OnUpdateHover();
 
+            if (!_attachedGrip)
+            {
+                if (HoveringInteractable is Grip garp && !gripPose && garp.pose != null)
+                {
+                    arm.DataArm.Hand.SetClosedPose(garp.pose.data);
+                }
+                else
+                {
+                    arm.DataArm.Hand.SetClosedPose(closedPose);
+                }
+            }
+
             if (gripPose && !_wasGripPose && !_attachedGrip && HoveringInteractable is Grip grp)
             {
                 AttachGrip(grp);
