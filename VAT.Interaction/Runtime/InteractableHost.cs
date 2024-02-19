@@ -7,12 +7,15 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Interaction
 {
+    [DisallowMultipleComponent]
     public sealed class InteractableHost : MonoBehaviour
     {
         private List<IInteractable> _interactables = new();
         private Rigidbody _rb;
 
         private readonly List<Collider> _colliders = new List<Collider>();
+
+        private InteractableHostManager _manager;
 
         public List<Collider> Colliders => _colliders;
 
@@ -36,6 +39,37 @@ namespace VAT.Interaction
                 {
                     _colliders.Add(collider);
                 }
+            }
+        }
+
+        private void OnEnable()
+        {
+            FindManager();
+        }
+
+        private void OnDisable()
+        {
+            UnregisterManager();
+        }
+
+        public void FindManager()
+        {
+            UnregisterManager();
+
+            _manager = GetComponentInParent<InteractableHostManager>();
+
+            if (_manager != null)
+            {
+                _manager.RegisterHost(this);
+            }
+        }
+
+        public void UnregisterManager()
+        {
+            if (_manager != null)
+            {
+                _manager.UnregisterHost(this);
+                _manager = null;
             }
         }
 

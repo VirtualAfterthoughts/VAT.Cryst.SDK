@@ -7,12 +7,7 @@ namespace VAT.Interaction
 {
     public sealed class InteractableHostManager : MonoBehaviour
     {
-        private InteractableHost[] _hosts;
-
-        private void Awake()
-        {
-            _hosts = GetComponentsInChildren<InteractableHost>();
-        }
+        private List<InteractableHost> _hosts = new();
 
         public void EnableInteraction()
         {
@@ -28,6 +23,16 @@ namespace VAT.Interaction
             {
                 host.DisableInteraction();
             }
+        }
+
+        public void RegisterHost(InteractableHost host)
+        {
+            _hosts.Add(host);
+        }
+
+        public void UnregisterHost(InteractableHost host)
+        {
+            _hosts.Remove(host);
         }
     }
 }
