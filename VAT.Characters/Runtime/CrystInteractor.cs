@@ -84,7 +84,7 @@ namespace VAT.Characters
             arm.DataArm.Hand.SetOpenPose(openPose);
             arm.DataArm.Hand.SetClosedPose(closedPose);
 
-            _lastTarget = transform;
+            _lastTarget = SimpleTransform.Create(transform);
         }
 
         private float _pinAmount = 0f;
@@ -133,7 +133,7 @@ namespace VAT.Characters
                 var grabPoint = GetGrabPoint();
                 grabPoint.rotation = target.rotation;
 
-                var self = target.Transform(grabPoint.InverseTransform(transform));
+                var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform)));
                 lastTar = self;
                 _lerp = Mathf.Lerp(_lerp, 1f, Time.deltaTime * 12f);
                 return (self, _lerp);
@@ -198,12 +198,12 @@ namespace VAT.Characters
                     arm.DataArm.Hand.SetClosedPose(newPose);
                 }
 
-                _attachedGrip.UpdateJoint(this);
+                _attachedGrip.OnAttachUpdate(this);
 
                 if (distance <= 0.05f)
                 {
                     _isSnatching = false;
-                    _attachedGrip.OnAttachEnd(this);
+                    _attachedGrip.OnAttachComplete(this);
 
                     if (_attachedGrip.pose != null)
                     {
@@ -217,7 +217,7 @@ namespace VAT.Characters
 
         public void AttachGrip(Grip grip)
         {
-            grip.OnAttachBegin(this);
+            grip.OnAttachConfirm(this);
             _attachedGrip = grip;
             _isSnatching = true;
 
@@ -244,12 +244,12 @@ namespace VAT.Characters
         private void ResetPin()
         {
             _pinAmount = 1f;
-            lastTar = transform;
+            lastTar = SimpleTransform.Create(transform);
         }
 
         public void DetachGrip(Grip grip)
         {
-            grip.OnDetached(this);
+            grip.OnDetachConfirm(this);
 
             ToggleCollsion(grip, false);
 
@@ -284,14 +284,22 @@ namespace VAT.Characters
             float radius = grabRadius;
             Vector3 direction = Vector3.Lerp(-transform.up, transform.forward, 0.5f);
             var colliders = Physics.OverlapSphere((Vector3)grabPoint.position + (direction * radius), radius, ~0, QueryTriggerInteraction.Collide);
+            
             IInteractable interactable = null;
+            float lowestPriority = float.PositiveInfinity;
 
             foreach (var collider in colliders)
             {
                 var go = collider.attachedRigidbody ? collider.attachedRigidbody.gameObject : collider.gameObject;
 
                 if (go.TryGetComponent<IInteractable>(out var component)) {
-                    interactable = component;
+                    var (valid, priority) = component.ValidateInteractable(this);
+
+                    if (valid && priority < lowestPriority)
+                    {
+                        interactable = component;
+                        lowestPriority = priority;
+                    }
                 }
             }
 

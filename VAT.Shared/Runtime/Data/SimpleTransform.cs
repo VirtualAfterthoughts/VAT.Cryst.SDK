@@ -204,7 +204,5 @@ namespace VAT.Shared.Data {
                 lerp(a.lossyScale, b.lossyScale, t)
             );
         }
-
-        public static implicit operator SimpleTransform(Transform transform) => Create(transform);
     }
 }

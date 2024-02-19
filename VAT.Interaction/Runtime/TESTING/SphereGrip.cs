@@ -6,7 +6,7 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Interaction
 {
-    public class TargetGrip : Grip
+    public class SphereGrip : Grip
     {
         [SerializeField]
         private Transform _target = null;
@@ -20,6 +20,23 @@ namespace VAT.Interaction
             return transform.localScale.Maximum() * _radius;
         }
 
+        protected override GripJoint OnCreateGripJoint(IInteractor interactor)
+        {
+            return new SphereGripJoint(_target, GetRadius());
+        }
+
+        private void Reset()
+        {
+            if (gameObject.TryGetComponent<SphereCollider>(out var sphereCollider))
+            {
+                _radius = sphereCollider.radius;
+            }
+            else
+            {
+                _radius = 0.5f;
+            }
+        }
+
         private void Awake()
         {
             if (_target == null)
@@ -30,8 +47,12 @@ namespace VAT.Interaction
 
         public override SimpleTransform GetTargetInWorld(IInteractor interactor)
         {
-            var normal = interactor.GetRigidbody().transform.up;
-            return SimpleTransform.Create(_target.position + normal * GetRadius(), _target.rotation);
+            var grabPoint = interactor.GetGrabPoint();
+            var direction = ((Vector3)grabPoint.position - _target.position).normalized;
+
+            var grabRotation = Quaternion.FromToRotation(interactor.GetRigidbody().transform.up, direction) * grabPoint.rotation;
+
+            return SimpleTransform.Create(_target.position + direction * GetRadius(), grabRotation);
         }
 
         private void OnDrawGizmosSelected()

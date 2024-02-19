@@ -100,7 +100,7 @@ namespace VAT.Pooling
                     }
                     else
                     {
-                        transform = this.transform;
+                        transform = SimpleTransform.Create(this.transform);
                     }
 
                     go.DrawGameObject(transform, Color.green, false);

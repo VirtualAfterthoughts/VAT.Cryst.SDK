@@ -10,21 +10,6 @@ namespace VAT.Interaction
     {
         public BoxCollider boxCollider;
 
-        public override void DisableInteraction()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void EnableInteraction()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override float GetPriority(IInteractor interactor)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override SimpleTransform GetTargetInWorld(IInteractor interactor)
         {
             var grabPoint = interactor.GetGrabPoint();
@@ -42,21 +27,6 @@ namespace VAT.Interaction
             }
 
             return grabPoint;
-        }
-
-        public override bool IsInteractable()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void OnHoverBegin(IInteractor interactor)
-        {
-            //throw new System.NotImplementedException();
-        }
-
-        public override void OnHoverEnd(IInteractor interactor)
-        {
-            //throw new System.NotImplementedException();
         }
     }
 }

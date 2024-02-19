@@ -51,7 +51,7 @@ namespace VAT.Pooling
             IRespawnable.Cache.Add(gameObject, this);
 
             _initialParent = Transform.parent;
-            _spawnTransform = Transform;
+            _spawnTransform = SimpleTransform.Create(Transform);
         }
 
         private void OnDestroy()
@@ -90,7 +90,7 @@ namespace VAT.Pooling
             OnSpawnDelegate?.Invoke(this, id);
             InternalPoolSpawnDelegate?.Invoke(this);
 
-            _spawnTransform = Transform;
+            _spawnTransform = SimpleTransform.Create(Transform);
         }
 
 #if UNITY_EDITOR

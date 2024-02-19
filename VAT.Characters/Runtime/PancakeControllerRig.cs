@@ -171,10 +171,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(_leftWrist), _leftController, _leftHand));
+                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_leftWrist)), _leftController, _leftHand));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(_rightWrist), _rightController, _rightHand));
+                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_rightWrist)), _rightController, _rightHand));
                     return true;
             }
         }

@@ -164,10 +164,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(_leftWrist), _api.LeftController, _api.LeftHand));
+                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_leftWrist)), _api.LeftController, _api.LeftHand));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(_rightWrist), _api.RightController, _api.RightHand));
+                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_rightWrist)), _api.RightController, _api.RightHand));
                     return true;
             }
         }

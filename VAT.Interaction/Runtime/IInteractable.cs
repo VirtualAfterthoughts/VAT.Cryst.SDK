@@ -17,14 +17,12 @@ namespace VAT.Interaction
 
         void OnHoverEnd(IInteractor interactor);
 
-        float GetPriority(IInteractor interactor);
+        (bool valid, float priority) ValidateInteractable(IInteractor interactor);
 
         void RegisterHost(IHost host);
 
         void UnregisterHost();
 
         IHost GetHostOrDefault();
-
-        GameObject GetGameObject();
     }
 }

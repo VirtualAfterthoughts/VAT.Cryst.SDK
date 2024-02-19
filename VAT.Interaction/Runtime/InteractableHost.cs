@@ -45,7 +45,7 @@ namespace VAT.Interaction
 
             foreach (var interactable in _interactables)
             {
-                if ((Object)interactable.GetGameObject().GetComponentInParent<IHost>() != this)
+                if (interactable.GetHostOrDefault() != null)
                 {
                     continue;
                 }

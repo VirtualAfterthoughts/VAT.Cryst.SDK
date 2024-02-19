@@ -141,8 +141,8 @@ namespace VAT.Avatars.Example
         }
 
         public void FixedUpdate() {
-            var leftArm = leftElbow ? new BasicArm(leftHand, leftElbow) : new BasicArm(leftHand);
-            var rightArm = rightElbow ? new BasicArm(rightHand, rightElbow) : new BasicArm(rightHand);
+            var leftArm = leftElbow ? new BasicArm(SimpleTransform.Create(leftHand), SimpleTransform.Create(leftElbow)) : new BasicArm(SimpleTransform.Create(leftHand));
+            var rightArm = rightElbow ? new BasicArm(SimpleTransform.Create(rightHand), SimpleTransform.Create(rightElbow)) : new BasicArm(SimpleTransform.Create(rightHand));
 
             var payload = new BasicAvatarPayload() {
                 Root = SimpleTransform.Create(transform),
