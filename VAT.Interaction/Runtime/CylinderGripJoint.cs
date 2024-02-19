@@ -52,12 +52,15 @@ namespace VAT.Interaction
 
             _joint = joint;
 
-            rb.transform.rotation = initialRotation;
-
+            grabPoint = interactor.GetGrabPoint(grip.GetPalmPosition());
             var grabNormal = interactor.GetRigidbody().transform.up;
 
             joint.SetWorldAnchor((Vector3)grabPoint.position - grabNormal * _radius);
             joint.SetWorldConnectedAnchor(_center.position);
+
+            _joint.swapBodies = true;
+
+            rb.transform.rotation = initialRotation;
         }
 
         public void DetachJoints()
@@ -95,13 +98,6 @@ namespace VAT.Interaction
             _joint.linearLimit = new SoftJointLimit() { limit = _height * 0.5f };
             _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 0f, positionDamper = 1000f, maximumForce = 500000f };
             _joint.slerpDrive = new JointDrive();
-
-            var centerTransform = SimpleTransform.Create(_center.transform.position, _center.transform.rotation);
-            var relative = centerTransform.InverseTransformPoint(_joint.GetWorldAnchor());
-            relative.x = 0f;
-            relative.z = 0f;
-
-            _joint.SetWorldConnectedAnchor(centerTransform.TransformPoint(relative));
 
             _isFree = false;
         }
