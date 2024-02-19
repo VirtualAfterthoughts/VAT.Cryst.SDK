@@ -10,7 +10,7 @@ namespace VAT.Interaction
 
         void DetachJoints();
 
-        void UpdateJoints();
+        void UpdateJoints(float friction);
 
         void FreeJoints();
 

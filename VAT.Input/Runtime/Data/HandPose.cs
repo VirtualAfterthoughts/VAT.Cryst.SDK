@@ -11,5 +11,7 @@ namespace VAT.Input
     public class HandPose : ScriptableObject
     {
         public HandPoseData data;
+
+        public Vector2 centerOfPressure = Vector2.up;
     }
 }

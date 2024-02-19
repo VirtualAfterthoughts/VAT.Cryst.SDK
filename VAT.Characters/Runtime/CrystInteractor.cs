@@ -165,9 +165,9 @@ namespace VAT.Characters
 
             if (!_attachedGrip)
             {
-                if (HoveringInteractable is Grip garp && !gripPose && garp.pose != null)
+                if (HoveringInteractable is Grip garp && !gripPose && garp.GetClosedPose(this).valid)
                 {
-                    arm.DataArm.Hand.SetClosedPose(garp.pose.data);
+                    arm.DataArm.Hand.SetClosedPose(garp.GetClosedPose(this).data);
                 }
                 else
                 {
@@ -190,9 +190,10 @@ namespace VAT.Characters
             {
                 float distance = math.length(_attachedGrip.GetTargetInWorld(this).position - GetGrabPoint().position);
 
-                if (_attachedGrip.pose != null)
+                var (valid, data) = _attachedGrip.GetClosedPose(this);
+                if (valid)
                 {
-                    var targetPose = _attachedGrip.pose.data;
+                    var targetPose = data;
                     var newPose = HandPoseCreator.Lerp(openPose, targetPose, Mathf.Pow(distance / grabRadius - 1f, 2f));
 
                     arm.DataArm.Hand.SetClosedPose(newPose);
@@ -205,9 +206,9 @@ namespace VAT.Characters
                     _isSnatching = false;
                     _attachedGrip.OnAttachComplete(this);
 
-                    if (_attachedGrip.pose != null)
+                    if (valid)
                     {
-                        arm.DataArm.Hand.SetClosedPose(_attachedGrip.pose.data);
+                        arm.DataArm.Hand.SetClosedPose(data);
                     }
 
                     ResetPin();
@@ -317,14 +318,19 @@ namespace VAT.Characters
             Gizmos.DrawWireSphere((Vector3)grabPoint.position + (direction * radius), grabRadius);
         }
 
-        public CrystRigidbody GetRigidbody()
+        public Rigidbody GetRigidbody()
         {
-            return rb;
+            return rb.Rigidbody;
         }
 
         public SimpleTransform GetGrabPoint()
         {
-            return arm.PhysArm.Hand.GetPointOnPalm(Vector2.up);
+            return GetGrabPoint(Vector2.up);
+        }
+
+        public SimpleTransform GetGrabPoint(Vector2 position)
+        {
+            return arm.PhysArm.Hand.GetPointOnPalm(position);
         }
     }
 }

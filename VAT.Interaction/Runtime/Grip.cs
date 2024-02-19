@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Avatars;
 using VAT.Input;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
@@ -12,11 +12,30 @@ namespace VAT.Interaction
 {
     public abstract class Grip : MonoBehaviour, IInteractable
     {
+        public enum GripSwapMode
+        {
+            NONE = 0,
+            SWAP = 1,
+            SINGLE = 2,
+        }
+
+        [Header("Grabbing")]
+        [SerializeField]
+        private GripSwapMode _swapMode = GripSwapMode.NONE;
+
         [SerializeField]
         [Range(0f, 10f)]
         [Tooltip("The priority of the grip compared to other grips. A value of 0 means complete priority, a value of 1 is default, and higher values are less prioritized.")]
         private float _priority = 1f;
 
+        [Header("Visuals")]
+        [SerializeField]
+        private HandPose _defaultClosedPose;
+
+        [SerializeField]
+        private HandPose _defaultOpenPose;
+
+        [Header("Physics")]
         [SerializeField]
         [Range(0f, 2f)]
         private float _lowFriction = 0.5f;
@@ -25,9 +44,8 @@ namespace VAT.Interaction
         [Range(0f, 2f)]
         private float _highFriction = 1f;
 
+        private List<IInteractor> _attachedInteractors = new();
         private Dictionary<IInteractor, IGripJoint> _gripJoints = new();
-
-        public HandPose pose;
 
         private IHost _host = null;
 
@@ -38,12 +56,34 @@ namespace VAT.Interaction
             return new GenericGripJoint();
         }
 
+        public Vector2 GetPalmPosition()
+        {
+            if (_defaultClosedPose != null)
+            {
+                return _defaultClosedPose.centerOfPressure;
+            }
+            else
+            {
+                return Vector2.up;
+            }
+        }
+
         public void OnAttachConfirm(IInteractor interactor)
         {
+            if (_swapMode == GripSwapMode.SWAP)
+            {
+                foreach (var otherInteractor in _attachedInteractors.ToArray())
+                {
+                    otherInteractor.DetachGrip(this);
+                }
+            }
+
             var gripJoint = OnCreateGripJoint(interactor);
             gripJoint.AttachJoints(interactor, this);
             gripJoint.FreeJoints();
             _gripJoints[interactor] = gripJoint;
+
+            _attachedInteractors.Add(interactor);
         }
 
         public void OnAttachComplete(IInteractor interactor)
@@ -53,13 +93,16 @@ namespace VAT.Interaction
 
         public void OnAttachUpdate(IInteractor interactor)
         {
-            _gripJoints[interactor].UpdateJoints();
+            _gripJoints[interactor].UpdateJoints(_highFriction);
         }
 
         public void OnDetachConfirm(IInteractor interactor)
         {
             _gripJoints[interactor].DetachJoints();
             _gripJoints.Remove(interactor);
+
+            _attachedInteractors.Remove(interactor);
+
         }
 
         public void DisableInteraction()
@@ -77,8 +120,31 @@ namespace VAT.Interaction
             return _isInteractable;
         }
 
+        public virtual (bool valid, HandPoseData data) GetOpenPose(IInteractor interactor)
+        {
+            if (_defaultOpenPose != null)
+            {
+                return (true, _defaultOpenPose.data);
+            }
+
+            return (false, default);
+        }
+
+        public virtual (bool valid, HandPoseData data) GetClosedPose(IInteractor interactor)
+        {
+            if (_defaultClosedPose != null)
+            {
+                return (true, _defaultClosedPose.data);
+            }
+
+            return (false, default);
+        }
+
         public (bool valid, float priority) ValidateInteractable(IInteractor interactor)
         {
+            if (_attachedInteractors.Count > 0 && _swapMode == GripSwapMode.SINGLE)
+                return (false, 0f);
+
             var target = GetTargetInWorld(interactor);
             var grabPoint = interactor.GetGrabPoint();
 

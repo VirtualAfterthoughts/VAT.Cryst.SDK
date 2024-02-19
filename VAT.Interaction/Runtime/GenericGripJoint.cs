@@ -16,9 +16,8 @@ namespace VAT.Interaction
         public void AttachJoints(IInteractor interactor, Grip grip)
         {
             var rb = interactor.GetRigidbody();
-            rb.CreateItem();
 
-            var grabPoint = interactor.GetGrabPoint();
+            var grabPoint = interactor.GetGrabPoint(grip.GetPalmPosition());
             var target = grip.GetInteractorInHost(interactor);
             var hostTransform = grip.GetHostGameObject().transform;
 
@@ -28,7 +27,7 @@ namespace VAT.Interaction
             var initialRotation = rb.transform.rotation;
             rb.transform.rotation = grabPointRotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
 
-            var joint = rb.GameObject.AddComponent<ConfigurableJoint>();
+            var joint = rb.gameObject.AddComponent<ConfigurableJoint>();
 
             var host = grip.GetHostOrDefault();
 
@@ -52,7 +51,7 @@ namespace VAT.Interaction
             _joint = null;
         }
 
-        public void UpdateJoints()
+        public void UpdateJoints(float friction)
         {
             if (_isFree)
             {
