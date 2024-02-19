@@ -20,7 +20,7 @@ namespace VAT.Interaction
             return transform.localScale.Maximum() * _radius;
         }
 
-        protected override GripJoint OnCreateGripJoint(IInteractor interactor)
+        protected override IGripJoint OnCreateGripJoint(IInteractor interactor)
         {
             return new SphereGripJoint(_target, GetRadius());
         }

@@ -21,5 +21,11 @@ namespace VAT.Interaction
         SimpleTransform GetGrabPoint();
 
         CrystRigidbody GetRigidbody();
+
+        void AttachGrip(Grip grip);
+
+        void DetachGrip(Grip grip);
+
+        void DetachGrips();
     }
 }

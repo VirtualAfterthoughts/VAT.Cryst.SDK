@@ -25,7 +25,7 @@ namespace VAT.Interaction
         [Range(0f, 2f)]
         private float _highFriction = 1f;
 
-        private Dictionary<IInteractor, GripJoint> _joints = new();
+        private Dictionary<IInteractor, IGripJoint> _gripJoints = new();
 
         public HandPose pose;
 
@@ -33,33 +33,33 @@ namespace VAT.Interaction
 
         private bool _isInteractable = true;
 
-        protected virtual GripJoint OnCreateGripJoint(IInteractor interactor)
+        protected virtual IGripJoint OnCreateGripJoint(IInteractor interactor)
         {
-            return new GripJoint();
+            return new GenericGripJoint();
         }
 
         public void OnAttachConfirm(IInteractor interactor)
         {
             var gripJoint = OnCreateGripJoint(interactor);
-            gripJoint.AttachJoint(interactor, this);
-            gripJoint.FreeJoint();
-            _joints[interactor] = gripJoint;
+            gripJoint.AttachJoints(interactor, this);
+            gripJoint.FreeJoints();
+            _gripJoints[interactor] = gripJoint;
         }
 
         public void OnAttachComplete(IInteractor interactor)
         {
-            _joints[interactor].LockJoint();
+            _gripJoints[interactor].LockJoints();
         }
 
         public void OnAttachUpdate(IInteractor interactor)
         {
-            _joints[interactor].UpdateJoint();
+            _gripJoints[interactor].UpdateJoints();
         }
 
         public void OnDetachConfirm(IInteractor interactor)
         {
-            _joints[interactor].DetachJoint();
-            _joints.Remove(interactor);
+            _gripJoints[interactor].DetachJoints();
+            _gripJoints.Remove(interactor);
         }
 
         public void DisableInteraction()
