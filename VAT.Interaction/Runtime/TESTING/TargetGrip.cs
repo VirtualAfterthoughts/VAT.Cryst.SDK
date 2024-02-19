@@ -23,7 +23,7 @@ namespace VAT.Interaction
             return _target; 
         }
 
-        public float GetWorldRadius()
+        public virtual float GetWorldRadius()
         {
             return transform.lossyScale.Maximum() * _radius;
         }

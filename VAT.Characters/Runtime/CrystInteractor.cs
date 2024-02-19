@@ -214,6 +214,10 @@ namespace VAT.Characters
                     ResetPin();
                 }
             }
+            else if (_attachedGrip)
+            {
+                _attachedGrip.OnAttachUpdate(this);
+            }
         }
 
         public void AttachGrip(Grip grip)
