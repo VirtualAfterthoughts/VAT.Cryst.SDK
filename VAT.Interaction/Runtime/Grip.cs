@@ -47,9 +47,45 @@ namespace VAT.Interaction
         private List<IInteractor> _attachedInteractors = new();
         private Dictionary<IInteractor, IGripJoint> _gripJoints = new();
 
-        private IHost _host = null;
+        private InteractableHost _host = null;
 
         private bool _isInteractable = true;
+
+        private void OnEnable()
+        {
+            FindHost();
+        }
+
+        private void OnDisable()
+        {
+            UnregisterHost();
+
+            for (var i = _attachedInteractors.Count - 1; i >= 0; i--)
+            {
+                _attachedInteractors[i].DetachGrip(this);
+            }
+        }
+
+        public void UnregisterHost()
+        {
+            if (_host != null)
+            {
+                _host.UnregisterInteractable(this);
+                _host = null;
+            }
+        }
+
+        public void FindHost()
+        {
+            UnregisterHost();
+
+            _host = GetComponentInParent<InteractableHost>();
+
+            if (_host != null)
+            {
+                _host.RegisterInteractable(this);
+            }
+        }
 
         protected virtual IGripJoint OnCreateGripJoint(IInteractor interactor)
         {
@@ -189,17 +225,7 @@ namespace VAT.Interaction
 
         public abstract SimpleTransform GetTargetInWorld(IInteractor interactor);
 
-        public void RegisterHost(IHost host)
-        {
-            _host = host;
-        }
-
-        public void UnregisterHost()
-        {
-            _host = null;
-        }
-
-        public IHost GetHostOrDefault()
+        public InteractableHost GetHostOrDefault()
         {
             return _host;
         }

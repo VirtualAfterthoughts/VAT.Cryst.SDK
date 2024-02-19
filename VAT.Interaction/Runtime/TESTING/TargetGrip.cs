@@ -25,7 +25,7 @@ namespace VAT.Interaction
 
         public float GetWorldRadius()
         {
-            return transform.localScale.Maximum() * _radius;
+            return transform.lossyScale.Maximum() * _radius;
         }
 
         private void Awake()

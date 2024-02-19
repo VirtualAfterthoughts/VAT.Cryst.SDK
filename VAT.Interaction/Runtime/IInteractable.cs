@@ -19,10 +19,8 @@ namespace VAT.Interaction
 
         (bool valid, float priority) ValidateInteractable(IInteractor interactor);
 
-        void RegisterHost(IHost host);
+        InteractableHost GetHostOrDefault();
 
-        void UnregisterHost();
-
-        IHost GetHostOrDefault();
+        void FindHost();
     }
 }

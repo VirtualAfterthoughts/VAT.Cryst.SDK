@@ -7,9 +7,9 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Interaction
 {
-    public sealed class InteractableHost : MonoBehaviour, IHost
+    public sealed class InteractableHost : MonoBehaviour
     {
-        private IInteractable[] _interactables;
+        private List<IInteractable> _interactables = new();
         private Rigidbody _rb;
 
         private readonly List<Collider> _colliders = new List<Collider>();
@@ -39,31 +39,6 @@ namespace VAT.Interaction
             }
         }
 
-        private void OnEnable()
-        {
-            _interactables = GetComponentsInChildren<IInteractable>();
-
-            foreach (var interactable in _interactables)
-            {
-                if (interactable.GetHostOrDefault() != null)
-                {
-                    continue;
-                }
-
-                interactable.RegisterHost(this);
-            }
-        }
-
-        private void OnDisable()
-        {
-            foreach (var interactable in _interactables)
-            {
-                interactable.UnregisterHost();
-            }
-
-            _interactables = null;
-        }
-
         public void EnableInteraction()
         {
             foreach (var interactable in _interactables)
@@ -83,6 +58,16 @@ namespace VAT.Interaction
         public GameObject GetGameObject()
         {
             return gameObject;
+        }
+
+        public void RegisterInteractable(IInteractable interactable)
+        {
+            _interactables.Add(interactable);
+        }
+
+        public void UnregisterInteractable(IInteractable interactable)
+        {
+            _interactables.Remove(interactable);
         }
     }
 }

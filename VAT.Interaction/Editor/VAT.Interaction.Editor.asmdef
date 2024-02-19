@@ -1,0 +1,18 @@
+{
+    "name": "VAT.Interaction.Editor",
+    "rootNamespace": "VAT.Interaction.Editor",
+    "references": [
+        "GUID:b163d2aa2d9873e409cded2b58107799"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
