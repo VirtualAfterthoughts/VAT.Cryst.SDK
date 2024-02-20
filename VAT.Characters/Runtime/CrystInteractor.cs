@@ -336,5 +336,13 @@ namespace VAT.Characters
         {
             return arm.PhysArm.Hand.GetPointOnPalm(position);
         }
+
+        public float GetGripForce()
+        {
+            controller.TryGetGrip(out var grip);
+            controller.TryGetTrigger(out var trigger);
+
+            return (grip.GetForce() * 0.75f) + (trigger.GetForce() * 0.25f);
+        }
     }
 }

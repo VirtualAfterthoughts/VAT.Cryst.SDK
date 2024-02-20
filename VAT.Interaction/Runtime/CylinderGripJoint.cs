@@ -75,6 +75,22 @@ namespace VAT.Interaction
             {
                 _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = Mathf.Lerp(_joint.xDrive.positionSpring, 5000f, Time.deltaTime * 0.5f), positionDamper = 0f, maximumForce = float.PositiveInfinity };
             }
+            else
+            {
+                _joint.yDrive = new JointDrive()
+                {
+                    positionSpring = 0f,
+                    positionDamper = Mathf.LerpUnclamped(0f, 500000f, friction * friction),
+                    maximumForce = float.PositiveInfinity
+                };
+
+                _joint.slerpDrive = new JointDrive()
+                {
+                    positionSpring = 0f,
+                    positionDamper = Mathf.LerpUnclamped(0f, 500000f, friction * friction),
+                    maximumForce = float.PositiveInfinity
+                };
+            }
         }
 
         public void FreeJoints()

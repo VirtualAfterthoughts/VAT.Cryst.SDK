@@ -29,5 +29,7 @@ namespace VAT.Interaction
         void DetachGrip(Grip grip);
 
         void DetachGrips();
+
+        float GetGripForce();
     }
 }
