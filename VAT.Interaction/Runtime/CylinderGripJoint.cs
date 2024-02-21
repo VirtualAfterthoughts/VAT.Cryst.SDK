@@ -38,8 +38,8 @@ namespace VAT.Interaction
             rb.transform.rotation = _center.rotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
 
             var joint = rb.gameObject.AddComponent<ConfigurableJoint>();
-            joint.axis = Quaternion.Inverse(initialRotation) * grabPoint.forward;
-            joint.secondaryAxis = Quaternion.Inverse(initialRotation) * grabPoint.up;
+            joint.axis = Quaternion.Inverse(initialRotation) * grabPoint.up;
+            joint.secondaryAxis = Quaternion.Inverse(initialRotation) * grabPoint.forward;
 
             var host = grip.GetHostOrDefault();
 
@@ -77,18 +77,27 @@ namespace VAT.Interaction
             }
             else
             {
-                _joint.yDrive = new JointDrive()
+                float force = Mathf.LerpUnclamped(0f, 5000f, Mathf.Pow(friction, 4f));
+
+                _joint.xDrive = new JointDrive()
                 {
                     positionSpring = 0f,
-                    positionDamper = Mathf.LerpUnclamped(0f, 500000f, friction * friction),
-                    maximumForce = float.PositiveInfinity
+                    positionDamper = force * 10f,
+                    maximumForce = force
                 };
 
-                _joint.slerpDrive = new JointDrive()
+                _joint.angularXDrive = new JointDrive()
                 {
                     positionSpring = 0f,
-                    positionDamper = Mathf.LerpUnclamped(0f, 500000f, friction * friction),
-                    maximumForce = float.PositiveInfinity
+                    positionDamper = force * 0.1f,
+                    maximumForce = force
+                };
+
+                _joint.angularYZDrive = new JointDrive() 
+                { 
+                    positionSpring = force * 10f, 
+                    positionDamper = force * 0.5f, 
+                    maximumForce = force
                 };
             }
         }
@@ -96,7 +105,7 @@ namespace VAT.Interaction
         public void FreeJoints()
         {
             _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
-            _joint.rotationDriveMode = RotationDriveMode.Slerp;
+            _joint.rotationDriveMode = RotationDriveMode.XYAndZ;
 
             _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 5f, positionDamper = 0f, maximumForce = float.MaxValue };
 
@@ -107,13 +116,12 @@ namespace VAT.Interaction
 
         public void LockJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
-            _joint.yMotion = ConfigurableJointMotion.Limited;
-            _joint.angularYMotion = ConfigurableJointMotion.Free;
+            _joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
+            _joint.xMotion = ConfigurableJointMotion.Limited;
+            _joint.angularXMotion = ConfigurableJointMotion.Free;
 
             _joint.linearLimit = new SoftJointLimit() { limit = _height * 0.5f };
             _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 0f, positionDamper = 1000f, maximumForce = 500000f };
-            _joint.slerpDrive = new JointDrive();
 
             _isFree = false;
         }

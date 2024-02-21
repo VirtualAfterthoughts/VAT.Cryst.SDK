@@ -186,7 +186,7 @@ namespace VAT.Interaction
 
             float distance = ((Vector3)(target.position - grabPoint.position)).magnitude;
 
-            float angle = Quaternion.Angle(target.rotation, grabPoint.rotation) * Mathf.Deg2Rad;
+            float angle = Quaternion.Angle(target.rotation, grabPoint.rotation) * Mathf.Deg2Rad * distance;
 
             return (true, (distance + angle) * _priority);
         }

@@ -30,9 +30,12 @@ namespace VAT.Avatars.Vitals
         public override void ConfigureJoints() {
             _arm.Clavicle.ConfigureJoint();
             _arm.Scapula.ConfigureJoint();
-            _arm.UpperArm.ConfigureJoint();
-            _arm.Elbow.ConfigureJoint();
-            _arm.Hand.Hand.ConfigureJoint();
+
+            float totalNewtons = 1800f;
+
+            _arm.UpperArm.ConfigureJoint(totalNewtons * 0.5f);
+            _arm.Elbow.ConfigureJoint(totalNewtons * 0.375f);
+            _arm.Hand.Hand.ConfigureJoint(totalNewtons * 0.125f);
         }
 
         public override void ApplyVitals() {

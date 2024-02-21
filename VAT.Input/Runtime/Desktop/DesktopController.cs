@@ -52,37 +52,37 @@ namespace VAT.Input.Desktop
         public bool TryGetGrip(out IInputTrigger grip)
         {
             grip = _grip;
-            return true;
+            return grip != null;
         }
 
         public bool TryGetPrimaryButton(out IInputButton primaryButton)
         {
             primaryButton = _primaryButton;
-            return true;
+            return primaryButton != null;
         }
 
         public bool TryGetSecondaryButton(out IInputButton secondaryButton)
         {
             secondaryButton = _secondaryButton;
-            return true;
+            return secondaryButton != null;
         }
 
         public bool TryGetThumbstick(out IInputTrackpad thumbstick)
         {
             thumbstick = _thumbstick;
-            return true;
+            return thumbstick != null;
         }
 
         public bool TryGetTrackpad(out IInputTrackpad trackpad)
         {
             trackpad = _trackpad;
-            return true;
+            return trackpad != null;
         }
 
         public bool TryGetTrigger(out IInputTrigger trigger)
         {
             trigger = _trigger;
-            return true;
+            return trigger != null;
         }
     }
 }

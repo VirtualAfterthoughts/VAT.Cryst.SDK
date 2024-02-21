@@ -24,7 +24,6 @@ namespace VAT.Characters
         public HandPoseData closedPose;
 
         public float grabCurl = 0.8f;
-        public float releaseCurl = 0.7f;
 
         public float grabRadius = 0.086848f;
 
@@ -179,7 +178,7 @@ namespace VAT.Characters
             {
                 AttachGrip(grp);
             }
-            else if (maxCurl < releaseCurl && _attachedGrip)
+            else if (maxCurl < grabCurl && _attachedGrip)
             {
                 DetachGrips();
             }
@@ -339,10 +338,10 @@ namespace VAT.Characters
 
         public float GetGripForce()
         {
-            controller.TryGetGrip(out var grip);
-            controller.TryGetTrigger(out var trigger);
+            if (controller.TryGetGrip(out var grip) && controller.TryGetTrigger(out var trigger))
+                return (grip.GetForce() * 0.75f) + (trigger.GetForce() * 0.25f);
 
-            return (grip.GetForce() * 0.75f) + (trigger.GetForce() * 0.25f);
+            return 0f;
         }
     }
 }

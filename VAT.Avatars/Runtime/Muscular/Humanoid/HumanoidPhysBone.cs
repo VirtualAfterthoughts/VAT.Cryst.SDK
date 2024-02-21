@@ -77,6 +77,23 @@ namespace VAT.Avatars.Muscular
             };
         }
 
+        public void ConfigureJoint(float newtons)
+        {
+            // Setup positional forces
+            JointDrive positionDrive = default;
+
+            var joint = _configurableJoint.ConfigurableJoint;
+            joint.xDrive = joint.yDrive = joint.zDrive = positionDrive;
+
+            joint.rotationDriveMode = RotationDriveMode.Slerp;
+            joint.slerpDrive = new JointDrive()
+            {
+                positionSpring = newtons * 10f,
+                positionDamper = newtons * 0.5f,
+                maximumForce = newtons,
+            };
+        }
+
         public override void Solve(SimpleTransform target) {
             var space = Joint.JointSpace;
             var previousTarget = space.RawTargetRotation;
