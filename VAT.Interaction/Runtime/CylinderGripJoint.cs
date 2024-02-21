@@ -32,10 +32,17 @@ namespace VAT.Interaction
 
             var grabPoint = interactor.GetGrabPoint(grip.GetPalmPosition());
 
+            float dot = Vector3.Dot(grabPoint.up, _center.up);
+
             // Match grab rotation, so that the joint initializes with proper target
             // Since we can't set anchorRotation in Unity
             var initialRotation = rb.transform.rotation;
-            rb.transform.rotation = _center.rotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
+            var centerRotation = _center.rotation;
+
+            if (dot < 0f)
+                centerRotation = Quaternion.AngleAxis(180f, _center.right) * centerRotation;
+
+            rb.transform.rotation = centerRotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
 
             var joint = rb.gameObject.AddComponent<ConfigurableJoint>();
             joint.axis = Quaternion.Inverse(initialRotation) * grabPoint.up;
@@ -92,13 +99,6 @@ namespace VAT.Interaction
                     positionDamper = force * 0.1f,
                     maximumForce = force
                 };
-
-                _joint.angularYZDrive = new JointDrive() 
-                { 
-                    positionSpring = force * 10f, 
-                    positionDamper = force * 0.5f, 
-                    maximumForce = force
-                };
             }
         }
 
@@ -116,7 +116,7 @@ namespace VAT.Interaction
 
         public void LockJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
+            _joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
             _joint.xMotion = ConfigurableJointMotion.Limited;
             _joint.angularXMotion = ConfigurableJointMotion.Free;
 
