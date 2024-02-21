@@ -23,7 +23,7 @@ namespace VAT.Characters
         public HandPoseData openPose;
         public HandPoseData closedPose;
 
-        public float grabCurl = 0.8f;
+        public float grabCurl = 0.9f;
 
         public float grabRadius = 0.086848f;
 

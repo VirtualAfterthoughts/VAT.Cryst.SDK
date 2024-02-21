@@ -118,6 +118,9 @@ namespace VAT.Avatars.Muscular
                 };
                 _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
 
+                _configurableJoint.ConfigurableJoint.projectionMode = JointProjectionMode.PositionAndRotation;
+                _configurableJoint.ConfigurableJoint.projectionDistance = 0.001f;
+                _configurableJoint.ConfigurableJoint.projectionAngle = 20f;
                 // _configurableJoint.ConfigurableJoint.SetAngularLimits(_limits);
                 // _configurableJoint.ConfigurableJoint.angularXMotion = _limits.IsFree(Axis.X) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
                 // _configurableJoint.ConfigurableJoint.angularYMotion = _limits.IsFree(Axis.Y) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
