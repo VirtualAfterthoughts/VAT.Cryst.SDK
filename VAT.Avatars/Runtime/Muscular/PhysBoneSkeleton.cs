@@ -46,6 +46,8 @@ namespace VAT.Avatars.Muscular
 
         public abstract SimpleTransform GetHead();
 
+        public abstract SimpleTransform GetEyeCenter();
+
         public virtual void IgnoreCollisions(bool ignore) {
             for (var i = 0; i < BoneGroupCount; i++) {
                 var first = GetGroup(i);

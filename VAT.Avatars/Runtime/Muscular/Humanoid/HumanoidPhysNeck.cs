@@ -52,6 +52,16 @@ namespace VAT.Avatars.Muscular
             return Skull.Transform;
         }
 
+        public SimpleTransform GetEyeCenter()
+        {
+            if (_neck is HumanoidNeck humanNeck)
+            {
+                return Skull.TransformBone(humanNeck.Skull, humanNeck.EyeCenter);
+            }
+
+            return Skull.Transform;
+        }
+
         public void MatchPose(IHumanNeck neck) {
             _neck = neck;
 

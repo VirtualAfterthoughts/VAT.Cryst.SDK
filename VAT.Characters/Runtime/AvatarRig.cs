@@ -97,7 +97,7 @@ namespace VAT.Characters
 
         public override bool TryGetHead(out IJoint head)
         {
-            head = new BasicJoint(SimpleTransform.Create(transform).InverseTransform(avatar.Anatomy.Skeleton.PhysBoneSkeleton.GetHead()));
+            head = new BasicJoint(SimpleTransform.Create(transform).InverseTransform(avatar.Anatomy.Skeleton.PhysBoneSkeleton.GetEyeCenter()));
             return true;
         }
 

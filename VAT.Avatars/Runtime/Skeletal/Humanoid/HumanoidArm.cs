@@ -177,18 +177,18 @@ namespace VAT.Avatars.Skeletal
             Vector3 upperArm = _spine.T1Vertebra.TransformPoint(_initialUpperArm);
 
             Vector3 clav = _target.position - (float3)upperArm;
-            clav /= _armLength * 1.5f;
+            clav /= _armLength * 2f;
 
             // Solve the Y axis of clavicles (back and forth)
             float pull = ClavicleReachCurve.Evaluate(Vector3.Dot(_spine.T1Vertebra.forward, clav));
             float angle = ClavicleYCurve.Evaluate(Mathf.Atan(pull)) * Mathf.Rad2Deg;
-            angle = angle * mult * 0.05f;
+            angle = angle * mult * 0.1f;
             Clavicle.rotation = Quaternion.AngleAxis(angle, _spine.T1Vertebra.up) * _spine.T1Vertebra.rotation;
 
             // Solve the Z axis of clavicles (up and down)
-            pull = ClavicleReachCurve.Evaluate(Vector3.Dot(_spine.T1Vertebra.up, clav));
+            pull = ClavicleReachCurve.Evaluate(Vector3.Dot(_spine.T1Vertebra.up, clav) * 1.25f);
             angle = ClavicleYCurve.Evaluate(Mathf.Atan(pull)) * Mathf.Rad2Deg;
-            angle = -angle * mult * 0.05f;
+            angle = -angle * mult * 0.08f;
             Clavicle.rotation = Quaternion.AngleAxis(angle, _spine.T1Vertebra.forward) * Clavicle.rotation;
 
             Clavicle.rotation = (Quaternion.AngleAxis(25f * mult, -Clavicle.up) * Quaternion.AngleAxis(3f * mult, -Clavicle.forward)) * Clavicle.rotation;

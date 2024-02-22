@@ -63,6 +63,11 @@ namespace VAT.Avatars.Muscular
             return Neck.GetHead();
         }
 
+        public override SimpleTransform GetEyeCenter()
+        {
+            return Neck.GetEyeCenter();
+        }
+
         public override void InitiateRuntime() {
             for (var i = 0; i < BoneGroupCount; i++) {
                 _groups[i].Initiate();
@@ -101,7 +106,7 @@ namespace VAT.Avatars.Muscular
             if (_skeleton is HumanoidDataSkeleton temp)
             {
                 temp.ShimbleWam = true;
-                var relativeTransform = Neck.Skull.Transform;
+                var relativeTransform = Neck.GetEyeCenter();
                 relativeTransform.rotation = LocoLeg.Knee.Transform.rotation;
                 temp.Flof = relativeTransform.InverseTransformPoint(GetFloor().position);
             }

@@ -63,7 +63,7 @@ namespace VAT.Avatars.Skeletal
             _avatarPayload.TryGetHead(out var head);
 
             EyeCenter.rotation = head.rotation;
-            EyeCenter.position = head.position - math.mul(head.rotation, Skull.localPosition);
+            EyeCenter.position = head.position;
 
             float height = _generalProportions.height;
 
@@ -79,6 +79,7 @@ namespace VAT.Avatars.Skeletal
             Vector3 tiltAxis = Vector3.Cross(tiltVector, Skull.up);
             chestRotation = Quaternion.AngleAxis(-CervicalTilt.Evaluate(tiltAngle), tiltAxis) * Skull.rotation;
 
+            // Leaning
             var chestUp = math.mul(chestRotation, math.up());
             var chestForward = math.mul(chestRotation, math.forward());
 
