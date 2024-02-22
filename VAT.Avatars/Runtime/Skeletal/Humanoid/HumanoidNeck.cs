@@ -87,7 +87,7 @@ namespace VAT.Avatars.Skeletal
 
             var offsetRotation = Quaternion.FromToRotation(math.mul(chestRotation, math.up()), math.normalize(Skull.position - feetCenter)) * chestRotation;
             float lerp = (1f - cervicalHeight) - (skullChestAngle / 90f);
-            chestRotation = Quaternion.Lerp(chestRotation, offsetRotation, lerp * 0.9f);
+            chestRotation = Quaternion.Lerp(chestRotation, offsetRotation, lerp);
 
             C1Vertebra.rotation = Quaternion.Lerp(Skull.rotation, chestRotation, 0.5f);
             C4Vertebra.rotation = Quaternion.Lerp(Skull.rotation, chestRotation, 0.7f);
