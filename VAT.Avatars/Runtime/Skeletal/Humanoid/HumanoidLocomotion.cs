@@ -35,6 +35,20 @@ namespace VAT.Avatars.Skeletal
             _feetCenter = new DataBone(_sacrum);
         }
 
+        public float3 GetLocomotorCenter()
+        {
+            float3 center = 0f;
+
+            foreach (var locomotor in _locomotors)
+            {
+                center += locomotor.Result.position;
+            }
+
+            center /= _locomotors.Length;
+
+            return center;
+        }
+
         public void WriteProportions(HumanoidProportions proportions) {
             _proportions = proportions;
 

@@ -212,10 +212,6 @@ namespace VAT.Avatars.Skeletal
             Scapula.rotation = protractRotation * lateralRotation * _spine.T1Vertebra.rotation;
         }
 
-        private float3 GetDepenetration(LineData line, SimpleTransform transform, Ellipsoid ellipsoid) {
-            return ellipsoid.AsInterface().GetDepenetration(transform, line.ClosestPointOnLine(transform.position));
-        }
-
         private void ArmSolve() {
             // First we solve a likely elbow position, then we can rotate the elbow using the wrist twist
             // cos(y) = a^2 + b^2 - c^2 / 2ab
@@ -228,7 +224,14 @@ namespace VAT.Avatars.Skeletal
             Vector3 newVector = target - shoulderPosition;
 
             // Make sure the vector isn't too small as to cause issues
-            if (newVector.sqrMagnitude > 0.01f) _armVector = newVector;
+            if (newVector.magnitude > 0.1f)
+            {
+                _armVector = newVector;
+            }
+            else
+            {
+                _armVector = newVector.normalized * 0.1f;
+            }
 
             float a = _armVector.magnitude;
             float b = _armProportions.upperArmEllipsoid.height;

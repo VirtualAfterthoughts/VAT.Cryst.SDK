@@ -86,6 +86,8 @@ namespace VAT.Avatars.Skeletal
 
         public override void Solve()
         {
+            _neck.feetCenter = _locomotion.GetLocomotorCenter();
+
             SimpleTransform root = _avatarPayload.GetRoot();
 
             Root.Transform = root;
