@@ -79,8 +79,6 @@ namespace VAT.Avatars.Skeletal
         public AnimationCurve ElbowLimitCurve = new AnimationCurve(new Keyframe(-180f, 0f), new Keyframe(-60f, 0f), new Keyframe(-20f, -75f), new Keyframe(70f, 0f), new Keyframe(180f, 0f));
 
         // Clavicles
-        public AnimationCurve ClavicleReachCurve = new AnimationCurve(new Keyframe(-0.7f, -0.7f, 0f, 0f), new Keyframe(-0.5f, -0.1f, 0.36f, 0.36f), new Keyframe(-0.08f, 0.05f, 0.36f, 0f), new Keyframe(0f, 0f, -0.7f, -0.7f), new Keyframe(0.08f, -0.05f, 0f, 0.36f), new Keyframe(0.404f, 0.1f, 0.36f, 0.36f), new Keyframe(0.604f, 0.7f, 0f, 0f));
-
         public AnimationCurve ClavicleYCurve = new AnimationCurve(new Keyframe(-1f, -5.24f, 0f, 0f), new Keyframe(0f, 0f, 0f, 0f), new Keyframe(1f, 5.63f, 0f, 0f));
 
         public AnimationCurve ClavicleZCurve = new AnimationCurve(new Keyframe(-1.2f, -15f, 0f, 0f), new Keyframe(-0.8f, -5f, 18f, 18f), new Keyframe(0f, 0f, 0f, 0f), new Keyframe(0.8f, 15.7f, 65f, 65f), new Keyframe(1.2f, 45f, 0f, 0f));
@@ -173,25 +171,41 @@ namespace VAT.Avatars.Skeletal
         private void ClavicleSolve() {
             float mult = isLeft ? 1f : -1f;
 
+            var lastClavicleRot = Clavicle.localRotation;
+
             // Get the direction from the clavicle to the hand (arm length)
             Vector3 upperArm = _spine.T1Vertebra.TransformPoint(_initialUpperArm);
 
             Vector3 clav = _target.position - (float3)upperArm;
-            clav /= _armLength * 2f;
+            clav /= _armLength;
 
             // Solve the Y axis of clavicles (back and forth)
-            float pull = ClavicleReachCurve.Evaluate(Vector3.Dot(_spine.T1Vertebra.forward, clav));
-            float angle = ClavicleYCurve.Evaluate(Mathf.Atan(pull)) * Mathf.Rad2Deg;
-            angle = angle * mult * 0.1f;
+            var yPlane = Vector3.ProjectOnPlane(clav, _spine.T1Vertebra.up);
+            float yDot = Vector3.Dot(yPlane, _spine.T1Vertebra.forward);
+            float atan = Mathf.Atan(yDot);
+            float angle = ClavicleYCurve.Evaluate(atan) * Mathf.Rad2Deg;
+            angle = angle * mult * 0.07f;
             Clavicle.rotation = Quaternion.AngleAxis(angle, _spine.T1Vertebra.up) * _spine.T1Vertebra.rotation;
 
-            // Solve the Z axis of clavicles (up and down)
-            pull = ClavicleReachCurve.Evaluate(Vector3.Dot(_spine.T1Vertebra.up, clav) * 1.25f);
-            angle = ClavicleYCurve.Evaluate(Mathf.Atan(pull)) * Mathf.Rad2Deg;
-            angle = -angle * mult * 0.08f;
-            Clavicle.rotation = Quaternion.AngleAxis(angle, _spine.T1Vertebra.forward) * Clavicle.rotation;
+            // Solve X axis influence
+            float xDot = Mathf.Max(0f, Vector3.Dot(yPlane, _spine.T1Vertebra.right) * mult);
+            atan = Mathf.Atan(xDot);
+            angle = ClavicleYCurve.Evaluate(atan) * Mathf.Rad2Deg;
+            angle = angle * mult * 0.07f;
+            Clavicle.rotation = Quaternion.AngleAxis(angle, _spine.T1Vertebra.up) * Clavicle.rotation;
 
-            Clavicle.rotation = (Quaternion.AngleAxis(25f * mult, -Clavicle.up) * Quaternion.AngleAxis(3f * mult, -Clavicle.forward)) * Clavicle.rotation;
+            // Solve the Z axis of clavicles (up and down)
+            var zPlane = Vector3.ProjectOnPlane(clav, _spine.T1Vertebra.forward);
+            float zDot = Vector3.Dot(zPlane, _spine.T1Vertebra.up);
+            atan = Mathf.Atan(zDot);
+            angle = ClavicleYCurve.Evaluate(atan) * Mathf.Rad2Deg;
+            angle = -angle * mult * 0.05f;
+            Clavicle.rotation = Quaternion.AngleAxis(angle, _spine.T1Vertebra.forward) * Clavicle.rotation;
+            
+            Clavicle.rotation = (Quaternion.AngleAxis(25f * mult, -Clavicle.up)) * Clavicle.rotation;
+
+            // Smoothing
+            Clavicle.localRotation = Quaternion.Slerp(lastClavicleRot, Clavicle.localRotation, Time.deltaTime * 24f);
         }
 
         private void ScapulaSolve() {
