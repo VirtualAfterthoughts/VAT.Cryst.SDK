@@ -80,7 +80,7 @@ namespace VAT.Avatars.Skeletal
             var position = target.position;
             var rotation = target.rotation;
 
-            Vector3 legVector = position - Hip.position - mul(rotation, Vector3.up) * Toe.localPosition.y;
+            Vector3 legVector = position - Hip.position - mul(rotation, Vector3.down) * _legProportions.ankleEllipsoid.height;
             float a = legVector.magnitude;
             float b = _legProportions.hipEllipsoid.height;
             float c = _legProportions.kneeEllipsoid.height;
