@@ -63,9 +63,11 @@ namespace VAT.Avatars.Skeletal
 
         FingerPoseData[] _openFingerPoses = null;
         FingerPoseData[] _closedFingerPoses = null;
+        FingerPoseData[] _blendFingerPoses = null;
 
         ThumbPoseData[] _openThumbPoses = null;
         ThumbPoseData[] _closedThumbPoses = null;
+        ThumbPoseData[] _blendThumbPoses = null;
 
         public void WriteProportions(HandProportions proportions) {
             _proportions = proportions;
@@ -84,13 +86,17 @@ namespace VAT.Avatars.Skeletal
 
             _fingerCount = proportions.FingerCount;
             _fingers = new HumanoidFinger[_fingerCount];
+
             _openFingerPoses = HandPoseCreator.CreateFingers(_fingerCount);
             _closedFingerPoses = HandPoseCreator.CreateFingers(_fingerCount);
+            _blendFingerPoses = HandPoseCreator.CreateFingers(_fingerCount);
 
             _thumbCount = proportions.ThumbCount;
             _thumbs = new HumanoidThumb[_thumbCount];
+
             _openThumbPoses = HandPoseCreator.CreateThumbs(_thumbCount);
             _closedThumbPoses = HandPoseCreator.CreateThumbs(_thumbCount);
+            _blendThumbPoses = HandPoseCreator.CreateThumbs(_thumbCount);
 
             for (var i = 0; i < _fingerCount; i++) {
                 var finger = new HumanoidFinger();
@@ -179,14 +185,17 @@ namespace VAT.Avatars.Skeletal
 
         public void SetBlendPose(HandPoseData data)
         {
-            for (var i = 0; i < Fingers.Length; i++)
+            data.RemapFingers(_blendFingerPoses);
+            data.RemapThumbs(_blendThumbPoses);
+
+            for (var i = 0; i < _fingerCount; i++)
             {
-                Fingers[i].blendPose = data.fingers[i];
+                Fingers[i].blendPose = _blendFingerPoses[i];
             }
 
-            for (var i = 0; i < _thumbs.Length; i++)
+            for (var i = 0; i < _thumbCount; i++)
             {
-                _thumbs[i].blendPose = data.thumbs[i];
+                _thumbs[i].blendPose = _blendThumbPoses[i];
             }
         }
 
