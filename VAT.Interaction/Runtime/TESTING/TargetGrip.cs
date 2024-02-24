@@ -56,9 +56,11 @@ namespace VAT.Interaction
         public override SimpleTransform GetTargetInWorld(IInteractor interactor)
         {
             var target = GetTargetTransform();
+            var grabPoint = interactor.GetGrabPoint();
             var normal = interactor.GetRigidbody().transform.up;
 
             var rotation = GetAxisOffset(interactor) * target.rotation;
+            normal = rotation * (Quaternion.Inverse(grabPoint.rotation) * normal);
 
             return SimpleTransform.Create(target.position + normal * GetWorldRadius(), rotation);
         }
@@ -93,11 +95,13 @@ namespace VAT.Interaction
 
             if (DefaultClosedPose != null && DefaultClosedPose.previewMesh != null)
             {
+                var rotation = _symmetricalRotationOffset * target.rotation;
+
                 Gizmos.color = Color.black;
-                Gizmos.DrawMesh(DefaultClosedPose.previewMesh, 0, target.position + target.right * GetWorldRadius(), _symmetricalRotationOffset * target.rotation);
+                Gizmos.DrawMesh(DefaultClosedPose.previewMesh, 0, target.position + rotation * Vector3.right * GetWorldRadius(), rotation);
 
                 Gizmos.color = new Color(1f, 1f, 1f, 0.005f);
-                Gizmos.DrawWireMesh(DefaultClosedPose.previewMesh, 0, target.position + target.right * GetWorldRadius(), _symmetricalRotationOffset * target.rotation);
+                Gizmos.DrawWireMesh(DefaultClosedPose.previewMesh, 0, target.position + rotation * Vector3.right * GetWorldRadius(), rotation);
             } 
         }
     }
