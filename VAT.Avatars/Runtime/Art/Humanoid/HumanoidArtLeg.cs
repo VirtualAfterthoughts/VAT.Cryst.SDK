@@ -5,6 +5,7 @@ using UnityEngine;
 using VAT.Avatars.Muscular;
 using VAT.Avatars.REWORK;
 using VAT.Avatars.Skeletal;
+using VAT.Shared.Data;
 
 namespace VAT.Avatars.Art
 {
@@ -18,9 +19,13 @@ namespace VAT.Avatars.Art
         public ArtBone Toe => Bones[3] as ArtBone;
 
         public override void Solve() {
-            UpperLeg.Solve(BoneGroup.Hip.Transform);
-            LowerLeg.Solve(BoneGroup.Knee.Transform);
-            Foot.Solve(BoneGroup.Ankle.Transform);
+            SimpleTransform hip = BoneGroup.Hip.Transform;
+            SimpleTransform knee = BoneGroup.Knee.Transform;
+            SimpleTransform ankle = BoneGroup.Ankle.Transform;
+
+            UpperLeg.Solve(hip);
+            LowerLeg.Solve(knee);
+            Foot.Solve(ankle);
             // Toe.Solve(BoneGroup.Ankle.TransformBone(BoneGroup.Ankle, BoneGroup.Toe));
         }
 

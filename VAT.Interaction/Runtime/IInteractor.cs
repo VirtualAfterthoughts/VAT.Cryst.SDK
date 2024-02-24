@@ -22,6 +22,8 @@ namespace VAT.Interaction
 
         SimpleTransform GetGrabPoint(Vector2 position);
 
+        SimpleTransform GetGrabCenter();
+
         Rigidbody GetRigidbody();
 
         void AttachGrip(Grip grip);

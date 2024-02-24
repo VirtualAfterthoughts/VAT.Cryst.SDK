@@ -284,10 +284,8 @@ namespace VAT.Characters
             if (_attachedGrip)
                 return;
 
-            var grabPoint = GetGrabPoint();
-            float radius = grabRadius;
-            Vector3 direction = Vector3.Lerp(-transform.up, transform.forward, 0.5f);
-            var colliders = Physics.OverlapSphere((Vector3)grabPoint.position + (direction * radius), radius, ~0, QueryTriggerInteraction.Collide);
+            var grabCenter = GetGrabCenter();
+            var colliders = Physics.OverlapSphere(grabCenter.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
             
             IInteractable interactable = null;
             float lowestPriority = float.PositiveInfinity;
@@ -315,10 +313,8 @@ namespace VAT.Characters
             if (_attachedGrip)
                 return;
 
-            var grabPoint = GetGrabPoint();
-            float radius = grabRadius;
-            Vector3 direction = Vector3.Lerp(-transform.up, transform.forward, 0.5f);
-            Gizmos.DrawWireSphere((Vector3)grabPoint.position + (direction * radius), grabRadius);
+            var grabCenter = GetGrabCenter();
+            Gizmos.DrawWireSphere(grabCenter.position, grabRadius);
         }
 
         public Rigidbody GetRigidbody()
@@ -334,6 +330,14 @@ namespace VAT.Characters
         public SimpleTransform GetGrabPoint(Vector2 position)
         {
             return arm.PhysArm.Hand.GetPointOnPalm(position);
+        }
+
+        public SimpleTransform GetGrabCenter()
+        {
+            var grabPoint = GetGrabPoint();
+            float radius = grabRadius;
+            Vector3 direction = Vector3.Lerp(-transform.up, transform.forward, 0.5f);
+            return SimpleTransform.Create((Vector3)grabPoint.position + (direction * radius), grabPoint.rotation);
         }
 
         public float GetGripForce()

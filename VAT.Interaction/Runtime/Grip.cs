@@ -182,11 +182,11 @@ namespace VAT.Interaction
                 return (false, 0f);
 
             var target = GetTargetInWorld(interactor);
-            var grabPoint = interactor.GetGrabPoint();
+            var grabCenter = interactor.GetGrabCenter();
 
-            float distance = ((Vector3)(target.position - grabPoint.position)).magnitude;
+            float distance = ((Vector3)(target.position - grabCenter.position)).magnitude;
 
-            float angle = Quaternion.Angle(target.rotation, grabPoint.rotation) * Mathf.Deg2Rad * distance;
+            float angle = Quaternion.Angle(target.rotation, grabCenter.rotation) * Mathf.Deg2Rad * distance;
 
             return (true, (distance + angle) * _priority);
         }
