@@ -12,6 +12,8 @@ namespace VAT.Input
     {
         public HandPoseData data;
 
+        public Mesh previewMesh;
+
         public Vector2 centerOfPressure = Vector2.up;
     }
 }

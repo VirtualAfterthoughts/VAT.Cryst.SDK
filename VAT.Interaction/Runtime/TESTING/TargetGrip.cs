@@ -13,10 +13,7 @@ namespace VAT.Interaction
         private Transform _target = null;
 
         [SerializeField]
-        private Vector3 _axis = Vector3.forward;
-
-        [SerializeField]
-        private Vector3 _secondaryAxis = Vector3.up;
+        private Quaternion _symmetricalRotationOffset = Quaternion.identity;
 
         [SerializeField]
         [Min(0f)]
@@ -49,11 +46,11 @@ namespace VAT.Interaction
 
             float dot = Vector3.Dot(grabPoint.right, normal);
 
-            var lookRotation = Quaternion.LookRotation(_axis, _secondaryAxis);
+            var offset = _symmetricalRotationOffset;
             if (dot < 0f)
-                lookRotation = Quaternion.Inverse(lookRotation);
+                offset = Quaternion.Inverse(offset);
 
-            return lookRotation;
+            return offset;
         }
 
         public override SimpleTransform GetTargetInWorld(IInteractor interactor)
@@ -66,23 +63,24 @@ namespace VAT.Interaction
             return SimpleTransform.Create(target.position + normal * GetWorldRadius(), rotation);
         }
 
-        private void OnValidate()
+        private void OnDrawGizmos()
         {
-            _axis.Normalize();
-            _secondaryAxis.Normalize();
-            Vector3.OrthoNormalize(ref _axis, ref _secondaryAxis);
-        }
+#if UNITY_EDITOR
+            if (UnityEditor.Selection.activeGameObject != gameObject)
+            {
+                return;
+            }
+#endif
 
-        private void OnDrawGizmosSelected()
-        {
             Transform target = _target ? _target : transform;
 
             var worldRadius = GetWorldRadius();
 
             Gizmos.DrawWireSphere(target.position, worldRadius);
 
-            var axis = target.TransformDirection(_axis);
-            var secondaryAxis = target.TransformDirection(_secondaryAxis);
+            var offset = target.rotation * _symmetricalRotationOffset;
+            var axis = offset * Vector3.forward;
+            var secondaryAxis = offset * Vector3.up;
 
             using (var color = TempGizmoColor.Create())
             {
@@ -92,6 +90,15 @@ namespace VAT.Interaction
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(target.position, target.position + secondaryAxis * worldRadius * 2f);
             }
+
+            if (DefaultClosedPose != null && DefaultClosedPose.previewMesh != null)
+            {
+                Gizmos.color = Color.black;
+                Gizmos.DrawMesh(DefaultClosedPose.previewMesh, 0, target.position + target.right * GetWorldRadius(), _symmetricalRotationOffset * target.rotation);
+
+                Gizmos.color = new Color(1f, 1f, 1f, 0.005f);
+                Gizmos.DrawWireMesh(DefaultClosedPose.previewMesh, 0, target.position + target.right * GetWorldRadius(), _symmetricalRotationOffset * target.rotation);
+            } 
         }
     }
 }

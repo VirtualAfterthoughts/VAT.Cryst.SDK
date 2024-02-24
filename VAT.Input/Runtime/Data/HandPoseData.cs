@@ -95,6 +95,38 @@ namespace VAT.Avatars
 
         public FingerPoseData[] fingers;
 
+        public readonly void RemapFingers(FingerPoseData[] data)
+        {
+            for (var i = 0; i < data.Length; i++)
+            {
+                var original = fingers[i];
+
+                data[i].splay = original.splay;
+
+                for (var j = 0; j < data[i].phalanges.Length; j++)
+                {
+                    data[i].phalanges[j].curl = original.phalanges[j].curl;
+                }
+            }
+        }
+
+        public readonly void RemapThumbs(ThumbPoseData[] data)
+        {
+            for (var i = 0; i < data.Length; i++)
+            {
+                var original = thumbs[i];
+
+                data[i].stretched = original.stretched;
+                data[i].spread = original.spread;
+                data[i].twist = original.twist;
+
+                for (var j = 0; j < data[i].phalanges.Length; j++)
+                {
+                    data[i].phalanges[j].curl = original.phalanges[j].curl;
+                }
+            }
+        }
+
         public readonly FingerPoseData[] RemapFingers(int fingerCount = 4)
         {
             FingerPoseData[] data = new FingerPoseData[fingerCount];

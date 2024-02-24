@@ -18,10 +18,28 @@ namespace VAT.Avatars.Editor
         private int? _fingerIndex = null;
 
         private SerializedProperty _handPoseData;
+        private SerializedProperty _handPoseAsset;
 
         private void OnEnable() {
             _poser = target as HumanoidHandPoser;
             _handPoseData = serializedObject.FindProperty(nameof(_poser.handPoseData));
+            _handPoseAsset = serializedObject.FindProperty(nameof(_poser.handPoseAsset));
+        }
+
+        private Mesh GeneratePreviewMesh()
+        {
+            var skinnedMeshRenderer = _poser.GetComponentInChildren<SkinnedMeshRenderer>();
+            var copy = Instantiate(skinnedMeshRenderer);
+
+            var palm = _poser.Hand.GetPointOnPalm(Vector2.up);
+            copy.transform.SetPositionAndRotation(palm.position, palm.rotation);
+
+            Mesh mesh = new();
+            copy.BakeMesh(mesh);
+
+            DestroyImmediate(copy.gameObject);
+
+            return mesh;
         }
 
         public override void OnInspectorGUI() {
@@ -36,9 +54,20 @@ namespace VAT.Avatars.Editor
                     _poser.Hand.NeutralPose();
                 }
 
+                if (GUILayout.Button("Save to Asset"))
+                {
+                    var previewMesh = GeneratePreviewMesh();
+                    previewMesh.name = "Preview Mesh";
+                    AssetDatabase.AddObjectToAsset(previewMesh, _poser.handPoseAsset);
+
+                    _poser.handPoseAsset.previewMesh = previewMesh;
+                }
+
                 EditorGUI.BeginChangeCheck();
 
                 EditorGUILayout.PropertyField(_handPoseData, true);
+
+                EditorGUILayout.PropertyField(_handPoseAsset, true);
 
                 if (EditorGUI.EndChangeCheck()) {
                     _poser.Solve();

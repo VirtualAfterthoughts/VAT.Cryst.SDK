@@ -11,6 +11,7 @@ using VAT.Avatars.Art;
 using VAT.Avatars.Helpers;
 using VAT.Avatars.Proportions;
 using VAT.Avatars.Skeletal;
+using VAT.Input;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
@@ -28,6 +29,8 @@ namespace VAT.Avatars.Posing
         public HumanoidHandDescriptor descriptor;
 
         public HandPoseData handPoseData;
+
+        public HandPose handPoseAsset;
 
         public HumanoidHand Hand => _hand;
 

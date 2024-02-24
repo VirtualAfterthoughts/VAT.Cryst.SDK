@@ -51,6 +51,14 @@ namespace VAT.Interaction
 
         private bool _isInteractable = true;
 
+        public HandPose DefaultClosedPose
+        {
+            get
+            {
+                return _defaultClosedPose;
+            }
+        }
+
         private void OnEnable()
         {
             FindHost();
