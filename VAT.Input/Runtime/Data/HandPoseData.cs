@@ -97,21 +97,85 @@ namespace VAT.Avatars
 
         public readonly void RemapFingers(FingerPoseData[] data)
         {
-            for (var i = 0; i < data.Length; i++)
+            int originalLength = fingers != null ? fingers.Length : 0;
+            int remapLength = data.Length;
+
+            bool hasValidFingers = originalLength > 0 && remapLength > 0;
+            if (!hasValidFingers)
             {
-                var original = fingers[i];
+                return;
+            }
 
-                data[i].splay = original.splay;
+            for (var i = 0; i < remapLength; i++)
+            {
+                float percent = i / (float)remapLength;
+                float originalValue = percent * originalLength;
+                int originalIndex = Mathf.FloorToInt(originalValue);
 
-                for (var j = 0; j < data[i].phalanges.Length; j++)
-                {
-                    data[i].phalanges[j].curl = original.phalanges[j].curl;
-                }
+                float blend = originalValue - originalIndex;
+
+                var original = fingers[originalIndex];
+                var next = originalIndex + 1 < originalLength ? fingers[originalIndex + 1] : original;
+
+                data[i].splay = Mathf.Lerp(original.splay, next.splay, blend);
+
+                RemapPhalanges(data[i].phalanges, original.phalanges, next.phalanges, blend);
+            }
+        }
+
+        private readonly void RemapPhalanges(PhalanxPoseData[] data, PhalanxPoseData[] original, PhalanxPoseData[] next, float blend)
+        {
+            int originalLength = original.Length;
+            int nextLength = next.Length;
+            int remapLength = data.Length;
+
+            bool hasValidPhalanges = originalLength > 0 && nextLength > 0 && remapLength > 0;
+            if (!hasValidPhalanges)
+            {
+                return;
+            }
+
+            for (var i = 0; i < remapLength; i++)
+            {
+                // Original
+                float percent = i / (float)remapLength;
+                float originalValue = percent * originalLength;
+                int originalIndex = Mathf.FloorToInt(originalValue);
+
+                float blendPhalanx = originalValue - originalIndex;
+
+                var originalPhalanx = original[originalIndex];
+                var nextPhalanx = originalIndex + 1 < originalLength ? original[originalIndex + 1] : originalPhalanx;
+
+                // Next
+                float nextPercent = i / (float)remapLength;
+                float nextOriginalValue = nextPercent * nextLength;
+                int nextOriginalIndex = Mathf.FloorToInt(nextOriginalValue);
+
+                float nextBlendPhalanx = nextOriginalValue - nextOriginalIndex;
+
+                var nextOriginalPhalanx = next[nextOriginalIndex];
+                var nextNextPhalanx = nextOriginalIndex + 1 < nextLength ? next[nextOriginalIndex + 1] : nextOriginalPhalanx;
+
+                // Calculate curl
+                float originalBlend = Mathf.Lerp(originalPhalanx.curl, nextPhalanx.curl, blendPhalanx);
+                float nextBlend = Mathf.Lerp(nextOriginalPhalanx.curl, nextNextPhalanx.curl, nextBlendPhalanx);
+
+                data[i].curl = Mathf.Lerp(originalBlend, nextBlend, blend);
             }
         }
 
         public readonly void RemapThumbs(ThumbPoseData[] data)
         {
+            int originalLength = thumbs != null ? thumbs.Length : 0;
+            int remapLength = data.Length;
+
+            bool hasValidThumbs = originalLength > 0 && remapLength > 0;
+            if (!hasValidThumbs)
+            {
+                return;
+            }
+
             for (var i = 0; i < data.Length; i++)
             {
                 var original = thumbs[i];
