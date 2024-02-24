@@ -59,6 +59,12 @@ namespace VAT.Interaction
             }
         }
 
+        public event Action<IInteractor> AttachBeginEvent, AttachCompleteEvent, DetachCompleteEvent;
+
+        public bool IsHeld => _attachedInteractors.Count > 0;
+
+        public List<IInteractor> AttachedInteractors => _attachedInteractors;
+
         private void OnEnable()
         {
             FindHost();
@@ -68,10 +74,7 @@ namespace VAT.Interaction
         {
             UnregisterHost();
 
-            for (var i = _attachedInteractors.Count - 1; i >= 0; i--)
-            {
-                _attachedInteractors[i].DetachGrip(this);
-            }
+            ForceDetachInteractors();
         }
 
         public void UnregisterHost()
@@ -128,11 +131,15 @@ namespace VAT.Interaction
             _gripJoints[interactor] = gripJoint;
 
             _attachedInteractors.Add(interactor);
+
+            AttachBeginEvent?.Invoke(interactor);
         }
 
         public void OnAttachComplete(IInteractor interactor)
         {
             _gripJoints[interactor].LockJoints();
+
+            AttachCompleteEvent?.Invoke(interactor);
         }
 
         public void OnAttachUpdate(IInteractor interactor)
@@ -147,11 +154,23 @@ namespace VAT.Interaction
 
             _attachedInteractors.Remove(interactor);
 
+            DetachCompleteEvent?.Invoke(interactor);
+
+        }
+
+        public void ForceDetachInteractors()
+        {
+            for (var i = _attachedInteractors.Count - 1; i >= 0; i--)
+            {
+                _attachedInteractors[i].DetachGrip(this);
+            }
         }
 
         public void DisableInteraction()
         {
             _isInteractable = false;
+
+            ForceDetachInteractors();
         }
 
         public void EnableInteraction()
@@ -186,7 +205,7 @@ namespace VAT.Interaction
 
         public (bool valid, float priority) ValidateInteractable(IInteractor interactor)
         {
-            if (_attachedInteractors.Count > 0 && _swapMode == GripSwapMode.SINGLE)
+            if (!IsInteractable() || (_attachedInteractors.Count > 0 && _swapMode == GripSwapMode.SINGLE))
                 return (false, 0f);
 
             var target = GetTargetInWorld(interactor);
