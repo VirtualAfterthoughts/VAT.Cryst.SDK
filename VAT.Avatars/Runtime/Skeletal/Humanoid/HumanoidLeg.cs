@@ -31,6 +31,8 @@ namespace VAT.Avatars.Skeletal
 
         IBone IHumanLeg.Ankle => Ankle;
 
+        IBone IHumanLeg.Toe => Toe;
+
         private int _legIndex;
 
         private HumanoidSpine _spine;

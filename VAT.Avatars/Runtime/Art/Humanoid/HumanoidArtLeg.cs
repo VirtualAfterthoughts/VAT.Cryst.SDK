@@ -22,18 +22,19 @@ namespace VAT.Avatars.Art
             SimpleTransform hip = BoneGroup.Hip.Transform;
             SimpleTransform knee = BoneGroup.Knee.Transform;
             SimpleTransform ankle = BoneGroup.Ankle.Transform;
+            SimpleTransform toe = BoneGroup.Toe.Transform;
 
             UpperLeg.Solve(hip);
             LowerLeg.Solve(knee);
             Foot.Solve(ankle);
-            // Toe.Solve(BoneGroup.Ankle.TransformBone(BoneGroup.Ankle, BoneGroup.Toe));
+            Toe.Solve(toe);
         }
 
         public override void WriteOffsets(IHumanLeg boneGroup) {
             UpperLeg.WriteOffset(boneGroup.Hip);
             LowerLeg.WriteOffset(boneGroup.Knee);
             Foot.WriteOffset(boneGroup.Ankle);
-            // Toe.WriteOffset(boneGroup.Toe);
+            Toe.WriteOffset(boneGroup.Toe);
         }
 
         public override void WriteTransforms(HumanoidLegDescriptor artDescriptorGroup)

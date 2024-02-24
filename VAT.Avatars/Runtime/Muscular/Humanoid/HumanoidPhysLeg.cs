@@ -34,6 +34,9 @@ namespace VAT.Avatars.Muscular
 
         IBone IHumanLeg.Ankle => Ankle;
 
+        private RelativeBone _relativeToe = null;
+        public IBone Toe => _relativeToe;
+
         private IHumanLeg _leg;
 
         public override void Initiate()
@@ -91,6 +94,8 @@ namespace VAT.Avatars.Muscular
             Hip.ConfigurableJoint.ConfigurableJoint.connectedMassScale = 0f;
             Knee.ConfigurableJoint.ConfigurableJoint.connectedMassScale = 0f;
             Ankle.ConfigurableJoint.ConfigurableJoint.connectedMassScale = 0f;
+
+            _relativeToe = new RelativeBone(Ankle, leg.Ankle, leg.Toe);
         }
 
         public Mesh GenerateHipMesh(HumanoidLegProportions proportions)

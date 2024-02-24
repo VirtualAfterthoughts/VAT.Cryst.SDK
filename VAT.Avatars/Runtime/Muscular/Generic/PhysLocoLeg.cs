@@ -140,7 +140,8 @@ namespace VAT.Avatars.Muscular
 
             Fender.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
             Fender.ConfigurableJoint.ConfigurableJoint.yMotion = ConfigurableJointMotion.Limited;
-            Fender.ConfigurableJoint.ConfigurableJoint.linearLimit = new SoftJointLimit() { limit = _leg.Length * 0.5f };
+            float legLength = _leg.Length * 0.5f;
+            Fender.ConfigurableJoint.ConfigurableJoint.linearLimit = new SoftJointLimit() { limit = legLength * 1.1f };
             Fender.ConfigurableJoint.ConfigurableJoint.yDrive = new JointDrive()
             {
                 positionSpring = 900000f,

@@ -112,7 +112,7 @@ namespace VAT.Avatars.Skeletal
                 extension = Mathf.Abs(offset);
             }
 
-            Foot.localPosition = down() * Mathf.Clamp(distanceToFloor, 0f, _length + extension);
+            Foot.localPosition = down() * Mathf.Clamp(distanceToFloor, 0f, _length * 1.1f + extension);
         }
 
 #if UNITY_EDITOR

@@ -9,5 +9,6 @@ namespace VAT.Avatars.REWORK
         public IBone Hip { get; }
         public IBone Knee { get; }
         public IBone Ankle { get; }
+        public IBone Toe { get; }
     }
 }
