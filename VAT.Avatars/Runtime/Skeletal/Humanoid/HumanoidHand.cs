@@ -61,8 +61,11 @@ namespace VAT.Avatars.Skeletal
             Palm = new DataBone(Hand);
         }
 
-        FingerPoseData[] _fingerPoses = null;
-        ThumbPoseData[] _thumbPoses = null;
+        FingerPoseData[] _openFingerPoses = null;
+        FingerPoseData[] _closedFingerPoses = null;
+
+        ThumbPoseData[] _openThumbPoses = null;
+        ThumbPoseData[] _closedThumbPoses = null;
 
         public void WriteProportions(HandProportions proportions) {
             _proportions = proportions;
@@ -81,11 +84,13 @@ namespace VAT.Avatars.Skeletal
 
             _fingerCount = proportions.FingerCount;
             _fingers = new HumanoidFinger[_fingerCount];
-            _fingerPoses = HandPoseCreator.CreateFingers(_fingerCount);
+            _openFingerPoses = HandPoseCreator.CreateFingers(_fingerCount);
+            _closedFingerPoses = HandPoseCreator.CreateFingers(_fingerCount);
 
             _thumbCount = proportions.ThumbCount;
             _thumbs = new HumanoidThumb[_thumbCount];
-            _thumbPoses = HandPoseCreator.CreateThumbs(_thumbCount);
+            _openThumbPoses = HandPoseCreator.CreateThumbs(_thumbCount);
+            _closedThumbPoses = HandPoseCreator.CreateThumbs(_thumbCount);
 
             for (var i = 0; i < _fingerCount; i++) {
                 var finger = new HumanoidFinger();
@@ -142,33 +147,33 @@ namespace VAT.Avatars.Skeletal
 
         public void SetOpenPose(HandPoseData data)
         {
-            data.RemapFingers(_fingerPoses);
-            data.RemapThumbs(_thumbPoses);
+            data.RemapFingers(_openFingerPoses);
+            data.RemapThumbs(_openThumbPoses);
 
             for (var i = 0; i < _fingerCount; i++)
             {
-                Fingers[i].openPose = _fingerPoses[i];
+                Fingers[i].openPose = _openFingerPoses[i];
             }
 
             for (var i = 0; i < _thumbCount; i++)
             {
-                _thumbs[i].openPose = _thumbPoses[i];
+                _thumbs[i].openPose = _openThumbPoses[i];
             }
         }
 
         public void SetClosedPose(HandPoseData data)
         {
-            var fingers = data.RemapFingers(_fingerCount);
-            var thumbs = data.RemapThumbs(_thumbCount);
+            data.RemapFingers(_closedFingerPoses);
+            data.RemapThumbs(_closedThumbPoses);
 
             for (var i = 0; i < _fingerCount; i++)
             {
-                Fingers[i].closedPose = fingers[i];
+                Fingers[i].closedPose = _closedFingerPoses[i];
             }
 
             for (var i = 0; i < _thumbCount; i++)
             {
-                _thumbs[i].closedPose = thumbs[i];
+                _thumbs[i].closedPose = _closedThumbPoses[i];
             }
         }
 
