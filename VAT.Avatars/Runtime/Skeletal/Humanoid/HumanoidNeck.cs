@@ -7,6 +7,7 @@ using UnityEngine;
 
 using VAT.Avatars.Proportions;
 using VAT.Avatars.REWORK;
+using VAT.Input;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
@@ -30,6 +31,8 @@ namespace VAT.Avatars.Skeletal
         private HumanoidGeneralProportions _generalProportions;
         private HumanoidNeckProportions _neckProportions;
 
+        private float _armLength = 1f;
+
         public AnimationCurve CervicalUpOffset = new(new(0f, 1f), new(0.4f, 1f), new(1f, 0.1f));
         public AnimationCurve CervicalTilt = new(new(0f, 0f, 1f, 1f), new(40f, 45f, 0.54f, 0.54f), new(100f, 60f));
 
@@ -44,6 +47,9 @@ namespace VAT.Avatars.Skeletal
         public override void WriteProportions(HumanoidProportions proportions) {
             _generalProportions = proportions.generalProportions;
             _neckProportions = proportions.neckProportions;
+
+            var arm = proportions.leftArmProportions;
+            _armLength = arm.upperArmEllipsoid.height + arm.elbowEllipsoid.height;
         }
 
         public override void BindPose() {
@@ -90,8 +96,39 @@ namespace VAT.Avatars.Skeletal
             float lerp = (1f - cervicalHeight) - (skullChestAngle / 90f);
             chestRotation = Quaternion.Lerp(chestRotation, offsetRotation, lerp);
 
+            ChestPull();
+
             C1Vertebra.rotation = Quaternion.Lerp(Skull.rotation, chestRotation, 0.5f);
             C4Vertebra.rotation = Quaternion.Lerp(Skull.rotation, chestRotation, 0.7f);
+        }
+
+        public void ChestPull()
+        {
+            _avatarPayload.TryGetArm(Handedness.LEFT, out var leftArm);
+            _avatarPayload.TryGetArm(Handedness.RIGHT, out var rightArm);
+
+            leftArm.TryGetHand(out var leftHand);
+            rightArm.TryGetHand(out var rightHand);
+
+            float leftPull = SolveChestPull(leftHand.Transform);
+            float rightPull = SolveChestPull(rightHand.Transform);
+
+            float pull = leftPull - rightPull;
+            chestRotation = Quaternion.AngleAxis(25f * pull, math.mul(chestRotation, Vector3.up)) * chestRotation;
+        }
+
+        private float SolveChestPull(SimpleTransform hand)
+        {
+            var pull = hand.position - C4Vertebra.position;
+            pull /= _armLength;
+
+            var forward = math.mul(chestRotation, Vector3.forward);
+            var up = math.mul(chestRotation, Vector3.up);
+
+            var yPlane = Vector3.ProjectOnPlane(pull, up);
+            float yDot = Vector3.Dot(yPlane, forward);
+
+            return Mathf.Clamp(yDot, -1f, 1f);
         }
     }
 }
