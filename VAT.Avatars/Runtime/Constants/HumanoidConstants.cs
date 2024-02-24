@@ -8,7 +8,6 @@ using VAT.Shared.Data;
 namespace VAT.Avatars.Constants
 {
     public static class HumanoidConstants {
-        #region ANGULAR LIMITS
         // Neck
         public static readonly JointAngularLimits SkullLimits = new(-60f, 60f, 0f, 10f);
         public static readonly JointAngularLimits UpperNeckLimits = new(-20f, 20f, 47f, 0f);
@@ -31,6 +30,5 @@ namespace VAT.Avatars.Constants
         public static readonly JointAngularLimits HipLimits = new(-45f, 160f, 36f, 40f);
         public static readonly JointAngularLimits KneeLimits = new(-140f, 0f, 0f, 0f);
         public static readonly JointAngularLimits AnkleLimits = new(-30f, 50f, 0f, 0f);
-        #endregion
     }
 }
