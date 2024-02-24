@@ -27,6 +27,11 @@ namespace VAT.Avatars.Helpers
         }
 
         public static void CalculateArm(ref HumanoidArmProportions proportions, HumanoidArm arm, HumanoidArmDescriptor descriptor) {
+            if (descriptor.upperArm.HasTransform)
+            {
+                proportions.shoulderBladeEllipsoid.radius.x = distance(descriptor.upperArm.transform.position, arm.Scapula.position);
+            }
+
             if (descriptor.lowerArm.HasTransform) {
                 proportions.upperArmEllipsoid.height = distance(descriptor.lowerArm.transform.position, arm.UpperArm.position);
             }
