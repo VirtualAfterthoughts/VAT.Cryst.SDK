@@ -27,6 +27,7 @@ namespace VAT.Avatars.Muscular
         private LocoLeg _leg;
 
         private SphereCollider _locoBall;
+        private SphereCollider _fender;
 
         public Vector3 _targetVelocity = Vector3.forward * 0f;
 
@@ -55,13 +56,31 @@ namespace VAT.Avatars.Muscular
             _locoBall.material = physMaterial;
 
             Foot.InsertCollider(_locoBall);
+
+            _fender = Fender.UnityGameObject.AddComponent<SphereCollider>();
+            _fender.radius = 0.25f;
+            _fender.center = Vector3.up * 0.3f;
+
+            var frictionless = new PhysicMaterial("Fender")
+            {
+                dynamicFriction = 0f,
+                staticFriction = 0f,
+                frictionCombine = PhysicMaterialCombine.Multiply,
+                bounceCombine = PhysicMaterialCombine.Multiply
+            };
+
+            _fender.material = frictionless;
+
+            Fender.InsertCollider(_fender);
         }
 
         private float3 _lastDistance;
 
         public override void Solve()
         {
-            _locoBall.radius = 0.2f * (1f - _leg._footShrink);
+            float shrinkMult = (1f - _leg._footShrink);
+            _locoBall.radius = 0.2f * shrinkMult;
+            _fender.radius = 0.25f * shrinkMult;
 
             var kneeTarget = Knee.Parent.TransformBone(_leg.Knee.Parent, _leg.Knee);
             Knee.Solve(kneeTarget);
