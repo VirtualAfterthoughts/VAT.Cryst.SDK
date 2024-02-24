@@ -258,6 +258,7 @@ namespace VAT.Characters
             ToggleCollsion(grip, false);
 
             _attachedGrip = null;
+            _isSnatching = false;
         }
 
         public void ToggleCollsion(Grip grip, bool ignore)
@@ -292,9 +293,9 @@ namespace VAT.Characters
 
             foreach (var collider in colliders)
             {
-                var go = collider.attachedRigidbody ? collider.attachedRigidbody.gameObject : collider.gameObject;
+                var component = collider.gameObject.GetComponentInParent<IInteractable>();
 
-                if (go.TryGetComponent<IInteractable>(out var component)) {
+                if (component != null) {
                     var (valid, priority) = component.ValidateInteractable(this);
 
                     if (valid && priority < lowestPriority)
