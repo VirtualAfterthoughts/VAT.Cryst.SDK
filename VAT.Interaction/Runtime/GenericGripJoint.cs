@@ -59,7 +59,7 @@ namespace VAT.Interaction
             }
             else
             {
-                float force = Mathf.LerpUnclamped(0f, 9000f, Mathf.Pow(friction, 4f));
+                float force = Mathf.LerpUnclamped(0f, 9000f, friction);
 
                 _joint.slerpDrive = new JointDrive()
                 {

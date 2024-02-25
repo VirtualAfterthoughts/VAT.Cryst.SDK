@@ -59,7 +59,7 @@ namespace VAT.Interaction
             var grabPoint = interactor.GetGrabPoint();
             var normal = interactor.GetRigidbody().transform.up;
 
-            var rotation = GetAxisOffset(interactor) * target.rotation;
+            var rotation = target.rotation * GetAxisOffset(interactor);
             normal = rotation * (Quaternion.Inverse(grabPoint.rotation) * normal);
 
             return SimpleTransform.Create(target.position + normal * GetWorldRadius(), rotation);
@@ -95,13 +95,11 @@ namespace VAT.Interaction
 
             if (DefaultClosedPose != null && DefaultClosedPose.previewMesh != null)
             {
-                var rotation = _symmetricalRotationOffset * target.rotation;
-
                 Gizmos.color = Color.black;
-                Gizmos.DrawMesh(DefaultClosedPose.previewMesh, 0, target.position + rotation * Vector3.right * GetWorldRadius(), rotation);
+                Gizmos.DrawMesh(DefaultClosedPose.previewMesh, 0, target.position + offset * Vector3.right * GetWorldRadius(), offset);
 
                 Gizmos.color = new Color(1f, 1f, 1f, 0.005f);
-                Gizmos.DrawWireMesh(DefaultClosedPose.previewMesh, 0, target.position + rotation * Vector3.right * GetWorldRadius(), rotation);
+                Gizmos.DrawWireMesh(DefaultClosedPose.previewMesh, 0, target.position + offset * Vector3.right * GetWorldRadius(), offset);
             } 
         }
     }
