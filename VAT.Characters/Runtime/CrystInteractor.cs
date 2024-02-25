@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using Unity.Mathematics;
 using UnityEngine;
+
 using VAT.Avatars;
 using VAT.Avatars.Integumentary;
+
 using VAT.Entities.PhysX;
+
 using VAT.Input;
 using VAT.Interaction;
+
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
 namespace VAT.Characters
 {
-    public class CrystInteractor : MonoBehaviour, IInteractor
+    public class CrystInteractor : MonoBehaviour, IInteractor, IAvatarTrackingOverride
     {
         public List<InteractableHost> hosts = new List<InteractableHost>();
         public CrystRigidbody rb;
@@ -78,7 +83,7 @@ namespace VAT.Characters
 
         private void Start()
         {
-            arm.DataArm.OnProcessTarget += OnProcessTarget;
+            arm.RegisterTrackingOverride(this);
 
             arm.DataArm.Hand.SetOpenPose(openPose);
             arm.DataArm.Hand.SetClosedPose(closedPose);
@@ -89,8 +94,10 @@ namespace VAT.Characters
         private float _pinAmount = 0f;
         private SimpleTransform _lastTarget = SimpleTransform.Default;
 
-        private SimpleTransform OnProcessTarget(in SimpleTransform target)
+        public SimpleTransform Solve(SimpleTransform rig, SimpleTransform targetInRig)
         {
+            SimpleTransform target = rig.Transform(targetInRig);
+
             Vector3 velocity = PhysicsExtensions.GetLinearVelocity(_lastTarget.position, target.position);
             _pinAmount = Mathf.Lerp(_pinAmount, 0f, Mathf.Clamp01(velocity.magnitude * 0.3f - 0.05f));
 
@@ -101,7 +108,8 @@ namespace VAT.Characters
             var goal = values.Item1;
             goal.rotation = target.rotation;
 
-            return SimpleTransform.Lerp(target, values.Item1, values.Item2);
+            target = SimpleTransform.Lerp(target, values.Item1, values.Item2);
+            return rig.InverseTransform(target);
         }
 
         public bool IsInteractionLocked()

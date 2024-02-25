@@ -179,15 +179,17 @@ namespace VAT.Avatars.Integumentary
         }
 
         protected override void OnUninitiateRuntime() {
-            GameObject.Destroy(_physicsRoot);
+            Destroy(_physicsRoot.gameObject);
         }
 
         protected override AvatarArm[] CreateArms() {
             var array = new AvatarArm[2];
             var skeleton = GenericAnatomy.GenericSkeleton;
+            var dataSkeleton = skeleton.GenericDataBoneSkeleton;
+            var physSkeleton = skeleton.GenericPhysBoneSkeleton;
 
-            array[0] = new AvatarArm(Handedness.LEFT, skeleton.GenericDataBoneSkeleton.LeftArm, skeleton.GenericPhysBoneSkeleton.LeftArm);
-            array[1] = new AvatarArm(Handedness.RIGHT, skeleton.GenericDataBoneSkeleton.RightArm, skeleton.GenericPhysBoneSkeleton.RightArm);
+            array[0] = new AvatarArm(Handedness.LEFT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, skeleton.GenericDataBoneSkeleton.LeftArm, skeleton.GenericPhysBoneSkeleton.LeftArm);
+            array[1] = new AvatarArm(Handedness.RIGHT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, skeleton.GenericDataBoneSkeleton.RightArm, skeleton.GenericPhysBoneSkeleton.RightArm);
 
             return array;
         }
