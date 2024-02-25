@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
@@ -62,7 +63,14 @@ namespace VAT.Interaction
             var rotation = target.rotation * GetAxisOffset(interactor);
             normal = rotation * (Quaternion.Inverse(grabPoint.rotation) * normal);
 
-            return SimpleTransform.Create(target.position + normal * GetWorldRadius(), rotation);
+            return SimpleTransform.Create(target.position, rotation);
+        }
+
+        public override SimpleTransform GetGrabPoint(IInteractor interactor)
+        {
+            var grabPoint = base.GetGrabPoint(interactor);
+            grabPoint.position -= (float3)interactor.GetRigidbody().transform.up * GetWorldRadius();
+            return grabPoint;
         }
 
         private void OnDrawGizmos()

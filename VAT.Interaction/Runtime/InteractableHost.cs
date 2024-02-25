@@ -19,6 +19,8 @@ namespace VAT.Interaction
 
         public List<Collider> Colliders => _colliders;
 
+        public VirtualController VirtualController { get; } = new VirtualController();
+
         public Rigidbody GetRigidbodyOrDefault()
         {
             return _rb;

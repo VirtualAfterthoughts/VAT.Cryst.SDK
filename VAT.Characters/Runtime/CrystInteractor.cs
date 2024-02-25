@@ -99,7 +99,7 @@ namespace VAT.Characters
             SimpleTransform result = targetInRig;
             foreach (var interactorOverride in _interactorOverrides)
             {
-                result = interactorOverride.Solve(this, rig, result);
+                result = interactorOverride.OnOverrideTarget(this, rig, result);
             }
 
             SimpleTransform target = rig.Transform(result);

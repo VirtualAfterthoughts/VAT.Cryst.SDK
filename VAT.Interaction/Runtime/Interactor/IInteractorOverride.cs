@@ -9,6 +9,6 @@ namespace VAT.Interaction
 {
     public interface IInteractorOverride
     {
-        SimpleTransform Solve(IInteractor interactor, SimpleTransform rig, SimpleTransform targetInRig);
+        SimpleTransform OnOverrideTarget(IInteractor interactor, SimpleTransform rig, SimpleTransform targetInRig);
     }
 }

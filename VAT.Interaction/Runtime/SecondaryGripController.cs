@@ -5,7 +5,7 @@ using VAT.Shared.Data;
 
 namespace VAT.Interaction
 {
-    public class SecondaryGripController : VirtualControllerOverride
+    public class SecondaryGripController : MonoBehaviour, IVirtualControllerOverride
     {
         [SerializeField]
         private Grip _primaryGrip = null;
@@ -13,45 +13,11 @@ namespace VAT.Interaction
         [SerializeField]
         private Grip _secondaryGrip = null;
 
-        private VirtualController _virtualController = new VirtualController();
-
-        public override void Solve(VirtualControllerData data)
-        {
-            VirtualControllerElement primaryElement = null;
-            VirtualControllerElement secondaryElement = null;
-
-            foreach (var element in data.elements)
-            {
-                if (element.gripPair.Grip == _secondaryGrip)
-                {
-                    secondaryElement = element;
-                }
-                else if (element.gripPair.Grip == _primaryGrip)
-                {
-                    primaryElement = element;
-                }
-            }
-
-            if (primaryElement != null && secondaryElement != null)
-            {
-                var primaryGripPair = primaryElement.gripPair;
-                var secondaryGripPair = secondaryElement.gripPair;
-
-                var primaryTransform = primaryGripPair.Interactor.GetRigidbody().transform;
-                var secondaryTransform = secondaryGripPair.Interactor.GetRigidbody().transform;
-
-                var relative = SimpleTransform.Create(primaryTransform).InverseTransform(SimpleTransform.Create(secondaryTransform));
-
-                var oldTargetInRig = secondaryElement.targetInRig.rotation;
-                secondaryElement.targetInRig = primaryElement.targetInRig.Transform(relative);
-                secondaryElement.targetInRig.rotation = oldTargetInRig;
-            }
-        }
+        [SerializeField]
+        private InteractableHost _host = null;
 
         private void Awake()
         {
-            _virtualController.RegisterOverride(this);
-
             _secondaryGrip.DisableInteraction();
 
             _primaryGrip.AttachCompleteEvent += OnPrimaryAttached;
@@ -59,33 +25,31 @@ namespace VAT.Interaction
 
             _secondaryGrip.AttachCompleteEvent += OnSecondaryAttached;
             _secondaryGrip.DetachCompleteEvent += OnSecondaryDetached;
-        }
 
-        public void Update()
-        {
-            _virtualController.Solve();
+            if (_host == null)
+            {
+                _host = GetComponentInParent<InteractableHost>();
+            }
+
+            _host.VirtualController.RegisterOverride(this);
         }
 
         private void OnSecondaryAttached(IInteractor interactor)
         {
-            _virtualController.RegisterPair(interactor, _secondaryGrip);
+
         }
 
         private void OnSecondaryDetached(IInteractor interactor)
         {
-            _virtualController.UnregisterPair(interactor);
+
         }
 
         private void OnPrimaryAttached(IInteractor interactor)
         {
-            _virtualController.RegisterPair(interactor, _primaryGrip);
-
             _secondaryGrip.EnableInteraction();
         }
 
         private void OnPrimaryDetached(IInteractor interactor) {
-            _virtualController.UnregisterPair(interactor);
-
             if (!_primaryGrip.IsHeld)
             {
                 IInteractor secondaryInteractor = null;
@@ -98,6 +62,24 @@ namespace VAT.Interaction
                 {
                     secondaryInteractor.AttachGrip(_primaryGrip);
                 }
+            }
+        }
+
+        public void OnSolveController(VirtualControllerPayload payload)
+        {
+            if (payload.interactorGripPair.Grip == _secondaryGrip && _primaryGrip.IsHeld)
+            {
+                var primaryHand = _primaryGrip.GetFirstInteractor();
+                var primaryTransform = primaryHand.GetRigidbody().transform;
+                var secondaryTransform = payload.interactorGripPair.Interactor.GetRigidbody().transform;
+
+                var relative = SimpleTransform.Create(primaryTransform).InverseTransform(SimpleTransform.Create(secondaryTransform));
+
+                var primaryTarget = primaryHand.GetTargetData().targetInRig;
+
+                var oldTargetInRig = payload.targetInRig.rotation;
+                payload.targetInRig = primaryTarget.Transform(relative);
+                payload.targetInRig.rotation = oldTargetInRig;
             }
         }
     }

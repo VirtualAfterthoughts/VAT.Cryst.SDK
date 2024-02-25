@@ -17,7 +17,7 @@ namespace VAT.Interaction
         {
             var rb = interactor.GetRigidbody();
 
-            var grabPoint = interactor.GetGrabPoint(grip.GetPalmPosition());
+            var grabPoint = grip.GetGrabPoint(interactor);
             var target = grip.GetInteractorInHost(interactor);
             var hostTransform = grip.GetHostGameObject().transform;
 
@@ -37,7 +37,7 @@ namespace VAT.Interaction
             }
 
             joint.autoConfigureConnectedAnchor = false;
-            joint.SetWorldAnchor(interactor.GetGrabPoint().position);
+            joint.SetWorldAnchor(grip.GetGrabPoint(interactor).position);
             joint.SetWorldConnectedAnchor(grip.GetTargetInWorld(interactor).position);
 
             _joint = joint;

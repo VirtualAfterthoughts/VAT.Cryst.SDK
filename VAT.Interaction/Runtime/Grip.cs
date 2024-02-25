@@ -77,10 +77,23 @@ namespace VAT.Interaction
             ForceDetachInteractors();
         }
 
+        public IInteractor GetFirstInteractor()
+        {
+            if (_attachedInteractors.Count > 0)
+                return _attachedInteractors[0];
+
+            return null;
+        }
+
         public void UnregisterHost()
         {
             if (_host != null)
             {
+                foreach (var interactor in _attachedInteractors)
+                {
+                    _host.VirtualController.UnregisterPair(interactor);
+                }
+
                 _host.UnregisterInteractable(this);
                 _host = null;
             }
@@ -95,6 +108,11 @@ namespace VAT.Interaction
             if (_host != null)
             {
                 _host.RegisterInteractable(this);
+
+                foreach (var interactor in _attachedInteractors)
+                {
+                    _host.VirtualController.RegisterPair(interactor, this);
+                }
             }
         }
 
@@ -132,6 +150,11 @@ namespace VAT.Interaction
 
             _attachedInteractors.Add(interactor);
 
+            if (_host != null)
+            {
+                _host.VirtualController.RegisterPair(interactor, this);
+            }
+
             AttachBeginEvent?.Invoke(interactor);
         }
 
@@ -153,6 +176,11 @@ namespace VAT.Interaction
             _gripJoints.Remove(interactor);
 
             _attachedInteractors.Remove(interactor);
+
+            if (_host != null)
+            {
+                _host.VirtualController.UnregisterPair(interactor);
+            }
 
             DetachCompleteEvent?.Invoke(interactor);
 
@@ -251,6 +279,11 @@ namespace VAT.Interaction
         }
 
         public abstract SimpleTransform GetTargetInWorld(IInteractor interactor);
+
+        public virtual SimpleTransform GetGrabPoint(IInteractor interactor)
+        {
+            return interactor.GetGrabPoint(GetPalmPosition());
+        }
 
         public InteractableHost GetHostOrDefault()
         {
