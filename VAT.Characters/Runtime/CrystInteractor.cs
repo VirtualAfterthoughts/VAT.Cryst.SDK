@@ -96,7 +96,13 @@ namespace VAT.Characters
 
         public SimpleTransform Solve(SimpleTransform rig, SimpleTransform targetInRig)
         {
-            SimpleTransform target = rig.Transform(targetInRig);
+            SimpleTransform result = targetInRig;
+            foreach (var interactorOverride in _interactorOverrides)
+            {
+                result = interactorOverride.Solve(this, rig, result);
+            }
+
+            SimpleTransform target = rig.Transform(result);
 
             Vector3 velocity = PhysicsExtensions.GetLinearVelocity(_lastTarget.position, target.position);
             _pinAmount = Mathf.Lerp(_pinAmount, 0f, Mathf.Clamp01(velocity.magnitude * 0.3f - 0.05f));
@@ -109,14 +115,8 @@ namespace VAT.Characters
             goal.rotation = target.rotation;
 
             target = SimpleTransform.Lerp(target, values.Item1, values.Item2);
-            var result = rig.InverseTransform(target);
 
-            foreach (var interactorOverride in _interactorOverrides)
-            {
-                result = interactorOverride.Solve(this, rig, result);
-            }
-
-            return result;
+            return rig.InverseTransform(target);
         }
 
         public bool IsInteractionLocked()
