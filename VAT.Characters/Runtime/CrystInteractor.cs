@@ -109,7 +109,14 @@ namespace VAT.Characters
             goal.rotation = target.rotation;
 
             target = SimpleTransform.Lerp(target, values.Item1, values.Item2);
-            return rig.InverseTransform(target);
+            var result = rig.InverseTransform(target);
+
+            foreach (var interactorOverride in _interactorOverrides)
+            {
+                result = interactorOverride.Solve(this, rig, result);
+            }
+
+            return result;
         }
 
         public bool IsInteractionLocked()
@@ -355,6 +362,27 @@ namespace VAT.Characters
                 return (grip.GetForce() * 0.75f) + (trigger.GetForce() * 0.25f);
 
             return 0f;
+        }
+
+        public InteractorTargetData GetTargetData()
+        {
+            return new InteractorTargetData()
+            {
+                rig = arm.PhysRig.Transform,
+                targetInRig = arm.DataRig.Transform.InverseTransform(arm.DataArm.Target)
+            };
+        }
+
+        private List<IInteractorOverride> _interactorOverrides = new();
+
+        public void RegisterOverride(IInteractorOverride interactorOverride)
+        {
+            _interactorOverrides.Add(interactorOverride);
+        }
+
+        public void UnregisterOverride(IInteractorOverride interactorOverride)
+        {
+            _interactorOverrides.Remove(interactorOverride);
         }
     }
 }

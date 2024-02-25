@@ -17,5 +17,7 @@ namespace VAT.Avatars.REWORK
         public IHandGroup Hand { get; }
 
         public event TargetProcessorCallback OnProcessTarget;
+
+        public SimpleTransform Target { get; }
     }
 }

@@ -50,6 +50,8 @@ namespace VAT.Avatars.Muscular
         private RelativeBone _relativeCarpal = null;
         public IBone Carpal => _relativeCarpal;
 
+        public SimpleTransform Target => _arm.Target;
+
         private IHumanArm _arm;
 
         public event TargetProcessorCallback OnProcessTarget

@@ -147,14 +147,14 @@ namespace VAT.Avatars.Skeletal
             _lastCurl01 = curl01;
             _lastCurl02 = curl02;
 
-            MetaCarpal.localRotation = Quaternion.AngleAxis(90f * leftMult, Vector3.forward);
-            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(0f, -60f, Remap(stretched)) * leftMult, MetaCarpal.up) * MetaCarpal.rotation;
-            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(10f, -60f, Remap(spread)), MetaCarpal.right) * MetaCarpal.rotation;
+            MetaCarpal.localRotation = Quaternion.AngleAxis(90f, Vector3.forward);
+            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(0f, -60f, Remap(stretched)), MetaCarpal.up) * MetaCarpal.rotation;
+            MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(10f, -60f, Remap(spread)) * leftMult, MetaCarpal.right) * MetaCarpal.rotation;
             MetaCarpal.rotation = Quaternion.AngleAxis(Mathf.Lerp(-20f, 60f, Remap(twist)) * leftMult, MetaCarpal.forward) * MetaCarpal.rotation;
 
             Proximal.localRotation = Quaternion.identity;
-            Middle.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(curl01)), Vector3.right);
-            Distal.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(curl02)), Vector3.right);
+            Middle.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(curl01)) * leftMult, Vector3.right);
+            Distal.localRotation = Quaternion.AngleAxis(Mathf.Lerp(-90f, 90f, Remap(curl02)) * leftMult, Vector3.right);
         }
 
         public override void Solve()

@@ -47,6 +47,9 @@ namespace VAT.Avatars.Skeletal
 
         IHandGroup IArmGroup.Hand => Hand;
 
+        public SimpleTransform Target => _originalTarget;
+        private SimpleTransform _originalTarget;
+
         private HumanoidSpine _spine;
 
         private HumanoidNeckProportions _neckProportions;
@@ -105,8 +108,8 @@ namespace VAT.Avatars.Skeletal
             _upperArmLength = _armProportions.upperArmEllipsoid.height;
             _armLength = _lowerArmLength + _upperArmLength;
 
-            if (isLeft)
-                Hand.Hand.localScale = new Vector3(-1f, 1f, 1f);
+            // if (isLeft)
+            //     Hand.Hand.localScale = new Vector3(-1f, 1f, 1f);
 
             Hand.WriteProportions(_armProportions.handProportions);
         }
@@ -138,6 +141,7 @@ namespace VAT.Avatars.Skeletal
             if (arm.TryGetHand(out var hand))
             {
                 _target = hand.Transform;
+                _originalTarget = hand.Transform;
             }
 
             if (OnProcessTarget != null)

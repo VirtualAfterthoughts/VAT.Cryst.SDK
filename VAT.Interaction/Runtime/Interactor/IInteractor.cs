@@ -18,6 +18,8 @@ namespace VAT.Interaction
 
         void UnlockInteraction();
 
+        InteractorTargetData GetTargetData();
+
         SimpleTransform GetGrabPoint();
 
         SimpleTransform GetGrabPoint(Vector2 position);
@@ -25,6 +27,10 @@ namespace VAT.Interaction
         SimpleTransform GetGrabCenter();
 
         Rigidbody GetRigidbody();
+
+        void RegisterOverride(IInteractorOverride interactorOverride);
+
+        void UnregisterOverride(IInteractorOverride interactorOverride);
 
         void AttachGrip(Grip grip);
 

@@ -16,16 +16,14 @@ namespace VAT.Avatars.Skeletal {
     public sealed class DataBone : IBone {
         private float3 _localPosition;
         private quaternion _localRotation = quaternion.identity;
-        private float3 _localScale = 1f;
 
         private List<DataBone> _children = null;
         private DataBone _parent = null;
 
-        public SimpleTransform Transform { get { return SimpleTransform.Create(position, rotation, lossyScale); }
+        public SimpleTransform Transform { get { return SimpleTransform.Create(position, rotation); }
             set {
                 position = value.position;
                 rotation = value.rotation;
-                localScale = value.lossyScale;
             }
         }
 
@@ -58,18 +56,9 @@ namespace VAT.Avatars.Skeletal {
                     _localRotation = _parent.InverseTransformRotation(value);
             }
         }
-        public float3 lossyScale { 
-            get {
-                if (_parent == null)
-                    return _localScale;
-
-                return _localScale * _parent.lossyScale; 
-            }
-        }
 
         public float3 localPosition { get { return _localPosition; } set { _localPosition = value; } }
         public quaternion localRotation { get { return _localRotation; } set { _localRotation = value; } }
-        public float3 localScale { get { return _localScale; } set { _localScale = value; } }
 
         public float3 forward { get { return mul(rotation, new float3(0f, 0f, 1f)); } }
         public float3 up { get { return mul(rotation, new float3(0f, 1f, 0f)); } }
@@ -98,24 +87,24 @@ namespace VAT.Avatars.Skeletal {
         }
 
         public float3 TransformPoint(float3 point) {
-            BurstCompiled_Transform.BurstCompiled_TransformPoint(point, position, rotation, lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_TransformPoint(point, position, rotation, 1f, out var result);
             return result;
         }
 
         public quaternion TransformRotation(quaternion rotation)
         {
-            BurstCompiled_Transform.BurstCompiled_TransformRotation(rotation, this.rotation, this.lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_TransformRotation(rotation, this.rotation, 1f, out var result);
             return result;
         }
 
         public float3 InverseTransformPoint(float3 point) {
-            BurstCompiled_Transform.BurstCompiled_InverseTransformPoint(point, position, rotation, lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_InverseTransformPoint(point, position, rotation, 1f, out var result);
             return result;
         }
 
         public quaternion InverseTransformRotation(quaternion rotation)
         {
-            BurstCompiled_Transform.BurstCompiled_InverseTransformRotation(rotation, this.rotation, lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_InverseTransformRotation(rotation, this.rotation, 1f, out var result);
             return result;
         }
 
