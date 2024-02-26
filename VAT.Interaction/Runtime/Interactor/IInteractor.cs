@@ -20,11 +20,7 @@ namespace VAT.Interaction
 
         InteractorTargetData GetTargetData();
 
-        SimpleTransform GetGrabPoint();
-
-        SimpleTransform GetGrabPoint(Vector2 position);
-
-        SimpleTransform GetGrabCenter();
+        IGrabberPoint GetGrabberPoint();
 
         Rigidbody GetRigidbody();
 

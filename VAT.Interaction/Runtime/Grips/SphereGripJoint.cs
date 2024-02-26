@@ -7,9 +7,20 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Interaction
 {
-    public class GenericGripJoint : IGripJoint
+    public class SphereGripJoint : IGripJoint
     {
+        private Transform _center;
+        private float _radius;
+
+        public SphereGripJoint(Transform center, float radius)
+        {
+            _center = center;
+            _radius = radius;
+        }
+
         private ConfigurableJoint _joint = null;
+
+        public ConfigurableJoint Joint => _joint;
 
         private bool _isFree = false;
 
@@ -18,14 +29,11 @@ namespace VAT.Interaction
             var rb = interactor.GetRigidbody();
 
             var grabPoint = grip.GetGrabPoint(interactor);
-            var target = grip.GetInteractorInHost(interactor);
-            var hostTransform = grip.GetHostGameObject().transform;
 
             // Match grab rotation, so that the joint initializes with proper target
             // Since we can't set anchorRotation in Unity
-            var grabPointRotation = hostTransform.TransformRotation(target.rotation);
             var initialRotation = rb.transform.rotation;
-            rb.transform.rotation = grabPointRotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
+            rb.transform.rotation = _center.rotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
 
             var joint = rb.gameObject.AddComponent<ConfigurableJoint>();
 
@@ -37,12 +45,13 @@ namespace VAT.Interaction
             }
 
             joint.autoConfigureConnectedAnchor = false;
-            joint.SetWorldAnchor(grip.GetGrabPoint(interactor).position);
-            joint.SetWorldConnectedAnchor(grip.GetTargetInWorld(interactor).position);
 
             _joint = joint;
 
             rb.transform.rotation = initialRotation;
+
+            joint.SetWorldAnchor((Vector3)grabPoint.position);
+            joint.SetWorldConnectedAnchor(_center.position);
         }
 
         public void DetachJoints()
@@ -56,15 +65,14 @@ namespace VAT.Interaction
             if (_isFree)
             {
                 _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = Mathf.Lerp(_joint.xDrive.positionSpring, 5000f, Time.deltaTime * 0.5f), positionDamper = 0f, maximumForce = float.PositiveInfinity };
-                _joint.slerpDrive = new JointDrive() { positionSpring = 0f, positionDamper = Mathf.Lerp(_joint.slerpDrive.positionDamper, 900f, Time.deltaTime * 0.5f), maximumForce = float.PositiveInfinity };
             }
             else
             {
-                float force = Mathf.LerpUnclamped(0f, 9000f, friction);
+                float force = Mathf.LerpUnclamped(0f, 5000f, Mathf.Pow(friction, 4f));
 
                 _joint.slerpDrive = new JointDrive()
                 {
-                    positionSpring = force,
+                    positionSpring = 0f,
                     positionDamper = force * 0.1f,
                     maximumForce = force
                 };
@@ -89,7 +97,7 @@ namespace VAT.Interaction
 
             _joint.linearLimit = new SoftJointLimit() { limit = 0.05f };
             _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
-            _joint.slerpDrive = new JointDrive() { positionSpring = 9000f, positionDamper = 500f, maximumForce = 1200f };
+            _joint.slerpDrive = new JointDrive();
 
             _isFree = false;
         }

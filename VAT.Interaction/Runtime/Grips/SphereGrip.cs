@@ -25,15 +25,15 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(IInteractor interactor)
+        public override SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint)
         {
             var target = GetTargetTransform();
-            var grabPoint = interactor.GetGrabPoint();
+            var grabPoint = grabberPoint.GetDefaultGrabPoint();
             var direction = ((Vector3)grabPoint.position - target.position).normalized;
 
-            var grabRotation = Quaternion.FromToRotation(interactor.GetRigidbody().transform.up, direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(grabberPoint.GetGrabNormal(), direction) * grabPoint.rotation;
 
-            return SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
+            return SimpleTransform.Create(target.position, grabRotation);
         }
     }
 }

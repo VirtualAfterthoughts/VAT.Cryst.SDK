@@ -17,9 +17,9 @@ namespace VAT.Interaction
         [SerializeField]
         private Vector3 _size = Vector3.one;
 
-        public override SimpleTransform GetTargetInWorld(IInteractor interactor)
+        public override SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint)
         {
-            var grabPoint = interactor.GetGrabPoint();
+            var grabPoint = grabberPoint.GetDefaultGrabPoint();
             var targetTransform = GetTargetTransform();
             var localGrabPoint = targetTransform.InverseTransformPoint(grabPoint.position);
 
@@ -29,7 +29,7 @@ namespace VAT.Interaction
                 var worldPoint = targetTransform.TransformPoint(face.Value.ClosestPoint(localGrabPoint));
                 var worldNormal = targetTransform.TransformDirection(face.Value.normal);
 
-                var grabRotation = Quaternion.FromToRotation(interactor.GetRigidbody().transform.up, worldNormal) * grabPoint.rotation;
+                var grabRotation = Quaternion.FromToRotation(grabberPoint.GetGrabNormal(), worldNormal) * grabPoint.rotation;
 
                 return SimpleTransform.Create(worldPoint, grabRotation);
             }

@@ -44,10 +44,10 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(IInteractor interactor)
+        public override SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint)
         {
             var target = GetTargetTransform();
-            var grabPoint = interactor.GetGrabPoint();
+            var grabPoint = grabberPoint.GetDefaultGrabPoint();
 
             var distance = ((Vector3)grabPoint.position - target.position);
             var relativeDistance = target.InverseTransformDirection(distance);
@@ -59,9 +59,9 @@ namespace VAT.Interaction
             fixedDirection.y = 0f;
             var direction = target.TransformDirection(fixedDirection.normalized);
 
-            var grabRotation = Quaternion.FromToRotation(interactor.GetRigidbody().transform.up, direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(grabberPoint.GetGrabNormal(), direction) * grabPoint.rotation;
 
-            return SimpleTransform.Create(target.position + direction * GetWorldRadius() + target.up * upOffset, grabRotation);
+            return SimpleTransform.Create(target.position + target.up * upOffset, grabRotation);
         }
     }
 }

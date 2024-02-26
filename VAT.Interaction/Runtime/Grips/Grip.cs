@@ -236,8 +236,10 @@ namespace VAT.Interaction
             if (!IsInteractable() || (_attachedInteractors.Count > 0 && _swapMode == GripSwapMode.SINGLE))
                 return (false, 0f);
 
-            var target = GetTargetInWorld(interactor);
-            var grabCenter = interactor.GetGrabCenter();
+            var grabberPoint = interactor.GetGrabberPoint();
+
+            var target = GetTargetInWorld(grabberPoint);
+            var grabCenter = grabberPoint.GetGrabCenter();
 
             float distance = ((Vector3)(target.position - grabCenter.position)).magnitude;
 
@@ -270,19 +272,19 @@ namespace VAT.Interaction
 
         public SimpleTransform GetInteractorInHost(IInteractor interactor)
         {
-            return SimpleTransform.Create(GetHostGameObject().transform).InverseTransform(GetTargetInWorld(interactor));
+            return SimpleTransform.Create(GetHostGameObject().transform).InverseTransform(GetTargetInWorld(interactor.GetGrabberPoint()));
         }
 
         public SimpleTransform GetHostInInteractor(IInteractor interactor)
         {
-            return GetTargetInWorld(interactor).InverseTransform(SimpleTransform.Create(GetHostGameObject().transform));
+            return GetTargetInWorld(interactor.GetGrabberPoint()).InverseTransform(SimpleTransform.Create(GetHostGameObject().transform));
         }
 
-        public abstract SimpleTransform GetTargetInWorld(IInteractor interactor);
+        public abstract SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint);
 
         public virtual SimpleTransform GetGrabPoint(IInteractor interactor)
         {
-            return interactor.GetGrabPoint(GetPalmPosition());
+            return interactor.GetGrabberPoint().GetGrabPoint(GetPalmPosition());
         }
 
         public InteractableHost GetHostOrDefault()

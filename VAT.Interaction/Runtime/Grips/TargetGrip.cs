@@ -40,10 +40,10 @@ namespace VAT.Interaction
             }
         }
 
-        public Quaternion GetAxisOffset(IInteractor interactor)
+        public Quaternion GetAxisOffset(IGrabberPoint grabberPoint)
         {
-            var grabPoint = interactor.GetGrabPoint();
-            var normal = interactor.GetRigidbody().transform.up;
+            var grabPoint = grabberPoint.GetDefaultGrabPoint();
+            var normal = grabberPoint.GetGrabNormal();
 
             float dot = Vector3.Dot(grabPoint.right, normal);
 
@@ -54,13 +54,13 @@ namespace VAT.Interaction
             return offset;
         }
 
-        public override SimpleTransform GetTargetInWorld(IInteractor interactor)
+        public override SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint)
         {
             var target = GetTargetTransform();
-            var grabPoint = interactor.GetGrabPoint();
-            var normal = interactor.GetRigidbody().transform.up;
+            var grabPoint = grabberPoint.GetDefaultGrabPoint();
+            var normal = grabberPoint.GetGrabNormal();
 
-            var rotation = target.rotation * GetAxisOffset(interactor);
+            var rotation = target.rotation * GetAxisOffset(grabberPoint);
             normal = rotation * (Quaternion.Inverse(grabPoint.rotation) * normal);
 
             return SimpleTransform.Create(target.position, rotation);

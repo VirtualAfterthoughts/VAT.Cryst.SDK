@@ -76,6 +76,8 @@ namespace VAT.Characters
 
         private bool _isInteractionLocked = false;
 
+        private AvatarGrabberPoint _grabberPoint;
+
         private void Awake()
         {
             rb = GetComponent<CrystRigidbody>();
@@ -83,6 +85,12 @@ namespace VAT.Characters
 
         private void Start()
         {
+            _grabberPoint = new AvatarGrabberPoint
+            {
+                arm = arm,
+                radius = grabRadius,
+            };
+
             arm.RegisterTrackingOverride(this);
 
             arm.DataArm.Hand.SetOpenPose(openPose);
@@ -142,7 +150,7 @@ namespace VAT.Characters
         {
             if (_isSnatching)
             {
-                var target = _attachedGrip.GetTargetInWorld(this);
+                var target = _attachedGrip.GetTargetInWorld(GetGrabberPoint());
                 target.lossyScale = 1f;
                 var grabPoint = _attachedGrip.GetGrabPoint(this);
                 grabPoint.rotation = target.rotation;
@@ -202,7 +210,7 @@ namespace VAT.Characters
 
             if (_isSnatching)
             {
-                float distance = math.length(_attachedGrip.GetTargetInWorld(this).position - _attachedGrip.GetGrabPoint(this).position);
+                float distance = math.length(_attachedGrip.GetTargetInWorld(GetGrabberPoint()).position - _attachedGrip.GetGrabPoint(this).position);
 
                 var (valid, data) = _attachedGrip.GetClosedPose(this);
                 if (valid)
@@ -300,7 +308,7 @@ namespace VAT.Characters
             if (_attachedGrip)
                 return;
 
-            var grabCenter = GetGrabCenter();
+            var grabCenter = _grabberPoint.GetGrabCenter();
             var colliders = Physics.OverlapSphere(grabCenter.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
             
             IInteractable interactable = null;
@@ -329,31 +337,13 @@ namespace VAT.Characters
             if (_attachedGrip)
                 return;
 
-            var grabCenter = GetGrabCenter();
+            var grabCenter = _grabberPoint.GetGrabCenter();
             Gizmos.DrawWireSphere(grabCenter.position, grabRadius);
         }
 
         public Rigidbody GetRigidbody()
         {
             return rb.Rigidbody;
-        }
-
-        public SimpleTransform GetGrabPoint()
-        {
-            return GetGrabPoint(Vector2.up);
-        }
-
-        public SimpleTransform GetGrabPoint(Vector2 position)
-        {
-            return arm.PhysArm.Hand.GetPointOnPalm(position);
-        }
-
-        public SimpleTransform GetGrabCenter()
-        {
-            var grabPoint = GetGrabPoint();
-            float radius = grabRadius;
-            Vector3 direction = Vector3.Lerp(-transform.up, transform.forward, 0.5f);
-            return SimpleTransform.Create((Vector3)grabPoint.position + (direction * radius), grabPoint.rotation);
         }
 
         public float GetGripForce()
@@ -383,6 +373,11 @@ namespace VAT.Characters
         public void UnregisterOverride(IInteractorOverride interactorOverride)
         {
             _interactorOverrides.Remove(interactorOverride);
+        }
+
+        public IGrabberPoint GetGrabberPoint()
+        {
+            return _grabberPoint;
         }
     }
 }

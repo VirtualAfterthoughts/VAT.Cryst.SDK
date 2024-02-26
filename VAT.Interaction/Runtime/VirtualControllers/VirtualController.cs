@@ -52,19 +52,14 @@ namespace VAT.Interaction
 
             if (gripPair != null)
             {
-                VirtualControllerPayload payload = new()
-                {
-                    interactorGripPair = gripPair,
-                    rig = rig,
-                    targetInRig = targetInRig
-                };
+                VirtualControllerPayload payload = new(gripPair, rig, targetInRig, _gripPairs);
 
                 foreach (var controllerOverride in _controllerOverrides)
                 {
                     controllerOverride.OnSolveController(payload);
                 }
 
-                return payload.targetInRig;
+                return payload.TargetInRig;
             }
 
 
