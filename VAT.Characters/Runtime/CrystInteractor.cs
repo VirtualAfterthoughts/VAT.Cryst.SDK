@@ -105,10 +105,6 @@ namespace VAT.Characters
         public SimpleTransform Solve(SimpleTransform rig, SimpleTransform targetInRig)
         {
             SimpleTransform result = targetInRig;
-            foreach (var interactorOverride in _interactorOverrides)
-            {
-                result = interactorOverride.OnOverrideTarget(this, rig, result);
-            }
 
             SimpleTransform target = rig.Transform(result);
 
@@ -124,7 +120,17 @@ namespace VAT.Characters
 
             target = SimpleTransform.Lerp(target, values.Item1, values.Item2);
 
-            return rig.InverseTransform(target);
+            result = rig.InverseTransform(target);
+
+            if (!_isSnatching)
+            {
+                foreach (var interactorOverride in _interactorOverrides)
+                {
+                    result = interactorOverride.OnOverrideTarget(this, rig, result);
+                }
+            }
+
+            return result;
         }
 
         public bool IsInteractionLocked()
