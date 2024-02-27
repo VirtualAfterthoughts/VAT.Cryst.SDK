@@ -28,9 +28,9 @@ namespace VAT.Interaction
 
         void UnregisterOverride(IInteractorOverride interactorOverride);
 
-        void AttachGrip(Grip grip);
+        void AttachGrip(IGrippable grip);
 
-        void DetachGrip(Grip grip);
+        void DetachGrip(IGrippable grip);
 
         void DetachGrips();
 

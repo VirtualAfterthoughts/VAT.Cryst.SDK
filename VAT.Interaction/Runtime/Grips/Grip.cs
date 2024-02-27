@@ -10,7 +10,7 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Interaction
 {
-    public abstract class Grip : MonoBehaviour, IInteractable
+    public abstract class Grip : MonoBehaviour, IGrippable
     {
         public enum GripSwapMode
         {

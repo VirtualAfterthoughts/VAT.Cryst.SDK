@@ -32,7 +32,7 @@ namespace VAT.Characters
 
         public float grabRadius = 0.086848f;
 
-        private Grip _attachedGrip;
+        private IGrippable _attachedGrip;
 
         private bool _isSnatching = false;
 
@@ -191,9 +191,9 @@ namespace VAT.Characters
 
             OnUpdateHover();
 
-            if (!_attachedGrip)
+            if (_attachedGrip == null)
             {
-                if (HoveringInteractable is Grip garp && !gripPose && garp.GetClosedPose(this).valid)
+                if (HoveringInteractable is IGrippable garp && !gripPose && garp.GetClosedPose(this).valid)
                 {
                     arm.DataArm.Hand.SetClosedPose(garp.GetClosedPose(this).data);
                 }
@@ -203,11 +203,11 @@ namespace VAT.Characters
                 }
             }
 
-            if (gripPose && !_wasGripPose && !_attachedGrip && HoveringInteractable is Grip grp)
+            if (gripPose && !_wasGripPose && _attachedGrip == null && HoveringInteractable is IGrippable grp)
             {
                 AttachGrip(grp);
             }
-            else if (maxCurl < grabCurl && _attachedGrip)
+            else if (maxCurl < grabCurl && _attachedGrip != null)
             {
                 DetachGrips();
             }
@@ -242,13 +242,13 @@ namespace VAT.Characters
                     ResetPin();
                 }
             }
-            else if (_attachedGrip)
+            else if (_attachedGrip != null)
             {
                 _attachedGrip.OnAttachUpdate(this);
             }
         }
 
-        public void AttachGrip(Grip grip)
+        public void AttachGrip(IGrippable grip)
         {
             grip.OnAttachConfirm(this);
             _attachedGrip = grip;
@@ -264,7 +264,7 @@ namespace VAT.Characters
             arm.DataArm.Hand.SetOpenPose(openPose);
             arm.DataArm.Hand.SetClosedPose(closedPose);
 
-            if (_attachedGrip)
+            if (_attachedGrip != null)
             {
                 DetachGrip(_attachedGrip);
                 _attachedGrip = null;
@@ -280,7 +280,7 @@ namespace VAT.Characters
             lastTar = SimpleTransform.Create(transform);
         }
 
-        public void DetachGrip(Grip grip)
+        public void DetachGrip(IGrippable grip)
         {
             grip.OnDetachConfirm(this);
 
@@ -290,7 +290,7 @@ namespace VAT.Characters
             _isSnatching = false;
         }
 
-        public void ToggleCollsion(Grip grip, bool ignore)
+        public void ToggleCollsion(IGrippable grip, bool ignore)
         {
             var gripHost = grip.GetHostOrDefault();
 
@@ -311,7 +311,7 @@ namespace VAT.Characters
 
         protected void OnUpdateHover()
         {
-            if (_attachedGrip)
+            if (_attachedGrip != null)
                 return;
 
             var grabCenter = _grabberPoint.GetGrabCenter();
@@ -340,7 +340,7 @@ namespace VAT.Characters
 
         public void OnDrawGizmosSelected()
         {
-            if (_attachedGrip)
+            if (_attachedGrip != null)
                 return;
 
             var grabCenter = _grabberPoint.GetGrabCenter();

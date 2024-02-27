@@ -8,9 +8,9 @@ namespace VAT.Interaction
     public class InteractorGripPair
     {
         public IInteractor Interactor { get; }
-        public Grip Grip { get; }
+        public IGrippable Grip { get; }
 
-        public InteractorGripPair(IInteractor interactor, Grip grip)
+        public InteractorGripPair(IInteractor interactor, IGrippable grip)
         {
             Interactor = interactor;
             Grip = grip;
