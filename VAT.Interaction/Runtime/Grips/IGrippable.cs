@@ -25,6 +25,6 @@ namespace VAT.Interaction
 
         SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint);
 
-        SimpleTransform GetGrabPoint(IInteractor interactor);
+        SimpleTransform GetTargetInInteractor(IGrabberPoint grabberPoint);
     }
 }

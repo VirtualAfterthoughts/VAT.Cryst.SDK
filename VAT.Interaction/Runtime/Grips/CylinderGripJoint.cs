@@ -30,7 +30,8 @@ namespace VAT.Interaction
         {
             var rb = interactor.GetRigidbody();
 
-            var grabPoint = grip.GetGrabPoint(interactor);
+            var grabberPoint = interactor.GetGrabberPoint();
+            var grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetTargetInInteractor(grabberPoint));
 
             float dot = Vector3.Dot(grabPoint.up, _center.up);
 
@@ -59,7 +60,7 @@ namespace VAT.Interaction
 
             _joint = joint;
 
-            grabPoint = grip.GetGrabPoint(interactor);
+            grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetTargetInInteractor(grabberPoint));
 
             joint.SetWorldAnchor((Vector3)grabPoint.position);
             joint.SetWorldConnectedAnchor(_center.position);

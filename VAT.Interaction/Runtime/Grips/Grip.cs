@@ -282,9 +282,14 @@ namespace VAT.Interaction
 
         public abstract SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint);
 
-        public virtual SimpleTransform GetGrabPoint(IInteractor interactor)
+        public virtual SimpleTransform GetTargetInInteractor(IGrabberPoint grabberPoint)
         {
-            return interactor.GetGrabberPoint().GetGrabPoint(GetPalmPosition());
+            return grabberPoint.GetParentTransform().InverseTransform(grabberPoint.GetGrabPoint(GetPalmPosition()));
+        }
+
+        public SimpleTransform GetInteractorInTarget(IGrabberPoint grabberPoint)
+        {
+            return grabberPoint.GetParentTransform().Transform(GetTargetInInteractor(grabberPoint));
         }
 
         public InteractableHost GetHostOrDefault()

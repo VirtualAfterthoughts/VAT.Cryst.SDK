@@ -29,7 +29,7 @@ namespace VAT.Interaction
                 var worldPoint = targetTransform.TransformPoint(face.Value.ClosestPoint(localGrabPoint));
                 var worldNormal = targetTransform.TransformDirection(face.Value.normal);
 
-                var grabRotation = Quaternion.FromToRotation(grabberPoint.GetGrabNormal(), worldNormal) * grabPoint.rotation;
+                var grabRotation = Quaternion.FromToRotation(-grabberPoint.GetGrabNormal(), worldNormal) * grabPoint.rotation;
 
                 return SimpleTransform.Create(worldPoint, grabRotation);
             }

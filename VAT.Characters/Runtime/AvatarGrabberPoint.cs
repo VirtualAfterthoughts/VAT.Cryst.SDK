@@ -29,12 +29,17 @@ namespace VAT.Characters
 
         public Vector3 GetGrabNormal()
         {
-            return arm.PhysArm.Hand.Hand.Transform.up;
+            return -arm.PhysArm.Hand.Hand.Transform.up;
         }
 
         public SimpleTransform GetGrabPoint(Vector2 position)
         {
             return arm.PhysArm.Hand.GetPointOnPalm(position);
+        }
+
+        public SimpleTransform GetParentTransform()
+        {
+            return arm.PhysArm.Hand.Hand.Transform;
         }
     }
 }

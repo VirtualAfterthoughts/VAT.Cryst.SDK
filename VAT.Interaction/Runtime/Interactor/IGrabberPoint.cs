@@ -18,5 +18,7 @@ namespace VAT.Interaction
         Vector3 GetGrabNormal();
 
         SimpleTransform GetGrabCenter();
+
+        SimpleTransform GetParentTransform();
     }
 }

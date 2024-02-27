@@ -31,7 +31,7 @@ namespace VAT.Interaction
             var grabPoint = grabberPoint.GetDefaultGrabPoint();
             var direction = ((Vector3)grabPoint.position - target.position).normalized;
 
-            var grabRotation = Quaternion.FromToRotation(grabberPoint.GetGrabNormal(), direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(-grabberPoint.GetGrabNormal(), direction) * grabPoint.rotation;
 
             return SimpleTransform.Create(target.position, grabRotation);
         }
