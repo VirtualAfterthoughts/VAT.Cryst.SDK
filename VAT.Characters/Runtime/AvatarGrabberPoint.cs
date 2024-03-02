@@ -23,7 +23,7 @@ namespace VAT.Characters
         public SimpleTransform GetGrabCenter()
         {
             var grabPoint = GetDefaultGrabPoint();
-            Vector3 direction = Vector3.Lerp(-GetGrabNormal(), grabPoint.forward, 0.5f);
+            Vector3 direction = Vector3.Lerp(GetGrabNormal(), grabPoint.forward, 0.5f);
             return SimpleTransform.Create((Vector3)grabPoint.position + (direction * radius), grabPoint.rotation);
         }
 

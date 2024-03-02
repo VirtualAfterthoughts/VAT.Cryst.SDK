@@ -34,6 +34,8 @@ namespace VAT.Avatars.Skeletal
         public override DataBoneGroup[] SubGroups => _subGroups;
         public HumanoidFinger[] Fingers => _fingers;
 
+        public HumanoidThumb[] Thumbs => _thumbs;
+
         public override int SubGroupCount => _fingerCount + _thumbCount;
 
         IBone IHandGroup.Hand => Hand;

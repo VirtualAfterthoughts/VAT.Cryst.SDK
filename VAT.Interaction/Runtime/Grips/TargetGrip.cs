@@ -56,19 +56,25 @@ namespace VAT.Interaction
 
         public override SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint)
         {
+            var pivot = GetPivotInWorld(grabberPoint);
+            var normalRelative = grabberPoint.GetDefaultGrabPoint().InverseTransformDirection(grabberPoint.GetGrabNormal());
+            pivot.position -= pivot.TransformDirection(normalRelative) * GetWorldRadius();
+
+            return pivot;
+        }
+
+        public override SimpleTransform GetPivotInWorld(IGrabberPoint grabberPoint)
+        {
             var target = GetTargetTransform();
-            var grabPoint = grabberPoint.GetDefaultGrabPoint();
-            var normal = -grabberPoint.GetGrabNormal();
 
             var rotation = target.rotation * GetAxisOffset(grabberPoint);
-            normal = rotation * (Quaternion.Inverse(grabPoint.rotation) * normal);
 
             return SimpleTransform.Create(target.position, rotation);
         }
 
-        public override SimpleTransform GetTargetInInteractor(IGrabberPoint grabberPoint)
+        public override SimpleTransform GetPivotInInteractor(IGrabberPoint grabberPoint)
         {
-            var grabPoint = base.GetTargetInInteractor(grabberPoint);
+            var grabPoint = base.GetPivotInInteractor(grabberPoint);
             grabPoint.position += math.down() * GetWorldRadius();
             return grabPoint;
         }

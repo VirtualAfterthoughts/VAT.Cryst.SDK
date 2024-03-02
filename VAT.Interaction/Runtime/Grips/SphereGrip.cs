@@ -33,7 +33,7 @@ namespace VAT.Interaction
 
             var grabRotation = Quaternion.FromToRotation(-grabberPoint.GetGrabNormal(), direction) * grabPoint.rotation;
 
-            return SimpleTransform.Create(target.position, grabRotation);
+            return SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
         }
     }
 }

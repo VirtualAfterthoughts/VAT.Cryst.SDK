@@ -60,7 +60,7 @@ namespace VAT.Interaction
 
             _joint = joint;
 
-            grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetTargetInInteractor(grabberPoint));
+            grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetPivotInInteractor(grabberPoint));
 
             joint.SetWorldAnchor((Vector3)grabPoint.position);
             joint.SetWorldConnectedAnchor(_center.position);
@@ -116,12 +116,14 @@ namespace VAT.Interaction
 
         public void LockJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
-            _joint.xMotion = ConfigurableJointMotion.Limited;
+            _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Locked);
             _joint.angularXMotion = ConfigurableJointMotion.Free;
 
             _joint.linearLimit = new SoftJointLimit() { limit = _height * 0.5f };
-            _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 0f, positionDamper = 1000f, maximumForce = 500000f };
+
+            _joint.xDrive = new JointDrive() { positionSpring = 0f, positionDamper = 1000f, maximumForce = 500000f };
+
+            _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
 
             _isFree = false;
         }

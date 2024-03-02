@@ -8,14 +8,30 @@ using VAT.Shared.Math;
 
 namespace VAT.Interaction
 {
-    public class BoxGrip : TargetGrip
+    public class BoxGrip : Grip
     {
         [Header("Box Grip")]
+        [SerializeField]
+        private Transform _target = null;
+
         [SerializeField]
         private Vector3 _center = Vector3.zero;
 
         [SerializeField]
         private Vector3 _size = Vector3.one;
+
+        private void Start()
+        {
+            if (_target == null)
+            {
+                _target = transform;
+            }
+        }
+
+        public Transform GetTargetTransform()
+        {
+            return _target;
+        }
 
         public override SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint)
         {

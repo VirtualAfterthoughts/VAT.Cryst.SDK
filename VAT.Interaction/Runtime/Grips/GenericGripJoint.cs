@@ -39,8 +39,8 @@ namespace VAT.Interaction
             }
 
             joint.autoConfigureConnectedAnchor = false;
-            joint.anchor = grip.GetTargetInInteractor(interactor.GetGrabberPoint()).position;
-            joint.SetWorldConnectedAnchor(grip.GetTargetInWorld(interactor.GetGrabberPoint()).position);
+            joint.anchor = grip.GetPivotInInteractor(interactor.GetGrabberPoint()).position;
+            joint.SetWorldConnectedAnchor(grip.GetPivotInWorld(interactor.GetGrabberPoint()).position);
 
             _joint = joint;
 

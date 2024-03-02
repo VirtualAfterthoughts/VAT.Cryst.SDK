@@ -110,14 +110,22 @@ namespace VAT.Avatars.Skeletal
             leftArm.TryGetHand(out var leftHand);
             rightArm.TryGetHand(out var rightHand);
 
-            float leftPull = SolveChestPull(leftHand.Transform);
-            float rightPull = SolveChestPull(rightHand.Transform);
+            float leftYPull = SolveChestYPull(leftHand.Transform);
+            float rightYPull = SolveChestYPull(rightHand.Transform);
 
-            float pull = leftPull - rightPull;
-            chestRotation = Quaternion.AngleAxis(25f * pull, math.mul(chestRotation, Vector3.up)) * chestRotation;
+            float yPull = leftYPull - rightYPull;
+
+            float leftZPull = SolveChestZPull(leftHand.Transform);
+            float rightZPull = SolveChestZPull(rightHand.Transform);
+
+            float zPull = rightZPull - leftZPull;
+
+            var yOffset = Quaternion.AngleAxis(25f * yPull, math.mul(chestRotation, Vector3.up));
+            var zOffset = Quaternion.AngleAxis(5f * zPull, math.mul(chestRotation, Vector3.forward));
+            chestRotation = yOffset * zOffset * chestRotation;
         }
 
-        private float SolveChestPull(SimpleTransform hand)
+        private float SolveChestYPull(SimpleTransform hand)
         {
             var pull = hand.position - C4Vertebra.position;
             pull /= _armLength;
@@ -129,6 +137,20 @@ namespace VAT.Avatars.Skeletal
             float yDot = Vector3.Dot(yPlane, forward);
 
             return Mathf.Clamp(yDot, -1f, 1f);
+        }
+
+        private float SolveChestZPull(SimpleTransform hand)
+        {
+            var pull = hand.position - C4Vertebra.position;
+            pull /= _armLength;
+
+            var forward = math.mul(chestRotation, Vector3.forward);
+            var up = math.mul(chestRotation, Vector3.up);
+
+            var zPlane = Vector3.ProjectOnPlane(pull, forward);
+            float zDot = Vector3.Dot(zPlane, up);
+
+            return Mathf.Clamp(zDot, -1f, 1f);
         }
     }
 }

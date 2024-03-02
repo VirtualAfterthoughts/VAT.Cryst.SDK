@@ -282,9 +282,19 @@ namespace VAT.Interaction
 
         public abstract SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint);
 
+        public virtual SimpleTransform GetPivotInWorld(IGrabberPoint grabberPoint)
+        {
+            return GetTargetInWorld(grabberPoint);
+        }
+
         public virtual SimpleTransform GetTargetInInteractor(IGrabberPoint grabberPoint)
         {
             return grabberPoint.GetParentTransform().InverseTransform(grabberPoint.GetGrabPoint(GetPalmPosition()));
+        }
+
+        public virtual SimpleTransform GetPivotInInteractor(IGrabberPoint grabberPoint)
+        {
+            return GetTargetInInteractor(grabberPoint);
         }
 
         public SimpleTransform GetInteractorInTarget(IGrabberPoint grabberPoint)

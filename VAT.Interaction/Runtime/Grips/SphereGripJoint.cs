@@ -29,7 +29,7 @@ namespace VAT.Interaction
             var rb = interactor.GetRigidbody();
 
             var grabberPoint = interactor.GetGrabberPoint();
-            var grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetTargetInInteractor(grabberPoint));
+            var grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetPivotInInteractor(grabberPoint));
 
             // Match grab rotation, so that the joint initializes with proper target
             // Since we can't set anchorRotation in Unity
@@ -94,11 +94,11 @@ namespace VAT.Interaction
 
         public void LockJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
+            _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
 
-            _joint.linearLimit = new SoftJointLimit() { limit = 0.05f };
+            _joint.linearLimit = new SoftJointLimit() { limit = _radius };
+            _joint.linearLimitSpring = new SoftJointLimitSpring() { spring = 500f, damper = 1f };
             _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
-            _joint.slerpDrive = new JointDrive();
 
             _isFree = false;
         }
