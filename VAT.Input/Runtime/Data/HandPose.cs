@@ -15,5 +15,7 @@ namespace VAT.Input
         public Mesh previewMesh;
 
         public Vector2 centerOfPressure = Vector2.up;
+
+        public Quaternion rotationOffset = Quaternion.identity;
     }
 }

@@ -14,9 +14,6 @@ namespace VAT.Interaction
         private Transform _target = null;
 
         [SerializeField]
-        private Quaternion _symmetricalRotationOffset = Quaternion.identity;
-
-        [SerializeField]
         [Min(0f)]
         private float _radius = 0f;
 
@@ -47,7 +44,10 @@ namespace VAT.Interaction
 
             float dot = Vector3.Dot(grabPoint.right, normal);
 
-            var offset = _symmetricalRotationOffset;
+            var offset = Quaternion.identity;
+            if (DefaultClosedPose != null)
+                offset = DefaultClosedPose.rotationOffset;
+
             if (dot < 0f)
                 offset = Quaternion.Inverse(offset);
 
@@ -94,7 +94,8 @@ namespace VAT.Interaction
 
             Gizmos.DrawWireSphere(target.position, worldRadius);
 
-            var offset = target.rotation * _symmetricalRotationOffset;
+            var rotationOffset = DefaultClosedPose ? DefaultClosedPose.rotationOffset : Quaternion.identity;
+            var offset = target.rotation * rotationOffset;
             var axis = offset * Vector3.forward;
             var secondaryAxis = offset * Vector3.up;
 

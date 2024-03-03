@@ -60,6 +60,9 @@ namespace VAT.Interaction
             var direction = target.TransformDirection(fixedDirection.normalized);
 
             var grabRotation = Quaternion.FromToRotation(-grabberPoint.GetGrabNormal(), direction) * grabPoint.rotation;
+            Vector3 grabUp = grabRotation * Vector3.up;
+            Vector3 targetUp = target.up * Mathf.Sign(Vector3.Dot(target.up, grabUp));
+            grabRotation = Quaternion.FromToRotation(grabUp, targetUp) * grabRotation;
 
             return SimpleTransform.Create(target.position + target.up * upOffset + direction * GetWorldRadius(), grabRotation);
         }
