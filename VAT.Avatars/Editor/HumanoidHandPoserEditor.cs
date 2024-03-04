@@ -9,7 +9,14 @@ using VAT.Shared.Data;
 
 namespace VAT.Avatars.Editor
 {
+    using System;
     using UnityEditor;
+    using UnityEngine.XR;
+    using VAT.Characters;
+    using VAT.Cryst.Game;
+    using VAT.Input;
+    using VAT.Interaction;
+    using VAT.Shared.Extensions;
 
     [CustomEditor(typeof(HumanoidHandPoser))]
     public sealed class HumanoidHandPoserEditor : Editor
@@ -20,28 +27,16 @@ namespace VAT.Avatars.Editor
         private DataBone _selectedBone = null;
 
         private SerializedProperty _handPoseData;
-        private SerializedProperty _handPoseAsset;
+
+        private SerializedProperty _selectedPose;
+        private SerializedProperty _targetGrip;
 
         private void OnEnable() {
             _poser = target as HumanoidHandPoser;
             _handPoseData = serializedObject.FindProperty(nameof(_poser.handPoseData));
-            _handPoseAsset = serializedObject.FindProperty(nameof(_poser.handPoseAsset));
-        }
 
-        private Mesh GeneratePreviewMesh()
-        {
-            var skinnedMeshRenderer = _poser.GetComponentInChildren<SkinnedMeshRenderer>();
-            var copy = Instantiate(skinnedMeshRenderer);
-
-            var palm = _poser.Hand.GetPointOnPalm(Vector2.up);
-            copy.transform.SetPositionAndRotation(palm.position, palm.rotation);
-
-            Mesh mesh = new();
-            copy.BakeMesh(mesh);
-
-            DestroyImmediate(copy.gameObject);
-
-            return mesh;
+            _selectedPose = serializedObject.FindProperty(nameof(_poser.selectedPose));
+            _targetGrip = serializedObject.FindProperty(nameof(_poser.targetGrip));
         }
 
         public override void OnInspectorGUI() {
@@ -52,58 +47,218 @@ namespace VAT.Avatars.Editor
             if (_poser.Generated) {
                 EditorGUILayout.HelpBox("No issues found!", MessageType.Info);
 
-                if (GUILayout.Button("Reset Hand Pose")) {
-                    Undo.RecordObject(_poser, "Reset Hand Pose");
+                EditorGUI.BeginChangeCheck();
+                EditorGUILayout.PropertyField(_selectedPose);
 
-                    _poser.handPoseData = new HandPoseData()
-                    {
-                        fingers = HandPoseCreator.CreateFingers(_poser.handPoseData.fingers.Length),
-                        thumbs = HandPoseCreator.CreateThumbs(_poser.handPoseData.thumbs.Length),
-                    };
-                }
+                bool changedPose = EditorGUI.EndChangeCheck();
 
-                if (GUILayout.Button("Save to Asset"))
+                EditorGUILayout.PropertyField(_targetGrip);
+
+                GUILayout.FlexibleSpace();
+
+                EditorGUILayout.LabelField("Resetting", EditorStyles.whiteLargeLabel, GUILayout.Height(20));
+
+                GUILayout.FlexibleSpace();
+
+                if (_poser.selectedPose != null)
                 {
-                    var previewMesh = GeneratePreviewMesh();
-                    previewMesh.name = "Preview Mesh";
-                    AssetDatabase.AddObjectToAsset(previewMesh, _poser.handPoseAsset);
-
-                    _poser.handPoseAsset.previewMesh = previewMesh;
+                    DrawResetToSelected();
                 }
+
+                DrawResetToNeutral();
+
+                GUILayout.FlexibleSpace();
+
+                EditorGUILayout.LabelField("Saving", EditorStyles.whiteLargeLabel, GUILayout.Height(20));
+
+                GUILayout.FlexibleSpace();
+
+                if (_poser.selectedPose != null) {
+                    DrawSaveToPose();
+                }
+
+                DrawCreateNewPose();
 
                 EditorGUI.BeginChangeCheck();
 
                 EditorGUILayout.PropertyField(_handPoseData, true);
 
-                EditorGUILayout.PropertyField(_handPoseAsset, true);
-
                 if (EditorGUI.EndChangeCheck()) {
                     _poser.Solve();
+                }
+
+                serializedObject.ApplyModifiedProperties();
+
+                if (changedPose)
+                {
+                    Undo.RecordObject(_poser, "Change Selected Pose");
+
+                    if (_poser.selectedPose != null)
+                    {
+                        _poser.handPoseData = HandPoseCreator.Clone(_poser.selectedPose.data);
+                    }
+                    else
+                    {
+                        _poser.ResetToNeutral();
+                    }
                 }
             }
             else {
                 EditorGUILayout.HelpBox("This poser is invalid! Please generate it from an avatar.", MessageType.Error);
             }
+        }
 
-            serializedObject.ApplyModifiedProperties();
+        private void DrawCreateNewPose()
+        {
+            if (GUILayout.Button("Create New Pose"))
+            {
+                var path = EditorUtility.SaveFilePanel("Create New Pose", "Assets", "New Hand Pose", "asset");
+
+                if (string.IsNullOrWhiteSpace(path))
+                    return;
+
+                HandPose pose = CreateInstance<HandPose>();
+                pose.data = _poser.handPoseData;
+
+                AssetDatabase.CreateAsset(pose, CrystAssetManager.GetProjectRelativePath(path));
+
+                _poser.selectedPose = pose;
+                EditorUtility.SetDirty(_poser);
+            }
+        }
+
+        private void DrawSaveToPose()
+        {
+            if (GUILayout.Button("Save To Pose"))
+            {
+                bool proceed = EditorUtility.DisplayDialog("Save To Pose", "This will overwrite the current selected pose data. Proceed?", "Save", "Cancel");
+
+                if (proceed)
+                {
+                    _poser.selectedPose.data = HandPoseCreator.Clone(_poser.handPoseData);
+                    EditorUtility.SetDirty(_poser.selectedPose);
+                }
+            }
+        }
+
+        private void DrawResetToSelected()
+        {
+            if (GUILayout.Button("Reset To Selected Pose"))
+            {
+                Undo.RecordObject(_poser, "Reset Hand Pose");
+
+                _poser.handPoseData = HandPoseCreator.Clone(_poser.selectedPose.data);
+            }
+        }
+
+        private void DrawResetToNeutral()
+        {
+            if (GUILayout.Button("Reset To Neutral Pose"))
+            {
+                Undo.RecordObject(_poser, "Reset Hand Pose");
+
+                _poser.ResetToNeutral();
+            }
+        }
+
+        private void DrawClickableGrips()
+        {
+            var style = new GUIStyle(GUI.skin.label) 
+            { 
+                alignment = TextAnchor.MiddleCenter,
+            };
+
+            style.normal.textColor = Color.cyan;
+
+            var allGrips = FindObjectsOfType<Grip>();
+            foreach (var grip in allGrips)
+            {
+                if (grip == _poser.targetGrip)
+                    continue;
+
+                Handles.Label(grip.transform.position + Vector3.up * _handleSize, $"{grip.GetType().Name} {grip.name}", style);
+
+                bool pressed = Handles.Button(grip.transform.position, grip.transform.rotation, _handleSize, _handleSize / 2f, Handles.SphereHandleCap);
+
+                if (pressed)
+                {
+                    Undo.RecordObject(_poser, "Change Grip");
+                    _poser.targetGrip = grip;
+                }
+            }
         }
 
         public void OnSceneGUI() {
             if (_poser.Initiated) {
+                DrawClickableGrips();
+
                 Handles.color = new Color(255, 87, 51, 255) / 255;
 
-                for (var i = 0; i < _poser.Hand.Fingers.Length; i++)
+                if (_poser.handPoseData.fingers != null && _poser.handPoseData.fingers.Length > 0)
                 {
-                    DrawFinger(_poser.Hand.Fingers[i], ref _poser.handPoseData.fingers[i]);
+                    for (var i = 0; i < _poser.Hand.Fingers.Length; i++)
+                    {
+                        var (index, blend) = ArrayRemapper.RemapIndex(i, _poser.handPoseData.fingers.Length, _poser.Hand.Fingers.Length);
+
+                        DrawFinger(_poser.Hand.Fingers[i], ref _poser.handPoseData.fingers[index]);
+                    }
                 }
 
-                for (var i = 0; i < _poser.Hand.Thumbs
-                    .Length; i++)
+                if (_poser.handPoseData.thumbs != null && _poser.handPoseData.thumbs.Length > 0)
                 {
-                    DrawThumb(_poser.Hand.Thumbs[i], ref _poser.handPoseData.thumbs[i]);
+                    for (var i = 0; i < _poser.Hand.Thumbs.Length; i++)
+                    {
+                        var (index, blend) = ArrayRemapper.RemapIndex(i, _poser.handPoseData.thumbs.Length, _poser.Hand.Thumbs.Length);
+
+                        DrawThumb(_poser.Hand.Thumbs[i], ref _poser.handPoseData.thumbs[index]);
+                    }
                 }
+
+                DrawWrist();
 
                 _poser.Solve();
+            }
+        }
+
+        private void DrawWrist()
+        {
+            var grip = _poser.targetGrip;
+            if (grip == null)
+                return;
+
+            Handles.color = Color.green;
+
+            var grabberPoint = new AvatarGrabberPoint()
+            {
+                hand = _poser.Hand,
+            };
+            var worldTarget = grip.GetTargetInWorld(grabberPoint);
+
+            var bone = _poser.Hand.Hand;
+
+            if (_selectedBone == bone && Tools.current == Tool.None)
+            {
+                EditorGUI.BeginChangeCheck();
+                var newRotation = Handles.RotationHandle(worldTarget.rotation * _poser.handPoseData.rotationOffset.normalized, worldTarget.position);
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(_poser, "Modify Hand Pose Data");
+
+                    _poser.handPoseData.rotationOffset = Quaternion.Inverse(worldTarget.rotation) * newRotation;
+
+                    _poser.SolveGrip();
+                }
+            }
+            else
+            {
+                bool pressed = Handles.Button(worldTarget.position, worldTarget.rotation, _handleSize, _handleSize / 2f, Handles.SphereHandleCap);
+
+                if (pressed)
+                {
+                    _selectedBone = bone;
+                    Tools.current = Tool.None;
+                }
             }
         }
 

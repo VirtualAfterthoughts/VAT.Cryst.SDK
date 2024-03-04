@@ -92,6 +92,7 @@ namespace VAT.Avatars.Editor {
 
                     if (instance.TryCreateHandPoser(out var poser)) {
                         // Rename poser
+                        instance.gameObject.hideFlags = HideFlags.DontSaveInEditor;
                         instance.gameObject.name = $"{_avatar.name} Hand Poser";
                         Transform avatarTransform = instance.transform;
 

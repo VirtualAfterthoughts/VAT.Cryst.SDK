@@ -121,18 +121,6 @@ namespace VAT.Interaction
             return new GenericGripJoint();
         }
 
-        public Vector2 GetPalmPosition()
-        {
-            if (_defaultClosedPose != null)
-            {
-                return _defaultClosedPose.centerOfPressure;
-            }
-            else
-            {
-                return Vector2.up;
-            }
-        }
-
         public void OnAttachConfirm(IInteractor interactor)
         {
             if (_swapMode == GripSwapMode.SWAP)
@@ -280,31 +268,46 @@ namespace VAT.Interaction
             return GetTargetInWorld(interactor.GetGrabberPoint()).InverseTransform(SimpleTransform.Create(GetHostGameObject().transform));
         }
 
-        public abstract SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint);
-
-        public virtual SimpleTransform GetPivotInWorld(IGrabberPoint grabberPoint)
+        public SimpleTransform GetTargetInWorld(IGrabPoint point)
         {
-            return GetTargetInWorld(grabberPoint);
+            return GetTargetInWorld(point, _defaultClosedPose.data);
         }
 
-        public virtual SimpleTransform GetTargetInInteractor(IGrabberPoint grabberPoint)
+        public abstract SimpleTransform GetTargetInWorld(IGrabPoint point, HandPoseData pose);
+
+        public virtual SimpleTransform GetPivotInWorld(IGrabPoint point, HandPoseData pose)
         {
-            return grabberPoint.GetParentTransform().InverseTransform(grabberPoint.GetGrabPoint(GetPalmPosition()));
+            return GetTargetInWorld(point, pose);
         }
 
-        public virtual SimpleTransform GetPivotInInteractor(IGrabberPoint grabberPoint)
+        public SimpleTransform GetTargetInInteractor(IGrabPoint point)
         {
-            return GetTargetInInteractor(grabberPoint);
+            return GetTargetInInteractor(point, _defaultClosedPose.data);
         }
 
-        public SimpleTransform GetInteractorInTarget(IGrabberPoint grabberPoint)
+        public SimpleTransform GetTargetInInteractor(IGrabPoint point, HandPoseData pose)
         {
-            return grabberPoint.GetParentTransform().Transform(GetTargetInInteractor(grabberPoint));
+            return point.GetParentTransform().InverseTransform(point.GetGrabPoint(pose.centerOfPressure));
+        }
+
+        public virtual SimpleTransform GetPivotInInteractor(IGrabPoint point, HandPoseData pose)
+        {
+            return GetTargetInInteractor(point, pose);
         }
 
         public InteractableHost GetHostOrDefault()
         {
             return _host;
+        }
+
+        public virtual SimpleTransform GetDefaultTargetInWorld(IGrabPoint point, HandPoseData pose)
+        {
+            return GetTargetInWorld(point, pose);
+        }
+
+        public virtual SimpleTransform GetDefaultTargetInInteractor(IGrabPoint point, HandPoseData pose)
+        {
+            return GetTargetInInteractor(point, pose);
         }
     }
 }

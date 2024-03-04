@@ -100,10 +100,10 @@ namespace VAT.Packaging
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
-                string packagePath = CrystAssetManager.GetProjectRelativePath(CRYST_PACKAGES_FOLDER);
+                string packagePath = CrystAssetManager.GetCrystRelativePath(CRYST_PACKAGES_FOLDER);
                 if (AssetDatabase.IsValidFolder(packagePath))
                 {
-                    string[] folders = Directory.GetDirectories(CrystAssetManager.GetPath(CRYST_PACKAGES_FOLDER));
+                    string[] folders = Directory.GetDirectories(CrystAssetManager.GetCrystPath(CRYST_PACKAGES_FOLDER));
 
                     foreach (var folder in folders)
                     {

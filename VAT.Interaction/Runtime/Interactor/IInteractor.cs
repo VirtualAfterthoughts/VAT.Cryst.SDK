@@ -20,7 +20,7 @@ namespace VAT.Interaction
 
         InteractorTargetData GetTargetData();
 
-        IGrabberPoint GetGrabberPoint();
+        IGrabPoint GetGrabberPoint();
 
         Rigidbody GetRigidbody();
 

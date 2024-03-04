@@ -87,7 +87,7 @@ namespace VAT.Characters
         {
             _grabberPoint = new AvatarGrabberPoint
             {
-                arm = arm,
+                hand = arm.PhysArm.Hand,
                 radius = grabRadius,
             };
 
@@ -386,7 +386,7 @@ namespace VAT.Characters
             _interactorOverrides.Remove(interactorOverride);
         }
 
-        public IGrabberPoint GetGrabberPoint()
+        public IGrabPoint GetGrabberPoint()
         {
             return _grabberPoint;
         }

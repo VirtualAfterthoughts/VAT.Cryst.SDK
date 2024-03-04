@@ -11,11 +11,5 @@ namespace VAT.Input
     public class HandPose : ScriptableObject
     {
         public HandPoseData data;
-
-        public Mesh previewMesh;
-
-        public Vector2 centerOfPressure = Vector2.up;
-
-        public Quaternion rotationOffset = Quaternion.identity;
     }
 }

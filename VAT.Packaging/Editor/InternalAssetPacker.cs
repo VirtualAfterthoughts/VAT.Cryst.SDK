@@ -34,7 +34,7 @@ namespace VAT.Packaging.Editor
             InternalAddressablesManager.SetActiveSettings(!isTemporary);
 
             // Verify text asset folder
-            var path = CrystAssetManager.GetProjectRelativePath(AssetPackager.CRYST_TEXT_ASSETS_FOLDER);
+            var path = CrystAssetManager.GetCrystRelativePath(AssetPackager.CRYST_TEXT_ASSETS_FOLDER);
             if (AssetDatabase.IsValidFolder(path))
                 AssetDatabase.DeleteAsset(path);
 

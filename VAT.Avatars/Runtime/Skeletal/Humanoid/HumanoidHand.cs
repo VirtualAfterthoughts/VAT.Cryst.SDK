@@ -71,6 +71,8 @@ namespace VAT.Avatars.Skeletal
         ThumbPoseData[] _closedThumbPoses = null;
         ThumbPoseData[] _blendThumbPoses = null;
 
+        Vector2 _centerOfPressure = Vector2.up;
+
         public void WriteProportions(HandProportions proportions) {
             _proportions = proportions;
 
@@ -155,8 +157,10 @@ namespace VAT.Avatars.Skeletal
 
         public void SetOpenPose(HandPoseData data)
         {
-            data.RemapFingers(_openFingerPoses);
-            data.RemapThumbs(_openThumbPoses);
+            _centerOfPressure = data.centerOfPressure;
+
+            HandPoseRemapper.RemapFingers(data.fingers, _openFingerPoses);
+            HandPoseRemapper.RemapThumbs(data.thumbs, _openThumbPoses);
 
             for (var i = 0; i < _fingerCount; i++)
             {
@@ -171,8 +175,10 @@ namespace VAT.Avatars.Skeletal
 
         public void SetClosedPose(HandPoseData data)
         {
-            data.RemapFingers(_closedFingerPoses);
-            data.RemapThumbs(_closedThumbPoses);
+            _centerOfPressure = data.centerOfPressure;
+
+            HandPoseRemapper.RemapFingers(data.fingers, _closedFingerPoses);
+            HandPoseRemapper.RemapThumbs(data.thumbs, _closedThumbPoses);
 
             for (var i = 0; i < _fingerCount; i++)
             {
@@ -187,8 +193,8 @@ namespace VAT.Avatars.Skeletal
 
         public void SetBlendPose(HandPoseData data)
         {
-            data.RemapFingers(_blendFingerPoses);
-            data.RemapThumbs(_blendThumbPoses);
+            HandPoseRemapper.RemapFingers(data.fingers, _blendFingerPoses);
+            HandPoseRemapper.RemapThumbs(data.thumbs, _blendThumbPoses);
 
             for (var i = 0; i < _fingerCount; i++)
             {
@@ -209,9 +215,9 @@ namespace VAT.Avatars.Skeletal
             using var color = TempGizmoColor.Create();
 
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(GetPointOnPalm(Vector2.up).position, 0.005f);
+            var palmPoint = GetPointOnPalm(_centerOfPressure).position;
 
-            Gizmos.DrawSphere(Palm.position, 0.005f);
+            Gizmos.DrawSphere(palmPoint, 0.005f);
 
             using (var matrix = TempGizmoMatrix.Create()) 
             {
@@ -221,10 +227,10 @@ namespace VAT.Avatars.Skeletal
             }
 
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(Palm.position, Palm.position + Palm.forward * 0.1f);
+            Gizmos.DrawLine(palmPoint, palmPoint + Palm.forward * 0.1f);
 
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(Palm.position, Palm.position + Palm.up * 0.1f);
+            Gizmos.DrawLine(palmPoint, palmPoint + Palm.up * 0.1f);
         }
 #endif
     }

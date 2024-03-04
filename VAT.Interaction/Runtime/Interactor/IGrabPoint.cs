@@ -9,7 +9,7 @@ using VAT.Shared.Data;
 
 namespace VAT.Interaction
 {
-    public interface IGrabberPoint
+    public interface IGrabPoint
     {
         SimpleTransform GetDefaultGrabPoint();
 

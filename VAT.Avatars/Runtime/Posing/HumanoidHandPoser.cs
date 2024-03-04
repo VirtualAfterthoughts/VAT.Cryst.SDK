@@ -11,7 +11,9 @@ using VAT.Avatars.Art;
 using VAT.Avatars.Helpers;
 using VAT.Avatars.Proportions;
 using VAT.Avatars.Skeletal;
+using VAT.Characters;
 using VAT.Input;
+using VAT.Interaction;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
@@ -30,7 +32,9 @@ namespace VAT.Avatars.Posing
 
         public HandPoseData handPoseData;
 
-        public HandPose handPoseAsset;
+        public HandPose selectedPose;
+
+        public Grip targetGrip;
 
         public HumanoidHand Hand => _hand;
 
@@ -60,15 +64,49 @@ namespace VAT.Avatars.Posing
             if (_hand == null)
                 return;
 
-            _hand.Hand.Transform = descriptor.hand.Transform.Transform(offset);
             Solve();
+            SolveGrip();
+        }
+
+        public void ResetToNeutral()
+        {
+            handPoseData = new HandPoseData()
+            {
+                fingers = HandPoseCreator.CreateFingers(Hand.Fingers.Length),
+                thumbs = HandPoseCreator.CreateThumbs(Hand.Thumbs.Length),
+                centerOfPressure = Vector2.up,
+                rotationOffset = Quaternion.identity,
+            };
         }
 
         public void Solve() {
+            _hand.Hand.Transform = descriptor.hand.Transform.Transform(offset);
+
             _hand.SetOpenPose(handPoseData);
             _hand.Solve();
 
             _artHand.SolveFingers();
+        }
+
+        public void SolveGrip()
+        {
+            if (targetGrip != null)
+            {
+                AvatarGrabberPoint grabberPoint = new AvatarGrabberPoint()
+                {
+                    hand = Hand,
+                    radius = 0f,
+                };
+
+                var targetInHand = targetGrip.GetDefaultTargetInInteractor(grabberPoint, handPoseData);
+                var targetInWorld = targetGrip.GetDefaultTargetInWorld(grabberPoint, handPoseData);
+
+                transform.rotation = (targetInWorld.rotation * Quaternion.Inverse(grabberPoint.GetParentTransform().Transform(targetInHand).rotation) * transform.rotation);
+
+                Solve();
+
+                transform.position += (Vector3)(targetInWorld.position - grabberPoint.GetParentTransform().Transform(targetInHand).position);
+            }
         }
 
         public override void WriteArtOffsets()
@@ -81,6 +119,8 @@ namespace VAT.Avatars.Posing
             _artHand.WriteOffsets(_hand);
 
             _hand.NeutralPose();
+
+            ResetToNeutral();
 
 #if UNITY_EDITOR
             EditorUtility.SetDirty(this);

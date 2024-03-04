@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using VAT.Avatars;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
@@ -21,6 +22,11 @@ namespace VAT.Interaction
 
         public Transform GetTargetTransform() 
         { 
+            if (_target == null)
+            {
+                _target = transform;
+            }
+
             return _target; 
         }
 
@@ -37,16 +43,14 @@ namespace VAT.Interaction
             }
         }
 
-        public Quaternion GetAxisOffset(IGrabberPoint grabberPoint)
+        public Quaternion GetAxisOffset(IGrabPoint point, HandPoseData pose)
         {
-            var grabPoint = grabberPoint.GetDefaultGrabPoint();
-            var normal = -grabberPoint.GetGrabNormal();
+            var grabPoint = point.GetDefaultGrabPoint();
+            var normal = -point.GetGrabNormal();
 
             float dot = Vector3.Dot(grabPoint.right, normal);
 
-            var offset = Quaternion.identity;
-            if (DefaultClosedPose != null)
-                offset = DefaultClosedPose.rotationOffset;
+            var offset = pose.rotationOffset.normalized;
 
             if (dot < 0f)
                 offset = Quaternion.Inverse(offset);
@@ -54,27 +58,27 @@ namespace VAT.Interaction
             return offset;
         }
 
-        public override SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint)
+        public override SimpleTransform GetTargetInWorld(IGrabPoint point, HandPoseData pose)
         {
-            var pivot = GetPivotInWorld(grabberPoint);
-            var normalRelative = grabberPoint.GetDefaultGrabPoint().InverseTransformDirection(grabberPoint.GetGrabNormal());
+            var pivot = GetPivotInWorld(point, pose);
+            var normalRelative = point.GetDefaultGrabPoint().InverseTransformDirection(point.GetGrabNormal());
             pivot.position -= pivot.TransformDirection(normalRelative) * GetWorldRadius();
 
             return pivot;
         }
 
-        public override SimpleTransform GetPivotInWorld(IGrabberPoint grabberPoint)
+        public override SimpleTransform GetPivotInWorld(IGrabPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
 
-            var rotation = target.rotation * GetAxisOffset(grabberPoint);
+            var rotation = target.rotation * GetAxisOffset(point, pose);
 
             return SimpleTransform.Create(target.position, rotation);
         }
 
-        public override SimpleTransform GetPivotInInteractor(IGrabberPoint grabberPoint)
+        public override SimpleTransform GetPivotInInteractor(IGrabPoint point, HandPoseData pose)
         {
-            var grabPoint = base.GetPivotInInteractor(grabberPoint);
+            var grabPoint = base.GetPivotInInteractor(point, pose);
             grabPoint.position += math.down() * GetWorldRadius();
             return grabPoint;
         }
@@ -94,7 +98,7 @@ namespace VAT.Interaction
 
             Gizmos.DrawWireSphere(target.position, worldRadius);
 
-            var rotationOffset = DefaultClosedPose ? DefaultClosedPose.rotationOffset : Quaternion.identity;
+            var rotationOffset = DefaultClosedPose ? DefaultClosedPose.data.rotationOffset.normalized : Quaternion.identity;
             var offset = target.rotation * rotationOffset;
             var axis = offset * Vector3.forward;
             var secondaryAxis = offset * Vector3.up;
@@ -107,15 +111,6 @@ namespace VAT.Interaction
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(target.position, target.position + secondaryAxis * worldRadius * 2f);
             }
-
-            if (DefaultClosedPose != null && DefaultClosedPose.previewMesh != null)
-            {
-                Gizmos.color = Color.black;
-                Gizmos.DrawMesh(DefaultClosedPose.previewMesh, 0, target.position + offset * Vector3.right * GetWorldRadius(), offset);
-
-                Gizmos.color = new Color(1f, 1f, 1f, 0.005f);
-                Gizmos.DrawWireMesh(DefaultClosedPose.previewMesh, 0, target.position + offset * Vector3.right * GetWorldRadius(), offset);
-            } 
         }
     }
 }

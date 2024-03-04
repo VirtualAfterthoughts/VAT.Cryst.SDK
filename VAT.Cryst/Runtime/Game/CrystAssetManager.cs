@@ -36,11 +36,27 @@ namespace VAT.Cryst.Game
         }
 
         /// <summary>
+        /// Gets the path relative to the UnityEditor project.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string GetProjectRelativePath(string path)
+        {
+            var projectPath = GetProjectPath();
+            if (path.Length > projectPath.Length)
+            {
+                return path[projectPath.Length..];
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
         /// Gets the project relative path to a path in CrystAssets.
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        public static string GetProjectRelativePath(string path)
+        public static string GetCrystRelativePath(string path)
         {
             return Path.Combine(PROJECT_RELATIVE_FOLDER, path);
         }
@@ -50,9 +66,9 @@ namespace VAT.Cryst.Game
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        public static string GetPath(string path)
+        public static string GetCrystPath(string path)
         {
-            return Path.GetFullPath(Path.Combine(GetProjectPath(), GetProjectRelativePath(path)));
+            return Path.GetFullPath(Path.Combine(GetProjectPath(), GetCrystRelativePath(path)));
         }
 
         [InitializeOnLoadMethod]

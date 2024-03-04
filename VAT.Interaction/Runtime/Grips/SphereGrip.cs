@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VAT.Avatars;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
@@ -25,13 +26,23 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint)
+        public override SimpleTransform GetTargetInWorld(IGrabPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
-            var grabPoint = grabberPoint.GetDefaultGrabPoint();
+            var grabPoint = point.GetParentTransform().Transform(GetTargetInInteractor(point, pose));
             var direction = ((Vector3)grabPoint.position - target.position).normalized;
 
-            var grabRotation = Quaternion.FromToRotation(-grabberPoint.GetGrabNormal(), direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(-point.GetGrabNormal(), direction) * grabPoint.rotation;
+
+            return SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
+        }
+
+        public override SimpleTransform GetDefaultTargetInWorld(IGrabPoint point, HandPoseData pose)
+        {
+            var target = GetTargetTransform();
+            var direction = target.right;
+
+            var grabRotation = target.rotation;
 
             return SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
         }

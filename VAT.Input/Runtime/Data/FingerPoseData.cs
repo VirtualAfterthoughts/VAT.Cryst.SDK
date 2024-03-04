@@ -12,9 +12,12 @@ namespace VAT.Avatars
         [Range(-1f, 1f)]
         public float splay;
 
+        [Range(0f, 1f)]
+        public float pressure;
+
         public PhalanxPoseData[] phalanges;
 
-        public readonly float GetCurl()
+        public float GetCurl()
         {
             if (phalanges.Length <= 0)
                 return 0f;

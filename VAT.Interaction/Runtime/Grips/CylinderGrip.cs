@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Avatars;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
@@ -14,6 +14,13 @@ namespace VAT.Interaction
         [SerializeField]
         [Min(0f)]
         private float _height = 2f;
+
+#if UNITY_EDITOR
+        [Header("Visualizer")]
+        [SerializeField]
+        [Range(-1f, 1f)]
+        private float _visualizerSlide = 0f;
+#endif
 
         public override float GetWorldRadius()
         {
@@ -44,10 +51,10 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint)
+        public override SimpleTransform GetTargetInWorld(IGrabPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
-            var grabPoint = grabberPoint.GetDefaultGrabPoint();
+            var grabPoint = point.GetDefaultGrabPoint();
 
             var distance = ((Vector3)grabPoint.position - target.position);
             var relativeDistance = target.InverseTransformDirection(distance);
@@ -59,12 +66,31 @@ namespace VAT.Interaction
             fixedDirection.y = 0f;
             var direction = target.TransformDirection(fixedDirection.normalized);
 
-            var grabRotation = Quaternion.FromToRotation(-grabberPoint.GetGrabNormal(), direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(-point.GetGrabNormal(), direction) * grabPoint.rotation;
             Vector3 grabUp = grabRotation * Vector3.up;
             Vector3 targetUp = target.up * Mathf.Sign(Vector3.Dot(target.up, grabUp));
             grabRotation = Quaternion.FromToRotation(grabUp, targetUp) * grabRotation;
 
             return SimpleTransform.Create(target.position + target.up * upOffset + direction * GetWorldRadius(), grabRotation);
+        }
+
+        public override SimpleTransform GetDefaultTargetInWorld(IGrabPoint point, HandPoseData pose)
+        {
+            var target = GetTargetTransform();
+
+            var direction = target.right;
+
+            var grabRotation = target.rotation;
+            var grabPosition = target.position;
+
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                grabPosition += _visualizerSlide * GetWorldHeight() * 0.5f * target.up;
+            }
+#endif
+
+            return SimpleTransform.Create(grabPosition + direction * GetWorldRadius(), grabRotation);
         }
     }
 }

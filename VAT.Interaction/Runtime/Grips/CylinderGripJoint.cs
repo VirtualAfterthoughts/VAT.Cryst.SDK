@@ -60,7 +60,7 @@ namespace VAT.Interaction
 
             _joint = joint;
 
-            grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetPivotInInteractor(grabberPoint));
+            grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetPivotInInteractor(grabberPoint, grip.GetClosedPose(interactor).data));
 
             joint.SetWorldAnchor((Vector3)grabPoint.position);
             joint.SetWorldConnectedAnchor(_center.position);

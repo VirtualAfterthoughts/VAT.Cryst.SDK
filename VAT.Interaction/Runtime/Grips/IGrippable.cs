@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars;
-
+using VAT.Input;
 using VAT.Shared.Data;
 
 namespace VAT.Interaction
 {
-    public interface IGrippable : IInteractable
+    public interface IGrippable : IInteractable, IGrabTarget
     {
         void OnAttachConfirm(IInteractor interactor);
 
@@ -22,9 +22,5 @@ namespace VAT.Interaction
         (bool valid, HandPoseData data) GetOpenPose(IInteractor interactor);
 
         (bool valid, HandPoseData data) GetClosedPose(IInteractor interactor);
-
-        SimpleTransform GetTargetInWorld(IGrabberPoint grabberPoint);
-
-        SimpleTransform GetTargetInInteractor(IGrabberPoint grabberPoint);
     }
 }

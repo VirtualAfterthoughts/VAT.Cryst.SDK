@@ -5,14 +5,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars.Integumentary;
+using VAT.Avatars.REWORK;
 using VAT.Interaction;
 using VAT.Shared.Data;
 
 namespace VAT.Characters
 {
-    public class AvatarGrabberPoint : IGrabberPoint
+    public class AvatarGrabberPoint : IGrabPoint
     {
-        public AvatarArm arm;
+        public IHandGroup hand;
         public float radius;
 
         public SimpleTransform GetDefaultGrabPoint()
@@ -29,17 +30,17 @@ namespace VAT.Characters
 
         public Vector3 GetGrabNormal()
         {
-            return -arm.PhysArm.Hand.Hand.Transform.up;
+            return -hand.Hand.Transform.up;
         }
 
         public SimpleTransform GetGrabPoint(Vector2 position)
         {
-            return arm.PhysArm.Hand.GetPointOnPalm(position);
+            return hand.GetPointOnPalm(position);
         }
 
         public SimpleTransform GetParentTransform()
         {
-            return arm.PhysArm.Hand.Hand.Transform;
+            return hand.Hand.Transform;
         }
     }
 }

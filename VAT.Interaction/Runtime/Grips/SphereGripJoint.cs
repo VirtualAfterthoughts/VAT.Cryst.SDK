@@ -29,7 +29,7 @@ namespace VAT.Interaction
             var rb = interactor.GetRigidbody();
 
             var grabberPoint = interactor.GetGrabberPoint();
-            var grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetPivotInInteractor(grabberPoint));
+            var grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetPivotInInteractor(grabberPoint, grip.GetClosedPose(interactor).data));
 
             // Match grab rotation, so that the joint initializes with proper target
             // Since we can't set anchorRotation in Unity

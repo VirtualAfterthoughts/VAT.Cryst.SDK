@@ -9,6 +9,41 @@ namespace VAT.Avatars
 {
     public static class HandPoseCreator
     {
+        public static HandPoseData Clone(HandPoseData pose)
+        {
+            FingerPoseData[] fingers = new FingerPoseData[pose.fingers.Length];
+            for (var i = 0; i < fingers.Length; i++)
+            {
+                fingers[i].splay = pose.fingers[i].splay;
+                fingers[i].pressure = pose.fingers[i].pressure;
+
+                fingers[i].phalanges = new PhalanxPoseData[pose.fingers[i].phalanges.Length];
+                pose.fingers[i].phalanges.CopyTo(fingers[i].phalanges, 0);
+            }
+
+            ThumbPoseData[] thumbs = new ThumbPoseData[pose.thumbs.Length];
+            for (var i = 0; i < thumbs.Length; i++)
+            {
+                thumbs[i].spread = pose.thumbs[i].spread;
+                thumbs[i].stretched = pose.thumbs[i].stretched;
+                thumbs[i].twist = pose.thumbs[i].twist;
+                thumbs[i].pressure = pose.thumbs[i].pressure;
+
+                thumbs[i].phalanges = new PhalanxPoseData[pose.thumbs[i].phalanges.Length];
+                pose.thumbs[i].phalanges.CopyTo(thumbs[i].phalanges, 0);
+            }
+
+            HandPoseData result = new HandPoseData()
+            {
+                fingers = fingers,
+                thumbs = thumbs,
+                centerOfPressure = pose.centerOfPressure,
+                rotationOffset = pose.rotationOffset,
+            };
+
+            return result;
+        }
+
         public static HandPoseData Lerp(HandPoseData a, HandPoseData b, float t)
         {
             HandPoseData data = new()
@@ -17,8 +52,8 @@ namespace VAT.Avatars
                 thumbs = CreateThumbs(b.thumbs.Length)
             };
 
-            a.RemapFingers(data.fingers);
-            a.RemapThumbs(data.thumbs);
+            HandPoseRemapper.RemapFingers(a.fingers, data.fingers);
+            HandPoseRemapper.RemapThumbs(a.thumbs, data.thumbs);
 
             for (var i = 0; i < data.fingers.Length; i++)
             {
@@ -99,76 +134,8 @@ namespace VAT.Avatars
 
         public FingerPoseData[] fingers;
 
-        public readonly void RemapFingers(FingerPoseData[] data)
-        {
-            int originalLength = fingers != null ? fingers.Length : 0;
-            int remapLength = data.Length;
+        public Vector2 centerOfPressure;
 
-            bool hasValidFingers = originalLength > 0 && remapLength > 0;
-            if (!hasValidFingers)
-            {
-                return;
-            }
-
-            for (var i = 0; i < remapLength; i++)
-            {
-                var (previous, next, blend) = ArrayRemapper.RemapElements(i, fingers, data);
-
-                data[i].splay = Mathf.Lerp(previous.splay, next.splay, blend);
-
-                RemapPhalanges(data[i].phalanges, previous.phalanges, next.phalanges, blend);
-            }
-        }
-
-        private readonly void RemapPhalanges(PhalanxPoseData[] data, PhalanxPoseData[] original, PhalanxPoseData[] next, float blend)
-        {
-            int originalLength = original.Length;
-            int nextLength = next.Length;
-            int remapLength = data.Length;
-
-            bool hasValidPhalanges = originalLength > 0 && nextLength > 0 && remapLength > 0;
-            if (!hasValidPhalanges)
-            {
-                return;
-            }
-
-            for (var i = 0; i < remapLength; i++)
-            {
-                // Original
-                var (previousOriginal, nextOriginal, blendOriginal) = ArrayRemapper.RemapElements(i, original, data);
-
-                // Next
-                var (previousNext, nextNext, blendNext) = ArrayRemapper.RemapElements(i, next, data);
-
-                // Calculate curl
-                float first = Mathf.Lerp(previousOriginal.curl, nextOriginal.curl, blendOriginal);
-                float second = Mathf.Lerp(previousNext.curl, nextNext.curl, blendNext);
-
-                data[i].curl = Mathf.Lerp(first, second, blend);
-            }
-        }
-
-        public readonly void RemapThumbs(ThumbPoseData[] data)
-        {
-            int originalLength = thumbs != null ? thumbs.Length : 0;
-            int remapLength = data.Length;
-
-            bool hasValidThumbs = originalLength > 0 && remapLength > 0;
-            if (!hasValidThumbs)
-            {
-                return;
-            }
-
-            for (var i = 0; i < data.Length; i++)
-            {
-                var (previous, next, blend) = ArrayRemapper.RemapElements(i, thumbs, data);
-
-                data[i].stretched = Mathf.Lerp(previous.stretched, next.stretched, blend);
-                data[i].spread = Mathf.Lerp(previous.spread, next.spread, blend);
-                data[i].twist = Mathf.Lerp(previous.twist, next.twist, blend);
-
-                RemapPhalanges(data[i].phalanges, previous.phalanges, next.phalanges, blend);
-            }
-        }
+        public Quaternion rotationOffset;
     }
 }
