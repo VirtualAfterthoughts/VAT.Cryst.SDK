@@ -284,10 +284,34 @@ namespace VAT.Interaction
         {
             return GetTargetInInteractor(point, _defaultClosedPose.data);
         }
+        private Quaternion GetAxisOffset(IGrabPoint point, HandPoseData pose)
+        {
+            var grabPoint = point.GetDefaultGrabPoint();
+            var normal = -point.GetGrabNormal();
+
+            float dot = Vector3.Dot(grabPoint.right, normal);
+
+            var offset = pose.rotationOffset.normalized;
+
+            if (dot > 0f)
+            {
+                offset.ToAngleAxis(out var angle, out var axis);
+                axis.z = -axis.z;
+
+                offset = Quaternion.AngleAxis(angle, axis);
+            }
+
+            return offset;
+        }
 
         public SimpleTransform GetTargetInInteractor(IGrabPoint point, HandPoseData pose)
         {
-            return point.GetParentTransform().InverseTransform(point.GetGrabPoint(pose.centerOfPressure));
+            var offset = GetAxisOffset(point, pose);
+
+            var local = point.GetParentTransform().InverseTransform(point.GetGrabPoint(pose.centerOfPressure));
+
+            local.rotation *= offset;
+            return local;
         }
 
         public virtual SimpleTransform GetPivotInInteractor(IGrabPoint point, HandPoseData pose)

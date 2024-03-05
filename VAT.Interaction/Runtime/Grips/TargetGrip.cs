@@ -43,21 +43,6 @@ namespace VAT.Interaction
             }
         }
 
-        public Quaternion GetAxisOffset(IGrabPoint point, HandPoseData pose)
-        {
-            var grabPoint = point.GetDefaultGrabPoint();
-            var normal = -point.GetGrabNormal();
-
-            float dot = Vector3.Dot(grabPoint.right, normal);
-
-            var offset = pose.rotationOffset.normalized;
-
-            if (dot < 0f)
-                offset = Quaternion.Inverse(offset);
-
-            return offset;
-        }
-
         public override SimpleTransform GetTargetInWorld(IGrabPoint point, HandPoseData pose)
         {
             var pivot = GetPivotInWorld(point, pose);
@@ -71,7 +56,7 @@ namespace VAT.Interaction
         {
             var target = GetTargetTransform();
 
-            var rotation = target.rotation * GetAxisOffset(point, pose);
+            var rotation = target.rotation;
 
             return SimpleTransform.Create(target.position, rotation);
         }

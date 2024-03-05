@@ -232,20 +232,31 @@ namespace VAT.Avatars.Editor
             {
                 hand = _poser.Hand,
             };
-            var worldTarget = grip.GetTargetInWorld(grabberPoint);
+            var worldTarget = grip.GetDefaultTargetInWorld(grabberPoint, _poser.handPoseData);
 
             var bone = _poser.Hand.Hand;
 
             if (_selectedBone == bone && Tools.current == Tool.None)
             {
                 EditorGUI.BeginChangeCheck();
-                var newRotation = Handles.RotationHandle(worldTarget.rotation * _poser.handPoseData.rotationOffset.normalized, worldTarget.position);
+
+                var rotationOffset = _poser.handPoseData.rotationOffset.normalized;
+                rotationOffset.ToAngleAxis(out var angle, out var axis);
+                axis.x = -axis.x;
+                axis.y = -axis.y;
+                rotationOffset = Quaternion.AngleAxis(angle, axis);
+
+                var newRotation = Handles.RotationHandle(worldTarget.rotation * rotationOffset, worldTarget.position);
 
                 if (EditorGUI.EndChangeCheck())
                 {
                     Undo.RecordObject(_poser, "Modify Hand Pose Data");
 
-                    _poser.handPoseData.rotationOffset = Quaternion.Inverse(worldTarget.rotation) * newRotation;
+                    var newOffset = Quaternion.Inverse(worldTarget.rotation) * newRotation;
+                    newOffset.ToAngleAxis(out var newAngle, out var newAxis);
+                    newAxis.x = -newAxis.x;
+                    newAxis.y = -newAxis.y;
+                    _poser.handPoseData.rotationOffset = Quaternion.AngleAxis(newAngle, newAxis);
 
                     _poser.SolveGrip();
                 }
