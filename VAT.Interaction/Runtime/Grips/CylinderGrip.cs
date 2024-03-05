@@ -83,6 +83,13 @@ namespace VAT.Interaction
             var grabRotation = target.rotation;
             var grabPosition = target.position;
 
+            var grabPoint = point.GetDefaultGrabPoint();
+            var normal = -point.GetGrabNormal();
+
+            float dot = Vector3.Dot(grabPoint.right, normal);
+
+            direction *= dot;
+
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {

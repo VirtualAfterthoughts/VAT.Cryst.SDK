@@ -42,6 +42,13 @@ namespace VAT.Interaction
             var target = GetTargetTransform();
             var direction = target.right;
 
+            var grabPoint = point.GetDefaultGrabPoint();
+            var normal = -point.GetGrabNormal();
+
+            float dot = Vector3.Dot(grabPoint.right, normal);
+
+            direction *= dot;
+
             var grabRotation = target.rotation;
 
             return SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);

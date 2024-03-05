@@ -297,6 +297,7 @@ namespace VAT.Interaction
             {
                 offset.ToAngleAxis(out var angle, out var axis);
                 axis.z = -axis.z;
+                axis.y = -axis.y;
 
                 offset = Quaternion.AngleAxis(angle, axis);
             }

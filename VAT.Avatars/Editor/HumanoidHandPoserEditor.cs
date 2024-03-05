@@ -236,14 +236,27 @@ namespace VAT.Avatars.Editor
 
             var bone = _poser.Hand.Hand;
 
+            var grabPoint = grabberPoint.GetDefaultGrabPoint();
+            var normal = -grabberPoint.GetGrabNormal();
+
+            float dot = Vector3.Dot(grabPoint.right, normal);
+
             if (_selectedBone == bone && Tools.current == Tool.None)
             {
                 EditorGUI.BeginChangeCheck();
 
                 var rotationOffset = _poser.handPoseData.rotationOffset.normalized;
                 rotationOffset.ToAngleAxis(out var angle, out var axis);
-                axis.x = -axis.x;
-                axis.y = -axis.y;
+
+                if (dot > 0)
+                {
+                    axis.x = -axis.x;
+                }
+                else
+                {
+                    axis = -axis;
+                }
+
                 rotationOffset = Quaternion.AngleAxis(angle, axis);
 
                 var newRotation = Handles.RotationHandle(worldTarget.rotation * rotationOffset, worldTarget.position);
@@ -254,8 +267,16 @@ namespace VAT.Avatars.Editor
 
                     var newOffset = Quaternion.Inverse(worldTarget.rotation) * newRotation;
                     newOffset.ToAngleAxis(out var newAngle, out var newAxis);
-                    newAxis.x = -newAxis.x;
-                    newAxis.y = -newAxis.y;
+
+                    if (dot > 0)
+                    {
+                        newAxis.x = -newAxis.x;
+                    }
+                    else
+                    {
+                        newAxis = -newAxis;
+                    }
+
                     _poser.handPoseData.rotationOffset = Quaternion.AngleAxis(newAngle, newAxis);
 
                     _poser.SolveGrip();
