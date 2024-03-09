@@ -64,7 +64,7 @@ namespace VAT.Avatars.Integumentary
             float headDistance = Mathf.Abs(eyeCenter.z - headPosition.z);
             float skullLength = headDistance * 0.8f;
 
-            float skullRadiusX = skullLength * 0.767880649f;
+            float skullRadiusX = skullLength * 0.8f;
             float skullRadiusY = skullLength * 0.97f;
 
             proportions.neckProportions.topEllipse.radius.y = skullRadiusY * 0.441096722f;
@@ -75,6 +75,7 @@ namespace VAT.Avatars.Integumentary
 
             proportions.neckProportions.skullEllipsoid.radius.y = skullRadiusY;
             proportions.neckProportions.skullEllipsoid.radius.x = skullRadiusX;
+            proportions.neckProportions.skullZOffset = -skullRadiusX;
             proportions.neckProportions.skullEllipsoid.height = skullLength * 2.32587718f;
 
             proportions.neckProportions.skullYOffset = Mathf.Abs(eyeCenter.y - headPosition.y) * -0.174878525f;
@@ -222,6 +223,7 @@ namespace VAT.Avatars.Integumentary
 
             proportions.rightArmProportions = proportions.leftArmProportions;
 
+            EditorCalculateNeck();
             EditorCalculateSpine();
             EditorCalculateArms();
             EditorCalculateLegs();
@@ -247,6 +249,23 @@ namespace VAT.Avatars.Integumentary
             HumanoidHelper.CalculateLeg(ref proportions.rightLegProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.RightLeg, artDescriptor.rightLegDescriptor, transform); ;
         }
 
+        public void EditorCalculateNeck()
+        {
+            float3? eyeCenterRaw = EditorGetEyeCenter();
+            if (!eyeCenterRaw.HasValue)
+            {
+                Debug.LogWarning($"Avatar {name} is missing an eye center! Please add an Eye Center Override before calculating proportions!", this);
+                return;
+            }
+
+            float3 eyeCenter = eyeCenterRaw.Value;
+
+            EditorRefreshAvatar();
+            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenter;
+
+            HumanoidHelper.CalculateNeck(ref proportions.neckProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton, artDescriptor);
+        }
+
         public void EditorCalculateSpine() {
             float3? eyeCenterRaw = EditorGetEyeCenter();
             if (!eyeCenterRaw.HasValue)
@@ -260,7 +279,7 @@ namespace VAT.Avatars.Integumentary
             EditorRefreshAvatar();
             GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenter;
 
-            HumanoidHelper.CalculateSpine(ref proportions.spineProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Spine, artDescriptor.spineDescriptor);
+            HumanoidHelper.CalculateSpine(ref proportions.spineProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton, artDescriptor);
         }
 
         public void EditorCalculateArms() {

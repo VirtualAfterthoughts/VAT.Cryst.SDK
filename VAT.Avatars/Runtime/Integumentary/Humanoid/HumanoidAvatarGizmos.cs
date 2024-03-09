@@ -131,6 +131,7 @@ namespace VAT.Avatars.Integumentary
             Gizmos.DrawWireMesh(physArm.GenerateUpperArmMesh(proportions), arm.UpperArm.position, arm.UpperArm.rotation);
             Gizmos.DrawWireMesh(physArm.GenerateElbowMesh(proportions), arm.Elbow.position, arm.Elbow.rotation);
             Gizmos.DrawWireMesh(physArm.GenerateHandMesh(proportions), arm.Hand.Hand.position, arm.Hand.Hand.rotation);
+            Gizmos.DrawWireMesh(physArm.GenerateKnuckleMesh(proportions), arm.Hand.Hand.position + arm.Hand.Hand.forward * proportions.handProportions.wristEllipsoid.height, arm.Hand.Hand.rotation);
 
         }
 

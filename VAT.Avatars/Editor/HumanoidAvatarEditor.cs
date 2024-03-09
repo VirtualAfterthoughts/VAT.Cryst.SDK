@@ -226,6 +226,7 @@ namespace VAT.Avatars.Editor {
             }
 
             // Always match avatar bones
+            _avatar.EditorCalculateNeck();
             _avatar.EditorCalculateSpine();
             _avatar.EditorCalculateArms();
             _avatar.EditorCalculateLegs();
@@ -244,6 +245,7 @@ namespace VAT.Avatars.Editor {
                 Undo.RecordObject(_avatar, "Adjust Skull Offset");
 
                 _avatar.proportions.neckProportions.skullYOffset += skullOffset.y;
+                _avatar.proportions.neckProportions.skullZOffset += skullOffset.z;
                 _avatar.EditorRefreshAvatar();
             }
 
@@ -252,6 +254,7 @@ namespace VAT.Avatars.Editor {
                 Undo.RecordObject(_avatar, "Adjust Upper Neck Offset");
 
                 _avatar.proportions.neckProportions.upperNeckOffsetZ -= upperNeckOffset.z;
+                _avatar.proportions.neckProportions.lowerNeckOffsetZ += upperNeckOffset.z;
                 _avatar.EditorRefreshAvatar();
             }
 
@@ -260,6 +263,7 @@ namespace VAT.Avatars.Editor {
                 Undo.RecordObject(_avatar, "Adjust Lower Neck Offset");
 
                 _avatar.proportions.neckProportions.lowerNeckOffsetZ -= lowerNeckOffset.z;
+                _avatar.proportions.spineProportions.upperChestOffsetZ += lowerNeckOffset.z;
                 _avatar.EditorRefreshAvatar();
             }
 
@@ -292,6 +296,7 @@ namespace VAT.Avatars.Editor {
                 Undo.RecordObject(_avatar, "Adjust Upper Chest Offset");
 
                 _avatar.proportions.spineProportions.upperChestOffsetZ += upperChestOffset.z;
+                _avatar.proportions.spineProportions.chestOffsetZ -= upperChestOffset.z;
                 _avatar.EditorRefreshAvatar();
             }
 
@@ -300,6 +305,7 @@ namespace VAT.Avatars.Editor {
                 Undo.RecordObject(_avatar, "Adjust Chest Offset");
 
                 _avatar.proportions.spineProportions.chestOffsetZ += chestOffset.z;
+                _avatar.proportions.spineProportions.spineOffsetZ -= chestOffset.z;
                 _avatar.EditorRefreshAvatar();
             }
 
@@ -308,6 +314,7 @@ namespace VAT.Avatars.Editor {
                 Undo.RecordObject(_avatar, "Adjust Spine Offset");
 
                 _avatar.proportions.spineProportions.spineOffsetZ += spineOffset.z;
+                _avatar.proportions.spineProportions.pelvisOffsetZ -= spineOffset.z;
                 _avatar.EditorRefreshAvatar();
             }
 
@@ -398,6 +405,10 @@ namespace VAT.Avatars.Editor {
             var elbowTransform = arm.Elbow.Transform;
             elbowTransform.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Elbow.forward);
             DrawAvatarEllipsoidSymmetry(ref proportions.elbowEllipsoid, ref otherProportions.elbowEllipsoid, _avatar, elbowTransform, -1f, "Elbow");
+
+            var wristTransfrom = arm.Wrist.Transform;
+            wristTransfrom.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Wrist.forward);
+            DrawAvatarEllipsoidSymmetry(ref proportions.handProportions.wristEllipsoid, ref otherProportions.handProportions.wristEllipsoid, _avatar, wristTransfrom, -1f, "Wrist");
         }
 
         private bool DrawOffset(float3 position, out float3 offset) {

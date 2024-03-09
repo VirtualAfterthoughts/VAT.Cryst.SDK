@@ -33,14 +33,32 @@ namespace VAT.Avatars.Helpers
             proportions.ankleEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(root.position - (Vector3)leg.Ankle.position, leg.Ankle.forward), leg.Ankle.up);
         }
 
-        public static void CalculateSpine(ref HumanoidSpineProportions proportions, HumanoidSpine spine, HumanoidSpineDescriptor descriptor) {
-            if (descriptor.chest.HasTransform) {
-                var chestOffset = (Vector3)spine.T1Vertebra.position - descriptor.chest.transform.position;
+        public static void CalculateNeck(ref HumanoidNeckProportions proportions, HumanoidDataSkeleton skeleton, HumanoidArtDescriptor descriptor)
+        {
+            if (descriptor.leftArmDescriptor.hand.hand.HasTransform)
+            {
+                var upperArmOffset = (Vector3)skeleton.LeftArm.Hand.Hand.position - descriptor.leftArmDescriptor.hand.hand.transform.position;
+                proportions.lowerNeckEllipsoid.height += Vector3.Dot(Vector3.ProjectOnPlane(upperArmOffset, skeleton.Neck.Skull.forward), skeleton.Neck.Skull.up);
+            }
+        }
+
+        public static void CalculateSpine(ref HumanoidSpineProportions proportions, HumanoidDataSkeleton skeleton, HumanoidArtDescriptor descriptor) {
+            var spineDescriptor = descriptor.spineDescriptor;
+            var spine = skeleton.Spine;
+
+            if (spineDescriptor.chest.HasTransform) {
+                var chestOffset = (Vector3)spine.T1Vertebra.position - spineDescriptor.chest.transform.position;
                 proportions.upperChestEllipsoid.height = Vector3.Dot(Vector3.ProjectOnPlane(chestOffset, spine.T1Vertebra.forward), spine.T1Vertebra.up);
             }
 
-            if (descriptor.hips.HasTransform) {
-                var hipsOffset = (Vector3)spine.L1Vertebra.position - descriptor.hips.transform.position;
+            if (descriptor.leftArmDescriptor.hand.hand.HasTransform)
+            {
+                var handOffset = (Vector3)skeleton.LeftArm.Wrist.position - descriptor.leftArmDescriptor.hand.hand.transform.position;
+                proportions.upperChestOffsetZ -= Vector3.Dot(Vector3.ProjectOnPlane(handOffset, spine.T1Vertebra.up), spine.T1Vertebra.forward);
+            }
+
+            if (spineDescriptor.hips.HasTransform) {
+                var hipsOffset = (Vector3)spine.L1Vertebra.position - spineDescriptor.hips.transform.position;
                 proportions.spineEllipsoid.height = Vector3.Dot(Vector3.ProjectOnPlane(hipsOffset, spine.L1Vertebra.forward), spine.L1Vertebra.up);
             }
         }

@@ -58,7 +58,7 @@ namespace VAT.Avatars.Skeletal
             Ellipsoid skull = _neckProportions.skullEllipsoid;
             Ellipsoid c1 = _neckProportions.upperNeckEllipsoid;
 
-            Skull.localPosition = new(0f, _neckProportions.skullYOffset, -skull.radius.y);
+            Skull.localPosition = new(0f, _neckProportions.skullYOffset, _neckProportions.skullZOffset);
             C1Vertebra.localPosition = new(0f, -skull.height * 0.4f, -_neckProportions.upperNeckOffsetZ);
             C4Vertebra.localPosition = new(0f, -c1.height, -_neckProportions.lowerNeckOffsetZ);
         }

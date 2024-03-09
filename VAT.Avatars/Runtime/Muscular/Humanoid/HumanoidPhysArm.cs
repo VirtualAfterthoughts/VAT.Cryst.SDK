@@ -218,5 +218,26 @@ namespace VAT.Avatars.Muscular
             // Create mesh
             return cylinder.CreateDescriptor().CreateMesh();
         }
+
+        public Mesh GenerateKnuckleMesh(HumanoidArmProportions proportions)
+        {
+            // Convert ellipsoids to ellipses
+            var knuckle = proportions.handProportions.knuckleEllipsoid.Convert<Ellipse>();
+
+            // Create knuckle -> finger top
+            quaternion rotation = Quaternion.AngleAxis(90f, right());
+
+            EllipseCylinderMesh cylinder = new()
+            {
+                bottom = knuckle,
+                bottomTransform = SimpleTransform.Create(float3.zero, rotation),
+
+                top = knuckle,
+                topTransform = SimpleTransform.Create(forward() * proportions.handProportions.knuckleEllipsoid.height, rotation),
+            };
+
+            // Create mesh
+            return cylinder.CreateDescriptor().CreateMesh();
+        }
     }
 }

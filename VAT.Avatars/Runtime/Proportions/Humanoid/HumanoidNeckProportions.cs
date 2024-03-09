@@ -16,6 +16,7 @@ namespace VAT.Avatars.Proportions
 
         public Ellipsoid skullEllipsoid;
         public float skullYOffset;
+        public float skullZOffset;
 
         public Ellipse jawEllipse;
 
