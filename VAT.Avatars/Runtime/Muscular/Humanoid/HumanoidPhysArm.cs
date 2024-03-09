@@ -116,7 +116,7 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateClavicleMesh(HumanoidArmProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var clavicle = proportions.clavicleEllipsoid.AsInterface().Convert<Ellipse>();
+            var clavicle = proportions.clavicleEllipsoid.Convert<Ellipse>();
 
             // Create clavicle top to bottom
             float3 offset = right() * (isLeft ? -1f : 1f) * clavicle.radius.x;
@@ -137,7 +137,7 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateShoulderBladeMesh(HumanoidArmProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var scapula = proportions.shoulderBladeEllipsoid.AsInterface().Convert<Ellipse>();
+            var scapula = proportions.shoulderBladeEllipsoid.Convert<Ellipse>();
 
             // Create shoulder blade top to bottom
             EllipseCylinderMesh cylinder = new EllipseCylinderMesh()
@@ -156,8 +156,8 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateUpperArmMesh(HumanoidArmProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var upperArm = proportions.upperArmEllipsoid.AsInterface().Convert<Ellipse>();
-            var elbow = proportions.elbowEllipsoid.AsInterface().Convert<Ellipse>();
+            var upperArm = proportions.upperArmEllipsoid.Convert<Ellipse>();
+            var elbow = proportions.elbowEllipsoid.Convert<Ellipse>();
 
             // Create upperArm -> elbow
             quaternion rotation = Quaternion.AngleAxis(90f, right());
@@ -178,8 +178,8 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateElbowMesh(HumanoidArmProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var elbow = proportions.elbowEllipsoid.AsInterface().Convert<Ellipse>();
-            var wrist = proportions.handProportions.wristEllipsoid.AsInterface().Convert<Ellipse>();
+            var elbow = proportions.elbowEllipsoid.Convert<Ellipse>();
+            var wrist = proportions.handProportions.wristEllipsoid.Convert<Ellipse>();
 
             // Create elbow -> wrist
             quaternion rotation = Quaternion.AngleAxis(90f, right());
@@ -200,8 +200,8 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateHandMesh(HumanoidArmProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var wrist = proportions.handProportions.wristEllipsoid.AsInterface().Convert<Ellipse>();
-            var knuckle = proportions.handProportions.knuckleEllipsoid.AsInterface().Convert<Ellipse>();
+            var wrist = proportions.handProportions.wristEllipsoid.Convert<Ellipse>();
+            var knuckle = proportions.handProportions.knuckleEllipsoid.Convert<Ellipse>();
 
             // Create wrist -> knuckle
             quaternion rotation = Quaternion.AngleAxis(90f, right());

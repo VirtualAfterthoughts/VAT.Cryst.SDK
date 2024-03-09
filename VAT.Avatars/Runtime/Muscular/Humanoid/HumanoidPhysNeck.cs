@@ -90,7 +90,7 @@ namespace VAT.Avatars.Muscular
 
         public Mesh GenerateSkullMesh(HumanoidNeckProportions proportions) {
             // Convert ellipsoids to ellipses
-            var skull = proportions.skullEllipsoid.AsInterface().Convert<Ellipse>();
+            var skull = proportions.skullEllipsoid.Convert<Ellipse>();
 
             // Create forehead -> top of head
             EllipseCylinderMesh top = new()
@@ -128,8 +128,8 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateUpperNeckMesh(HumanoidNeckProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var upperNeck = proportions.upperNeckEllipsoid.AsInterface().Convert<Ellipse>();
-            var lowerNeck = proportions.lowerNeckEllipsoid.AsInterface().Convert<Ellipse>();
+            var upperNeck = proportions.upperNeckEllipsoid.Convert<Ellipse>();
+            var lowerNeck = proportions.lowerNeckEllipsoid.Convert<Ellipse>();
 
             // Create larger upper neck -> upper neck
             EllipseCylinderMesh jawToNeck = new()
@@ -158,7 +158,7 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateLowerNeckMesh(HumanoidNeckProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var lowerNeck = proportions.lowerNeckEllipsoid.AsInterface().Convert<Ellipse>();
+            var lowerNeck = proportions.lowerNeckEllipsoid.Convert<Ellipse>();
 
             // Create upper neck -> lower neck
             EllipseCylinderMesh upperToLower = new()

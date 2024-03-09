@@ -101,8 +101,8 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateHipMesh(HumanoidLegProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var hip = proportions.hipEllipsoid.AsInterface().Convert<Ellipse>();
-            var knee = proportions.kneeEllipsoid.AsInterface().Convert<Ellipse>();
+            var hip = proportions.hipEllipsoid.Convert<Ellipse>();
+            var knee = proportions.kneeEllipsoid.Convert<Ellipse>();
 
             // Create hip -> knee
             EllipseCylinderMesh cylinder = new()
@@ -121,8 +121,8 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateKneeMesh(HumanoidLegProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var knee = proportions.kneeEllipsoid.AsInterface().Convert<Ellipse>();
-            var ankle = proportions.ankleEllipsoid.AsInterface().Convert<Ellipse>();
+            var knee = proportions.kneeEllipsoid.Convert<Ellipse>();
+            var ankle = proportions.ankleEllipsoid.Convert<Ellipse>();
 
             // Create knee -> ankle
             EllipseCylinderMesh cylinder = new()
@@ -141,8 +141,8 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateAnkleMesh(HumanoidLegProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var ankle = proportions.ankleEllipsoid.AsInterface().Convert<Ellipse>();
-            var toe = proportions.toeEllipsoid.AsInterface().Convert<Ellipse>();
+            var ankle = proportions.ankleEllipsoid.Convert<Ellipse>();
+            var toe = proportions.toeEllipsoid.Convert<Ellipse>();
 
             float mult = isLeft ? -1f : 1f;
 

@@ -8,23 +8,27 @@ namespace VAT.Shared.Data
     using System;
     using Unity.Mathematics;
 
+    public static class EllipseExtensions
+    {
+        /// <summary>
+        /// Converts an ellipse to another ellipse type.
+        /// </summary>
+        /// <typeparam name="TEllipse"></typeparam>
+        /// <returns></returns>
+        public static TEllipse Convert<TEllipse>(this IEllipse original) where TEllipse : IEllipse
+        {
+            var instance = Activator.CreateInstance<TEllipse>();
+            instance.SetRadius(original.GetRadius());
+            return instance;
+        }
+    }
+
     public interface IEllipse {
         /// <summary>
         /// Converts this ellipse to its interface form.
         /// </summary>
         /// <returns></returns>
         public IEllipse AsInterface();
-
-        /// <summary>
-        /// Converts this ellipse to another ellipse type.
-        /// </summary>
-        /// <typeparam name="TEllipse"></typeparam>
-        /// <returns></returns>
-        public TEllipse Convert<TEllipse>() where TEllipse : IEllipse {
-            var instance = Activator.CreateInstance<TEllipse>();
-            instance.SetRadius(GetRadius());
-            return instance;
-        }
 
         /// <summary>
         /// Sets the radius of the ellipse.

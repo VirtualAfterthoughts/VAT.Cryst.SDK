@@ -144,9 +144,9 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateUpperChestMesh(HumanoidSpineProportions proportions, HumanoidNeckProportions neck)
         {
             // Convert ellipsoids to ellipses
-            var lowerNeck = proportions.upperChestEllipsoid.AsInterface().Convert<Ellipse>().Scaled(new float2(0.9f, 0.6f));
-            var upperChest = proportions.upperChestEllipsoid.AsInterface().Convert<Ellipse>();
-            var chest = proportions.chestEllipsoid.AsInterface().Convert<Ellipse>();
+            var lowerNeck = proportions.upperChestEllipsoid.Convert<Ellipse>().Scaled(new float2(0.9f, 0.6f));
+            var upperChest = proportions.upperChestEllipsoid.Convert<Ellipse>();
+            var chest = proportions.chestEllipsoid.Convert<Ellipse>();
 
             // Create lower neck -> upper chest
             EllipseCylinderMesh collar = new()
@@ -175,8 +175,8 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateChestMesh(HumanoidSpineProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var chest = proportions.chestEllipsoid.AsInterface().Convert<Ellipse>();
-            var spine = proportions.spineEllipsoid.AsInterface().Convert<Ellipse>();
+            var chest = proportions.chestEllipsoid.Convert<Ellipse>();
+            var spine = proportions.spineEllipsoid.Convert<Ellipse>();
 
             // Create chest -> spine
             EllipseCylinderMesh cylinder = new()
@@ -195,8 +195,8 @@ namespace VAT.Avatars.Muscular
         public Mesh GenerateSpineMesh(HumanoidSpineProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var spine = proportions.spineEllipsoid.AsInterface().Convert<Ellipse>();
-            var pelvis = proportions.pelvisEllipsoid.AsInterface().Convert<Ellipse>();
+            var spine = proportions.spineEllipsoid.Convert<Ellipse>();
+            var pelvis = proportions.pelvisEllipsoid.Convert<Ellipse>();
 
             // Create spine -> pelvis
             EllipseCylinderMesh cylinder = new()
@@ -215,7 +215,7 @@ namespace VAT.Avatars.Muscular
         public Mesh GeneratePelvisMesh(HumanoidSpineProportions proportions)
         {
             // Convert ellipsoids to ellipses
-            var pelvis = proportions.pelvisEllipsoid.AsInterface().Convert<Ellipse>();
+            var pelvis = proportions.pelvisEllipsoid.Convert<Ellipse>();
             var groin = pelvis.Scaled(0.6f);
 
             // Create pelvis -> groin
