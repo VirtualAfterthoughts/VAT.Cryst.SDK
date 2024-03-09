@@ -11,8 +11,8 @@ namespace VAT.Avatars.Proportions
     [Serializable]
     public struct HandProportions : IBoneGroupProportions
     {
-        public int FingerCount => fingerProportions.Length;
-        public int ThumbCount => thumbProportions.Length;
+        public int FingerCount => (fingerProportions?.Length).GetValueOrDefault();
+        public int ThumbCount => (thumbProportions?.Length).GetValueOrDefault();
 
         public Handedness handedness;
 

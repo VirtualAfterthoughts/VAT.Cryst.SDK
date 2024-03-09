@@ -16,33 +16,60 @@ namespace VAT.Avatars.Helpers
     using Unity.Mathematics;
 
     public static class HumanoidHelper {
+        public static void CalculateLeg(ref HumanoidLegProportions proportions, HumanoidLeg leg, HumanoidLegDescriptor descriptor, Transform root)
+        {
+            if (descriptor.upperLeg.HasTransform)
+            {
+                float offset = Vector3.Dot(Vector3.ProjectOnPlane((Vector3)leg.Hip.Parent.position - descriptor.upperLeg.transform.position, leg.Hip.forward), leg.Hip.right);
+                offset = Mathf.Abs(offset);
+                proportions.hipSeparationOffset = offset;
+            }
+
+            if (descriptor.lowerLeg.HasTransform)
+            {
+                proportions.kneeOffsetZ = Vector3.Dot(Vector3.ProjectOnPlane((Vector3)leg.Hip.position - descriptor.lowerLeg.transform.position, leg.Hip.up), leg.Hip.forward);
+            }
+
+            proportions.ankleEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(root.position - (Vector3)leg.Ankle.position, leg.Ankle.forward), leg.Ankle.up);
+        }
+
         public static void CalculateSpine(ref HumanoidSpineProportions proportions, HumanoidSpine spine, HumanoidSpineDescriptor descriptor) {
             if (descriptor.chest.HasTransform) {
-                proportions.upperChestEllipsoid.height = distance(descriptor.chest.transform.position, spine.T1Vertebra.position);
+                var chestOffset = (Vector3)spine.T1Vertebra.position - descriptor.chest.transform.position;
+                proportions.upperChestEllipsoid.height = Vector3.Dot(Vector3.ProjectOnPlane(chestOffset, spine.T1Vertebra.forward), spine.T1Vertebra.up);
             }
 
             if (descriptor.hips.HasTransform) {
-                proportions.spineEllipsoid.height = distance(descriptor.hips.transform.position, spine.L1Vertebra.position);
+                var hipsOffset = (Vector3)spine.L1Vertebra.position - descriptor.hips.transform.position;
+                proportions.spineEllipsoid.height = Vector3.Dot(Vector3.ProjectOnPlane(hipsOffset, spine.L1Vertebra.forward), spine.L1Vertebra.up);
             }
         }
 
         public static void CalculateArm(ref HumanoidArmProportions proportions, HumanoidArm arm, HumanoidArmDescriptor descriptor) {
             if (descriptor.upperArm.HasTransform)
             {
-                proportions.shoulderBladeEllipsoid.radius.x = distance(descriptor.upperArm.transform.position, arm.Scapula.position);
+                var upperArmOffset = (Vector3)arm.Scapula.position - descriptor.upperArm.transform.position;
+
+                proportions.shoulderBladeEllipsoid.radius.x = -Vector3.Dot(Vector3.ProjectOnPlane(upperArmOffset, arm.UpperArm.up), arm.UpperArm.forward);
             }
 
             if (descriptor.lowerArm.HasTransform) {
-                proportions.upperArmEllipsoid.height = distance(descriptor.lowerArm.transform.position, arm.UpperArm.position);
+                var lowerArmOffset = (Vector3)arm.UpperArm.position - descriptor.lowerArm.transform.position;
+
+                proportions.upperArmEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(lowerArmOffset, arm.UpperArm.up), arm.UpperArm.forward);
             }
             
             if (descriptor.wrist.HasTransform)
             {
-                proportions.elbowEllipsoid.height = distance(descriptor.wrist.transform.position, arm.Elbow.position);
+                var wristOffset = (Vector3)arm.Elbow.position - descriptor.wrist.transform.position;
+
+                proportions.elbowEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(wristOffset, arm.Elbow.up), arm.Elbow.forward);
             }
             else if (descriptor.hand.hand.HasTransform) 
             {
-                proportions.elbowEllipsoid.height = distance(descriptor.hand.hand.transform.position, arm.Elbow.position);
+                var handOffset = (Vector3)arm.Elbow.position - descriptor.hand.hand.transform.position;
+
+                proportions.elbowEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(handOffset, arm.Elbow.up), arm.Elbow.forward);
             }
             
             CalculateHand(ref proportions.handProportions, arm.Hand, descriptor.hand);
@@ -63,7 +90,8 @@ namespace VAT.Avatars.Helpers
             proportions.fingerProportions[2] = Internal_CalculateFinger(hand, descriptor.ring, Vector3.up);
             proportions.fingerProportions[3] = Internal_CalculateFinger(hand, descriptor.pinky, Vector3.up);
 
-            proportions.wristEllipsoid.height = distance(hand.Hand.position, descriptor.middle.proximal.transform.position);
+            var knuckleOffset = (Vector3)hand.Hand.position - descriptor.middle.proximal.transform.position;
+            proportions.wristEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(knuckleOffset, hand.Hand.up), hand.Hand.forward);
             Vector3 fingerDirection = descriptor.middle.distal.transform.position - descriptor.middle.proximal.transform.position;
             proportions.knuckleEllipsoid.height = fingerDirection.magnitude + proportions.fingerProportions[2].distalEllipsoid.height;
         }
@@ -101,7 +129,7 @@ namespace VAT.Avatars.Helpers
                 finger.middleTransform.rotation = metaCarpal.InverseTransformRotation(endDirection);
             }
 
-            finger.phalanxCount = descriptor.distal ? 3 : 2;
+            finger.phalanxCount = descriptor.distal.HasTransform ? 3 : 2;
 
             if (descriptor.middle.HasTransform)
             {

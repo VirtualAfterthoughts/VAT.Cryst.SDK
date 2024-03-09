@@ -61,7 +61,7 @@ namespace VAT.Avatars.Skeletal
 
             float mult = isLeft ? -1f : 1f;
 
-            _hipOffset = mult * (_legProportions.hipSeparationOffset + _legProportions.hipEllipsoid.radius.x);
+            _hipOffset = mult * _legProportions.hipSeparationOffset;
 
             Hip.localPosition = new float3(_hipOffset, -_spineProportions.pelvisEllipsoid.height * 0.24f, 0f);
             Knee.localPosition = new float3(0f, -_legProportions.hipEllipsoid.height, -_legProportions.kneeOffsetZ);

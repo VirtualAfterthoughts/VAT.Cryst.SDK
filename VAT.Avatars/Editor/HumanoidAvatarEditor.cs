@@ -228,6 +228,7 @@ namespace VAT.Avatars.Editor {
             // Always match avatar bones
             _avatar.EditorCalculateSpine();
             _avatar.EditorCalculateArms();
+            _avatar.EditorCalculateLegs();
 
             if (_avatar.Initiated) {
                 _avatar.WriteArtOffsets();

@@ -19,8 +19,8 @@ namespace VAT.Avatars.Art
 
         public void AutoFillBones(Animator animator)
         {
-            head = animator.GetBoneTransform(HumanBodyBones.Head);
-            lowerNeck = animator.GetBoneTransform(HumanBodyBones.Neck);
+            head = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.Head));
+            lowerNeck = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.Neck));
         }
     }
 
@@ -34,10 +34,10 @@ namespace VAT.Avatars.Art
 
         public void AutoFillBones(Animator animator)
         {
-            upperChest = animator.GetBoneTransform(HumanBodyBones.UpperChest);
-            chest = animator.GetBoneTransform(HumanBodyBones.Chest);
-            spine = animator.GetBoneTransform(HumanBodyBones.Spine);
-            hips = animator.GetBoneTransform(HumanBodyBones.Hips);
+            upperChest = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.UpperChest));
+            chest = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.Chest));
+            spine = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.Spine));
+            hips = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.Hips));
         }
     }
 
@@ -55,13 +55,13 @@ namespace VAT.Avatars.Art
             metaCarpal = new TransformArtReference();
 
             if (proximalBone.HasValue)
-                proximal = animator.GetBoneTransform(proximalBone.Value);
+                proximal = new TransformArtReference(animator.GetBoneTransform(proximalBone.Value));
 
             if (middleBone.HasValue)
-                middle = animator.GetBoneTransform(middleBone.Value);
+                middle = new TransformArtReference(animator.GetBoneTransform(middleBone.Value));
 
             if (distalBone.HasValue)
-                distal = animator.GetBoneTransform(distalBone.Value);
+                distal = new TransformArtReference(animator.GetBoneTransform(distalBone.Value));
         }
 
         public HumanoidFingerDescriptor(HumanBodyBones? proximal, HumanBodyBones? middle, HumanBodyBones? distal) {
@@ -88,7 +88,7 @@ namespace VAT.Avatars.Art
         public void AutoFillBones(Animator animator) {
             if (isLeft)
             {
-                hand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
+                hand = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.LeftHand));
                 (thumb = new HumanoidFingerDescriptor(HumanBodyBones.LeftThumbProximal, HumanBodyBones.LeftThumbIntermediate, HumanBodyBones.LeftThumbDistal)).AutoFillBones(animator);
                 (index = new HumanoidFingerDescriptor(HumanBodyBones.LeftIndexProximal, HumanBodyBones.LeftIndexIntermediate, HumanBodyBones.LeftIndexDistal)).AutoFillBones(animator);
                 (middle = new HumanoidFingerDescriptor(HumanBodyBones.LeftMiddleProximal, HumanBodyBones.LeftMiddleIntermediate, HumanBodyBones.LeftMiddleDistal)).AutoFillBones(animator);
@@ -97,7 +97,7 @@ namespace VAT.Avatars.Art
             }
             else
             {
-                hand = animator.GetBoneTransform(HumanBodyBones.RightHand);
+                hand = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.RightHand));
                 (thumb = new HumanoidFingerDescriptor(HumanBodyBones.RightThumbProximal, HumanBodyBones.RightThumbIntermediate, HumanBodyBones.RightThumbDistal)).AutoFillBones(animator);
                 (index = new HumanoidFingerDescriptor(HumanBodyBones.RightIndexProximal, HumanBodyBones.RightIndexIntermediate, HumanBodyBones.RightIndexDistal)).AutoFillBones(animator);
                 (middle = new HumanoidFingerDescriptor(HumanBodyBones.RightMiddleProximal, HumanBodyBones.RightMiddleIntermediate, HumanBodyBones.RightMiddleDistal)).AutoFillBones(animator);
@@ -123,21 +123,21 @@ namespace VAT.Avatars.Art
 
         public void AutoFillBones(Animator animator)
         {
-            collarBone = null;
-            wrist = null;
-            carpal = null;
+            collarBone = default;
+            wrist = default;
+            carpal = default;
 
             if (isLeft)
             {
-                shoulderBlade = animator.GetBoneTransform(HumanBodyBones.LeftShoulder);
-                upperArm = animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
-                lowerArm = animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
+                shoulderBlade = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.LeftShoulder));
+                upperArm = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.LeftUpperArm));
+                lowerArm = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.LeftLowerArm));
             }
             else
             {
-                shoulderBlade = animator.GetBoneTransform(HumanBodyBones.RightShoulder);
-                upperArm = animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
-                lowerArm = animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
+                shoulderBlade = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.RightShoulder));
+                upperArm = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.RightUpperArm));
+                lowerArm = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.RightLowerArm));
             }
 
             hand.AutoFillBones(animator);
@@ -168,17 +168,17 @@ namespace VAT.Avatars.Art
         {
             if (isLeft)
             {
-                upperLeg = animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
-                lowerLeg = animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
-                foot = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
-                toe = animator.GetBoneTransform(HumanBodyBones.LeftToes);
+                upperLeg = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg));
+                lowerLeg = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg));
+                foot = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.LeftFoot));
+                toe = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.LeftToes));
             }
             else
             {
-                upperLeg = animator.GetBoneTransform(HumanBodyBones.RightUpperLeg);
-                lowerLeg = animator.GetBoneTransform(HumanBodyBones.RightLowerLeg);
-                foot = animator.GetBoneTransform(HumanBodyBones.RightFoot);
-                toe = animator.GetBoneTransform(HumanBodyBones.RightToes);
+                upperLeg = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.RightUpperLeg));
+                lowerLeg = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.RightLowerLeg));
+                foot = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.RightFoot));
+                toe = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.RightToes));
             }
         }
 

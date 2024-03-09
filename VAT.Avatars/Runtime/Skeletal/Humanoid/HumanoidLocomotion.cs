@@ -192,7 +192,7 @@ namespace VAT.Avatars.Skeletal
 
             float mult = _isLeft ? -1f : 1f;
 
-            _hipOffset = mult * (_proportions.hipSeparationOffset + _proportions.hipEllipsoid.radius.x);
+            _hipOffset = mult * _proportions.hipSeparationOffset;
         }
 
         public void PreSolve(SimpleTransform sacrum, SimpleTransform feetCenter, Vector3 velocity) {

@@ -25,8 +25,8 @@ namespace VAT.Avatars.Integumentary
         private void Reset() {
             if (TryGetComponent(out animator)) {
                 EditorSetAnimatorPose();
-                EditorCalculateProportions();
                 EditorAutoFillBoneTransforms();
+                EditorCalculateProportions();
             }
         }
 
@@ -164,7 +164,7 @@ namespace VAT.Avatars.Integumentary
             float hipLength = proportions.spineProportions.pelvisEllipsoid.radius.y * 0.75f;
             float hipHeight = hipToFloor * 0.429197829f;
 
-            proportions.leftLegProportions.hipSeparationOffset = hipSeparation;
+            proportions.leftLegProportions.hipSeparationOffset = hipSeparation + hipWidth;
             proportions.leftLegProportions.hipEllipsoid.radius.x = hipWidth;
             proportions.leftLegProportions.hipEllipsoid.radius.y = hipLength;
             proportions.leftLegProportions.hipEllipsoid.height = hipHeight;
@@ -222,9 +222,29 @@ namespace VAT.Avatars.Integumentary
 
             proportions.rightArmProportions = proportions.leftArmProportions;
 
+            EditorCalculateSpine();
             EditorCalculateArms();
+            EditorCalculateLegs();
 
             EditorRefreshAvatar();
+        }
+
+        public void EditorCalculateLegs()
+        {
+            float3? eyeCenterRaw = EditorGetEyeCenter();
+            if (!eyeCenterRaw.HasValue)
+            {
+                Debug.LogWarning($"Avatar {name} is missing an eye center! Please add an Eye Center Override before calculating proportions!", this);
+                return;
+            }
+
+            float3 eyeCenter = eyeCenterRaw.Value;
+
+            EditorRefreshAvatar();
+            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenter;
+
+            HumanoidHelper.CalculateLeg(ref proportions.leftLegProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.LeftLeg, artDescriptor.leftLegDescriptor, transform); ;
+            HumanoidHelper.CalculateLeg(ref proportions.rightLegProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.RightLeg, artDescriptor.rightLegDescriptor, transform); ;
         }
 
         public void EditorCalculateSpine() {
