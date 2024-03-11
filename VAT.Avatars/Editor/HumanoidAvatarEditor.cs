@@ -406,9 +406,14 @@ namespace VAT.Avatars.Editor {
             elbowTransform.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Elbow.forward);
             DrawAvatarEllipsoidSymmetry(ref proportions.elbowEllipsoid, ref otherProportions.elbowEllipsoid, _avatar, elbowTransform, -1f, "Elbow");
 
-            var wristTransfrom = arm.Wrist.Transform;
-            wristTransfrom.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Wrist.forward);
-            DrawAvatarEllipsoidSymmetry(ref proportions.handProportions.wristEllipsoid, ref otherProportions.handProportions.wristEllipsoid, _avatar, wristTransfrom, -1f, "Wrist");
+            var wristTransform = arm.Wrist.Transform;
+            wristTransform.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Wrist.forward);
+            DrawAvatarEllipsoidSymmetry(ref proportions.handProportions.wristEllipsoid, ref otherProportions.handProportions.wristEllipsoid, _avatar, wristTransform, -1f, "Wrist");
+
+            var knuckleTransform = arm.Wrist.Transform;
+            knuckleTransform.position += proportions.handProportions.wristEllipsoid.height * knuckleTransform.forward;
+            knuckleTransform.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Wrist.forward);
+            DrawAvatarEllipsoidSymmetry(ref proportions.handProportions.knuckleEllipsoid, ref otherProportions.handProportions.knuckleEllipsoid, _avatar, knuckleTransform, -1f, "Knuckle");
         }
 
         private bool DrawOffset(float3 position, out float3 offset) {

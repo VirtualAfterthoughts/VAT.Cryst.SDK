@@ -108,9 +108,6 @@ namespace VAT.Avatars.Skeletal
             _upperArmLength = _armProportions.upperArmEllipsoid.height;
             _armLength = _lowerArmLength + _upperArmLength;
 
-            // if (isLeft)
-            //     Hand.Hand.localScale = new Vector3(-1f, 1f, 1f);
-
             Hand.WriteProportions(_armProportions.handProportions);
         }
 
@@ -123,8 +120,9 @@ namespace VAT.Avatars.Skeletal
             Scapula.localPosition = new float3(mult * _armProportions.clavicleEllipsoid.radius.x * 1.5f, 0f, -_spineProportions.upperChestEllipsoid.radius.y * 0.85f);
             Scapula.rotation = Clavicle.Parent.rotation;
 
-            UpperArm.localPosition = new float3(mult * _armProportions.shoulderBladeEllipsoid.radius.x, 0f, _armProportions.shoulderBladeEllipsoid.radius.y * 0.2f);
-            UpperArm.localRotation = Quaternion.AngleAxis(90f * mult, Vector3.up);
+            UpperArm.localPosition = new float3(mult * _armProportions.shoulderBladeEllipsoid.radius.x, 0f, _armProportions.upperArmOffsetZ);
+            
+            UpperArm.localRotation = math.normalizesafe(_armProportions.upperArmRotation);
 
             Elbow.localPosition = new float3(0f, 0f, _armProportions.upperArmEllipsoid.height);
             Wrist.localPosition = new float3(0f, 0f, _armProportions.elbowEllipsoid.height);
@@ -132,6 +130,15 @@ namespace VAT.Avatars.Skeletal
             _initialUpperArm = _spine.T1Vertebra.InverseTransformPoint(UpperArm.position);
 
             base.BindPose();
+        }
+
+        public override void NeutralPose()
+        {
+            float mult = isLeft ? -1f : 1f;
+
+            UpperArm.localRotation = Quaternion.AngleAxis(90f * mult, Vector3.up);
+
+            base.NeutralPose();
         }
 
         public override void Solve() {

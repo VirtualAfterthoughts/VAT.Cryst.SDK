@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using Unity.Mathematics;
 using UnityEngine;
 
 using VAT.Shared.Data;
@@ -17,6 +17,8 @@ namespace VAT.Avatars.Proportions
         public Ellipsoid shoulderBladeEllipsoid;
 
         public Ellipsoid upperArmEllipsoid;
+        public float upperArmOffsetZ;
+        public quaternion upperArmRotation;
 
         public Ellipsoid elbowEllipsoid;
 

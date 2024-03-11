@@ -78,7 +78,7 @@ namespace VAT.Avatars.Skeletal
 
             _handedness = proportions.handedness;
 
-            Palm.localPosition = 0.7f * proportions.wristEllipsoid.height * Vector3.forward + Vector3.down * proportions.wristEllipsoid.radius.y;
+            Palm.localPosition = 0.7f * proportions.wristEllipsoid.height * Vector3.forward + Vector3.down * proportions.knuckleEllipsoid.radius.y;
 
             float angle;
             if (_handedness == Handedness.LEFT)
