@@ -89,7 +89,7 @@ namespace VAT.Avatars.Muscular
             joint.slerpDrive = new JointDrive()
             {
                 positionSpring = newtons * 10f,
-                positionDamper = newtons * 0.5f,
+                positionDamper = newtons,
                 maximumForce = newtons,
             };
         }
