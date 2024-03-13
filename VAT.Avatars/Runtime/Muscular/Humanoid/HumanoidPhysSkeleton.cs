@@ -103,13 +103,7 @@ namespace VAT.Avatars.Muscular
         {
             base.Solve();
 
-            if (_skeleton is HumanoidDataSkeleton temp)
-            {
-                temp.ShimbleWam = true;
-                var relativeTransform = Neck.GetEyeCenter();
-                relativeTransform.rotation = LocoLeg.Knee.Transform.rotation;
-                temp.Flof = relativeTransform.InverseTransformPoint(GetFloor().position);
-            }
+            _skeleton.WriteSkeleton(this);
         }
 
         public void WriteReferences(IHumanSkeleton skeleton)
@@ -191,6 +185,11 @@ namespace VAT.Avatars.Muscular
 
         public override SimpleTransform GetFloor() {
             return SimpleTransform.Create(LocoLeg.GetCenterOfPressure(), Spine.Root.Transform.rotation);
+        }
+
+        public void WriteSkeleton(IHumanSkeleton skeleton)
+        {
+            // use in future
         }
     }
 }

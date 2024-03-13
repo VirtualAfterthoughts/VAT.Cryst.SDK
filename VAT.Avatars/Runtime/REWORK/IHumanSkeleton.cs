@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using VAT.Shared.Data;
+
 namespace VAT.Avatars.REWORK
 {
     public interface IHumanSkeleton : ISkeleton
@@ -14,5 +16,11 @@ namespace VAT.Avatars.REWORK
         public IHumanLeg LeftLeg { get; }
         public IHumanLeg RightLeg { get; }
         public IBoneGroup LocoLeg { get; }
+
+        void WriteSkeleton(IHumanSkeleton skeleton);
+
+        SimpleTransform GetEyeCenter();
+
+        SimpleTransform GetFloor();
     }
 }

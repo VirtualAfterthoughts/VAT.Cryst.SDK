@@ -115,6 +115,27 @@ namespace VAT.Avatars.Skeletal
             LocoLeg.Solve();
         }
 
+        public SimpleTransform GetEyeCenter()
+        {
+            return Neck.EyeCenter.Transform;
+        }
+
+        public void WriteSkeleton(IHumanSkeleton skeleton)
+        {
+            ShimbleWam = true;
+            var relativeTransform = skeleton.GetEyeCenter();
+            relativeTransform.rotation = skeleton.LocoLeg.Bones[0].Transform.rotation;
+
+            var floor = skeleton.GetFloor();
+
+            Flof = relativeTransform.InverseTransformPoint(floor.position);
+        }
+
+        public SimpleTransform GetFloor()
+        {
+            return Spine.Root.Transform;
+        }
+
         public override bool TryGetHead(out DataBone result)
         {
             result = Neck.Skull;
