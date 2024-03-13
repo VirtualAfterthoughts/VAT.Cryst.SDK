@@ -219,7 +219,8 @@ namespace VAT.Avatars.Skeletal
             _stepSpeed = Mathf.Lerp(0.5f, 2f, _velocity.magnitude / (12f * _legMultiplier)) * _legMultiplier;
 
             // Get the resting foot position and rotation
-            _resting = SimpleTransform.Create(feetCenter.position + feetCenter.right * _hipOffset, feetCenter.rotation);
+            float restOffset = _hipOffset * 1.5f;
+            _resting = SimpleTransform.Create(feetCenter.position + feetCenter.right * restOffset, feetCenter.rotation);
 
             if (!_steppedOnce) {
                 _result = _resting;

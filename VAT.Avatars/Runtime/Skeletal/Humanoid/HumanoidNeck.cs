@@ -118,10 +118,10 @@ namespace VAT.Avatars.Skeletal
             float leftZPull = SolveChestZPull(leftHand.Transform);
             float rightZPull = SolveChestZPull(rightHand.Transform);
 
-            float zPull = rightZPull - leftZPull;
+            float zPull = Mathf.Clamp(rightZPull - leftZPull, -1f, 1f);
 
             var yOffset = Quaternion.AngleAxis(25f * yPull, math.mul(chestRotation, Vector3.up));
-            var zOffset = Quaternion.AngleAxis(7f * zPull, math.mul(chestRotation, Vector3.forward));
+            var zOffset = Quaternion.AngleAxis(5f * zPull, math.mul(chestRotation, Vector3.forward));
             chestRotation = yOffset * zOffset * chestRotation;
         }
 

@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using Unity.Mathematics;
 using UnityEngine;
 
 using VAT.Avatars.Muscular;
@@ -37,7 +37,11 @@ namespace VAT.Avatars.Art
         }
 
         public override void Solve() {
-            CollarBone.Solve(BoneGroup.Clavicle.Transform);
+            float mult = _isLeft ? 1f : -1f;
+
+            var clavicle = BoneGroup.Clavicle.Transform;
+
+            CollarBone.Solve(clavicle);
             ShoulderBlade.Solve(BoneGroup.Scapula.Transform);
 
             // Twist upper arm and elbow
@@ -46,16 +50,15 @@ namespace VAT.Avatars.Art
             SimpleTransform wrist = BoneGroup.Wrist.Transform;
             SimpleTransform carpal = BoneGroup.Carpal.Transform;
 
-            //float twistAngle = Vector3.SignedAngle(elbow.up, wrist.up, elbow.forward);
-            //
-            //elbow.rotation = Quaternion.AngleAxis(twistAngle, elbow.forward) * elbow.rotation;
-            //
-            //upperArm.rotation = Quaternion.AngleAxis(twistAngle * 0.45f, upperArm.forward) * upperArm.rotation;
-
-            float mult = _isLeft ? 1f : -1f;
-
+            // Axis correction
             elbow.rotation = Quaternion.AngleAxis(90f * mult, elbow.forward) * elbow.rotation;
             upperArm.rotation = Quaternion.AngleAxis(90f * mult, upperArm.forward) * upperArm.rotation;
+
+            // Upper arm twist
+            Vector3 twistUp = Quaternion.FromToRotation(clavicle.forward, upperArm.forward) * clavicle.up;
+            float upperTwist = Vector3.SignedAngle(upperArm.up, twistUp, upperArm.forward);
+
+            upperArm.rotation = Quaternion.AngleAxis(upperTwist * 0.5f, upperArm.forward) * upperArm.rotation;
 
             UpperArm.Solve(upperArm);
             LowerArm.Solve(elbow);
