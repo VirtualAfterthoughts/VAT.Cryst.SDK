@@ -109,8 +109,8 @@ namespace VAT.Avatars.Muscular
             Elbow.MatchBone(arm.Elbow);
             Hand.MatchPose(arm.Hand);
 
-            _relativeWrist = new RelativeBone(Hand.Hand, arm.Hand.Hand, arm.Wrist);
-            _relativeCarpal = new RelativeBone(Hand.Hand, arm.Hand.Hand, arm.Carpal);
+            _relativeWrist = new RelativeBone(Elbow, arm.Elbow, arm.Wrist);
+            _relativeCarpal = new RelativeBone(Elbow, arm.Elbow, arm.Carpal);
         }
 
         public Mesh GenerateClavicleMesh(HumanoidArmProportions proportions)
