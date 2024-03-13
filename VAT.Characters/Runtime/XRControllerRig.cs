@@ -105,15 +105,18 @@ namespace VAT.Characters
     public class XRControllerRig : ControllerRig {
         public Transform vrRoot;
 
-        private XRApi _api;
-
         public override void OnAwake()
         {
-            _api = new XRApi();
+            XRManager.InitializeApiAsync();
         }
 
         public override void OnLateUpdate(float deltaTime)
         {
+            if (!XRManager.HasApi())
+            {
+                return;
+            }
+
             if (TryGetArm(Handedness.RIGHT, out var arm) && arm.TryGetHand(out var hand))
             {
                 var controller = hand.GetInputControllerOrDefault();
@@ -142,13 +145,13 @@ namespace VAT.Characters
 
         public override bool TryGetInput(out IBasicInput input)
         {
-            _api.LeftController.TryGetThumbstick(out var thumbstick);
+            XRManager.Api.LeftController.TryGetThumbstick(out var thumbstick);
 
             var movementAxis = thumbstick.GetAxis();
             var flattenedHead = Quaternion.LookRotation(_head.forward.FlattenNeck(_head.up, transform.up), transform.up);
             var movement = flattenedHead * new Vector3(movementAxis.x, 0f, movementAxis.y);
 
-            _api.RightController.TryGetPrimaryButton(out var button);
+            XRManager.Api.RightController.TryGetPrimaryButton(out var button);
 
             var jump = button.GetPressed();
 
@@ -158,16 +161,22 @@ namespace VAT.Characters
 
         public override bool TryGetArm(Handedness handedness, out IArm arm)
         {
+            if (!XRManager.HasApi())
+            {
+                arm = default;
+                return false;
+            }
+
             switch (handedness)
             {
                 default:
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_leftWrist)), _api.LeftController, _api.LeftHand));
+                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_leftWrist)), XRManager.Api.LeftController, XRManager.Api.LeftHand));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_rightWrist)), _api.RightController, _api.RightHand));
+                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_rightWrist)), XRManager.Api.RightController, XRManager.Api.RightHand));
                     return true;
             }
         }

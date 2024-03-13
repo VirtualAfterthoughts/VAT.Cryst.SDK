@@ -20,14 +20,6 @@ namespace VAT.Input.XR
 
         public XRApi() {
             var manager = XRGeneralSettings.Instance.Manager;
-            if (manager.activeLoader != null)
-            {
-                manager.StopSubsystems();
-                manager.DeinitializeLoader();
-            }
-
-            manager.InitializeLoaderSync();
-            manager.StartSubsystems();
 
             _inputActions = new XRInputActions();
             _inputActions.Enable();

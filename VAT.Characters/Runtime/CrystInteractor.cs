@@ -227,7 +227,7 @@ namespace VAT.Characters
                 if (valid)
                 {
                     var targetPose = data;
-                    var newPose = HandPoseCreator.Lerp(openPose, targetPose, Mathf.Pow(distance / grabRadius - 1f, 2f));
+                    var newPose = HandPoseCreator.Lerp(openPose, targetPose, grabRadius / distance);
 
                     arm.DataArm.Hand.SetClosedPose(newPose);
                 }

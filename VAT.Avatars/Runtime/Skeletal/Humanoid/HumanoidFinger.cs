@@ -146,7 +146,7 @@ namespace VAT.Avatars.Skeletal
             float curl02 = Mathf.Lerp(openPose.phalanges[1].curl, closedPose.phalanges[1].curl, blendPose.phalanges[1].curl);
             float curl03 = Mathf.Lerp(openPose.phalanges[2].curl, closedPose.phalanges[2].curl, blendPose.phalanges[2].curl);
 
-            float lerp = Time.deltaTime * 40f;
+            float lerp = Time.deltaTime * 20f;
 
             splay = Mathf.Lerp(_lastSplay, splay, lerp);
             curl01 = Mathf.Lerp(_lastCurl01, curl01, lerp);

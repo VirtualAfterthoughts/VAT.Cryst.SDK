@@ -45,6 +45,7 @@ namespace VAT.Interaction
         private float _highFriction = 1f;
 
         private List<IInteractor> _attachedInteractors = new();
+        private Dictionary<IInteractor, InteractorGripState> _interactorStates = new();
         private Dictionary<IInteractor, IGripJoint> _gripJoints = new();
 
         private InteractableHost _host = null;
@@ -59,7 +60,7 @@ namespace VAT.Interaction
             }
         }
 
-        public event Action<IInteractor> AttachBeginEvent, AttachCompleteEvent, DetachCompleteEvent;
+        public event Action<IInteractor> AttachBeginEvent, AttachCancelEvent, AttachCompleteEvent, DetachCompleteEvent;
 
         public bool IsHeld => _attachedInteractors.Count > 0;
 
@@ -138,6 +139,12 @@ namespace VAT.Interaction
 
             _attachedInteractors.Add(interactor);
 
+            _interactorStates.Add(interactor, new InteractorGripState()
+            {
+                interactor = interactor,
+                isAttaching = true,
+            });
+
             if (_host != null)
             {
                 _host.VirtualController.RegisterPair(interactor, this);
@@ -149,6 +156,8 @@ namespace VAT.Interaction
         public void OnAttachComplete(IInteractor interactor)
         {
             _gripJoints[interactor].LockJoints();
+
+            _interactorStates[interactor].isAttaching = false;
 
             AttachCompleteEvent?.Invoke(interactor);
         }
@@ -163,14 +172,24 @@ namespace VAT.Interaction
             _gripJoints[interactor].DetachJoints();
             _gripJoints.Remove(interactor);
 
+            var wasAttaching = _interactorStates[interactor].isAttaching;
+
             _attachedInteractors.Remove(interactor);
+            _interactorStates.Remove(interactor);
 
             if (_host != null)
             {
                 _host.VirtualController.UnregisterPair(interactor);
             }
 
-            DetachCompleteEvent?.Invoke(interactor);
+            if (wasAttaching)
+            {
+                AttachCancelEvent?.Invoke(interactor);
+            }
+            else
+            {
+                DetachCompleteEvent?.Invoke(interactor);
+            }
 
         }
 
