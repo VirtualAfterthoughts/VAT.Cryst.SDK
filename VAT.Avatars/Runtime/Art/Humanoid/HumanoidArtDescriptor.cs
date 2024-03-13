@@ -114,6 +114,9 @@ namespace VAT.Avatars.Art
         public TransformArtReference shoulderBlade;
         public TransformArtReference upperArm;
         public TransformArtReference lowerArm;
+
+        public TransformArtReference[] lowerTwists;
+
         public TransformArtReference wrist;
         public TransformArtReference carpal;
         public HumanoidHandDescriptor hand;

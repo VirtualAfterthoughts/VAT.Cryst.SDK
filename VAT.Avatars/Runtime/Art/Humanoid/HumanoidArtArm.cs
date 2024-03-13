@@ -22,7 +22,11 @@ namespace VAT.Avatars.Art
         public ArtBone Wrist => Bones[4] as ArtBone;
         public ArtBone Carpal => Bones[5] as ArtBone;
 
+        public ArtBone[] LowerTwists = new ArtBone[0];
+
         public HumanoidArtHand Hand = null;
+
+        private bool _isLeft = false;
 
         public override void Initiate()
         {
@@ -42,14 +46,34 @@ namespace VAT.Avatars.Art
             SimpleTransform wrist = BoneGroup.Wrist.Transform;
             SimpleTransform carpal = BoneGroup.Carpal.Transform;
 
-            float twistAngle = Vector3.SignedAngle(elbow.up, wrist.up, elbow.forward);
+            //float twistAngle = Vector3.SignedAngle(elbow.up, wrist.up, elbow.forward);
+            //
+            //elbow.rotation = Quaternion.AngleAxis(twistAngle, elbow.forward) * elbow.rotation;
+            //
+            //upperArm.rotation = Quaternion.AngleAxis(twistAngle * 0.45f, upperArm.forward) * upperArm.rotation;
 
-            elbow.rotation = Quaternion.AngleAxis(twistAngle, elbow.forward) * elbow.rotation;
+            float mult = _isLeft ? 1f : -1f;
 
-            upperArm.rotation = Quaternion.AngleAxis(twistAngle * 0.45f, upperArm.forward) * upperArm.rotation;
+            elbow.rotation = Quaternion.AngleAxis(90f * mult, elbow.forward) * elbow.rotation;
+            upperArm.rotation = Quaternion.AngleAxis(90f * mult, upperArm.forward) * upperArm.rotation;
 
             UpperArm.Solve(upperArm);
             LowerArm.Solve(elbow);
+
+            for (var i = 0; i < LowerTwists.Length; i++)
+            {
+                var bone = LowerTwists[i];
+                int count = LowerTwists.Length + 2;
+                int position = i + 1;
+
+                float percent = ((float)position / (float)count);
+
+                var transform = elbow;
+                transform.rotation = Quaternion.Lerp(transform.rotation, wrist.rotation, percent);
+
+                bone.Solve(transform);
+            }
+
             Wrist.Solve(wrist);
             Carpal.Solve(carpal);
 
@@ -68,6 +92,12 @@ namespace VAT.Avatars.Art
             ShoulderBlade.WriteOffset(boneGroup.Scapula);
             UpperArm.WriteOffset(boneGroup.UpperArm);
             LowerArm.WriteOffset(boneGroup.Elbow);
+
+            foreach (var lowerTwist in LowerTwists)
+            {
+                lowerTwist.WriteOffset(boneGroup.Elbow);
+            }
+
             Wrist.WriteOffset(boneGroup.Wrist);
             Carpal.WriteOffset(boneGroup.Carpal);
 
@@ -76,10 +106,23 @@ namespace VAT.Avatars.Art
 
         public override void WriteTransforms(HumanoidArmDescriptor artDescriptorGroup)
         {
+            _isLeft = artDescriptorGroup.isLeft;
+
             CollarBone.WriteReference(artDescriptorGroup.collarBone);
             ShoulderBlade.WriteReference(artDescriptorGroup.shoulderBlade);
             UpperArm.WriteReference(artDescriptorGroup.upperArm);
             LowerArm.WriteReference(artDescriptorGroup.lowerArm);
+
+            LowerTwists = new ArtBone[artDescriptorGroup.lowerTwists != null ? artDescriptorGroup.lowerTwists.Length : 0];
+            for (var i = 0; i <  LowerTwists.Length; i++)
+            {
+                var bone = new ArtBone();
+
+                bone.WriteReference(artDescriptorGroup.lowerTwists[i]);
+
+                LowerTwists[i] = bone;
+            }
+
             Wrist.WriteReference(artDescriptorGroup.wrist);
             Carpal.WriteReference(artDescriptorGroup.carpal);
 
