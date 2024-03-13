@@ -121,7 +121,7 @@ namespace VAT.Avatars.Skeletal
             float zPull = rightZPull - leftZPull;
 
             var yOffset = Quaternion.AngleAxis(25f * yPull, math.mul(chestRotation, Vector3.up));
-            var zOffset = Quaternion.AngleAxis(2.5f * zPull, math.mul(chestRotation, Vector3.forward));
+            var zOffset = Quaternion.AngleAxis(7f * zPull, math.mul(chestRotation, Vector3.forward));
             chestRotation = yOffset * zOffset * chestRotation;
         }
 
