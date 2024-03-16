@@ -414,6 +414,22 @@ namespace VAT.Avatars.Editor {
             knuckleTransform.position += proportions.handProportions.wristEllipsoid.height * knuckleTransform.forward;
             knuckleTransform.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Wrist.forward);
             DrawAvatarEllipsoidSymmetry(ref proportions.handProportions.knuckleEllipsoid, ref otherProportions.handProportions.knuckleEllipsoid, _avatar, knuckleTransform, -1f, "Knuckle");
+
+            if (DrawOffset(wristTransform.position, out var wristOffset))
+            {
+                Undo.RecordObject(_avatar, "Adjust Wrist Offset");
+
+                proportions.wristOffset.z += wristOffset.z;
+                proportions.wristOffset.y += wristOffset.y;
+                proportions.wristOffset.x = 0f;
+
+                if (_useSymmetry)
+                {
+                    otherProportions.wristOffset = proportions.wristOffset;
+                }
+
+                _avatar.EditorRefreshAvatar();
+            }
         }
 
         private bool DrawOffset(float3 position, out float3 offset) {

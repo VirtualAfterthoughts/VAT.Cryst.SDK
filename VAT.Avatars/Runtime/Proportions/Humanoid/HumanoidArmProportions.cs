@@ -22,6 +22,7 @@ namespace VAT.Avatars.Proportions
 
         public Ellipsoid elbowEllipsoid;
 
+        public float3 wristOffset;
         public HandProportions handProportions;
     }
 }

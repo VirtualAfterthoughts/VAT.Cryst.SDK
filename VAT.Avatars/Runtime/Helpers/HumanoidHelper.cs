@@ -70,10 +70,12 @@ namespace VAT.Avatars.Helpers
                 var scapulaLowerOffset = (Vector3)arm.Scapula.position - descriptor.lowerArm.transform.position;
                 proportions.upperArmOffsetZ = -Vector3.Dot(Vector3.ProjectOnPlane(scapulaLowerOffset, arm.Scapula.up), arm.Scapula.forward);
             }
-            
+
+            Vector3 offset = mul(arm.Clavicle.rotation, proportions.wristOffset);
+
             if (descriptor.wrist.HasTransform)
             {
-                var fromTo = (descriptor.wrist.transform.position - (Vector3)arm.UpperArm.position).normalized;
+                var fromTo = (descriptor.wrist.transform.position + offset - (Vector3)arm.UpperArm.position).normalized;
                 var worldRotation = quaternion.LookRotation(fromTo, arm.Scapula.up);
                 proportions.upperArmRotation = arm.Scapula.InverseTransformRotation(worldRotation);
 
@@ -83,7 +85,7 @@ namespace VAT.Avatars.Helpers
             }
             else if (descriptor.hand.hand.HasTransform) 
             {
-                var fromTo = (descriptor.hand.hand.transform.position - (Vector3)arm.UpperArm.position).normalized;
+                var fromTo = (descriptor.hand.hand.transform.position + offset - (Vector3)arm.UpperArm.position).normalized;
                 var worldRotation = quaternion.LookRotation(fromTo, arm.Scapula.up);
                 proportions.upperArmRotation = arm.Scapula.InverseTransformRotation(worldRotation);
 
