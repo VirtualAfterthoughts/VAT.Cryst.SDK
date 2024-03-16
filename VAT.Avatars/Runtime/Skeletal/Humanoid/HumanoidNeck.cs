@@ -63,10 +63,20 @@ namespace VAT.Avatars.Skeletal
             C4Vertebra.localPosition = new(0f, -c1.height, -_neckProportions.lowerNeckOffsetZ);
         }
 
+        private float3 _floorOffset = float3.zero;
+
+        public void WriteFloorOffset(float3 offset)
+        {
+            _floorOffset = offset;
+        }
+
         public override void Solve()
         {
             SimpleTransform root = _avatarPayload.GetRoot();
             _avatarPayload.TryGetHead(out var head);
+            head = root.Transform(head);
+
+            root.position += _floorOffset;
 
             EyeCenter.rotation = head.rotation;
             EyeCenter.position = head.position;

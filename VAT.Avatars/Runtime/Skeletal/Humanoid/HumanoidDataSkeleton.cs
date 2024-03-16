@@ -44,6 +44,8 @@ namespace VAT.Avatars.Skeletal
 
         public bool ShimbleWam;
         public float3 Flof;
+        public Quaternion PhysicsRotation;
+        public float3 PhysicsPosition;
 
         public override void Initiate()
         {
@@ -95,22 +97,39 @@ namespace VAT.Avatars.Skeletal
             var start = _payload.GetRoot();
             _payload.TryGetHead(out var head);
 
+            float3 floorOffset = float3.zero;
+
             if (ShimbleWam) {
-                var relativeTransform = SimpleTransform.Create(head.position, LocoLeg.Knee.rotation);
-                var thing = relativeTransform.TransformPoint(Flof);
                 var rot = _payload.GetRoot();
-                rot.position.y = thing.y;
+
+                rot.rotation = PhysicsRotation;
+
+                rot.position += PhysicsPosition - rot.TransformPoint(head.position);
+
                 _payload.SetRoot(rot);
+
+                // Get offset
+                var relativeTransform = SimpleTransform.Create(rot.TransformPoint(head.position), LocoLeg.Knee.rotation);
+                var thing = relativeTransform.TransformPoint(Flof);
+
+                var offset = thing - rot.position;
+                offset = Quaternion.Inverse(PhysicsRotation) * offset;
+                offset.xz = 0f;
+                floorOffset = PhysicsRotation * offset;
             }
 
+            Neck.WriteFloorOffset(floorOffset);
+            Spine.WriteFloorOffset(floorOffset);
+
             Neck.Solve();
+
+            Spine.WriteTarget(start);
+
             Spine.Solve();
             LeftArm.Solve();
             RightArm.Solve();
             LeftLeg.Solve();
             RightLeg.Solve();
-
-            _payload.SetRoot(start);
 
             LocoLeg.Solve();
         }
@@ -129,6 +148,9 @@ namespace VAT.Avatars.Skeletal
             var floor = skeleton.GetFloor();
 
             Flof = relativeTransform.InverseTransformPoint(floor.position);
+
+            PhysicsRotation = skeleton.Spine.Root.Transform.rotation;
+            PhysicsPosition = skeleton.GetEyeCenter().position;
         }
 
         public SimpleTransform GetFloor()

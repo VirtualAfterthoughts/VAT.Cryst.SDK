@@ -142,13 +142,15 @@ namespace VAT.Avatars.Skeletal
         }
 
         public override void Solve() {
+            var root = _avatarPayload.GetRoot();
+
             Handedness handedness = isLeft ? Handedness.LEFT : Handedness.RIGHT;
             _avatarPayload.TryGetArm(handedness, out var arm);
 
             if (arm.TryGetHand(out var hand))
             {
-                _target = hand.Transform;
-                _originalTarget = hand.Transform;
+                _target = root.Transform(hand.Transform);
+                _originalTarget = _target;
             }
 
             if (OnProcessTarget != null)
@@ -159,7 +161,7 @@ namespace VAT.Avatars.Skeletal
             _hasElbow = arm.TryGetElbow(out var elbow);
             if (_hasElbow)
             {
-                _elbowTarget = elbow.Transform;
+                _elbowTarget = root.Transform(elbow.Transform);
             }
 
             ClavicleSolve();

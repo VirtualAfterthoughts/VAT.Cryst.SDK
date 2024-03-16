@@ -70,9 +70,9 @@ namespace VAT.Characters
             return new BasicAvatarPayload()
             {
                 Root = root,
-                Head = root.Transform(head.Transform),
-                LeftArm = root.TransformLimb(leftArm),
-                RightArm = root.TransformLimb(rightArm),
+                Head = head.Transform,
+                LeftArm = leftArm,
+                RightArm = rightArm,
                 Input = input,
             };
         }

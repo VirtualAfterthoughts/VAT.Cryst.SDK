@@ -49,6 +49,7 @@ namespace VAT.Avatars.Skeletal
             SimpleTransform root = _avatarPayload.GetRoot();
 
             _avatarPayload.TryGetHead(out SimpleTransform head);
+            head = root.Transform(head);
 
             _trackedDebt += (Vector3)PhysicsExtensions.GetLinearVelocity(root.TransformPoint(_localHead), head.position);
             _localHead = root.InverseTransformPoint(head.position);

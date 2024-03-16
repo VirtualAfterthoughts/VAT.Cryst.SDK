@@ -21,6 +21,8 @@ namespace VAT.Avatars.Skeletal
 
         public DataBone Root = null;
 
+        public DataBone TargetRoot = null;
+
         public override int BoneCount => 4;
 
         private HumanoidLocomotion _locomotion;
@@ -30,6 +32,8 @@ namespace VAT.Avatars.Skeletal
         public AnimationCurve SacrumUpOffset = new(new(0f, 0f), new(0.5f, 1f), new(1f, 0f));
 
         public HumanoidNeck Neck => _neck;
+
+        IBone IHumanSpine.TargetRoot => TargetRoot;
 
         IBone IHumanSpine.Root => Root;
 
@@ -49,10 +53,14 @@ namespace VAT.Avatars.Skeletal
 
         private quaternion lastChestRotation = quaternion.identity;
 
+        private SimpleTransform _targetRoot = SimpleTransform.Default;
+
         public override void Initiate() {
             base.Initiate();
 
             Root = new DataBone();
+
+            TargetRoot = new DataBone();
 
             // Setup locomotion solving
             _locomotion = new HumanoidLocomotion();
@@ -84,6 +92,18 @@ namespace VAT.Avatars.Skeletal
             Sacrum.localPosition = new(0f, -_spineProportions.spineEllipsoid.height, _spineProportions.pelvisOffsetZ);
         }
 
+        private float3 _floorOffset = float3.zero;
+
+        public void WriteFloorOffset(float3 floorOffset)
+        {
+            _floorOffset = floorOffset;
+        }
+
+        public void WriteTarget(SimpleTransform targetRoot)
+        {
+            _targetRoot = targetRoot;
+        }
+
         public override void Solve()
         {
             _neck.feetCenter = _locomotion.GetLocomotorCenter();
@@ -91,6 +111,10 @@ namespace VAT.Avatars.Skeletal
             SimpleTransform root = _avatarPayload.GetRoot();
 
             Root.Transform = root;
+
+            TargetRoot.Transform = _targetRoot;
+
+            root.position += _floorOffset;
 
             quaternion chestRotation = _neck.chestRotation;
             chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Time.deltaTime * 7f);
@@ -119,7 +143,7 @@ namespace VAT.Avatars.Skeletal
             Sacrum.rotation = sacrumRotation;
 
             // Solve locomotion logic for the legs
-            _locomotion.Solve();
+            _locomotion.Solve(root);
         }
         public override void Attach(DataBoneGroup group) {
             base.Attach(group);

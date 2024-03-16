@@ -16,7 +16,9 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
+
     using VAT.Avatars.REWORK;
+    using VAT.Shared.Extensions;
 
     public class HumanoidPhysSpine : HumanoidPhysBoneGroup, IHumanSpine
     {
@@ -42,6 +44,8 @@ namespace VAT.Avatars.Muscular
 
         IBone IHumanSpine.Root => Root;
 
+        IBone IHumanSpine.TargetRoot => Root;
+
         private IHumanSpine _spine;
 
         public override void Initiate()
@@ -53,6 +57,14 @@ namespace VAT.Avatars.Muscular
             _bones[2] = new HumanoidPhysBone("Spine", Sacrum, HumanoidConstants.SpineLimits);
             _bones[3] = new HumanoidPhysBone("Chest", L1Vertebra, HumanoidConstants.ChestLimits);
             _bones[4] = new HumanoidPhysBone("Upper Chest", T7Vertebra, HumanoidConstants.UpperChestLimits);
+
+            Root.ConfigureJoint(500000000f);
+
+            Root.ConfigurableJoint.ConfigurableJoint.axis = Vector3.up;
+            Root.ConfigurableJoint.ConfigurableJoint.secondaryAxis = Vector3.right;
+
+            Sacrum.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Free, ConfigurableJointMotion.Free);
+            Root.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
         }
 
         public void WriteProportions(HumanoidSpineProportions proportions, HumanoidNeckProportions neck)
@@ -74,51 +86,9 @@ namespace VAT.Avatars.Muscular
         }
 
 
-        private Vector3 errorLast;
-
         public override void Solve()
         {
-            float frequency = 50000f;
-            float damping = 1000f;
-            Root.ConfigurableJoint.Rigidbody.Rigidbody.inertiaTensor = new Vector3(100f, 100f, 100f);
-            // var up = Root.Transform.up;
-            // var targetUp = _spine.Root.up;
-
-            // Quaternion targetRotation = Quaternion.FromToRotation(up, targetUp) * Root.transform.rotation;
-            var targetRotation = _spine.Root.Transform.rotation;
-
-            var startRotation = Root.Transform.rotation;
-            Quaternion desiredRotation = targetRotation;
-            var kp = (6f * frequency) * (6f * frequency) * 0.25f;
-            var kd = 4.5f * frequency * damping;
-            float dt = Time.fixedDeltaTime;
-            float g = 1 / (1 + kd * dt + kp * dt * dt);
-            float ksg = kp * g;
-            float kdg = (kd + kp * dt) * g;
-            Quaternion q = desiredRotation * Quaternion.Inverse(startRotation);
-            // Q can be the-long-rotation-around-the-sphere eg. 350 degrees
-            // We want the equivalant short rotation eg. -10 degrees
-            // Check if rotation is greater than 190 degees == q.w is negative
-            if (q.w < 0)
-            {
-                // Convert the quaterion to eqivalent "short way around" quaterion
-                q.x = -q.x;
-                q.y = -q.y;
-                q.z = -q.z;
-                q.w = -q.w;
-            }
-            q.ToAngleAxis(out float xMag, out Vector3 x);
-            x.Normalize();
-            x *= Mathf.Deg2Rad;
-            Vector3 error = x * xMag;
-            Vector3 derivative = kdg * ((error - errorLast) / dt);
-            errorLast = error;
-            Vector3 pidv = ksg * error + derivative;
-            Quaternion rotInertia2World = Root.ConfigurableJoint.Rigidbody.Rigidbody.inertiaTensorRotation * startRotation;
-            pidv = Quaternion.Inverse(rotInertia2World) * pidv;
-            pidv.Scale(Root.ConfigurableJoint.Rigidbody.Rigidbody.inertiaTensor);
-            pidv = rotInertia2World * pidv;
-            Root.ConfigurableJoint.Rigidbody.Rigidbody.AddTorque(pidv);
+            Root.Solve(_spine.TargetRoot.Transform);
 
             var sacrumTarget = Root.TransformBone(_spine.Root, _spine.Sacrum);
             Sacrum.Solve(sacrumTarget);

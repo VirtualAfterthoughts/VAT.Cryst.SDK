@@ -7,6 +7,7 @@ namespace VAT.Avatars.REWORK
     public interface IHumanSpine : IBoneGroup
     {
         public IBone Root { get; }
+        public IBone TargetRoot { get; }
         public IBone Sacrum { get; }
         public IBone L1Vertebra { get; }
         public IBone T7Vertebra { get; }

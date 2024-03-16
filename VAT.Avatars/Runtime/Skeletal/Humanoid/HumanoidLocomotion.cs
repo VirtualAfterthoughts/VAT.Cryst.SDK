@@ -70,10 +70,8 @@ namespace VAT.Avatars.Skeletal
 
         private Vector3 _lastFeetCenter;
 
-        public void Solve(float3 velocity = default) {
+        public void Solve(SimpleTransform root, float3 velocity = default) {
             // Position the feet center
-            SimpleTransform root = _payload.GetRoot();
-
             Time.fixedDeltaTime = Time.timeScale / 144f;
 
             float feetAngle = Vector3.Angle(root.up, _sacrum.up);
