@@ -24,5 +24,10 @@ namespace VAT.Avatars.Proportions
 
         public float3 wristOffset;
         public HandProportions handProportions;
+
+        public float GetLength()
+        {
+            return upperArmEllipsoid.height + elbowEllipsoid.height;
+        }
     }
 }

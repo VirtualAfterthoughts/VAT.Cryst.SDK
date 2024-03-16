@@ -419,9 +419,14 @@ namespace VAT.Avatars.Editor {
             {
                 Undo.RecordObject(_avatar, "Adjust Wrist Offset");
 
+                wristOffset /= proportions.GetLength();
+
                 proportions.wristOffset.z += wristOffset.z;
                 proportions.wristOffset.y += wristOffset.y;
                 proportions.wristOffset.x = 0f;
+
+                proportions.wristOffset.z = Mathf.Clamp(proportions.wristOffset.z, -0.25f, 0.25f);
+                proportions.wristOffset.y = Mathf.Clamp(proportions.wristOffset.y, -0.25f, 0.25f);
 
                 if (_useSymmetry)
                 {

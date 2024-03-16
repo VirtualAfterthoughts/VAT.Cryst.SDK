@@ -71,7 +71,7 @@ namespace VAT.Avatars.Helpers
                 proportions.upperArmOffsetZ = -Vector3.Dot(Vector3.ProjectOnPlane(scapulaLowerOffset, arm.Scapula.up), arm.Scapula.forward);
             }
 
-            Vector3 offset = mul(arm.Clavicle.rotation, proportions.wristOffset);
+            Vector3 offset = mul(arm.Clavicle.rotation, proportions.wristOffset * proportions.GetLength());
 
             if (descriptor.wrist.HasTransform)
             {
