@@ -114,13 +114,15 @@ namespace VAT.Avatars.Skeletal
         public override void BindPose() {
             float mult = isLeft ? -1f : 1f;
 
+            var chest = Clavicle.Parent;
+
             Clavicle.localPosition = new float3(mult * _armProportions.clavicleSeparation, _spineProportions.upperChestEllipsoid.height * 0.02f, _spineProportions.upperChestEllipsoid.radius.y * 0.85f);
             Clavicle.localRotation = Quaternion.AngleAxis(25f * mult, Vector3.up) * Quaternion.AngleAxis(3f * mult, Vector3.forward);
 
             Scapula.localPosition = new float3(mult * _armProportions.clavicleEllipsoid.radius.x * 1.5f, 0f, -_spineProportions.upperChestEllipsoid.radius.y * 0.85f);
-            Scapula.rotation = Clavicle.Parent.rotation;
+            Scapula.rotation = chest.rotation;
 
-            UpperArm.localPosition = new float3(mult * _armProportions.shoulderBladeEllipsoid.radius.x, 0f, _armProportions.upperArmOffsetZ);
+            UpperArm.position = chest.position + math.mul(chest.rotation, new float3(mult * _spineProportions.upperChestEllipsoid.radius.x, 0f, _armProportions.upperArmOffsetZ));
             
             UpperArm.localRotation = math.normalizesafe(_armProportions.upperArmRotation);
 

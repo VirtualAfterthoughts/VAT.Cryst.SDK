@@ -23,5 +23,10 @@ namespace VAT.Avatars.Proportions
         public FingerProportions[] fingerProportions;
 
         public FingerProportions[] thumbProportions;
+
+        public float GetLength()
+        {
+            return wristEllipsoid.height + knuckleEllipsoid.height;
+        }
     }
 }

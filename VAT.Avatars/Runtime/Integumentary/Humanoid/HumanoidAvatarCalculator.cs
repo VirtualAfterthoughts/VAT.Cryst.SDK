@@ -93,7 +93,7 @@ namespace VAT.Avatars.Integumentary
             float3 skullPosition = mul(worldToLocal, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.Skull.position);
             float skullDifference = 1f - Mathf.Clamp01((headPosition.z - neckPosition.z) / (skullPosition.z - dataNeckPosition.z));
 
-            float upperOffset = -(neckPosition.z - dataNeckPosition.z) * skullDifference;
+            float upperOffset = (neckPosition.z - dataNeckPosition.z) * skullDifference;
             proportions.neckProportions.upperNeckOffsetZ += upperOffset;
 
             EditorRefreshAvatar();

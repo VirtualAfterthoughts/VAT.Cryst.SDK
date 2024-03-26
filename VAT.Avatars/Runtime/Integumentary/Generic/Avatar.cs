@@ -6,6 +6,7 @@ using UnityEngine;
 
 using VAT.Avatars.Nervous;
 using VAT.Avatars.Posing;
+using VAT.Input.Data;
 using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Integumentary {
@@ -116,6 +117,8 @@ namespace VAT.Avatars.Integumentary {
             poser = null;
             return false;
         }
+
+        public abstract BodyMeasurements GetMeasurements();
 
 #if UNITY_EDITOR
         protected virtual void OnDrawGizmos() {

@@ -5,12 +5,20 @@ using UnityEngine;
 
 namespace VAT.Characters
 {
-    public abstract class CrystCharacter : MonoBehaviour
+    public abstract class CrystCharacter : MonoBehaviour, ICrystRigManager
     {
+        [SerializeField]
+        private CharacterVitals _vitals = null;
+
         public CrystRig[] Rigs { get { return _rigs; } }
         public int Count { get; private set; }
 
         private CrystRig[] _rigs;
+
+        public ICrystVitals GetVitalsOrDefault()
+        {
+            return _vitals;
+        }
 
         // Events
         private void Awake()
@@ -121,7 +129,7 @@ namespace VAT.Characters
             _rigs[i] = rig;
             rig.RigIndex = i;
 
-            rig.OnRegistered();
+            rig.OnRegisterManager(this);
         }
 
         private void Internal_UnregisterRig(int i)
@@ -132,7 +140,7 @@ namespace VAT.Characters
             rig.RigIndex = -1;
             rig.LastRig = null;
 
-            rig.OnUnregistered();
+            rig.OnDeregisterManager(this);
         }
 
         // Virtual methods

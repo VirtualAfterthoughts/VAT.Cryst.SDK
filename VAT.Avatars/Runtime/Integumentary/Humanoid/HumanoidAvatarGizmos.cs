@@ -43,20 +43,6 @@ namespace VAT.Avatars.Integumentary
             }
         }
 
-        public float? EditorGetHeight() {
-            var eyeCenter = EditorGetEyeCenter();
-            if (!eyeCenter.HasValue)
-                return null;
-
-            var headTop = eyeCenter.Value + (float3)transform.up * proportions.neckProportions.skullYOffset + (float3)transform.up * proportions.neckProportions.skullEllipsoid.height * 0.5f;
-
-            quaternion worldToLocal = inverse(transform.rotation);
-            headTop = mul(worldToLocal, headTop);
-            var root = mul(worldToLocal, transform.position);
-
-            return Mathf.Abs(headTop.y - root.y);
-        }
-
         public float3? EditorGetEyeCenter() {
             if (eyeCenterOverride != null) {
                 return eyeCenterOverride.position;

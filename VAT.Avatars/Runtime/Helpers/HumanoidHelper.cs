@@ -67,8 +67,9 @@ namespace VAT.Avatars.Helpers
 
                 proportions.upperArmEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(lowerArmOffset, arm.UpperArm.up), arm.UpperArm.forward);
 
-                var scapulaLowerOffset = (Vector3)arm.Scapula.position - descriptor.lowerArm.transform.position;
-                proportions.upperArmOffsetZ = -Vector3.Dot(Vector3.ProjectOnPlane(scapulaLowerOffset, arm.Scapula.up), arm.Scapula.forward);
+                var clavicleParent = arm.Clavicle.Parent;
+                var scapulaLowerOffset = (Vector3)clavicleParent.position - descriptor.lowerArm.transform.position;
+                proportions.upperArmOffsetZ = -Vector3.Dot(Vector3.ProjectOnPlane(scapulaLowerOffset, clavicleParent.up), clavicleParent.forward);
             }
 
             Vector3 offset = mul(arm.Clavicle.rotation, proportions.wristOffset * proportions.GetLength());

@@ -145,7 +145,7 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh upperToLower = new()
             {
                 bottom = lowerNeck,
-                bottomTransform = SimpleTransform.Create(back() * proportions.lowerNeckOffsetZ + down() * proportions.upperNeckEllipsoid.height * 0.5f, quaternion.identity),
+                bottomTransform = SimpleTransform.Create(forward() * proportions.lowerNeckOffsetZ + down() * proportions.upperNeckEllipsoid.height * 0.5f, quaternion.identity),
 
                 top = upperNeck,
                 topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),

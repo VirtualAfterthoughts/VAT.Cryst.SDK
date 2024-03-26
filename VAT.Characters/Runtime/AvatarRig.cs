@@ -26,6 +26,8 @@ namespace VAT.Characters
         {
             avatar.Initiate();
 
+            RigManager.GetVitalsOrDefault().CharacterMeasurements = avatar.GetMeasurements();
+
             var arms = avatar.GetArms();
 
             TryGetTrackedRig(out var rig);

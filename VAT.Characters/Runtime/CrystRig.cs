@@ -13,8 +13,18 @@ namespace VAT.Characters
 
         public CrystRig LastRig { get; set; } = null;
 
-        public virtual void OnRegistered() { }
-        public virtual void OnUnregistered() { }
+        private ICrystRigManager _rigManager = null;
+        public ICrystRigManager RigManager => _rigManager;
+
+        public virtual void OnRegisterManager(ICrystRigManager rigManager)
+        { 
+            _rigManager = rigManager;
+        }
+
+        public virtual void OnDeregisterManager(ICrystRigManager rigManager) 
+        {
+            _rigManager = null;
+        }
 
         public virtual void OnAwake() { }
         public virtual void OnStart() { }

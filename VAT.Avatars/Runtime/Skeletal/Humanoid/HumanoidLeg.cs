@@ -63,7 +63,7 @@ namespace VAT.Avatars.Skeletal
 
             _hipOffset = mult * _legProportions.hipSeparationOffset;
 
-            Hip.localPosition = new float3(_hipOffset, -_spineProportions.pelvisEllipsoid.height * 0.24f, 0f);
+            Hip.localPosition = new float3(_hipOffset, _spineProportions.GetHipYOffset(), 0f);
             Knee.localPosition = new float3(0f, -_legProportions.hipEllipsoid.height, -_legProportions.kneeOffsetZ);
             Ankle.localPosition = new float3(0f, -_legProportions.kneeEllipsoid.height, -_legProportions.ankleOffsetZ);
             Toe.localPosition = new float3(mult * _legProportions.toeOffset.x, -_legProportions.ankleEllipsoid.height + _legProportions.toeOffset.y, _legProportions.toeOffset.z);

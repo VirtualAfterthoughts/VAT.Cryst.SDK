@@ -10,6 +10,10 @@ namespace VAT.Characters
 {
     public interface ICrystRig : IUpdateable, IFixedUpdateable, ILateUpdateable
     {
+        void OnRegisterManager(ICrystRigManager rigManager);
+
+        void OnDeregisterManager(ICrystRigManager rigManager);
+
         bool TryGetArm(Handedness handedness, out IArm result);
     }
 }

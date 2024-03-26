@@ -99,6 +99,8 @@ namespace VAT.Characters
     }
 
     public class PancakeControllerRig : ControllerRig {
+        public Transform neckPivot;
+
         private DesktopInputActions _inputActions;
         private DesktopController _leftController;
         private DesktopController _rightController;
@@ -148,13 +150,13 @@ namespace VAT.Characters
             _headAxis += lookDelta * speed;
             _headAxis.y = Mathf.Clamp(_headAxis.y, -80f, 80f);
 
-            _head.rotation = Quaternion.AngleAxis(_headAxis.x, transform.up) * Quaternion.AngleAxis(_headAxis.y, -transform.right) * transform.rotation;
+            neckPivot.rotation = Quaternion.AngleAxis(_headAxis.x, transform.up) * Quaternion.AngleAxis(_headAxis.y, -transform.right) * transform.rotation;
         }
 
         public override bool TryGetInput(out IBasicInput input)
         {
             var movementAxis = _inputActions.Gameplay.Movement.ReadValue<Vector2>();
-            var flattenedHead = Quaternion.LookRotation(_head.forward.FlattenNeck(_head.up, transform.up), transform.up);
+            var flattenedHead = Quaternion.LookRotation(neckPivot.forward.FlattenNeck(neckPivot.up, transform.up), transform.up);
             var movement = flattenedHead * new Vector3(movementAxis.x, 0f, movementAxis.y);
 
             var jump = _inputActions.Gameplay.Jump.ReadValue<float>();

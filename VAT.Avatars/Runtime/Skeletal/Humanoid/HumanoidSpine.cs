@@ -9,6 +9,7 @@ using VAT.Avatars.Nervous;
 
 using VAT.Shared.Data;
 using VAT.Avatars.REWORK;
+using VAT.Input.Data;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -47,7 +48,7 @@ namespace VAT.Avatars.Skeletal
 
         private HumanoidNeck _neck;
 
-        private HumanoidGeneralProportions _generalProportions;
+        private BodyMeasurements _measurements;
         private HumanoidNeckProportions _neckProportions;
         private HumanoidSpineProportions _spineProportions;
 
@@ -75,7 +76,8 @@ namespace VAT.Avatars.Skeletal
 
         public override void WriteProportions(HumanoidProportions proportions)
         {
-            _generalProportions = proportions.generalProportions;
+            _measurements = proportions.GetMeasurements();
+
             _neckProportions = proportions.neckProportions;
             _spineProportions = proportions.spineProportions;
 
@@ -125,7 +127,7 @@ namespace VAT.Avatars.Skeletal
             Vector3 t1Up = T1Vertebra.up;
             Vector3 t1Right = T1Vertebra.right;
 
-            float height = _generalProportions.height;
+            float height = _measurements.height;
 
             float bendAngle = Vector3.Angle(root.up, t1Up);
             Vector3 bendAxis = Vector3.Cross(root.up, t1Up);

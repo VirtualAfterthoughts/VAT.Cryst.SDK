@@ -25,5 +25,10 @@ namespace VAT.Avatars.Proportions
 
         public Ellipsoid lowerNeckEllipsoid;
         public float lowerNeckOffsetZ;
+
+        public float GetLength()
+        {
+            return skullEllipsoid.height * 0.9f + upperNeckEllipsoid.height + lowerNeckEllipsoid.height;
+        }
     }
 }

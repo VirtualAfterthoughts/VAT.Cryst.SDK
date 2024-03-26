@@ -19,6 +19,7 @@ using VAT.Shared;
 using VAT.Shared.Extensions;
 using VAT.Avatars.Posing;
 using VAT.Input;
+using VAT.Input.Data;
 
 namespace VAT.Avatars.Integumentary
 {
@@ -39,14 +40,15 @@ namespace VAT.Avatars.Integumentary
         [Tooltip("The initial eye center position local to the avatar transform at runtime.")]
         public SerializedNullableVector3 runtimeEyeCenter = null;
 
-        [HideInInspector]
-        [Tooltip("The height of the avatar in meters.")]
-        public SerializedNullableFloat height = null;
-
         private Transform _physicsRoot;
 
         private HumanoidAvatarAnatomy _humanoidAvatarAnatomy;
         public override HumanoidAvatarAnatomy GenericAnatomy => _humanoidAvatarAnatomy;
+
+        public override BodyMeasurements GetMeasurements()
+        {
+            return proportions.GetMeasurements();
+        }
 
 #if UNITY_EDITOR
         public void Update() {
@@ -64,15 +66,6 @@ namespace VAT.Avatars.Integumentary
                     EditorUtility.SetDirty(this);
                     AssetDatabase.SaveAssetIfDirty(this);
                 }
-            }
-
-            // Save height
-            var height = EditorGetHeight();
-            
-            if (height.HasValue && (!this.height.HasValue() || !Mathf.Approximately(height.Value, this.height.GetValueOrDefault()))) {
-                this.height = height.Value;
-                EditorUtility.SetDirty(this);
-                AssetDatabase.SaveAssetIfDirty(this);
             }
         }
 #endif
@@ -105,10 +98,6 @@ namespace VAT.Avatars.Integumentary
             base.OnInitiate();
 
             // Initiate the data/IK skeleton
-            proportions.generalProportions = new HumanoidGeneralProportions() {
-                height = height.GetValueOrDefault(),
-            };
-
             GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Initiate();
             GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.WriteProportions(proportions);
             GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.BindPose();
@@ -125,10 +114,6 @@ namespace VAT.Avatars.Integumentary
             _physicsRoot = GameObjectExtensions.CreateGameObject(PhysSkeletonName, transform.parent).transform;
 
             base.OnInitiateRuntime();
-
-            // Make sure the avatar has a height
-            if (!height.HasValue())
-                throw new MissingReferenceException("No HumanoidAvatar height was found at runtime! Please recompile your avatar!");
 
             // Write eye center to the root transform
             var eyeCenter = GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter;

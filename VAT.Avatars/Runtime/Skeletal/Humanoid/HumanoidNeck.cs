@@ -8,8 +8,10 @@ using UnityEngine;
 using VAT.Avatars.Proportions;
 using VAT.Avatars.REWORK;
 using VAT.Input;
+using VAT.Input.Data;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
+using VAT.Shared.Math;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -28,7 +30,8 @@ namespace VAT.Avatars.Skeletal
 
         IBone IHumanNeck.Skull => Skull;
 
-        private HumanoidGeneralProportions _generalProportions;
+        private BodyMeasurements _measurements;
+
         private HumanoidNeckProportions _neckProportions;
 
         private float _armLength = 1f;
@@ -45,7 +48,8 @@ namespace VAT.Avatars.Skeletal
         }
 
         public override void WriteProportions(HumanoidProportions proportions) {
-            _generalProportions = proportions.generalProportions;
+            _measurements = proportions.GetMeasurements();
+
             _neckProportions = proportions.neckProportions;
 
             var arm = proportions.leftArmProportions;
@@ -59,8 +63,8 @@ namespace VAT.Avatars.Skeletal
             Ellipsoid c1 = _neckProportions.upperNeckEllipsoid;
 
             Skull.localPosition = new(0f, _neckProportions.skullYOffset, _neckProportions.skullZOffset);
-            C1Vertebra.localPosition = new(0f, -skull.height * 0.4f, -_neckProportions.upperNeckOffsetZ);
-            C4Vertebra.localPosition = new(0f, -c1.height, -_neckProportions.lowerNeckOffsetZ);
+            C1Vertebra.localPosition = new(0f, -skull.height * 0.4f, _neckProportions.upperNeckOffsetZ);
+            C4Vertebra.localPosition = new(0f, -c1.height, _neckProportions.lowerNeckOffsetZ);
         }
 
         private float3 _floorOffset = float3.zero;
@@ -81,7 +85,7 @@ namespace VAT.Avatars.Skeletal
             EyeCenter.rotation = head.rotation;
             EyeCenter.position = head.position;
 
-            float height = _generalProportions.height;
+            float height = _measurements.height;
 
             float bendAngle = Vector3.Angle(root.up, Skull.up);
             Vector3 bendAxis = Vector3.Cross(root.up, Skull.up);

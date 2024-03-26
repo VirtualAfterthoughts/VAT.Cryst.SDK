@@ -14,8 +14,41 @@ namespace VAT.Characters
     public abstract class ControllerRig : CrystRig {
         [Header("References")]
         [SerializeField] protected Transform _leftWrist;
+
         [SerializeField] protected Transform _rightWrist;
+
         [SerializeField] protected Transform _head;
+
+        [SerializeField] protected Transform vrRoot;
+
+        public override void OnRegisterManager(ICrystRigManager rigManager)
+        {
+            base.OnRegisterManager(rigManager);
+
+            var vitals = rigManager.GetVitalsOrDefault();
+
+            if (vitals != null)
+            {
+                vitals.OnSendVitals += OnSendVitals;
+            }
+        }
+
+        public override void OnDeregisterManager(ICrystRigManager rigManager)
+        {
+            base.OnDeregisterManager(rigManager);
+
+            var vitals = rigManager.GetVitalsOrDefault();
+
+            if (vitals != null)
+            {
+                vitals.OnSendVitals -= OnSendVitals;
+            }
+        }
+
+        private void OnSendVitals(ICrystVitals vitals)
+        {
+            vrRoot.localScale = (vitals.CharacterMeasurements.height / vitals.PlayerMeasurements.height) * Vector3.one;
+        }
 
         public override bool TryGetTrackedRig(out CrystRig rig)
         {

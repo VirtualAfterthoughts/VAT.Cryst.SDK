@@ -22,5 +22,15 @@ namespace VAT.Avatars.Proportions
 
         public Ellipsoid pelvisEllipsoid;
         public float pelvisOffsetZ;
+
+        public float GetLength()
+        {
+            return upperChestEllipsoid.height + chestEllipsoid.height + spineEllipsoid.height;
+        }
+
+        public float GetHipYOffset()
+        {
+            return -pelvisEllipsoid.height * 0.24f;
+        }
     }
 }

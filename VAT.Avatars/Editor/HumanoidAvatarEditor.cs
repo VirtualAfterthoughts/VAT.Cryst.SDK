@@ -134,6 +134,18 @@ namespace VAT.Avatars.Editor {
 
             GUILayout.Space(5);
 
+            EditorGUI.BeginDisabledGroup(true);
+
+            var measurements = _avatar.GetMeasurements();
+
+            EditorGUILayout.FloatField("Height", measurements.height);
+
+            EditorGUILayout.FloatField("Wingspan", measurements.wingspan);
+
+            EditorGUI.EndDisabledGroup();
+
+            GUILayout.Space(5);
+
             OnEditingFoldout();
 
             GUILayout.Space(10);
@@ -246,6 +258,9 @@ namespace VAT.Avatars.Editor {
 
                 _avatar.proportions.neckProportions.skullYOffset += skullOffset.y;
                 _avatar.proportions.neckProportions.skullZOffset += skullOffset.z;
+
+                _avatar.proportions.spineProportions.upperChestOffsetZ -= skullOffset.z;
+
                 _avatar.EditorRefreshAvatar();
             }
 
@@ -253,8 +268,8 @@ namespace VAT.Avatars.Editor {
             {
                 Undo.RecordObject(_avatar, "Adjust Upper Neck Offset");
 
-                _avatar.proportions.neckProportions.upperNeckOffsetZ -= upperNeckOffset.z;
-                _avatar.proportions.neckProportions.lowerNeckOffsetZ += upperNeckOffset.z;
+                _avatar.proportions.neckProportions.upperNeckOffsetZ += upperNeckOffset.z;
+                _avatar.proportions.neckProportions.lowerNeckOffsetZ -= upperNeckOffset.z;
                 _avatar.EditorRefreshAvatar();
             }
 
@@ -262,8 +277,8 @@ namespace VAT.Avatars.Editor {
             {
                 Undo.RecordObject(_avatar, "Adjust Lower Neck Offset");
 
-                _avatar.proportions.neckProportions.lowerNeckOffsetZ -= lowerNeckOffset.z;
-                _avatar.proportions.spineProportions.upperChestOffsetZ += lowerNeckOffset.z;
+                _avatar.proportions.neckProportions.lowerNeckOffsetZ += lowerNeckOffset.z;
+                _avatar.proportions.spineProportions.upperChestOffsetZ -= lowerNeckOffset.z;
                 _avatar.EditorRefreshAvatar();
             }
 
