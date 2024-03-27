@@ -37,7 +37,13 @@ namespace VAT.Shared.Data {
         /// <summary>
         /// Matrix that transforms a point from local space into world space.
         /// </summary>
-        public Matrix4x4 localToWorldMatrix;
+        public Matrix4x4 localToWorldMatrix
+        {
+            get
+            {
+                return Matrix4x4.TRS(position, rotation, lossyScale);
+            }
+        }
 
         /// <summary>
         /// The forward vector of the snapshot.
@@ -87,7 +93,6 @@ namespace VAT.Shared.Data {
             simple.position = position;
             simple.rotation = normalize(rotation);
             simple.lossyScale = lossyScale;
-            simple.localToWorldMatrix = Matrix4x4.TRS(simple.position, simple.rotation, simple.lossyScale);
             return simple;
         }
 
