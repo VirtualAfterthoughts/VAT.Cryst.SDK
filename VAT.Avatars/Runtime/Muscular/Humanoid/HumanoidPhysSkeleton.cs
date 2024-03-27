@@ -131,10 +131,17 @@ namespace VAT.Avatars.Muscular
             ResetAnchors();
         }
 
-        public void SetTransformRoot(Transform root) {
-            for (var i = 0; i < BoneGroupCount; i++) {
+        public void SetTransformRoot(Transform root)
+        {
+            for (var i = 0; i < BoneGroupCount; i++)
+            {
                 if (_groups[i] is HumanoidPhysBoneGroup group)
                     group.SetTransformRoot(root);
+            }
+
+            foreach (var bone in LocoLeg.TBones)
+            {
+                bone.UnityTransform.parent = root;
             }
         }
 
