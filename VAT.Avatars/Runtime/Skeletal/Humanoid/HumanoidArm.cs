@@ -253,13 +253,14 @@ namespace VAT.Avatars.Skeletal
             Vector3 newVector = target - shoulderPosition;
 
             // Make sure the vector isn't too small as to cause issues
-            if (newVector.magnitude > 0.1f)
+            float minArmLength = _armLength * 0.1f;
+            if (newVector.magnitude > minArmLength)
             {
                 _armVector = newVector;
             }
             else
             {
-                _armVector = newVector.normalized * 0.1f;
+                _armVector = newVector.normalized * minArmLength;
             }
 
             float a = _armVector.magnitude;
