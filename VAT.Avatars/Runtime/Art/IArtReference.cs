@@ -14,6 +14,8 @@ namespace VAT.Avatars.Art
 
         public abstract SimpleTransform Transform { get; set; }
 
+        public abstract SimpleTransform LocalTransform { get; set; }
+
         public SimpleTransform ArtOffset { get; set; }
 
         public void WriteOffset(IBone bone) {

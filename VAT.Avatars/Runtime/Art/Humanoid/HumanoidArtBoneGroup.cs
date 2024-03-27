@@ -16,6 +16,14 @@ namespace VAT.Avatars.Art
                 Bones[i] = new ArtBone();
             }
         }
+
+        public override void Deinitiate()
+        {
+            for (var i = 0; i < BoneCount; i++)
+            {
+                Bones[i].Deinitiate();
+            }
+        }
     }
 
     public abstract class HumanoidArtBoneGroupT<TArtGroup, TBoneGroup> : HumanoidArtBoneGroup

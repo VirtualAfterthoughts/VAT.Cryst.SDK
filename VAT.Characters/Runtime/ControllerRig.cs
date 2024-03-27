@@ -29,7 +29,7 @@ namespace VAT.Characters
 
             if (vitals != null)
             {
-                vitals.OnSendVitals += OnSendVitals;
+                vitals.OnUpdatedVitals += OnUpdatedVitals;
             }
         }
 
@@ -41,11 +41,11 @@ namespace VAT.Characters
 
             if (vitals != null)
             {
-                vitals.OnSendVitals -= OnSendVitals;
+                vitals.OnUpdatedVitals -= OnUpdatedVitals;
             }
         }
 
-        private void OnSendVitals(ICrystVitals vitals)
+        private void OnUpdatedVitals(ICrystVitals vitals)
         {
             vrRoot.localScale = (vitals.CharacterMeasurements.height / vitals.PlayerMeasurements.height) * Vector3.one;
         }

@@ -17,16 +17,44 @@ namespace VAT.Characters
 
     public class AvatarRig : CrystRig
     {
-        public Avatar avatar;
+        public Avatar targetAvatar;
 
         public HandPose openPose;
         public HandPose closedPose;
 
+        private Avatar _activeAvatar = null;
+
         public override void OnAwake()
+        {
+            if (targetAvatar != null)
+            {
+                ActivateAvatar(targetAvatar);
+            }
+        }
+
+        [ContextMenu("Change Avatar")]
+        public void ChangeAvatar()
+        {
+            targetAvatar.gameObject.SetActive(true);
+
+            if (_activeAvatar != null)
+            {
+                targetAvatar.transform.SetPositionAndRotation(_activeAvatar.transform.position, _activeAvatar.transform.rotation);
+
+                _activeAvatar.Uninitiate();
+                _activeAvatar.gameObject.SetActive(false);
+            }
+
+            ActivateAvatar(targetAvatar);
+        }
+
+        public void ActivateAvatar(Avatar avatar)
         {
             avatar.Initiate();
 
-            RigManager.GetVitalsOrDefault().CharacterMeasurements = avatar.GetMeasurements();
+            var vitals = RigManager.GetVitalsOrDefault();
+            vitals.CharacterMeasurements = avatar.GetMeasurements();
+            vitals.UpdateVitals();
 
             var arms = avatar.GetArms();
 
@@ -54,13 +82,15 @@ namespace VAT.Characters
                     interactor.hosts.Add(((PhysBone)physBone).UnityGameObject.AddComponent<InteractableHost>());
                 }
             }
+
+            _activeAvatar = avatar;
         }
 
         protected virtual IAvatarPayload GetPayload()
         {
-            avatar.transform.position = LastRig.transform.position;
+            _activeAvatar.transform.position = LastRig.transform.position;
 
-            var root = SimpleTransform.Create(avatar.transform);
+            var root = SimpleTransform.Create(_activeAvatar.transform);
             root.lossyScale = Vector3.one;
 
             LastRig.TryGetHead(out var head);
@@ -85,21 +115,21 @@ namespace VAT.Characters
 
             var payload = GetPayload();
 
-            avatar.Write(payload);
-            avatar.Anatomy.Skeleton.DataBoneSkeleton.Solve();
-            avatar.Anatomy.Skeleton.PhysBoneSkeleton.Solve();
+            _activeAvatar.Write(payload);
+            _activeAvatar.Anatomy.Skeleton.DataBoneSkeleton.Solve();
+            _activeAvatar.Anatomy.Skeleton.PhysBoneSkeleton.Solve();
         }
 
         public override void OnLateUpdate(float deltaTime)
         {
-            avatar.SolveArt();
+            _activeAvatar.SolveArt();
 
             ApplyOffsets();
         }
 
         public override bool TryGetHead(out IJoint head)
         {
-            head = new BasicJoint(SimpleTransform.Create(transform).InverseTransform(avatar.Anatomy.Skeleton.PhysBoneSkeleton.GetEyeCenter()));
+            head = new BasicJoint(SimpleTransform.Create(transform).InverseTransform(_activeAvatar.Anatomy.Skeleton.PhysBoneSkeleton.GetEyeCenter()));
             return true;
         }
 
@@ -109,7 +139,7 @@ namespace VAT.Characters
                 return;
 
             // Rotation
-            var skeleton = avatar.Anatomy.Skeleton;
+            var skeleton = _activeAvatar.Anatomy.Skeleton;
             trackedRig.transform.rotation = Quaternion.Slerp(trackedRig.transform.rotation, skeleton.PhysBoneSkeleton.GetRoot().Transform.rotation, Time.deltaTime * 12f);
 
             // Position

@@ -37,6 +37,14 @@ namespace VAT.Avatars.Art
             }
         }
 
+        public override void Deinitiate()
+        {
+            foreach (var group in _groups)
+            {
+                group.Deinitiate();
+            }
+        }
+
         public override void WriteTransforms(HumanoidArtDescriptor artDescriptor) {
             Neck.WriteTransforms(artDescriptor.neckDescriptor);
             Spine.WriteTransforms(artDescriptor.spineDescriptor);

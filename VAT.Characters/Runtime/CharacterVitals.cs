@@ -18,12 +18,12 @@ namespace VAT.Characters
         public BodyMeasurements PlayerMeasurements { get => _playerMeasurements; set => _playerMeasurements = value; }
         public BodyMeasurements CharacterMeasurements { get => _characterMeasurements; set => _characterMeasurements = value; }
 
-        public event CrystVitalsDelegate OnSendVitals;
+        public event CrystVitalsDelegate OnUpdatedVitals;
 
-        [ContextMenu("Send Vitals")]
-        public void SendVitals()
+        [ContextMenu("Update Vitals")]
+        public void UpdateVitals()
         {
-            OnSendVitals?.Invoke(this);
+            OnUpdatedVitals?.Invoke(this);
         }
     }
 }

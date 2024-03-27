@@ -165,6 +165,8 @@ namespace VAT.Avatars.Integumentary
 
         protected override void OnUninitiateRuntime() {
             Destroy(_physicsRoot.gameObject);
+
+            GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.Deinitiate();
         }
 
         protected override AvatarArm[] CreateArms() {

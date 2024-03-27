@@ -11,12 +11,12 @@ namespace VAT.Characters
 
     public interface ICrystVitals
     {
-        event CrystVitalsDelegate OnSendVitals;
+        event CrystVitalsDelegate OnUpdatedVitals;
 
         BodyMeasurements PlayerMeasurements { get; set; }
         
         BodyMeasurements CharacterMeasurements { get; set; }
 
-        void SendVitals();
+        void UpdateVitals();
     }
 }

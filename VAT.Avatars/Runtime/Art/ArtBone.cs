@@ -21,13 +21,25 @@ namespace VAT.Avatars.Art
             set { ArtReference.Transform = value; }
         }
 
+        private SimpleTransform _defaultTransform = SimpleTransform.Default;
+
         IBone IBone.Parent => throw new System.NotImplementedException();
 
         int IBone.ChildCount => 0;
 
+        public void Deinitiate()
+        {
+            if (HasReference)
+            {
+                ArtReference.LocalTransform = _defaultTransform;
+            }
+        }
+
         public void WriteReference(IArtReference reference) {
             _artReference = reference;
             _hasReference = true;
+
+            _defaultTransform = reference.LocalTransform;
         }
 
         public void WriteOffset(IBone bone) {

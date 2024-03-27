@@ -36,6 +36,13 @@ namespace VAT.Avatars.Art
             Hand.Initiate();
         }
 
+        public override void Deinitiate()
+        {
+            base.Deinitiate();
+
+            Hand.Deinitiate();
+        }
+
         public override void Solve() {
             float mult = _isLeft ? 1f : -1f;
 

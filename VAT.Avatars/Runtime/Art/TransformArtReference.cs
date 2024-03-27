@@ -38,6 +38,26 @@ namespace VAT.Avatars.Art
             }
         }
 
+        public SimpleTransform LocalTransform
+        {
+            get
+            {
+                if (HasTransform)
+                {
+                    return SimpleTransform.Create(transform.localPosition, transform.localRotation);
+                }
+
+                return SimpleTransform.Default;
+            }
+            set
+            {
+                if (HasTransform)
+                {
+                    transform.SetLocalPositionAndRotation(value.position, value.rotation);
+                }
+            }
+        }
+
         public SimpleTransform ArtOffset {
             readonly get { return offset; }
             set { offset = value; }

@@ -13,7 +13,7 @@ namespace VAT.Avatars.Art
     {
         public override int BoneCount => 1;
 
-        public ArtBone Hand => Bones[0] as ArtBone;
+        public ArtBone Hand => Bones[0];
 
         private HumanoidArtThumb[] _thumbs = null;
         public HumanoidArtThumb[] Thumbs => _thumbs;
@@ -35,6 +35,21 @@ namespace VAT.Avatars.Art
             for (var i = 0; i < _fingers.Length; i++) {
                 _fingers[i] = new HumanoidArtFinger();
                 _fingers[i].Initiate();
+            }
+        }
+
+        public override void Deinitiate()
+        {
+            base.Deinitiate();
+
+            foreach (var finger in Fingers)
+            {
+                finger.Deinitiate();
+            }
+
+            foreach (var thumb in Thumbs)
+            {
+                thumb.Deinitiate();
             }
         }
 
