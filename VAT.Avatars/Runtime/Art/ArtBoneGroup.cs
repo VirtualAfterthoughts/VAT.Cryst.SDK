@@ -7,31 +7,35 @@ using VAT.Avatars.REWORK;
 namespace VAT.Avatars.Art
 {
     public abstract class ArtBoneGroup : IBoneGroup {
-        public abstract ArtBone[] Bones { get; }
+        protected ArtBone[] _bones = null;
+        public ArtBone[] Bones => _bones;
         public abstract int BoneCount { get; }
-        public abstract ArtBoneGroup[] SubGroups { get; }
-        public abstract int SubGroupCount { get; }
+
+        public virtual ArtBoneGroup[] SubGroups { get; } = null;
+        public virtual int SubGroupCount { get; } = 0;
 
         IBoneGroup[] IBoneGroup.SubGroups => SubGroups;
 
         IBone[] IBoneGroup.Bones => Bones;
 
-        public abstract void Initiate();
-        public abstract void Deinitiate();
+        public virtual void Initiate()
+        {
+            _bones = new ArtBone[BoneCount];
+
+            for (var i = 0; i < Bones.Length; i++)
+            {
+                _bones[i] = new ArtBone();
+            }
+        }
+
+        public virtual void Deinitiate()
+        {
+            for (var i = 0; i < BoneCount; i++)
+            {
+                _bones[i].Deinitiate();
+            }
+        }
 
         public abstract void Solve();
-    }
-
-    public abstract class ArtBoneGroupT<TBone> : ArtBoneGroup where TBone : ArtBone {
-        public sealed override ArtBone[] Bones => TBones;
-        public override int SubGroupCount => 0;
-        public override ArtBoneGroup[] SubGroups => null;
-
-        protected TBone[] _bones = null;
-        public virtual TBone[] TBones => _bones;
-
-        public override void Initiate() {
-            _bones = new TBone[BoneCount];
-        }
     }
 }

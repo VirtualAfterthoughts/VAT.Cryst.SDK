@@ -7,7 +7,7 @@ using VAT.Avatars.Skeletal;
 
 using VAT.Cryst.Interfaces;
 using VAT.Entities;
-
+using VAT.Input.Data;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
@@ -33,6 +33,8 @@ namespace VAT.Avatars.Muscular
 
         private Vector3 _fenderDebt = Vector3.zero;
 
+        private float _radius = 0.2f;
+
         public override void Initiate()
         {
             base.Initiate();
@@ -43,7 +45,6 @@ namespace VAT.Avatars.Muscular
 
             Foot.Rigidbody.Rigidbody.angularDrag = 0f;
             _locoBall = Foot.UnityGameObject.AddComponent<SphereCollider>();
-            _locoBall.radius = 0.2f;
 
             var physMaterial = new PhysicMaterial("LocoSphere")
             {
@@ -58,8 +59,6 @@ namespace VAT.Avatars.Muscular
             Foot.InsertCollider(_locoBall);
 
             _fender = Fender.UnityGameObject.AddComponent<SphereCollider>();
-            _fender.radius = 0.25f;
-            _fender.center = Vector3.up * 0.3f;
 
             var frictionless = new PhysicMaterial("Fender")
             {
@@ -76,11 +75,20 @@ namespace VAT.Avatars.Muscular
 
         private float3 _lastDistance;
 
+        public void WriteProportions(BodyMeasurements measurements)
+        {
+            _radius = 0.2f * (measurements.height / 1.76f);
+
+            _locoBall.radius = _radius;
+            _fender.radius = _radius * 1.25f;
+            _fender.center = _radius * 1.5f * Vector3.up;
+        }
+
         public override void Solve()
         {
             float shrinkMult = (1f - _leg._footShrink);
-            _locoBall.radius = 0.2f * shrinkMult;
-            _fender.radius = 0.25f * shrinkMult;
+            _locoBall.radius = _radius * shrinkMult;
+            _fender.radius = _radius * 1.25f * shrinkMult;
 
             var kneeTarget = Knee.Parent.TransformBone(_leg.Knee.Parent, _leg.Knee);
             Knee.Solve(kneeTarget);
@@ -144,28 +152,31 @@ namespace VAT.Avatars.Muscular
             Fender.MatchBone(leg.Foot);
             Foot.MatchBone(leg.Foot);
 
-            Knee.SetMass(8f);
-            Fender.SetMass(16f);
-            Foot.SetMass(16f);
-            Foot.Rigidbody.Rigidbody.inertiaTensor = Vector3.one * 10f;
+            float legLength = _leg.Length * 0.5f;
+            float legScalar = legLength / 0.5f;
+
+            Knee.SetMass(8f * legScalar);
+            Fender.SetMass(16f * legScalar);
+            Foot.SetMass(16f * legScalar);
+
+            Foot.Rigidbody.Rigidbody.inertiaTensor = 1f * legScalar * Vector3.one;
 
             Knee.ConfigurableJoint.ConfigurableJoint.rotationDriveMode = RotationDriveMode.Slerp;
             Knee.ConfigurableJoint.ConfigurableJoint.slerpDrive = new JointDrive()
             {
                 positionSpring = 5e+06f,
                 positionDamper = 1e+05f,
-                maximumForce = 5e+06f
+                maximumForce = 5e+06f * legScalar
             };
 
             Fender.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
             Fender.ConfigurableJoint.ConfigurableJoint.yMotion = ConfigurableJointMotion.Limited;
-            float legLength = _leg.Length * 0.5f;
             Fender.ConfigurableJoint.ConfigurableJoint.linearLimit = new SoftJointLimit() { limit = legLength * 1.1f };
             Fender.ConfigurableJoint.ConfigurableJoint.yDrive = new JointDrive()
             {
                 positionSpring = 900000f,
                 positionDamper = 200000f,
-                maximumForce = 6000f,
+                maximumForce = 6000f * legScalar * legScalar,
             };
         }
 
@@ -176,7 +187,7 @@ namespace VAT.Avatars.Muscular
             Fender.SetAnchor(Fender.Transform.position);
 
             Foot.ResetAnchors();
-            Foot.SetConnectedAnchor(Fender.Transform.position + Fender.Transform.up * 0.2f);
+            Foot.SetConnectedAnchor(Fender.Transform.position + Fender.Transform.up * _radius);
         }
 
         public override void Attach(PhysBoneGroup group) {

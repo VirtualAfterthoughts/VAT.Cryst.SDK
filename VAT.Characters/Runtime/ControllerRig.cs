@@ -21,6 +21,8 @@ namespace VAT.Characters
 
         [SerializeField] protected Transform vrRoot;
 
+        public Camera cameraTest;
+
         public override void OnRegisterManager(ICrystRigManager rigManager)
         {
             base.OnRegisterManager(rigManager);
@@ -47,7 +49,14 @@ namespace VAT.Characters
 
         private void OnUpdatedVitals(ICrystVitals vitals)
         {
-            vrRoot.localScale = (vitals.CharacterMeasurements.height / vitals.PlayerMeasurements.height) * Vector3.one;
+            float scale = (vitals.CharacterMeasurements.height / vitals.PlayerMeasurements.height);
+            vrRoot.localScale = scale * Vector3.one;
+
+            if (cameraTest != null)
+            {
+                cameraTest.nearClipPlane = 0.01f * scale;
+                cameraTest.farClipPlane = 1000f * scale;
+            }
         }
 
         public override bool TryGetTrackedRig(out CrystRig rig)

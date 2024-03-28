@@ -10,7 +10,7 @@ using VAT.Avatars.Skeletal;
 namespace VAT.Avatars.Art
 {
     public class HumanoidArtSkeleton : ArtBoneSkeletonT<HumanoidArtDescriptor, IHumanSkeleton> {
-        private HumanoidArtBoneGroup[] _groups = null;
+        private ArtBoneGroup[] _groups = null;
         public override IBoneGroup[] BoneGroups => _groups;
 
         public override int BoneGroupCount => 6;
@@ -24,7 +24,7 @@ namespace VAT.Avatars.Art
 
         public override void Initiate()
         {
-            _groups = new HumanoidArtBoneGroup[BoneGroupCount];
+            _groups = new ArtBoneGroup[BoneGroupCount];
             _groups[0] = new HumanoidArtNeck();
             _groups[1] = new HumanoidArtSpine();
             _groups[2] = new HumanoidArtArm();

@@ -36,6 +36,8 @@ namespace VAT.Avatars.Skeletal
 
         public void WriteProportions(float length) {
             _length = length;
+
+            _legScalar = length / 0.5f;
         }
 
         public float _spineDebtMultiplier = 1f;
@@ -43,6 +45,8 @@ namespace VAT.Avatars.Skeletal
         public float _jumpPull = 0f;
         public float _jumpMultiplier = 1f;
         private float _timeSinceJump = 0f;
+
+        private float _legScalar = 1f;
 
         public override void Solve()
         {
@@ -83,11 +87,16 @@ namespace VAT.Avatars.Skeletal
                 }
                 else
                 {
-                    if (_timeSinceJump < 0.25f)
+                    float timerScalar = Mathf.Sqrt(_legScalar);
+
+                    float initialTime = 0.25f * timerScalar;
+                    float pullTime = 0.1f * timerScalar;
+
+                    if (_timeSinceJump < initialTime)
                     {
-                        _jumpMultiplier = Mathf.Lerp(0f, 5f, _timeSinceJump / 0.25f);
-                        _spineDebtMultiplier = Mathf.Lerp(0f, 1f, _timeSinceJump / 0.25f);
-                        _jumpPull = Mathf.Lerp(0.4f, -0.5f, _timeSinceJump / 0.1f);
+                        _jumpMultiplier = Mathf.Lerp(0f, 5f * _legScalar, _timeSinceJump / initialTime);
+                        _spineDebtMultiplier = Mathf.Lerp(0f, 1f, _timeSinceJump / initialTime);
+                        _jumpPull = Mathf.Lerp(0.4f, -0.5f, _timeSinceJump / pullTime);
                     }
                     else
                     {
@@ -96,13 +105,13 @@ namespace VAT.Avatars.Skeletal
                         _jumpPull = Mathf.Lerp(_jumpPull, 0f, Time.deltaTime * 6f);
                     }
 
-                    if (_timeSinceJump > 0.15f && _timeSinceJump < 1f)
+                    if (_timeSinceJump > 0.15f * timerScalar && _timeSinceJump < 1f * timerScalar)
                     {
-                        _footShrink = 0.3f;
+                        _footShrink = Mathf.Lerp(_footShrink, 0.3f, Time.deltaTime * 24f);
                     }
                     else
                     {
-                        _footShrink = 0f;
+                        _footShrink = Mathf.Lerp(_footShrink, 0f, Time.deltaTime * 24f);
                     }
 
                     _timeSinceJump += Time.deltaTime;

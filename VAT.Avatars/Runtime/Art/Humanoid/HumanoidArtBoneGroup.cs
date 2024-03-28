@@ -8,25 +8,7 @@ using VAT.Avatars.Skeletal;
 
 namespace VAT.Avatars.Art
 {
-    public abstract class HumanoidArtBoneGroup : ArtBoneGroupT<ArtBone> {
-        public override void Initiate() {
-            base.Initiate();
-
-            for (var i = 0; i < BoneCount; i++) {
-                Bones[i] = new ArtBone();
-            }
-        }
-
-        public override void Deinitiate()
-        {
-            for (var i = 0; i < BoneCount; i++)
-            {
-                Bones[i].Deinitiate();
-            }
-        }
-    }
-
-    public abstract class HumanoidArtBoneGroupT<TArtGroup, TBoneGroup> : HumanoidArtBoneGroup
+    public abstract class HumanoidArtBoneGroupT<TArtGroup, TBoneGroup> : ArtBoneGroup
         where TArtGroup : IArtDescriptorGroup
         where TBoneGroup : IBoneGroup
     {

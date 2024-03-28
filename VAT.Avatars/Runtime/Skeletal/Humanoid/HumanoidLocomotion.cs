@@ -225,7 +225,7 @@ namespace VAT.Avatars.Skeletal
 
             _threshold = Mathf.Lerp(0.8f, 0.6f, _velocity.magnitude / (4f * _legMultiplier));
 
-            _stepSpeed = Mathf.Lerp(0.7f, 1f, _velocity.magnitude / (4f * _legMultiplier)) * _legMultiplier;
+            _stepSpeed = Mathf.Lerp(0.7f, 1f, _velocity.magnitude / (4f * _legMultiplier)) * Mathf.Sqrt(_legMultiplier);
 
             // Get the resting foot position and rotation
             float restOffset = _hipOffset * 1.5f;

@@ -96,6 +96,8 @@ namespace VAT.Avatars.Muscular
             LeftArm.WriteProportions(proportions.leftArmProportions);
             RightArm.WriteProportions(proportions.rightArmProportions);
 
+            LocoLeg.WriteProportions(proportions.GetMeasurements());
+
             IgnoreCollisions(true);
         }
 

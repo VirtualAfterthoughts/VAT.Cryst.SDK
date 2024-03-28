@@ -22,10 +22,10 @@ namespace VAT.Avatars.Vitals
 
         public override void ConfigureJoints()
         {
-            _spine.T1Vertebra.ConfigureJoint();
-            _spine.T7Vertebra.ConfigureJoint();
-            _spine.L1Vertebra.ConfigureJoint();
-            _spine.Sacrum.ConfigureJoint();
+            _spine.T1Vertebra.ConfigureJoint(UpperChestMass * 50000f);
+            _spine.T7Vertebra.ConfigureJoint(ChestMass * 50000f);
+            _spine.L1Vertebra.ConfigureJoint(SpineMass * 50000f);
+            _spine.Sacrum.ConfigureJoint(PelvisMass * 50000f);
         }
 
         public override void ApplyVitals()
