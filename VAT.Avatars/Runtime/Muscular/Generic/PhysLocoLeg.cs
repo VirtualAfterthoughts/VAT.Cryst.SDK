@@ -173,11 +173,23 @@ namespace VAT.Avatars.Muscular
             Fender.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
             Fender.ConfigurableJoint.ConfigurableJoint.yMotion = ConfigurableJointMotion.Limited;
             Fender.ConfigurableJoint.ConfigurableJoint.linearLimit = new SoftJointLimit() { limit = legLength * 1.1f };
+
+            float fenderScalar;
+
+            if (legScalar <= 1f)
+            {
+                fenderScalar = legScalar * Mathf.Sqrt(legScalar);
+            }
+            else
+            {
+                fenderScalar = legScalar * legScalar;
+            }
+
             Fender.ConfigurableJoint.ConfigurableJoint.yDrive = new JointDrive()
             {
                 positionSpring = 900000f,
                 positionDamper = 200000f,
-                maximumForce = 6000f * legScalar * Mathf.Sqrt(legScalar),
+                maximumForce = 6000f * fenderScalar,
             };
         }
 
