@@ -177,7 +177,7 @@ namespace VAT.Avatars.Muscular
             {
                 positionSpring = 900000f,
                 positionDamper = 200000f,
-                maximumForce = 6000f * legScalar * legScalar,
+                maximumForce = 6000f * legScalar,
             };
         }
 
