@@ -83,22 +83,19 @@ namespace VAT.Characters
             _joints[index] = joint;
         }
 
-        public bool TryGetElbow(out IJoint elbow)
+        public IHand GetHandOrNull()
         {
-            elbow = default;
-            return false;
+            return (XRHand)GetJoint(0);
         }
 
-        public bool TryGetHand(out IHand hand)
+        public IJoint GetElbowOrNull()
         {
-            hand = (XRHand)GetJoint(0);
-            return true;
+            return null;
         }
 
-        public bool TryGetUpperArm(out IJoint upperArm)
+        public IJoint GetUpperArmOrNull()
         {
-            upperArm = default;
-            return false;
+            return null;
         }
     }
 
@@ -117,8 +114,10 @@ namespace VAT.Characters
                 return;
             }
 
-            if (TryGetArm(Handedness.RIGHT, out var arm) && arm.TryGetHand(out var hand))
+            if (TryGetArm(Handedness.RIGHT, out var arm))
             {
+                var hand = arm.GetHandOrNull();
+
                 var controller = hand.GetInputControllerOrDefault();
                 controller.TryGetThumbstick(out var thumbstick);
 

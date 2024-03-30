@@ -121,16 +121,19 @@ namespace VAT.Avatars.Skeletal
             _avatarPayload.TryGetArm(Handedness.LEFT, out var leftArm);
             _avatarPayload.TryGetArm(Handedness.RIGHT, out var rightArm);
 
-            leftArm.TryGetHand(out var leftHand);
-            rightArm.TryGetHand(out var rightHand);
+            var leftHand = leftArm.GetHandOrNull();
+            var rightHand = rightArm.GetHandOrNull();
 
-            float leftYPull = SolveChestYPull(leftHand.Transform);
-            float rightYPull = SolveChestYPull(rightHand.Transform);
+            var leftHandTransform = _avatarPayload.GetRoot().Transform(leftHand.Transform);
+            var rightHandTransform = _avatarPayload.GetRoot().Transform(rightHand.Transform);
+
+            float leftYPull = SolveChestYPull(leftHandTransform);
+            float rightYPull = SolveChestYPull(rightHandTransform);
 
             float yPull = leftYPull - rightYPull;
 
-            float leftZPull = SolveChestZPull(leftHand.Transform);
-            float rightZPull = SolveChestZPull(rightHand.Transform);
+            float leftZPull = SolveChestZPull(leftHandTransform);
+            float rightZPull = SolveChestZPull(rightHandTransform);
 
             float zPull = Mathf.Clamp(rightZPull - leftZPull, -1f, 1f);
 

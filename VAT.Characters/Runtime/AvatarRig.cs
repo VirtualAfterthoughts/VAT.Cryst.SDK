@@ -6,7 +6,6 @@ using UnityEngine;
 namespace VAT.Characters
 {
     using VAT.Avatars;
-    using VAT.Avatars.Example;
     using VAT.Avatars.Integumentary;
     using VAT.Avatars.Muscular;
     using VAT.Avatars.Nervous;
@@ -71,7 +70,7 @@ namespace VAT.Characters
             foreach (var arm in arms)
             {
                 rig.TryGetArm(arm.Handedness, out var rigArm);
-                rigArm.TryGetHand(out var thing);
+                var thing = rigArm.GetHandOrNull();
 
                 // add interactor
                 var bone = (PhysBone)arm.PhysArm.Hand.Hand;

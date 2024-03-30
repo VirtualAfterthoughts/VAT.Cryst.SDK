@@ -7,10 +7,10 @@ namespace VAT.Avatars
 {
     public interface IArm : ILimb
     {
-        bool TryGetHand(out IHand hand);
+        IHand GetHandOrNull();
 
-        bool TryGetElbow(out IJoint elbow);
+        IJoint GetElbowOrNull();
 
-        bool TryGetUpperArm(out IJoint upperArm);
+        IJoint GetUpperArmOrNull();
     }
 }

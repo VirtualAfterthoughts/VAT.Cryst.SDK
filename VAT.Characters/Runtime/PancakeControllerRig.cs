@@ -79,22 +79,19 @@ namespace VAT.Characters
             _joints[index] = joint;
         }
 
-        public bool TryGetElbow(out IJoint elbow)
+        public IHand GetHandOrNull()
         {
-            elbow = default;
-            return false;
+            return (PancakeHand)GetJoint(0);
         }
 
-        public bool TryGetHand(out IHand hand)
+        public IJoint GetElbowOrNull()
         {
-            hand = (PancakeHand)GetJoint(0);
-            return true;
+            return null;
         }
 
-        public bool TryGetUpperArm(out IJoint upperArm)
+        public IJoint GetUpperArmOrNull()
         {
-            upperArm = default;
-            return false;
+            return null;
         }
     }
 
