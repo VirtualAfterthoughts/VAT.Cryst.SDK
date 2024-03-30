@@ -24,26 +24,34 @@ namespace VAT.Characters
 
         private Avatar _activeAvatar = null;
 
-        public override void OnAwake()
+        public override void OnRigEnable()
         {
-            if (targetAvatar != null)
+            ChangeAvatar();
+        }
+
+        public override void OnRigDisable()
+        {
+            if (_activeAvatar != null)
             {
-                ActivateAvatar(targetAvatar);
+                _activeAvatar.Uninitiate();
+                _activeAvatar = null;
             }
         }
 
         [ContextMenu("Change Avatar")]
         public void ChangeAvatar()
         {
-            targetAvatar.gameObject.SetActive(true);
-
             if (_activeAvatar != null)
             {
                 targetAvatar.transform.SetPositionAndRotation(_activeAvatar.transform.position, _activeAvatar.transform.rotation);
 
                 _activeAvatar.Uninitiate();
                 _activeAvatar.gameObject.SetActive(false);
+
+                _activeAvatar = null;
             }
+
+            targetAvatar.gameObject.SetActive(true);
 
             ActivateAvatar(targetAvatar);
         }

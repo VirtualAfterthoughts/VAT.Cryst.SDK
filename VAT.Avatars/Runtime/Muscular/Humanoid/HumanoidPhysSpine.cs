@@ -60,9 +60,6 @@ namespace VAT.Avatars.Muscular
 
             Root.ConfigureJoint(500000000f);
 
-            Root.ConfigurableJoint.ConfigurableJoint.axis = Vector3.up;
-            Root.ConfigurableJoint.ConfigurableJoint.secondaryAxis = Vector3.right;
-
             Sacrum.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Free, ConfigurableJointMotion.Free);
             Root.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
         }

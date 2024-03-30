@@ -108,7 +108,7 @@ namespace VAT.Characters
         private DesktopHand _leftHand;
         private DesktopHand _rightHand;
 
-        public override void OnAwake()
+        public override void OnRigEnable()
         {
             _inputActions = new DesktopInputActions();
             _inputActions.Enable();

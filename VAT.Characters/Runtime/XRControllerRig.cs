@@ -103,7 +103,7 @@ namespace VAT.Characters
     }
 
     public class XRControllerRig : ControllerRig {
-        public override void OnAwake()
+        public override void OnRigEnable()
         {
             XRManager.InitializeApiAsync();
         }

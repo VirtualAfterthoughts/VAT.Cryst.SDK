@@ -16,18 +16,31 @@ namespace VAT.Characters
         private ICrystRigManager _rigManager = null;
         public ICrystRigManager RigManager => _rigManager;
 
-        public virtual void OnRegisterManager(ICrystRigManager rigManager)
-        { 
+        public void OnRegisterRig(ICrystRigManager rigManager)
+        {
             _rigManager = rigManager;
+
+            _rigManager.OnManagerUpdate += OnUpdate;
+            _rigManager.OnManagerFixedUpdate += OnFixedUpdate;
+            _rigManager.OnManagerLateUpdate += OnLateUpdate;
         }
 
-        public virtual void OnDeregisterManager(ICrystRigManager rigManager) 
+        public void OnDeregisterRig(ICrystRigManager rigManager)
         {
+            _rigManager.OnManagerUpdate -= OnUpdate;
+            _rigManager.OnManagerFixedUpdate -= OnFixedUpdate;
+            _rigManager.OnManagerLateUpdate -= OnLateUpdate;
+
             _rigManager = null;
         }
 
-        public virtual void OnAwake() { }
-        public virtual void OnStart() { }
+        public virtual void OnRigEnable()
+        { 
+        }
+
+        public virtual void OnRigDisable() 
+        {
+        }
 
         public virtual void OnFixedUpdate(float deltaTime) { }
         public virtual void OnLateUpdate(float deltaTime) { }

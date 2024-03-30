@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -15,6 +16,8 @@ namespace VAT.Characters
 
         private CrystRig[] _rigs;
 
+        public event Action<float> OnManagerUpdate, OnManagerFixedUpdate, OnManagerLateUpdate;
+
         public ICrystVitals GetVitalsOrDefault()
         {
             return _vitals;
@@ -26,20 +29,26 @@ namespace VAT.Characters
             OnCharacterAwake();
 
             RegisterRigs(GetComponentsInChildren<CrystRig>());
-
-            for (var i = 0; i < _rigs.Length; i++)
-            {
-                _rigs[i].OnAwake();
-            }
         }
 
         private void Start()
         {
             OnCharacterStart();
+        }
 
-            for (var i = 0; i < _rigs.Length; i++)
+        public void OnEnable()
+        {
+            foreach (var rig in Rigs)
             {
-                _rigs[i].OnStart();
+                rig.OnRigEnable();
+            }
+        }
+
+        public void OnDisable()
+        {
+            foreach (var rig in Rigs)
+            {
+                rig.OnRigDisable();
             }
         }
 
@@ -49,10 +58,7 @@ namespace VAT.Characters
 
             OnCharacterEarlyUpdate();
 
-            for (var i = 0; i < _rigs.Length; i++)
-            {
-                _rigs[i].OnUpdate(deltaTime);
-            }
+            OnManagerUpdate?.Invoke(deltaTime);
 
             OnCharacterUpdate();
         }
@@ -63,10 +69,7 @@ namespace VAT.Characters
 
             OnCharacterEarlyFixedUpdate();
 
-            for (var i = 0; i < _rigs.Length; i++)
-            {
-                _rigs[i].OnFixedUpdate(fixedDelta);
-            }
+            OnManagerFixedUpdate?.Invoke(fixedDelta);
 
             OnCharacterFixedUpdate();
         }
@@ -77,10 +80,7 @@ namespace VAT.Characters
 
             OnCharacterEarlyLateUpdate();
 
-            for (var i = 0; i < _rigs.Length; i++)
-            {
-                _rigs[i].OnLateUpdate(deltaTime);
-            }
+            OnManagerLateUpdate?.Invoke(deltaTime);
 
             OnCharacterLateUpdate();
         }
@@ -129,7 +129,7 @@ namespace VAT.Characters
             _rigs[i] = rig;
             rig.RigIndex = i;
 
-            rig.OnRegisterManager(this);
+            rig.OnRegisterRig(this);
         }
 
         private void Internal_UnregisterRig(int i)
@@ -140,7 +140,7 @@ namespace VAT.Characters
             rig.RigIndex = -1;
             rig.LastRig = null;
 
-            rig.OnDeregisterManager(this);
+            rig.OnDeregisterRig(this);
         }
 
         // Virtual methods

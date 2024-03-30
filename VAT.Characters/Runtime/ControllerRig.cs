@@ -23,11 +23,9 @@ namespace VAT.Characters
 
         public Camera cameraTest;
 
-        public override void OnRegisterManager(ICrystRigManager rigManager)
+        public override void OnRigEnable()
         {
-            base.OnRegisterManager(rigManager);
-
-            var vitals = rigManager.GetVitalsOrDefault();
+            var vitals = RigManager.GetVitalsOrDefault();
 
             if (vitals != null)
             {
@@ -35,11 +33,9 @@ namespace VAT.Characters
             }
         }
 
-        public override void OnDeregisterManager(ICrystRigManager rigManager)
+        public override void OnRigDisable()
         {
-            base.OnDeregisterManager(rigManager);
-
-            var vitals = rigManager.GetVitalsOrDefault();
+            var vitals = RigManager.GetVitalsOrDefault();
 
             if (vitals != null)
             {
