@@ -7,15 +7,17 @@ namespace VAT.Interaction
 {
     public interface IInteractable
     {
+        event InteractorDelegate OnHoverBegin, OnHoverEnd;
+
         bool IsInteractable();
 
         void EnableInteraction();
 
         void DisableInteraction();
 
-        void OnHoverBegin(IInteractor interactor);
+        void BeginHover(IInteractor interactor);
 
-        void OnHoverEnd(IInteractor interactor);
+        void EndHover(IInteractor interactor);
 
         (bool valid, float priority) ValidateInteractable(IInteractor interactor);
 

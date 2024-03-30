@@ -10,6 +10,7 @@ namespace VAT.Characters
     using VAT.Avatars.Muscular;
     using VAT.Avatars.Nervous;
 
+    using VAT.Input.Skeleton;
     using VAT.Input;
     using VAT.Interaction;
     using VAT.Shared.Data;
@@ -59,7 +60,7 @@ namespace VAT.Characters
         {
             avatar.Initiate();
 
-            var vitals = RigManager.GetVitalsOrDefault();
+            var vitals = RigManager.GetVitalsOrNull();
             vitals.CharacterMeasurements = avatar.GetMeasurements();
             vitals.UpdateVitals();
 
@@ -76,8 +77,8 @@ namespace VAT.Characters
                 var bone = (PhysBone)arm.PhysArm.Hand.Hand;
 
                 var interactor = bone.UnityGameObject.AddComponent<CrystInteractor>();
-                interactor.controller = thing.GetInputControllerOrDefault();
-                interactor.hand = thing.GetInputHandOrDefault();
+                interactor.controller = thing.GetInputControllerOrNull();
+                interactor.hand = thing.GetInputHandOrNull();
                 interactor.arm = arm;
                 interactor.handedness = arm.Handedness;
 

@@ -58,15 +58,14 @@ namespace VAT.Characters
                     // Begin hover
                     if (_hoveringInteractable == null)
                     {
-                        value.OnHoverBegin(this);
+                        value.BeginHover(this);
                     }
                     // End hover
                     else
                     {
-                        _hoveringInteractable.OnHoverEnd(this);
+                        _hoveringInteractable.EndHover(this);
 
-                        if (value != null)
-                            value.OnHoverBegin(this);
+                        value?.BeginHover(this);
                     }
 
                     _hoveringInteractable = value;

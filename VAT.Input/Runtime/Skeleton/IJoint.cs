@@ -5,11 +5,11 @@ using UnityEngine;
 
 using VAT.Shared.Data;
 
-namespace VAT.Avatars
+namespace VAT.Input.Skeleton
 {
     public interface IJoint
     {
-        SimpleTransform Transform { get; set; }
+        SimpleTransform Transform { get; }
     }
 
     public struct BasicJoint : IJoint

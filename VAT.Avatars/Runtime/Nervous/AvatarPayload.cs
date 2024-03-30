@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Input;
+using VAT.Input.Skeleton;
 using VAT.Shared.Data;
 
 namespace VAT.Avatars.Nervous {

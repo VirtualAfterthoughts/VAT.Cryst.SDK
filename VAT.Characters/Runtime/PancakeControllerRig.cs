@@ -6,95 +6,11 @@ using VAT.Avatars;
 using VAT.Input;
 using VAT.Input.Desktop;
 using VAT.Shared.Data;
+using VAT.Input.Skeleton;
 using VAT.Shared.Extensions;
 
 namespace VAT.Characters
 {
-    public readonly struct PancakeInput : IBasicInput
-    {
-        private readonly Vector3 _movement;
-        private readonly bool _jump;
-
-        public PancakeInput(Vector3 movement, bool jump)
-        {
-            _movement = movement;
-            _jump = jump;
-        }
-
-        public readonly bool GetJump()
-        {
-            return _jump;
-        }
-
-        public readonly Vector3 GetMovement()
-        {
-            return _movement;
-        }
-    }
-
-    public struct PancakeHand : IHand
-    {
-        public SimpleTransform Transform { get => _transform; set => _transform = value; }
-
-        private SimpleTransform _transform;
-        private DesktopController _controller;
-        private DesktopHand _hand;
-
-        public PancakeHand(SimpleTransform transform, DesktopController controller, DesktopHand hand)
-        {
-            _transform = transform;
-            _controller = controller;
-            _hand = hand;
-        }
-
-        public IInputController GetInputControllerOrDefault()
-        {
-            return _controller;
-        }
-
-        public IInputHand GetInputHandOrDefault()
-        {
-            return _hand;
-        }
-    }
-
-    public struct PancakeArm : IArm
-    {
-        private IJoint[] _joints;
-
-        public int JointCount => 1;
-
-        public PancakeArm(PancakeHand hand)
-        {
-            _joints = new IJoint[] { hand };
-        }
-
-        public IJoint GetJoint(int index)
-        {
-            return _joints[index];
-        }
-
-        public void SetJoint(int index, IJoint joint)
-        {
-            _joints[index] = joint;
-        }
-
-        public IHand GetHandOrNull()
-        {
-            return (PancakeHand)GetJoint(0);
-        }
-
-        public IJoint GetElbowOrNull()
-        {
-            return null;
-        }
-
-        public IJoint GetUpperArmOrNull()
-        {
-            return null;
-        }
-    }
-
     public class PancakeControllerRig : ControllerRig {
         public Transform neckPivot;
 
@@ -160,22 +76,24 @@ namespace VAT.Characters
 
             var jump = _inputActions.Gameplay.Jump.ReadValue<float>();
 
-            input = new PancakeInput(movement, jump >= 0.5f);
+            input = new GenericInput(movement, jump >= 0.5f);
             return true;
         }
 
         public override bool TryGetArm(Handedness handedness, out IArm arm)
         {
+            var root = SimpleTransform.Create(transform);
+
             switch (handedness)
             {
                 default:
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_leftWrist)), _leftController, _leftHand));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), _leftController, _leftHand));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new PancakeArm(new PancakeHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_rightWrist)), _rightController, _rightHand));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), _rightController, _rightHand));
                     return true;
             }
         }

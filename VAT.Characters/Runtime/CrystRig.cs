@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using VAT.Avatars;
+using VAT.Input.Skeleton;
 using VAT.Input;
 
 namespace VAT.Characters

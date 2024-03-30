@@ -5,14 +5,12 @@ using UnityEngine;
 
 using VAT.Shared.Data;
 
-namespace VAT.Avatars
+namespace VAT.Input.Skeleton
 {
     public interface ILimb
     {
+        IJoint[] Joints { get; }
+
         int JointCount { get; }
-
-        IJoint GetJoint(int index);
-
-        void SetJoint(int index, IJoint joint);
     }
 }

@@ -6,6 +6,7 @@ using UnityEngine;
 using VAT.Avatars;
 using VAT.Avatars.Integumentary;
 using VAT.Input;
+using VAT.Input.Skeleton;
 using VAT.Shared.Data;
 
 namespace VAT.Characters
@@ -21,12 +22,12 @@ namespace VAT.Characters
             _transform = transform;
         }
 
-        public IInputController GetInputControllerOrDefault()
+        public IInputController GetInputControllerOrNull()
         {
             return default;
         }
 
-        public IInputHand GetInputHandOrDefault()
+        public IInputHand GetInputHandOrNull()
         {
             return default;
         }
@@ -56,10 +57,7 @@ namespace VAT.Characters
 
         public readonly int JointCount => 1;
 
-        public readonly IJoint GetJoint(int index)
-        {
-            return _bones.ElementAt(index);
-        }
+        public readonly IJoint[] Joints => _bones;
 
         public void SetJoint(int index, IJoint joint)
         {
@@ -106,7 +104,7 @@ namespace VAT.Characters
 
         public override void OnRigEnable()
         {
-            var vitals = RigManager.GetVitalsOrDefault();
+            var vitals = RigManager.GetVitalsOrNull();
 
             if (vitals != null)
             {
@@ -116,7 +114,7 @@ namespace VAT.Characters
 
         public override void OnRigDisable()
         {
-            var vitals = RigManager.GetVitalsOrDefault();
+            var vitals = RigManager.GetVitalsOrNull();
 
             if (vitals != null)
             {

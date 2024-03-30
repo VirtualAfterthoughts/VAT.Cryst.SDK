@@ -5,6 +5,7 @@ using UnityEngine;
 using VAT.Avatars;
 using VAT.Cryst.Interfaces;
 
+using VAT.Input.Skeleton;
 using VAT.Input;
 
 namespace VAT.Characters

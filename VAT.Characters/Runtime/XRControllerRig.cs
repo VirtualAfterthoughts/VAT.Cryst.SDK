@@ -6,6 +6,7 @@ using UnityEngine.XR.Management;
 
 using VAT.Avatars;
 
+using VAT.Input.Skeleton;
 using VAT.Input;
 using VAT.Input.XR;
 
@@ -14,91 +15,6 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Characters
 {
-    public readonly struct XRInput : IBasicInput
-    {
-        private readonly Vector3 _movement;
-        private readonly bool _jump;
-
-        public XRInput(Vector3 movement, bool jump)
-        {
-            _movement = movement;
-            _jump = jump;
-        }
-
-        public readonly bool GetJump()
-        {
-            return _jump;
-        }
-
-        public readonly Vector3 GetMovement()
-        {
-            return _movement;
-        }
-    }
-
-    public struct XRHand : IHand
-    {
-        public SimpleTransform Transform { get => _transform; set => _transform = value; }
-
-        private SimpleTransform _transform;
-        private XRController _controller;
-        private Input.XRHand _hand;
-
-        public XRHand(SimpleTransform transform, XRController controller, Input.XRHand hand)
-        {
-            _transform = transform;
-            _controller = controller;
-            _hand = hand;
-        }
-
-        public IInputController GetInputControllerOrDefault()
-        {
-            return _controller;
-        }
-
-        public IInputHand GetInputHandOrDefault()
-        {
-            return _hand;
-        }
-    }
-
-    public struct XRArm : IArm
-    {
-        private IJoint[] _joints;
-
-        public int JointCount => 1;
-
-        public XRArm(XRHand hand)
-        {
-            _joints = new IJoint[] { hand };
-        }
-
-        public IJoint GetJoint(int index)
-        {
-            return _joints[index];
-        }
-
-        public void SetJoint(int index, IJoint joint)
-        {
-            _joints[index] = joint;
-        }
-
-        public IHand GetHandOrNull()
-        {
-            return (XRHand)GetJoint(0);
-        }
-
-        public IJoint GetElbowOrNull()
-        {
-            return null;
-        }
-
-        public IJoint GetUpperArmOrNull()
-        {
-            return null;
-        }
-    }
-
     public class XRControllerRig : ControllerRig {
         public override void OnRigEnable()
         {
@@ -118,7 +34,7 @@ namespace VAT.Characters
             {
                 var hand = arm.GetHandOrNull();
 
-                var controller = hand.GetInputControllerOrDefault();
+                var controller = hand.GetInputControllerOrNull();
                 controller.TryGetThumbstick(out var thumbstick);
 
                 float turnAxis = thumbstick.GetAxis().x;
@@ -154,7 +70,7 @@ namespace VAT.Characters
 
             var jump = button.GetPressed();
 
-            input = new PancakeInput(movement, jump);
+            input = new GenericInput(movement, jump);
             return true;
         }
 
@@ -166,16 +82,18 @@ namespace VAT.Characters
                 return false;
             }
 
+            var root = SimpleTransform.Create(transform);
+
             switch (handedness)
             {
                 default:
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_leftWrist)), XRManager.Api.LeftController, XRManager.Api.LeftHand));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), XRManager.Api.LeftController, XRManager.Api.LeftHand));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new XRArm(new XRHand(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_rightWrist)), XRManager.Api.RightController, XRManager.Api.RightHand));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), XRManager.Api.RightController, XRManager.Api.RightHand));
                     return true;
             }
         }

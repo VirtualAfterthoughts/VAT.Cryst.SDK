@@ -23,8 +23,8 @@ namespace VAT.Interaction
         {
             foreach (var grip  in _grips)
             {
-                grip.AttachCompleteEvent += OnAttachComplete;
-                grip.DetachCompleteEvent += OnDetachComplete;
+                grip.OnAttached += OnAttached;
+                grip.OnDetached += OnDetached;
             }
         }
 
@@ -32,17 +32,17 @@ namespace VAT.Interaction
         {
             foreach (var grip in _grips)
             {
-                grip.AttachCompleteEvent -= OnAttachComplete;
-                grip.DetachCompleteEvent -= OnDetachComplete;
+                grip.OnAttached -= OnAttached;
+                grip.OnDetached -= OnDetached;
             }
         }
 
-        private void OnAttachComplete(IInteractor interactor)
+        private void OnAttached(IInteractor interactor)
         {
             onAttached?.Invoke();
         }
 
-        private void OnDetachComplete(IInteractor interactor)
+        private void OnDetached(IInteractor interactor)
         {
             onDetached?.Invoke();
         }

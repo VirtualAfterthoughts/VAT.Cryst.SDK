@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace VAT.Avatars
+namespace VAT.Input.Skeleton
 {
     public interface IArm : ILimb
     {

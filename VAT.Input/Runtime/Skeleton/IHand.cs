@@ -5,12 +5,12 @@ using UnityEngine;
 
 using VAT.Input;
 
-namespace VAT.Avatars
+namespace VAT.Input.Skeleton
 {
     public interface IHand : IJoint
     {
-        IInputController GetInputControllerOrDefault();
+        IInputController GetInputControllerOrNull();
 
-        IInputHand GetInputHandOrDefault();
+        IInputHand GetInputHandOrNull();
     }
 }

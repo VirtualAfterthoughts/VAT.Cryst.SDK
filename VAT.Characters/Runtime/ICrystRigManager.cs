@@ -10,9 +10,6 @@ namespace VAT.Characters
     {
         event Action<float> OnManagerUpdate, OnManagerFixedUpdate, OnManagerLateUpdate;
 
-        ICrystVitals GetVitalsOrDefault()
-        {
-            return null;
-        }
+        ICrystVitals GetVitalsOrNull();
     }
 }

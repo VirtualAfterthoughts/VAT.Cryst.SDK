@@ -11,6 +11,8 @@ namespace VAT.Interaction
 {
     public interface IGrippable : IInteractable, IGrabTarget
     {
+        event InteractorDelegate OnAttached, OnDetached;
+
         void OnAttachConfirm(IInteractor interactor);
 
         void OnAttachComplete(IInteractor interactor);

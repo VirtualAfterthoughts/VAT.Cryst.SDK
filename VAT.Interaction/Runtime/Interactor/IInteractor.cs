@@ -10,6 +10,8 @@ using VAT.Shared.Data;
 
 namespace VAT.Interaction
 {
+    public delegate void InteractorDelegate(IInteractor interactor);
+
     public interface IInteractor
     {
         bool IsInteractionLocked();

@@ -52,6 +52,9 @@ namespace VAT.Interaction
 
         private bool _isInteractable = true;
 
+        public event InteractorDelegate OnAttached, OnDetached;
+        public event InteractorDelegate OnHoverBegin, OnHoverEnd;
+
         public HandPose DefaultClosedPose
         {
             get
@@ -59,8 +62,6 @@ namespace VAT.Interaction
                 return _defaultClosedPose;
             }
         }
-
-        public event Action<IInteractor> AttachBeginEvent, AttachCancelEvent, AttachCompleteEvent, DetachCompleteEvent;
 
         public bool IsHeld => _attachedInteractors.Count > 0;
 
@@ -149,8 +150,6 @@ namespace VAT.Interaction
             {
                 _host.VirtualController.RegisterPair(interactor, this);
             }
-
-            AttachBeginEvent?.Invoke(interactor);
         }
 
         public void OnAttachComplete(IInteractor interactor)
@@ -159,7 +158,7 @@ namespace VAT.Interaction
 
             _interactorStates[interactor].isAttaching = false;
 
-            AttachCompleteEvent?.Invoke(interactor);
+            OnAttached?.Invoke(interactor);
         }
 
         public void OnAttachUpdate(IInteractor interactor)
@@ -182,13 +181,9 @@ namespace VAT.Interaction
                 _host.VirtualController.UnregisterPair(interactor);
             }
 
-            if (wasAttaching)
+            if (!wasAttaching)
             {
-                AttachCancelEvent?.Invoke(interactor);
-            }
-            else
-            {
-                DetachCompleteEvent?.Invoke(interactor);
+                OnDetached?.Invoke(interactor);
             }
 
         }
@@ -255,14 +250,14 @@ namespace VAT.Interaction
             return (true, (distance + angle) * _priority);
         }
 
-        public void OnHoverBegin(IInteractor interactor)
+        public void BeginHover(IInteractor interactor)
         {
-
+            OnHoverBegin?.Invoke(interactor);
         }
 
-        public void OnHoverEnd(IInteractor interactor)
+        public void EndHover(IInteractor interactor)
         {
-
+            OnHoverEnd?.Invoke(interactor);
         }
 
         public GameObject GetHostGameObject()

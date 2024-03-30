@@ -34,8 +34,8 @@ namespace VAT.Interaction
                 grip.DisableInteraction();
             }
 
-            _primaryGrip.AttachCompleteEvent += OnPrimaryGripAttached;
-            _primaryGrip.DetachCompleteEvent += OnPrimaryGripDetached;
+            _primaryGrip.OnAttached += OnPrimaryGripAttached;
+            _primaryGrip.OnDetached += OnPrimaryGripDetached;
 
             if (_host == null)
             {
@@ -47,8 +47,8 @@ namespace VAT.Interaction
 
         private void OnDisable()
         {
-            _primaryGrip.AttachCompleteEvent -= OnPrimaryGripAttached;
-            _primaryGrip.DetachCompleteEvent -= OnPrimaryGripDetached;
+            _primaryGrip.OnAttached -= OnPrimaryGripAttached;
+            _primaryGrip.OnDetached -= OnPrimaryGripDetached;
 
             if (_host != null)
             {
