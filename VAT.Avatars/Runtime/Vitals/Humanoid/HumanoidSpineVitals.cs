@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using Unity.Mathematics;
 using UnityEngine;
 
 using VAT.Avatars.Muscular;
@@ -25,7 +25,15 @@ namespace VAT.Avatars.Vitals
             _spine.T1Vertebra.ConfigureJoint(UpperChestMass * 50000f);
             _spine.T7Vertebra.ConfigureJoint(ChestMass * 50000f);
             _spine.L1Vertebra.ConfigureJoint(SpineMass * 50000f);
-            _spine.Sacrum.ConfigureJoint(PelvisMass * 50000f);
+
+            float newtons = PelvisMass * 50000f;
+            _spine.Sacrum.ConfigurableJoint.ConfigurableJoint.rotationDriveMode = RotationDriveMode.Slerp;
+            _spine.Sacrum.ConfigurableJoint.ConfigurableJoint.slerpDrive = new JointDrive()
+            {
+                positionSpring = newtons * 10f,
+                positionDamper = newtons * 0.001f,
+                maximumForce = newtons,
+            };
         }
 
         public override void ApplyVitals()
@@ -40,8 +48,8 @@ namespace VAT.Avatars.Vitals
         public override void CalculateVitals()
         {
             // Calculate mass
-            float totalVolume = _proportions.upperChestEllipsoid.GetVolume() + _proportions.chestEllipsoid.GetVolume() + _proportions.spineEllipsoid.GetVolume() + _proportions.pelvisEllipsoid.GetVolume();
-            float weight = totalVolume * 1279.2602f;
+            float totalVolume = math.length(_proportions.upperChestEllipsoid.GetRadius() + _proportions.chestEllipsoid.GetRadius() + _proportions.spineEllipsoid.GetRadius() + _proportions.pelvisEllipsoid.GetRadius());
+            float weight = totalVolume * 63f;
 
             _boneMasses[0] = weight * 0.137100646f;
             _boneMasses[1] = weight * 0.20565097f;

@@ -159,14 +159,15 @@ namespace VAT.Avatars.Muscular
             Fender.SetMass(16f * legScalar);
             Foot.SetMass(16f * legScalar);
 
-            Foot.Rigidbody.Rigidbody.inertiaTensor = 1f * legScalar * Vector3.one;
+            Foot.Rigidbody.Rigidbody.inertiaTensor = 10f * legScalar * Vector3.one;
 
             Knee.ConfigurableJoint.ConfigurableJoint.rotationDriveMode = RotationDriveMode.Slerp;
+            float kneeForce = 5e+05f * legScalar;
             Knee.ConfigurableJoint.ConfigurableJoint.slerpDrive = new JointDrive()
             {
-                positionSpring = 5e+06f,
-                positionDamper = 1e+05f,
-                maximumForce = 5e+06f * legScalar
+                positionSpring = kneeForce * 10f,
+                positionDamper = kneeForce * 5f,
+                maximumForce = kneeForce
             };
 
             Fender.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
