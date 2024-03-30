@@ -110,6 +110,8 @@ namespace VAT.Characters
 
         public override void OnRigEnable()
         {
+            base.OnRigEnable();
+
             _inputActions = new DesktopInputActions();
             _inputActions.Enable();
 
