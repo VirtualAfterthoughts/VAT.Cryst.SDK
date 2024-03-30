@@ -13,16 +13,30 @@ namespace VAT.Avatars.Art
     {
         public override int BoneCount => 4;
 
-        public ArtBone UpperLeg => Bones[0] as ArtBone;
-        public ArtBone LowerLeg => Bones[1] as ArtBone;
-        public ArtBone Foot => Bones[2] as ArtBone;
-        public ArtBone Toe => Bones[3] as ArtBone;
+        public ArtBone UpperLeg => Bones[0];
+        public ArtBone LowerLeg => Bones[1];
+        public ArtBone Foot => Bones[2];
+        public ArtBone Toe => Bones[3];
 
         public override void Solve() {
+            SimpleTransform pelvis = BoneGroup.Hip.Parent.Transform;
+
             SimpleTransform hip = BoneGroup.Hip.Transform;
             SimpleTransform knee = BoneGroup.Knee.Transform;
             SimpleTransform ankle = BoneGroup.Ankle.Transform;
             SimpleTransform toe = BoneGroup.Toe.Transform;
+
+            // Upper leg twist
+            Vector3 twistUp = Quaternion.FromToRotation(pelvis.up, hip.up) * pelvis.forward;
+            float upperTwist = Vector3.SignedAngle(hip.forward, twistUp, hip.up);
+
+            hip.rotation = Quaternion.AngleAxis(upperTwist * 0.7f, hip.up) * hip.rotation;
+
+            // Lower leg twist
+            Vector3 twistLower = Quaternion.FromToRotation(hip.up, ankle.up) * hip.forward;
+            float lowerTwist = Vector3.SignedAngle(ankle.forward, twistLower, knee.up);
+
+            knee.rotation = Quaternion.AngleAxis(lowerTwist * 0.7f, knee.up) * knee.rotation;
 
             UpperLeg.Solve(hip);
             LowerLeg.Solve(knee);
