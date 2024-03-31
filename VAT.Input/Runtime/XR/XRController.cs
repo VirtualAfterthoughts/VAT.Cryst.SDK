@@ -49,39 +49,38 @@ namespace VAT.Input
             }
         }
 
-        public bool TryGetGrip(out IInputTrigger grip)
+        public IInputTrigger GetGripOrNull()
         {
-            grip = _grip;
-            return true;
+            return _grip;
         }
 
-        public bool TryGetPrimaryButton(out IInputButton primaryButton)
+        public IInputButton GetPrimaryButtonOrNull()
         {
-            primaryButton = _primaryButton;
-            return true;
+            return _primaryButton;
         }
 
-        public bool TryGetSecondaryButton(out IInputButton secondaryButton)
+        public IInputButton GetSecondaryButtonOrNull()
         {
-            secondaryButton = _secondaryButton;
-            return true;
+            return _secondaryButton;
         }
 
-        public bool TryGetThumbstick(out IInputTrackpad thumbstick)
+        public IInputTrackpad GetThumbstickOrNull()
         {
-            thumbstick = _thumbstick;
-            return true;
+            return _thumbstick;
         }
 
-        public bool TryGetTrackpad(out IInputTrackpad trackpad)
+        public IInputTrackpad GetTrackpadOrNull()
         {
-            trackpad = _trackpad;
-            return true;
+            return _trackpad;
         }
 
-        public bool TryGetTrigger(out IInputTrigger trigger)
+        public IInputTrigger GetTriggerOrNull()
         {
-            trigger = _trigger;
+            return _trigger;
+        }
+
+        public bool HasForceSensor()
+        {
             return true;
         }
     }

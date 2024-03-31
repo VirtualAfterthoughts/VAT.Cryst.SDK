@@ -49,40 +49,39 @@ namespace VAT.Input.Desktop
             }
         }
 
-        public bool TryGetGrip(out IInputTrigger grip)
+        public IInputTrigger GetGripOrNull()
         {
-            grip = _grip;
-            return grip != null;
+            return _grip;
         }
 
-        public bool TryGetPrimaryButton(out IInputButton primaryButton)
+        public IInputButton GetPrimaryButtonOrNull()
         {
-            primaryButton = _primaryButton;
-            return primaryButton != null;
+            return _primaryButton;
         }
 
-        public bool TryGetSecondaryButton(out IInputButton secondaryButton)
+        public IInputButton GetSecondaryButtonOrNull()
         {
-            secondaryButton = _secondaryButton;
-            return secondaryButton != null;
+            return _secondaryButton;
         }
 
-        public bool TryGetThumbstick(out IInputTrackpad thumbstick)
+        public IInputTrackpad GetThumbstickOrNull()
         {
-            thumbstick = _thumbstick;
-            return thumbstick != null;
+            return _thumbstick;
         }
 
-        public bool TryGetTrackpad(out IInputTrackpad trackpad)
+        public IInputTrackpad GetTrackpadOrNull()
         {
-            trackpad = _trackpad;
-            return trackpad != null;
+            return _trackpad;
         }
 
-        public bool TryGetTrigger(out IInputTrigger trigger)
+        public IInputTrigger GetTriggerOrNull()
         {
-            trigger = _trigger;
-            return trigger != null;
+            return _trigger;
+        }
+
+        public bool HasForceSensor()
+        {
+            return false;
         }
     }
 }

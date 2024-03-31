@@ -35,7 +35,8 @@ namespace VAT.Characters
                 var hand = arm.GetHandOrNull();
 
                 var controller = hand.GetInputControllerOrNull();
-                controller.TryGetThumbstick(out var thumbstick);
+
+                var thumbstick = controller.GetThumbstickOrNull();
 
                 float turnAxis = thumbstick.GetAxis().x;
 
@@ -60,13 +61,13 @@ namespace VAT.Characters
 
         public override bool TryGetInput(out IBasicInput input)
         {
-            XRManager.Api.LeftController.TryGetThumbstick(out var thumbstick);
+            var thumbstick = XRManager.Api.LeftController.GetThumbstickOrNull();
 
             var movementAxis = thumbstick.GetAxis();
             var flattenedHead = Quaternion.LookRotation(_head.forward.FlattenNeck(_head.up, transform.up), transform.up);
             var movement = flattenedHead * new Vector3(movementAxis.x, 0f, movementAxis.y);
 
-            XRManager.Api.RightController.TryGetPrimaryButton(out var button);
+            var button = XRManager.Api.RightController.GetPrimaryButtonOrNull();
 
             var jump = button.GetPressed();
 

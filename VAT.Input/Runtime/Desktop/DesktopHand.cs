@@ -25,12 +25,14 @@ namespace VAT.Input
 
         public void Update()
         {
-            _controller.TryGetGrip(out var grip);
+            var trigger = _controller.GetTriggerOrNull();
 
-            if (_controller.TryGetTrigger(out var trigger) && trigger != null)
+            if (trigger != null)
             {
                 HandPoseCreator.SetCurls(_handPose.fingers[0].phalanges, trigger.GetAxis());
             }
+
+            var grip = _controller.GetGripOrNull();
 
             float curl = grip.GetAxis();
 

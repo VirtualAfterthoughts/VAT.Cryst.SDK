@@ -5,7 +5,7 @@ using UnityEngine;
 
 using VAT.Entities;
 using VAT.Entities.PhysX;
-
+using VAT.Input;
 using VAT.Shared.Data;
 
 namespace VAT.Interaction
@@ -36,6 +36,6 @@ namespace VAT.Interaction
 
         void DetachGrips();
 
-        float GetGripForce();
+        IInputController GetInputControllerOrNull();
     }
 }

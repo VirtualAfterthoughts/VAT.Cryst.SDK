@@ -356,12 +356,9 @@ namespace VAT.Characters
             return rb.Rigidbody;
         }
 
-        public float GetGripForce()
+        public IInputController GetInputControllerOrNull()
         {
-            if (controller.TryGetGrip(out var grip) && controller.TryGetTrigger(out var trigger))
-                return (grip.GetForce() * 0.75f) + (trigger.GetForce() * 0.25f);
-
-            return 0f;
+            return controller;
         }
 
         public InteractorTargetData GetTargetData()

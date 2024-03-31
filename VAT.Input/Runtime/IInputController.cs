@@ -6,16 +6,37 @@ namespace VAT.Input
 {
     public interface IInputController
     {
-        bool TryGetTrigger(out IInputTrigger trigger);
+        float GetGripForce()
+        {
+            float force = 0f;
 
-        bool TryGetGrip(out IInputTrigger grip);
+            var trigger = GetTriggerOrNull();
+            if (trigger != null)
+            {
+                force += trigger.GetForce() * 0.25f;
+            }
 
-        bool TryGetThumbstick(out IInputTrackpad thumbstick);
+            var grip = GetGripOrNull();
+            if (grip != null)
+            {
+                force += grip.GetForce() * 0.75f;
+            }
 
-        bool TryGetTrackpad(out IInputTrackpad trackpad);
+            return force;
+        }
 
-        bool TryGetPrimaryButton(out IInputButton primaryButton);
+        bool HasForceSensor();
 
-        bool TryGetSecondaryButton(out IInputButton secondaryButton);
+        IInputTrigger GetTriggerOrNull();
+
+        IInputTrigger GetGripOrNull();
+
+        IInputTrackpad GetThumbstickOrNull();
+
+        IInputTrackpad GetTrackpadOrNull();
+
+        IInputButton GetPrimaryButtonOrNull();
+
+        IInputButton GetSecondaryButtonOrNull();
     }
 }

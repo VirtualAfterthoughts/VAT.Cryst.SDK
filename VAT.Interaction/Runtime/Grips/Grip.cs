@@ -163,7 +163,16 @@ namespace VAT.Interaction
 
         public void OnAttachUpdate(IInteractor interactor)
         {
-            _gripJoints[interactor].UpdateJoints(Mathf.Lerp(_lowFriction, _highFriction, interactor.GetGripForce()));
+            float force = 0f;
+
+            var controller = interactor.GetInputControllerOrNull();
+
+            if (controller != null)
+            {
+                force = controller.GetGripForce();
+            }
+
+            _gripJoints[interactor].UpdateJoints(Mathf.Lerp(_lowFriction, _highFriction, force));
         }
 
         public void OnDetachConfirm(IInteractor interactor)
