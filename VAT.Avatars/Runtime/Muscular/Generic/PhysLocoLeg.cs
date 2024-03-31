@@ -21,7 +21,7 @@ namespace VAT.Avatars.Muscular
         public RigidbodyPhysBone Fender => Bones[1] as RigidbodyPhysBone;
         public RigidbodyPhysBone Foot => Bones[2] as RigidbodyPhysBone;
 
-        public PhysBone _pivot;
+        public IBone _pivot;
         public IBone _pivotData;
 
         private LocoLeg _leg;
@@ -131,7 +131,7 @@ namespace VAT.Avatars.Muscular
             float3 targetAngularVelocity = new Vector3(_targetVelocity.z, _targetVelocity.y, -_targetVelocity.x) / radius;
 
             float frequency = 1f;
-            float damping = 900f;
+            float damping = 1000f;
             float kp = (6f * frequency) * (6f * frequency) * 0.25f;
             float kd = 4.5f * frequency * damping;
             float dt = Time.fixedDeltaTime;
@@ -162,7 +162,7 @@ namespace VAT.Avatars.Muscular
             Foot.Rigidbody.Rigidbody.inertiaTensor = 10f * legScalar * Vector3.one;
 
             Knee.ConfigurableJoint.ConfigurableJoint.rotationDriveMode = RotationDriveMode.Slerp;
-            float kneeForce = 5e+05f * legScalar;
+            float kneeForce = 5000f * legScalar;
             Knee.ConfigurableJoint.ConfigurableJoint.slerpDrive = new JointDrive()
             {
                 positionSpring = kneeForce * 10f,

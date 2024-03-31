@@ -10,5 +10,6 @@ namespace VAT.Avatars.REWORK
         public IBone C4Vertebra { get; }
         public IBone C1Vertebra { get; }
         public IBone Skull { get; }
+        public IBone EyeCenter { get; }
     }
 }

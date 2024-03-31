@@ -83,7 +83,7 @@ namespace VAT.Avatars.Muscular
 
             LocoLeg.Attach(Spine);
 
-            LocoLeg._pivot = Neck.Skull;
+            LocoLeg._pivot = ((IHumanNeck)Neck).EyeCenter;
         }
 
         public void WriteProportions(HumanoidProportions proportions) {
@@ -128,7 +128,7 @@ namespace VAT.Avatars.Muscular
 
             LocoLeg.MatchPose(skeleton.LocoLeg as LocoLeg);
 
-            LocoLeg._pivotData = skeleton.Neck.Skull;
+            LocoLeg._pivotData = skeleton.Neck.EyeCenter;
 
             ResetAnchors();
         }

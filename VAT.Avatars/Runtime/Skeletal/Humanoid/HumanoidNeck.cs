@@ -30,6 +30,8 @@ namespace VAT.Avatars.Skeletal
 
         IBone IHumanNeck.Skull => Skull;
 
+        IBone IHumanNeck.EyeCenter => EyeCenter;
+
         private BodyMeasurements _measurements;
 
         private HumanoidNeckProportions _neckProportions;

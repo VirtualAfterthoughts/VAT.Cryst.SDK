@@ -65,7 +65,7 @@ namespace VAT.Avatars.Skeletal
 
             Knee.rotation = Quaternion.LookRotation(flattened, up);
 
-            var debt = _trackedDebt * 0.25f;
+            var debt = _trackedDebt * 0.3f;
             velocity = debt;
             _trackedDebt -= debt;
 

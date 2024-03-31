@@ -32,7 +32,11 @@ namespace VAT.Avatars.Muscular
 
         IBone IHumanNeck.Skull => Skull;
 
+        IBone IHumanNeck.EyeCenter => _relativeEyeCenter;
+
         private IHumanNeck _neck;
+
+        private RelativeBone _relativeEyeCenter;
 
         public override void Initiate() {
             base.Initiate();
@@ -68,6 +72,8 @@ namespace VAT.Avatars.Muscular
             C4Vertebra.MatchBone(neck.C4Vertebra);
             C1Vertebra.MatchBone(neck.C1Vertebra);
             Skull.MatchBone(neck.Skull);
+
+            _relativeEyeCenter = new RelativeBone(Skull, neck.Skull, neck.EyeCenter);
         }
 
         public override void Solve()

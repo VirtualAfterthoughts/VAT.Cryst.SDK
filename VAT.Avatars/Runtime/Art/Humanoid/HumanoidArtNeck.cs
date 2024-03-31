@@ -23,6 +23,8 @@ namespace VAT.Avatars.Art
 
         IBone IHumanNeck.Skull => Head;
 
+        IBone IHumanNeck.EyeCenter => null;
+
         public override void Solve()
         {
             LowerNeck.Solve(BoneGroup.C4Vertebra.Transform);
