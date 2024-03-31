@@ -164,6 +164,7 @@ namespace VAT.Avatars.Integumentary
         }
 
         protected override void OnUninitiateRuntime() {
+            _physicsRoot.gameObject.SetActive(false);
             Destroy(_physicsRoot.gameObject);
 
             GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.Deinitiate();

@@ -166,6 +166,8 @@ namespace VAT.Avatars.Skeletal
                 var shoulderPosition = _spine.T1Vertebra.position;
                 var vector = _target.position - shoulderPosition;
 
+                vector = Quaternion.Inverse(_spine.T1Vertebra.rotation) * vector;
+
                 var remapMeasurements = remappingMeasurements.Value;
 
                 var remapChestWidth = remapMeasurements.chestCircumference * 0.4f;
@@ -175,6 +177,9 @@ namespace VAT.Avatars.Skeletal
                 var bodyWingspan = _bodyMeasurements.wingspan - bodyChestWidth;
 
                 vector *= bodyWingspan / remapWingspan;
+                vector.x *= bodyChestWidth / remapChestWidth;
+
+                vector = (Quaternion)_spine.T1Vertebra.rotation * vector;
 
                 _target.position = shoulderPosition + vector;
             }

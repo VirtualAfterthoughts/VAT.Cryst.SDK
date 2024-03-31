@@ -117,6 +117,10 @@ namespace VAT.Characters
             _activeAvatar = avatar;
 
             ApplyRemapping();
+
+            avatar.Write(GetPayload());
+            avatar.Anatomy.Skeleton.DataBoneSkeleton.Solve();
+            avatar.SolveArt();
         }
 
         protected virtual IAvatarPayload GetPayload()
