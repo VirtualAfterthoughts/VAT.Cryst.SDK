@@ -11,6 +11,7 @@ using VAT.Shared.Math;
 
 namespace VAT.Avatars.Skeletal
 {
+    using PlasticPipe.PlasticProtocol.Messages;
     using Unity.Mathematics;
     using VAT.Avatars.REWORK;
     using VAT.Cryst.Delegates;
@@ -157,9 +158,24 @@ namespace VAT.Avatars.Skeletal
             if (hand != null)
             {
                 _target = root.Transform(hand.Transform);
-                _originalTarget = _target;
             }
 
+            // Remap arm length
+            if (remappingMeasurements.HasValue)
+            {
+                var shoulderPosition = _spine.T1Vertebra.position;
+                var vector = _target.position - shoulderPosition;
+
+                var remapWingspan = remappingMeasurements.Value.wingspan;
+
+                vector *= _bodyMeasurements.wingspan / remapWingspan;
+
+                _target.position = shoulderPosition + vector;
+            }
+
+            _originalTarget = _target;
+
+            // Process target
             if (OnProcessTarget != null)
             {
                 _target = OnProcessTarget(_target);
@@ -257,12 +273,6 @@ namespace VAT.Avatars.Skeletal
             var target = _target.position;
 
             Vector3 newVector = target - shoulderPosition;
-
-            if (remappingMeasurements.HasValue)
-            {
-                float wingspanRemap = _bodyMeasurements.wingspan / remappingMeasurements.Value.wingspan;
-                newVector *= wingspanRemap;
-            }
 
             // Make sure the vector isn't too small as to cause issues
             float minArmLength = _armLength * 0.1f;
