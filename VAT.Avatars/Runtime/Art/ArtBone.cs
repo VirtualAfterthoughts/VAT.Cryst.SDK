@@ -5,6 +5,7 @@ using UnityEngine;
 
 using VAT.Avatars.REWORK;
 using VAT.Shared.Data;
+using static UnityEngine.GraphicsBuffer;
 
 namespace VAT.Avatars.Art
 {
@@ -17,8 +18,22 @@ namespace VAT.Avatars.Art
         public bool HasReference => _hasReference;
 
         public SimpleTransform Transform {
-            get { return ArtReference.Transform; }
-            set { ArtReference.Transform = value; }
+            get 
+            {
+                if (HasReference)
+                {
+                    return ArtReference.Transform.Transform(SimpleTransform.Inverse(ArtReference.ArtOffset));
+                }
+
+                return SimpleTransform.Default;
+            }
+            set 
+            {
+                if (HasReference)
+                {
+                    ArtReference.Transform = value.Transform(ArtReference.ArtOffset);
+                }
+            }
         }
 
         private SimpleTransform _defaultTransform = SimpleTransform.Default;
@@ -48,8 +63,7 @@ namespace VAT.Avatars.Art
         }
 
         public void Solve(SimpleTransform target) {
-            if (HasReference)
-                Transform = target.Transform(ArtReference.ArtOffset);
+            Transform = target;
         }
 
         IBone IBone.GetChild(int index)

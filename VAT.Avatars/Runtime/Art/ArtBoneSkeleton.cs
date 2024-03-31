@@ -5,6 +5,8 @@ using UnityEngine;
 
 using VAT.Avatars.REWORK;
 
+using VAT.Shared.Data;
+
 namespace VAT.Avatars.Art
 {
     public abstract class ArtBoneSkeleton : ISkeleton {
@@ -15,15 +17,8 @@ namespace VAT.Avatars.Art
         public virtual void Deinitiate() { }
 
         public abstract void Solve();
-    }
 
-    public abstract class ArtBoneSkeletonT<TArtDescriptor, TSkeleton> : ArtBoneSkeleton 
-        where TArtDescriptor : IArtDescriptor {
-
-        public abstract void WriteTransforms(TArtDescriptor artDescriptor);
-
-        public abstract void WriteData(TSkeleton skeleton);
-
-        public abstract void WriteOffsets(TSkeleton skeleton);
+        public abstract IBone GetHead();
+        public abstract SimpleTransform GetEyeCenter();
     }
 }

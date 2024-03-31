@@ -52,18 +52,9 @@ namespace VAT.Avatars.Muscular
             Skull.SetMesh(GenerateSkullMesh(proportions));
         }
 
-        public SimpleTransform GetHead() {
-            return Skull.Transform;
-        }
-
         public SimpleTransform GetEyeCenter()
         {
-            if (_neck is HumanoidNeck humanNeck)
-            {
-                return Skull.TransformBone(humanNeck.Skull, humanNeck.EyeCenter);
-            }
-
-            return Skull.Transform;
+            return Skull.TransformBone(_neck.Skull, _neck.EyeCenter);
         }
 
         public void MatchPose(IHumanNeck neck) {

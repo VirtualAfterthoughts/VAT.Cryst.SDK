@@ -7,9 +7,11 @@ using VAT.Avatars.Muscular;
 using VAT.Avatars.REWORK;
 using VAT.Avatars.Skeletal;
 
+using VAT.Shared.Data;
+
 namespace VAT.Avatars.Art
 {
-    public class HumanoidArtSkeleton : ArtBoneSkeletonT<HumanoidArtDescriptor, IHumanSkeleton> {
+    public class HumanoidArtSkeleton : ArtBoneSkeleton {
         private ArtBoneGroup[] _groups = null;
         public override IBoneGroup[] BoneGroups => _groups;
 
@@ -45,7 +47,7 @@ namespace VAT.Avatars.Art
             }
         }
 
-        public override void WriteTransforms(HumanoidArtDescriptor artDescriptor) {
+        public void WriteTransforms(HumanoidArtDescriptor artDescriptor) {
             Neck.WriteTransforms(artDescriptor.neckDescriptor);
             Spine.WriteTransforms(artDescriptor.spineDescriptor);
 
@@ -56,7 +58,7 @@ namespace VAT.Avatars.Art
             RightLeg.WriteTransforms(artDescriptor.rightLegDescriptor);
         }
 
-        public override void WriteData(IHumanSkeleton skeleton)
+        public void WriteData(IHumanSkeleton skeleton)
         {
             Neck.WriteData(skeleton.Neck);
             Spine.WriteData(skeleton.Spine);
@@ -68,7 +70,7 @@ namespace VAT.Avatars.Art
             RightLeg.WriteData(skeleton.RightLeg);
         }
 
-        public override void WriteOffsets(IHumanSkeleton skeleton) {
+        public void WriteOffsets(IHumanSkeleton skeleton) {
             Neck.WriteOffsets(skeleton.Neck);
             Spine.WriteOffsets(skeleton.Spine);
 
@@ -89,6 +91,16 @@ namespace VAT.Avatars.Art
             RightArm.Solve();
 
             Neck.Solve();
+        }
+
+        public override IBone GetHead()
+        {
+            return Neck.Head;
+        }
+
+        public override SimpleTransform GetEyeCenter()
+        {
+            return Neck.EyeCenter.Transform;
         }
     }
 }

@@ -13,9 +13,12 @@ namespace VAT.Avatars.Art
     {
         public override int BoneCount => 3;
 
-        public ArtBone Head => Bones[0] as ArtBone;
-        public ArtBone UpperNeck => Bones[1] as ArtBone;
-        public ArtBone LowerNeck => Bones[2] as ArtBone;
+        public ArtBone Head => Bones[0];
+        public ArtBone UpperNeck => Bones[1];
+        public ArtBone LowerNeck => Bones[2];
+
+        private RelativeBone _eyeCenter = null;
+        public RelativeBone EyeCenter => _eyeCenter;
 
         IBone IHumanNeck.C4Vertebra => LowerNeck;
 
@@ -23,7 +26,7 @@ namespace VAT.Avatars.Art
 
         IBone IHumanNeck.Skull => Head;
 
-        IBone IHumanNeck.EyeCenter => null;
+        IBone IHumanNeck.EyeCenter => EyeCenter;
 
         public override void Solve()
         {
@@ -36,6 +39,8 @@ namespace VAT.Avatars.Art
             Head.WriteOffset(boneGroup.Skull);
             UpperNeck.WriteOffset(boneGroup.C1Vertebra);
             LowerNeck.WriteOffset(boneGroup.C4Vertebra);
+
+            _eyeCenter = new RelativeBone(Head, boneGroup.Skull, boneGroup.EyeCenter);
         }
 
         public override void WriteTransforms(HumanoidNeckDescriptor artDescriptorGroup)

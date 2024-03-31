@@ -10,6 +10,7 @@ using VAT.Avatars.Nervous;
 
 using VAT.Avatars.REWORK;
 using VAT.Input.Data;
+using VAT.Shared.Data;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -100,6 +101,9 @@ namespace VAT.Avatars.Skeletal
         {
             
         }
+
+        public abstract IBone GetHead();
+        public abstract SimpleTransform GetEyeCenter();
 #endif
     }
 }

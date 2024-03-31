@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
+
+using VAT.Shared.Data;
 
 namespace VAT.Avatars.REWORK
 {
@@ -13,5 +16,8 @@ namespace VAT.Avatars.REWORK
         void Deinitiate();
 
         void Solve();
+
+        IBone GetHead();
+        SimpleTransform GetEyeCenter();
     }
 }

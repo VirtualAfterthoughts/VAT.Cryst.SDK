@@ -61,6 +61,16 @@ namespace VAT.Shared.Data {
         public float3 right => math.mul(rotation, math.right());
 
         /// <summary>
+        /// Creates an inverse of this transform's position and rotation.
+        /// </summary>
+        /// <param name="transform">The original transform.</param>
+        /// <returns></returns>
+        public static SimpleTransform Inverse(SimpleTransform transform)
+        {
+            return Create(-transform.position, inverse(transform.rotation), transform.lossyScale);
+        }
+
+        /// <summary>
         /// Creates a snapshot of this transform.
         /// </summary>
         /// <param name="transform"></param>

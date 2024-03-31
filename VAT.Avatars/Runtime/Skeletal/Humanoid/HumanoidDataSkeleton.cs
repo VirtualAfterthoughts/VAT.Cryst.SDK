@@ -135,7 +135,7 @@ namespace VAT.Avatars.Skeletal
             LocoLeg.Solve();
         }
 
-        public SimpleTransform GetEyeCenter()
+        public override SimpleTransform GetEyeCenter()
         {
             return Neck.EyeCenter.Transform;
         }
@@ -208,6 +208,11 @@ namespace VAT.Avatars.Skeletal
         {
             LeftArm.remappingMeasurements = measurements;
             RightArm.remappingMeasurements = measurements;
+        }
+
+        public override IBone GetHead()
+        {
+            return Neck.Skull;
         }
     }
 }

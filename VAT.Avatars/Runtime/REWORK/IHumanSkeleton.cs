@@ -19,8 +19,6 @@ namespace VAT.Avatars.REWORK
 
         void WriteSkeleton(IHumanSkeleton skeleton);
 
-        SimpleTransform GetEyeCenter();
-
         SimpleTransform GetFloor();
     }
 }

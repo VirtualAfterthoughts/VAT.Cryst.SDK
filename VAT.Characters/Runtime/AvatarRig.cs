@@ -15,6 +15,7 @@ namespace VAT.Characters
     using VAT.Interaction;
     using VAT.Shared.Data;
     using VAT.Input.Data;
+    using System;
 
     public class AvatarRig : CrystRig
     {
@@ -24,6 +25,10 @@ namespace VAT.Characters
         public HandPose closedPose;
 
         private Avatar _activeAvatar = null;
+
+        public Avatar ActiveAvatar => _activeAvatar;
+
+        public Action OnPostArt;
 
         public override void OnRigEnable()
         {
@@ -162,6 +167,8 @@ namespace VAT.Characters
             _activeAvatar.SolveArt();
 
             ApplyOffsets();
+
+            OnPostArt?.Invoke();
         }
 
         public override bool TryGetHead(out IJoint head)

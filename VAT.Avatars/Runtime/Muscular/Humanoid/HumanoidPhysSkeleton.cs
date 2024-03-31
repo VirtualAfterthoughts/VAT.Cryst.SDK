@@ -59,8 +59,8 @@ namespace VAT.Avatars.Muscular
             LeftLeg.isLeft = true;
         }
 
-        public override SimpleTransform GetHead() {
-            return Neck.GetHead();
+        public override IBone GetHead() {
+            return Neck.Skull;
         }
 
         public override SimpleTransform GetEyeCenter()
