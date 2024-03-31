@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Input.Haptic;
 using VAT.Input.Unity;
 
 namespace VAT.Input.Desktop

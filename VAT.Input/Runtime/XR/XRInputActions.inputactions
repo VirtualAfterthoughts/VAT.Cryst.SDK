@@ -187,6 +187,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Haptic",
+                    "type": "Value",
+                    "id": "43be8bbf-8c46-4e1c-ac06-7a5d83276911",
+                    "expectedControlType": "Haptic",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -365,6 +374,17 @@
                     "action": "TrackpadTouched",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5a656327-6fb5-4da4-8f60-970e21818b35",
+                    "path": "<XRController>{LeftHand}/haptic",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Haptic",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -506,6 +526,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Haptic",
+                    "type": "Value",
+                    "id": "1398b6c7-ada5-413d-9d68-a6c30f35bab5",
+                    "expectedControlType": "Haptic",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -682,6 +711,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "TrackpadTouched",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f578622b-4cca-4550-ad49-5d4e152bcfd6",
+                    "path": "<XRController>{RightHand}/haptic",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Haptic",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

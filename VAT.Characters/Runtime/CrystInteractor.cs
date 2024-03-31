@@ -10,6 +10,7 @@ using VAT.Avatars.Integumentary;
 using VAT.Entities.PhysX;
 
 using VAT.Input;
+using VAT.Input.Haptic;
 using VAT.Interaction;
 
 using VAT.Shared.Data;
@@ -27,6 +28,8 @@ namespace VAT.Characters
         public AvatarArm arm;
         public HandPoseData openPose;
         public HandPoseData closedPose;
+
+        public HapticImpulse grabHaptic = new(0.5f, 0.01f);
 
         public float grabCurl = 0.9f;
 
@@ -244,6 +247,8 @@ namespace VAT.Characters
                     }
 
                     ResetPin();
+
+                    SendGripHaptic();
                 }
             }
             else if (_attachedGrip != null)
@@ -263,6 +268,16 @@ namespace VAT.Characters
             HoveringInteractable = null;
         }
 
+        private void SendGripHaptic()
+        {
+            var haptor = controller?.GetHaptorOrNull();
+
+            if (haptor != null)
+            {
+                HapticHelper.SendSoftHaptic(haptor, grabHaptic);
+            }
+        }
+
         public void DetachGrips()
         {
             arm.DataArm.Hand.SetOpenPose(openPose);
@@ -273,6 +288,8 @@ namespace VAT.Characters
                 DetachGrip(_attachedGrip);
                 _attachedGrip = null;
                 _isSnatching = false;
+
+                SendGripHaptic();
             }
 
             ResetPin();

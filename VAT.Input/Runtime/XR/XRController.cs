@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using VAT.Input.Haptic;
 using VAT.Input.Unity;
 using VAT.Input.XR;
 
@@ -18,6 +19,8 @@ namespace VAT.Input
         private readonly UnityTrackpad _thumbstick;
         private readonly UnityTrackpad _trackpad;
 
+        private readonly XRHaptor _haptor;
+
         public XRController(Handedness handedness, XRInputActions actions)
         {
             switch (handedness)
@@ -33,6 +36,8 @@ namespace VAT.Input
 
                     _thumbstick = new UnityTrackpad(left.ThumbstickAxis, left.ThumbstickPressed, left.ThumbstickTouched);
                     _trackpad = new UnityTrackpad(left.TrackpadAxis, left.TrackpadPressed, left.TrackpadTouched);
+
+                    _haptor = new XRHaptor(left.Haptic, handedness);
                     break;
                 case Handedness.RIGHT:
                     var right = actions.ControllerRight;
@@ -45,13 +50,15 @@ namespace VAT.Input
 
                     _thumbstick = new UnityTrackpad(right.ThumbstickAxis, right.ThumbstickPressed, right.ThumbstickTouched);
                     _trackpad = new UnityTrackpad(right.TrackpadAxis, right.TrackpadPressed, right.TrackpadTouched);
+
+                    _haptor = new XRHaptor(right.Haptic, handedness);
                     break;
             }
         }
 
         public IInputHaptor GetHaptorOrNull()
         {
-            return null;
+            return _haptor;
         }
 
         public IInputTrigger GetGripOrNull()

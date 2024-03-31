@@ -211,6 +211,15 @@ namespace VAT.Input.XR
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Haptic"",
+                    ""type"": ""Value"",
+                    ""id"": ""43be8bbf-8c46-4e1c-ac06-7a5d83276911"",
+                    ""expectedControlType"": ""Haptic"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -389,6 +398,17 @@ namespace VAT.Input.XR
                     ""action"": ""TrackpadTouched"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5a656327-6fb5-4da4-8f60-970e21818b35"",
+                    ""path"": ""<XRController>{LeftHand}/haptic"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Haptic"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -530,6 +550,15 @@ namespace VAT.Input.XR
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Haptic"",
+                    ""type"": ""Value"",
+                    ""id"": ""1398b6c7-ada5-413d-9d68-a6c30f35bab5"",
+                    ""expectedControlType"": ""Haptic"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -708,6 +737,17 @@ namespace VAT.Input.XR
                     ""action"": ""TrackpadTouched"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f578622b-4cca-4550-ad49-5d4e152bcfd6"",
+                    ""path"": ""<XRController>{RightHand}/haptic"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Haptic"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -735,6 +775,7 @@ namespace VAT.Input.XR
             m_ControllerLeft_TrackpadAxis = m_ControllerLeft.FindAction("TrackpadAxis", throwIfNotFound: true);
             m_ControllerLeft_TrackpadPressed = m_ControllerLeft.FindAction("TrackpadPressed", throwIfNotFound: true);
             m_ControllerLeft_TrackpadTouched = m_ControllerLeft.FindAction("TrackpadTouched", throwIfNotFound: true);
+            m_ControllerLeft_Haptic = m_ControllerLeft.FindAction("Haptic", throwIfNotFound: true);
             // ControllerRight
             m_ControllerRight = asset.FindActionMap("ControllerRight", throwIfNotFound: true);
             m_ControllerRight_TriggerAxis = m_ControllerRight.FindAction("TriggerAxis", throwIfNotFound: true);
@@ -752,6 +793,7 @@ namespace VAT.Input.XR
             m_ControllerRight_TrackpadAxis = m_ControllerRight.FindAction("TrackpadAxis", throwIfNotFound: true);
             m_ControllerRight_TrackpadPressed = m_ControllerRight.FindAction("TrackpadPressed", throwIfNotFound: true);
             m_ControllerRight_TrackpadTouched = m_ControllerRight.FindAction("TrackpadTouched", throwIfNotFound: true);
+            m_ControllerRight_Haptic = m_ControllerRight.FindAction("Haptic", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -867,6 +909,7 @@ namespace VAT.Input.XR
         private readonly InputAction m_ControllerLeft_TrackpadAxis;
         private readonly InputAction m_ControllerLeft_TrackpadPressed;
         private readonly InputAction m_ControllerLeft_TrackpadTouched;
+        private readonly InputAction m_ControllerLeft_Haptic;
         public struct ControllerLeftActions
         {
             private @XRInputActions m_Wrapper;
@@ -886,6 +929,7 @@ namespace VAT.Input.XR
             public InputAction @TrackpadAxis => m_Wrapper.m_ControllerLeft_TrackpadAxis;
             public InputAction @TrackpadPressed => m_Wrapper.m_ControllerLeft_TrackpadPressed;
             public InputAction @TrackpadTouched => m_Wrapper.m_ControllerLeft_TrackpadTouched;
+            public InputAction @Haptic => m_Wrapper.m_ControllerLeft_Haptic;
             public InputActionMap Get() { return m_Wrapper.m_ControllerLeft; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -940,6 +984,9 @@ namespace VAT.Input.XR
                     @TrackpadTouched.started -= m_Wrapper.m_ControllerLeftActionsCallbackInterface.OnTrackpadTouched;
                     @TrackpadTouched.performed -= m_Wrapper.m_ControllerLeftActionsCallbackInterface.OnTrackpadTouched;
                     @TrackpadTouched.canceled -= m_Wrapper.m_ControllerLeftActionsCallbackInterface.OnTrackpadTouched;
+                    @Haptic.started -= m_Wrapper.m_ControllerLeftActionsCallbackInterface.OnHaptic;
+                    @Haptic.performed -= m_Wrapper.m_ControllerLeftActionsCallbackInterface.OnHaptic;
+                    @Haptic.canceled -= m_Wrapper.m_ControllerLeftActionsCallbackInterface.OnHaptic;
                 }
                 m_Wrapper.m_ControllerLeftActionsCallbackInterface = instance;
                 if (instance != null)
@@ -989,6 +1036,9 @@ namespace VAT.Input.XR
                     @TrackpadTouched.started += instance.OnTrackpadTouched;
                     @TrackpadTouched.performed += instance.OnTrackpadTouched;
                     @TrackpadTouched.canceled += instance.OnTrackpadTouched;
+                    @Haptic.started += instance.OnHaptic;
+                    @Haptic.performed += instance.OnHaptic;
+                    @Haptic.canceled += instance.OnHaptic;
                 }
             }
         }
@@ -1012,6 +1062,7 @@ namespace VAT.Input.XR
         private readonly InputAction m_ControllerRight_TrackpadAxis;
         private readonly InputAction m_ControllerRight_TrackpadPressed;
         private readonly InputAction m_ControllerRight_TrackpadTouched;
+        private readonly InputAction m_ControllerRight_Haptic;
         public struct ControllerRightActions
         {
             private @XRInputActions m_Wrapper;
@@ -1031,6 +1082,7 @@ namespace VAT.Input.XR
             public InputAction @TrackpadAxis => m_Wrapper.m_ControllerRight_TrackpadAxis;
             public InputAction @TrackpadPressed => m_Wrapper.m_ControllerRight_TrackpadPressed;
             public InputAction @TrackpadTouched => m_Wrapper.m_ControllerRight_TrackpadTouched;
+            public InputAction @Haptic => m_Wrapper.m_ControllerRight_Haptic;
             public InputActionMap Get() { return m_Wrapper.m_ControllerRight; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1085,6 +1137,9 @@ namespace VAT.Input.XR
                     @TrackpadTouched.started -= m_Wrapper.m_ControllerRightActionsCallbackInterface.OnTrackpadTouched;
                     @TrackpadTouched.performed -= m_Wrapper.m_ControllerRightActionsCallbackInterface.OnTrackpadTouched;
                     @TrackpadTouched.canceled -= m_Wrapper.m_ControllerRightActionsCallbackInterface.OnTrackpadTouched;
+                    @Haptic.started -= m_Wrapper.m_ControllerRightActionsCallbackInterface.OnHaptic;
+                    @Haptic.performed -= m_Wrapper.m_ControllerRightActionsCallbackInterface.OnHaptic;
+                    @Haptic.canceled -= m_Wrapper.m_ControllerRightActionsCallbackInterface.OnHaptic;
                 }
                 m_Wrapper.m_ControllerRightActionsCallbackInterface = instance;
                 if (instance != null)
@@ -1134,6 +1189,9 @@ namespace VAT.Input.XR
                     @TrackpadTouched.started += instance.OnTrackpadTouched;
                     @TrackpadTouched.performed += instance.OnTrackpadTouched;
                     @TrackpadTouched.canceled += instance.OnTrackpadTouched;
+                    @Haptic.started += instance.OnHaptic;
+                    @Haptic.performed += instance.OnHaptic;
+                    @Haptic.canceled += instance.OnHaptic;
                 }
             }
         }
@@ -1160,6 +1218,7 @@ namespace VAT.Input.XR
             void OnTrackpadAxis(InputAction.CallbackContext context);
             void OnTrackpadPressed(InputAction.CallbackContext context);
             void OnTrackpadTouched(InputAction.CallbackContext context);
+            void OnHaptic(InputAction.CallbackContext context);
         }
         public interface IControllerRightActions
         {
@@ -1178,6 +1237,7 @@ namespace VAT.Input.XR
             void OnTrackpadAxis(InputAction.CallbackContext context);
             void OnTrackpadPressed(InputAction.CallbackContext context);
             void OnTrackpadTouched(InputAction.CallbackContext context);
+            void OnHaptic(InputAction.CallbackContext context);
         }
     }
 }
