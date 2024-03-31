@@ -12,5 +12,7 @@ namespace VAT.Input.Data
         public float height;
 
         public float wingspan;
+
+        public float chestCircumference;
     }
 }

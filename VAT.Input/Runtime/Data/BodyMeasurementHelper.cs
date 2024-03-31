@@ -15,6 +15,7 @@ namespace VAT.Input.Data
             {
                 height = height,
                 wingspan = height,
+                chestCircumference = height * 0.59f,
             };
         }
 
@@ -24,6 +25,7 @@ namespace VAT.Input.Data
             {
                 height = measurements.height * scale,
                 wingspan = measurements.wingspan * scale,
+                chestCircumference = measurements.chestCircumference * scale,
             };
         }
     }

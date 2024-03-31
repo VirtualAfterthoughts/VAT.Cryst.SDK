@@ -27,6 +27,8 @@ namespace VAT.Input
 
         bool HasForceSensor();
 
+        IInputHaptor GetHaptorOrNull();
+
         IInputTrigger GetTriggerOrNull();
 
         IInputTrigger GetGripOrNull();

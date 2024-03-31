@@ -142,6 +142,8 @@ namespace VAT.Avatars.Editor {
 
             EditorGUILayout.FloatField("Wingspan", measurements.wingspan);
 
+            EditorGUILayout.FloatField("Chest Circumference", measurements.chestCircumference);
+
             EditorGUI.EndDisabledGroup();
 
             GUILayout.Space(5);

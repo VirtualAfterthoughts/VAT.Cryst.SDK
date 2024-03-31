@@ -19,7 +19,7 @@ namespace VAT.Avatars.Proportions {
         public HumanoidLegProportions leftLegProportions;
         public HumanoidLegProportions rightLegProportions;
 
-        public BodyMeasurements GetMeasurements()
+        public float GetHeight()
         {
             float height = 0f;
             var leg = leftLegProportions;
@@ -28,6 +28,11 @@ namespace VAT.Avatars.Proportions {
 
             height += neckProportions.GetLength();
 
+            return height;
+        }
+
+        public float GetWingspan()
+        {
             float wingspan = 0f;
 
             var leftArm = leftArmProportions;
@@ -38,10 +43,34 @@ namespace VAT.Avatars.Proportions {
 
             wingspan += spineProportions.upperChestEllipsoid.radius.x * 2f;
 
+            return wingspan;
+        }
+
+        private float GetCircumference(float a, float b)
+        {
+            return 2f * Mathf.PI * Mathf.Sqrt((a * a + b * b) / 2f);
+        }
+
+        public float GetChestCircumference()
+        {
+            var upperChest = spineProportions.upperChestEllipsoid;
+
+            return GetCircumference(upperChest.radius.x, upperChest.radius.y);
+        }
+
+        public BodyMeasurements GetMeasurements()
+        {
+            float height = GetHeight();
+
+            float wingspan = GetWingspan();
+
+            float chestCircumference = GetChestCircumference();
+
             return new BodyMeasurements()
             {
                 height = height,
                 wingspan = wingspan,
+                chestCircumference = chestCircumference,
             };
         }
     }

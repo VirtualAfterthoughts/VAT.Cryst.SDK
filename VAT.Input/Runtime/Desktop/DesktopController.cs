@@ -49,6 +49,11 @@ namespace VAT.Input.Desktop
             }
         }
 
+        public IInputHaptor GetHaptorOrNull()
+        {
+            return null;
+        }
+
         public IInputTrigger GetGripOrNull()
         {
             return _grip;

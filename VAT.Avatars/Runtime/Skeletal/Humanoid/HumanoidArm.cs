@@ -166,9 +166,15 @@ namespace VAT.Avatars.Skeletal
                 var shoulderPosition = _spine.T1Vertebra.position;
                 var vector = _target.position - shoulderPosition;
 
-                var remapWingspan = remappingMeasurements.Value.wingspan;
+                var remapMeasurements = remappingMeasurements.Value;
 
-                vector *= _bodyMeasurements.wingspan / remapWingspan;
+                var remapChestWidth = remapMeasurements.chestCircumference * 0.4f;
+                var remapWingspan = remapMeasurements.wingspan - remapChestWidth;
+
+                var bodyChestWidth = _bodyMeasurements.chestCircumference * 0.4f;
+                var bodyWingspan = _bodyMeasurements.wingspan - bodyChestWidth;
+
+                vector *= bodyWingspan / remapWingspan;
 
                 _target.position = shoulderPosition + vector;
             }
