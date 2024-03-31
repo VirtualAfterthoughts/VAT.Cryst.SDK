@@ -15,6 +15,7 @@ namespace VAT.Avatars.Skeletal
     using VAT.Avatars.REWORK;
     using VAT.Cryst.Delegates;
     using VAT.Input;
+    using VAT.Input.Data;
 
     public class HumanoidArm : HumanoidBoneGroup, IHumanArm
     {
@@ -52,7 +53,10 @@ namespace VAT.Avatars.Skeletal
 
         private HumanoidSpine _spine;
 
-        private HumanoidNeckProportions _neckProportions;
+        private BodyMeasurements _bodyMeasurements;
+
+        public BodyMeasurements? remappingMeasurements = null;
+
         private HumanoidSpineProportions _spineProportions;
         private HumanoidArmProportions _armProportions;
 
@@ -96,7 +100,7 @@ namespace VAT.Avatars.Skeletal
         }
 
         public override void WriteProportions(HumanoidProportions proportions) {
-            _neckProportions = proportions.neckProportions;
+            _bodyMeasurements = proportions.GetMeasurements();
             _spineProportions = proportions.spineProportions;
 
             if (isLeft)
@@ -253,6 +257,12 @@ namespace VAT.Avatars.Skeletal
             var target = _target.position;
 
             Vector3 newVector = target - shoulderPosition;
+
+            if (remappingMeasurements.HasValue)
+            {
+                float wingspanRemap = _bodyMeasurements.wingspan / remappingMeasurements.Value.wingspan;
+                newVector *= wingspanRemap;
+            }
 
             // Make sure the vector isn't too small as to cause issues
             float minArmLength = _armLength * 0.1f;

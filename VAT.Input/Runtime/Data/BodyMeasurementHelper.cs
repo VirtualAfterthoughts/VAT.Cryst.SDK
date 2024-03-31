@@ -17,5 +17,14 @@ namespace VAT.Input.Data
                 wingspan = height,
             };
         }
+
+        public static BodyMeasurements Scale(BodyMeasurements measurements, float scale)
+        {
+            return new BodyMeasurements()
+            {
+                height = measurements.height * scale,
+                wingspan = measurements.wingspan * scale,
+            };
+        }
     }
 }

@@ -10,6 +10,7 @@ using VAT.Avatars.Nervous;
 using VAT.Input;
 using VAT.Avatars.REWORK;
 using VAT.Shared.Data;
+using VAT.Input.Data;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -201,6 +202,12 @@ namespace VAT.Avatars.Skeletal
         public override DataBone GetRoot()
         {
             return Spine.Root;
+        }
+
+        public override void WriteRemappingMeasurements(BodyMeasurements measurements)
+        {
+            LeftArm.remappingMeasurements = measurements;
+            RightArm.remappingMeasurements = measurements;
         }
     }
 }

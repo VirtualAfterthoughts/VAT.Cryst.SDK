@@ -9,6 +9,7 @@ using VAT.Input;
 using VAT.Avatars.Nervous;
 
 using VAT.Avatars.REWORK;
+using VAT.Input.Data;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -27,6 +28,8 @@ namespace VAT.Avatars.Skeletal
         public abstract void Initiate();
 
         public abstract void Solve();
+
+        public abstract void WriteRemappingMeasurements(BodyMeasurements measurements);
 
         public virtual void BindPose() {
             if (BoneGroups != null) { 

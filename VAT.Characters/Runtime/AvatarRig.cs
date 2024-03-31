@@ -14,6 +14,7 @@ namespace VAT.Characters
     using VAT.Input;
     using VAT.Interaction;
     using VAT.Shared.Data;
+    using VAT.Input.Data;
 
     public class AvatarRig : CrystRig
     {
@@ -27,6 +28,8 @@ namespace VAT.Characters
         public override void OnRigEnable()
         {
             ChangeAvatar();
+
+            RigManager.GetVitalsOrNull().OnUpdatedVitals += OnUpdatedVitals;
         }
 
         public override void OnRigDisable()
@@ -35,6 +38,26 @@ namespace VAT.Characters
             {
                 _activeAvatar.Uninitiate();
                 _activeAvatar = null;
+            }
+
+            RigManager.GetVitalsOrNull().OnUpdatedVitals -= OnUpdatedVitals;
+        }
+
+        private void OnUpdatedVitals(ICrystVitals vitals)
+        {
+            ApplyRemapping();
+        }
+
+        public void ApplyRemapping()
+        {
+            var vitals = RigManager.GetVitalsOrNull();
+
+            if (vitals != null && _activeAvatar != null)
+            {
+                float scale = vitals.CharacterMeasurements.height / vitals.PlayerMeasurements.height;
+                var playerMeasurements = BodyMeasurementHelper.Scale(vitals.PlayerMeasurements, scale);
+
+                _activeAvatar.Anatomy.Skeleton.DataBoneSkeleton.WriteRemappingMeasurements(playerMeasurements);
             }
         }
 
@@ -92,6 +115,8 @@ namespace VAT.Characters
             }
 
             _activeAvatar = avatar;
+
+            ApplyRemapping();
         }
 
         protected virtual IAvatarPayload GetPayload()
