@@ -159,14 +159,20 @@ namespace VAT.Avatars.Muscular
             Fender.SetMass(16f * legScalar);
             Foot.SetMass(16f * legScalar);
 
-            Foot.Rigidbody.Rigidbody.inertiaTensor = 10f * legScalar * Vector3.one;
+            var inertia = 10f * legScalar * Vector3.one;
+
+            Knee.Rigidbody.Rigidbody.inertiaTensor = inertia;
+            Foot.Rigidbody.Rigidbody.inertiaTensor = inertia;
 
             Knee.ConfigurableJoint.ConfigurableJoint.rotationDriveMode = RotationDriveMode.Slerp;
-            float kneeForce = 5000f * legScalar;
+
+            float kneeForce = 500000000f * legScalar;
+            float kneeDamper = kneeForce * 0.5f;
+
             Knee.ConfigurableJoint.ConfigurableJoint.slerpDrive = new JointDrive()
             {
-                positionSpring = kneeForce * 10f,
-                positionDamper = kneeForce * 5f,
+                positionSpring = kneeForce,
+                positionDamper = kneeDamper,
                 maximumForce = kneeForce
             };
 
@@ -174,22 +180,11 @@ namespace VAT.Avatars.Muscular
             Fender.ConfigurableJoint.ConfigurableJoint.yMotion = ConfigurableJointMotion.Limited;
             Fender.ConfigurableJoint.ConfigurableJoint.linearLimit = new SoftJointLimit() { limit = legLength * 1.1f };
 
-            float fenderScalar;
-
-            if (legScalar <= 1f)
-            {
-                fenderScalar = legScalar * Mathf.Sqrt(legScalar);
-            }
-            else
-            {
-                fenderScalar = legScalar * legScalar;
-            }
-
             Fender.ConfigurableJoint.ConfigurableJoint.yDrive = new JointDrive()
             {
                 positionSpring = 900000f,
                 positionDamper = 200000f,
-                maximumForce = 6000f * fenderScalar,
+                maximumForce = 6000f * legScalar,
             };
         }
 

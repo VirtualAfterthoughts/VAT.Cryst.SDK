@@ -87,15 +87,15 @@ namespace VAT.Avatars.Skeletal
                 }
                 else
                 {
-                    float timerScalar = Mathf.Sqrt(_legScalar);
+                    float timerScalar = _legScalar;
 
                     float initialTime = 0.25f * timerScalar;
                     float pullTime = 0.1f * timerScalar;
 
                     if (_timeSinceJump < initialTime)
                     {
-                        _jumpMultiplier = Mathf.Lerp(0f, 5f * _legScalar, _timeSinceJump / initialTime);
-                        _spineDebtMultiplier = Mathf.Lerp(0f, 1f, _timeSinceJump / initialTime);
+                        _jumpMultiplier = Mathf.Lerp(0f, 5f, _timeSinceJump / initialTime);
+                        _spineDebtMultiplier = Mathf.Lerp(0f, 1f, _timeSinceJump / 0.25f);
                         _jumpPull = Mathf.Lerp(0.4f, -0.5f, _timeSinceJump / pullTime);
                     }
                     else
