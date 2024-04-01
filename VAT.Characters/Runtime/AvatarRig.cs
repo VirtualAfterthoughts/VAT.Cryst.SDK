@@ -15,6 +15,7 @@ namespace VAT.Characters
     using VAT.Interaction;
     using VAT.Shared.Data;
     using VAT.Input.Data;
+
     using System;
 
     public class AvatarRig : CrystRig
