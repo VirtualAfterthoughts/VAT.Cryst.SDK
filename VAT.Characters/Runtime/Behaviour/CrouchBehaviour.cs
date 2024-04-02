@@ -76,16 +76,18 @@ namespace VAT.Characters
 
             if (_enabled && Mathf.Abs(crouchAxis) > 0.1f)
             {
-                float crouchDelta = crouchAxis * Time.deltaTime * 2f;
+                float crouchDelta = crouchAxis * Time.deltaTime * 2f * behaviourSpace.lossyScale.y;
 
                 behaviourSpace.position += behaviourSpace.up * crouchDelta;
             }
 
-            float headHeight = _playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
+            float playerHeight = behaviourSpace.lossyScale.y * _playerHeight;
+
+            float headHeight = playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
 
             var localHead = _behaviourRig.GetLocalHead();
             float headPos = (localHead.position + localHead.up * headHeight).y;
-            float clampedPos = Mathf.Clamp(headPos, 0f, _playerHeight);
+            float clampedPos = Mathf.Clamp(headPos, 0f, playerHeight);
 
             behaviourSpace.position += behaviourSpace.up * (clampedPos - headPos);
 
@@ -96,11 +98,13 @@ namespace VAT.Characters
         {
             var behaviourSpace = _behaviourRig.GetBehaviourSpace();
 
-            float headHeight = _playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
+            float playerHeight = _playerHeight * behaviourSpace.lossyScale.y;
+
+            float headHeight = playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
 
             float headPos = _behaviourRig.GetLocalHead().position.y + headHeight;
 
-            behaviourSpace.position += behaviourSpace.up * (_playerHeight - headPos);
+            behaviourSpace.position += behaviourSpace.up * (playerHeight - headPos);
 
             _behaviourRig.SetBehaviourSpace(behaviourSpace);
         }

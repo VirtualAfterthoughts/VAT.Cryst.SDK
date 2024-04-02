@@ -208,12 +208,12 @@ namespace VAT.Characters
 
         public SimpleTransform GetRoot()
         {
-            return SimpleTransform.Create(transform.position, transform.rotation);
+            return SimpleTransform.Create(transform.position, transform.rotation, transform.lossyScale);
         }
 
         public SimpleTransform GetBehaviourSpace()
         {
-            return SimpleTransform.Create(vrRoot.localPosition, vrRoot.localRotation);
+            return SimpleTransform.Create(vrRoot.localPosition, vrRoot.localRotation, vrRoot.lossyScale);
         }
 
         public void SetBehaviourSpace(SimpleTransform transform)
