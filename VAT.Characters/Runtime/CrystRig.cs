@@ -17,7 +17,7 @@ namespace VAT.Characters
         private ICrystRigManager _rigManager = null;
         public ICrystRigManager RigManager => _rigManager;
 
-        public void OnRegisterRig(ICrystRigManager rigManager)
+        public void OnRegister(ICrystRigManager rigManager)
         {
             _rigManager = rigManager;
 
@@ -26,7 +26,7 @@ namespace VAT.Characters
             _rigManager.OnManagerLateUpdate += OnLateUpdate;
         }
 
-        public void OnDeregisterRig(ICrystRigManager rigManager)
+        public void OnDeregister(ICrystRigManager rigManager)
         {
             _rigManager.OnManagerUpdate -= OnUpdate;
             _rigManager.OnManagerFixedUpdate -= OnFixedUpdate;

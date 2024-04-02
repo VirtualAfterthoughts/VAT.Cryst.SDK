@@ -9,6 +9,8 @@ namespace VAT.Input.Data
     {
         public static readonly BodyMeasurements AverageHuman = Create(1.76f);
 
+        public const float HeadHeightPercent = 1f / 8f;
+
         public static BodyMeasurements Create(float height)
         {
             return new BodyMeasurements()

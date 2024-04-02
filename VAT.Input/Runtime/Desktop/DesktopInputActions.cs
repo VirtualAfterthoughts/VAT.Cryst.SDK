@@ -55,6 +55,15 @@ namespace VAT.Input.Desktop
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Value"",
+                    ""id"": ""64d55976-9c5f-4021-925b-e1caa0ce79c8"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -134,6 +143,39 @@ namespace VAT.Input.Desktop
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""83338ca5-4b56-473a-8c22-3d078346156e"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""6f649dc0-048f-442b-a9c3-38aea84b9400"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""414ab848-88df-4d67-9de8-32631be044f3"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -177,6 +219,15 @@ namespace VAT.Input.Desktop
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ThumbstickAxis"",
+                    ""type"": ""Value"",
+                    ""id"": ""844ab350-a2b0-4aa7-844e-5a25f0c5f070"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -190,6 +241,61 @@ namespace VAT.Input.Desktop
                     ""action"": ""GripAxis"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""8d51b1d9-7d60-4269-9968-f86b563337f6"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThumbstickAxis"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""b6f86bc3-e3a9-4bbf-bd81-93c52d11b8c7"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThumbstickAxis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""18633e65-95a7-4a0b-ab4e-614ffa1a7a15"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThumbstickAxis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""0a6b60fa-f48c-470c-9d80-677135a1adac"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThumbstickAxis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""3c7b338c-7e04-41a0-9ce5-26c8ec830ba4"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThumbstickAxis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -201,12 +307,14 @@ namespace VAT.Input.Desktop
             m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
             m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
             m_Gameplay_Look = m_Gameplay.FindAction("Look", throwIfNotFound: true);
+            m_Gameplay_Crouch = m_Gameplay.FindAction("Crouch", throwIfNotFound: true);
             // HandLeft
             m_HandLeft = asset.FindActionMap("HandLeft", throwIfNotFound: true);
             m_HandLeft_GripAxis = m_HandLeft.FindAction("GripAxis", throwIfNotFound: true);
             // HandRight
             m_HandRight = asset.FindActionMap("HandRight", throwIfNotFound: true);
             m_HandRight_GripAxis = m_HandRight.FindAction("GripAxis", throwIfNotFound: true);
+            m_HandRight_ThumbstickAxis = m_HandRight.FindAction("ThumbstickAxis", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -269,6 +377,7 @@ namespace VAT.Input.Desktop
         private readonly InputAction m_Gameplay_Movement;
         private readonly InputAction m_Gameplay_Jump;
         private readonly InputAction m_Gameplay_Look;
+        private readonly InputAction m_Gameplay_Crouch;
         public struct GameplayActions
         {
             private @DesktopInputActions m_Wrapper;
@@ -276,6 +385,7 @@ namespace VAT.Input.Desktop
             public InputAction @Movement => m_Wrapper.m_Gameplay_Movement;
             public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
             public InputAction @Look => m_Wrapper.m_Gameplay_Look;
+            public InputAction @Crouch => m_Wrapper.m_Gameplay_Crouch;
             public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -294,6 +404,9 @@ namespace VAT.Input.Desktop
                     @Look.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
                     @Look.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
                     @Look.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnLook;
+                    @Crouch.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnCrouch;
+                    @Crouch.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnCrouch;
+                    @Crouch.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnCrouch;
                 }
                 m_Wrapper.m_GameplayActionsCallbackInterface = instance;
                 if (instance != null)
@@ -307,6 +420,9 @@ namespace VAT.Input.Desktop
                     @Look.started += instance.OnLook;
                     @Look.performed += instance.OnLook;
                     @Look.canceled += instance.OnLook;
+                    @Crouch.started += instance.OnCrouch;
+                    @Crouch.performed += instance.OnCrouch;
+                    @Crouch.canceled += instance.OnCrouch;
                 }
             }
         }
@@ -349,11 +465,13 @@ namespace VAT.Input.Desktop
         private readonly InputActionMap m_HandRight;
         private IHandRightActions m_HandRightActionsCallbackInterface;
         private readonly InputAction m_HandRight_GripAxis;
+        private readonly InputAction m_HandRight_ThumbstickAxis;
         public struct HandRightActions
         {
             private @DesktopInputActions m_Wrapper;
             public HandRightActions(@DesktopInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @GripAxis => m_Wrapper.m_HandRight_GripAxis;
+            public InputAction @ThumbstickAxis => m_Wrapper.m_HandRight_ThumbstickAxis;
             public InputActionMap Get() { return m_Wrapper.m_HandRight; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -366,6 +484,9 @@ namespace VAT.Input.Desktop
                     @GripAxis.started -= m_Wrapper.m_HandRightActionsCallbackInterface.OnGripAxis;
                     @GripAxis.performed -= m_Wrapper.m_HandRightActionsCallbackInterface.OnGripAxis;
                     @GripAxis.canceled -= m_Wrapper.m_HandRightActionsCallbackInterface.OnGripAxis;
+                    @ThumbstickAxis.started -= m_Wrapper.m_HandRightActionsCallbackInterface.OnThumbstickAxis;
+                    @ThumbstickAxis.performed -= m_Wrapper.m_HandRightActionsCallbackInterface.OnThumbstickAxis;
+                    @ThumbstickAxis.canceled -= m_Wrapper.m_HandRightActionsCallbackInterface.OnThumbstickAxis;
                 }
                 m_Wrapper.m_HandRightActionsCallbackInterface = instance;
                 if (instance != null)
@@ -373,6 +494,9 @@ namespace VAT.Input.Desktop
                     @GripAxis.started += instance.OnGripAxis;
                     @GripAxis.performed += instance.OnGripAxis;
                     @GripAxis.canceled += instance.OnGripAxis;
+                    @ThumbstickAxis.started += instance.OnThumbstickAxis;
+                    @ThumbstickAxis.performed += instance.OnThumbstickAxis;
+                    @ThumbstickAxis.canceled += instance.OnThumbstickAxis;
                 }
             }
         }
@@ -382,6 +506,7 @@ namespace VAT.Input.Desktop
             void OnMovement(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
+            void OnCrouch(InputAction.CallbackContext context);
         }
         public interface IHandLeftActions
         {
@@ -390,6 +515,7 @@ namespace VAT.Input.Desktop
         public interface IHandRightActions
         {
             void OnGripAxis(InputAction.CallbackContext context);
+            void OnThumbstickAxis(InputAction.CallbackContext context);
         }
     }
 }

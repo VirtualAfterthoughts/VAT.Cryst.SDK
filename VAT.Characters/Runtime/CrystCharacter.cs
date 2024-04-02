@@ -129,7 +129,7 @@ namespace VAT.Characters
             _rigs[i] = rig;
             rig.RigIndex = i;
 
-            rig.OnRegisterRig(this);
+            rig.OnRegister(this);
         }
 
         private void Internal_UnregisterRig(int i)
@@ -140,7 +140,7 @@ namespace VAT.Characters
             rig.RigIndex = -1;
             rig.LastRig = null;
 
-            rig.OnDeregisterRig(this);
+            rig.OnDeregister(this);
         }
 
         // Virtual methods

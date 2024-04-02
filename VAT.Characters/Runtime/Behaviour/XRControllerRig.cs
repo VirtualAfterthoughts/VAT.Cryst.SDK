@@ -30,36 +30,10 @@ namespace VAT.Characters
                 return;
             }
 
-            if (TryGetArm(Handedness.RIGHT, out var arm))
-            {
-                var hand = arm.GetHandOrNull();
-
-                var controller = hand.GetInputControllerOrNull();
-
-                var thumbstick = controller.GetThumbstickOrNull();
-
-                float turnAxis = thumbstick.GetAxis().x;
-
-                if (Mathf.Abs(turnAxis) > 0.1f)
-                {
-                    vrRoot.RotateAround(_head.position, vrRoot.up, Time.deltaTime * turnAxis * 200f);
-                }
-
-                float crouchAxis = thumbstick.GetAxis().y;
-
-                if (Mathf.Abs(crouchAxis) > 0.1f)
-                {
-                    float crouchDelta = crouchAxis * Time.deltaTime * 2f;
-
-                    var vrPos = vrRoot.localPosition;
-                    vrPos.y = Mathf.Clamp(vrPos.y + crouchDelta, -1.3f, 0f);
-
-                    vrRoot.localPosition = vrPos;
-                }
-            }
+            base.OnLateUpdate(deltaTime);
         }
 
-        public override bool TryGetInput(out IBasicInput input)
+        protected override Vector3 OnProcessMovement()
         {
             var thumbstick = XRManager.Api.LeftController.GetThumbstickOrNull();
 
@@ -67,12 +41,14 @@ namespace VAT.Characters
             var flattenedHead = Quaternion.LookRotation(_head.forward.FlattenNeck(_head.up, transform.up), transform.up);
             var movement = flattenedHead * new Vector3(movementAxis.x, 0f, movementAxis.y);
 
+            return movement;
+        }
+
+        protected override bool OnProcessJump()
+        {
             var button = XRManager.Api.RightController.GetPrimaryButtonOrNull();
 
-            var jump = button.GetPressed();
-
-            input = new GenericInput(movement, jump);
-            return true;
+            return button.GetPressed();
         }
 
         public override bool TryGetArm(Handedness handedness, out IArm arm)
@@ -97,6 +73,11 @@ namespace VAT.Characters
                     arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), XRManager.Api.RightController, XRManager.Api.RightHand));
                     return true;
             }
+        }
+
+        protected override void OnProcessTracking()
+        {
+            
         }
     }
 }

@@ -12,9 +12,11 @@ namespace VAT.Characters
 {
     public interface ICrystRig
     {
-        void OnRegisterRig(ICrystRigManager rigManager);
+        ICrystRigManager RigManager { get; }
 
-        void OnDeregisterRig(ICrystRigManager rigManager);
+        void OnRegister(ICrystRigManager rigManager);
+
+        void OnDeregister(ICrystRigManager rigManager);
 
         void OnRigEnable();
 

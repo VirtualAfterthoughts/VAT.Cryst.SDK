@@ -35,20 +35,12 @@ namespace VAT.Characters
             _rightHand = new DesktopHand(_rightController);
         }
 
-        public override void OnUpdate(float deltaTime)
-        {
-            base.OnUpdate(deltaTime);
-
-            SolveCamera(deltaTime);
-
-            _leftHand.Update();
-            _rightHand.Update();
-        }
-
         private Vector2 _headAxis;
 
-        private void SolveCamera(float deltaTime)
+        protected override void OnProcessTracking()
         {
+            float deltaTime = Time.deltaTime;
+
             // Camera control
             float speed = 150f * deltaTime;
             Cursor.lockState = CursorLockMode.Locked;
@@ -65,19 +57,25 @@ namespace VAT.Characters
             _headAxis += lookDelta * speed;
             _headAxis.y = Mathf.Clamp(_headAxis.y, -80f, 80f);
 
-            neckPivot.rotation = Quaternion.AngleAxis(_headAxis.x, transform.up) * Quaternion.AngleAxis(_headAxis.y, -transform.right) * transform.rotation;
+            neckPivot.rotation = Quaternion.AngleAxis(_headAxis.x, vrRoot.up) * Quaternion.AngleAxis(_headAxis.y, -vrRoot.right) * vrRoot.rotation;
+
+            // Update hands
+            _leftHand.Update();
+            _rightHand.Update();
         }
 
-        public override bool TryGetInput(out IBasicInput input)
+        protected override bool OnProcessJump()
+        {
+            return _inputActions.Gameplay.Jump.ReadValue<float>() > 0.5f;
+        }
+
+        protected override Vector3 OnProcessMovement()
         {
             var movementAxis = _inputActions.Gameplay.Movement.ReadValue<Vector2>();
             var flattenedHead = Quaternion.LookRotation(neckPivot.forward.FlattenNeck(neckPivot.up, transform.up), transform.up);
             var movement = flattenedHead * new Vector3(movementAxis.x, 0f, movementAxis.y);
 
-            var jump = _inputActions.Gameplay.Jump.ReadValue<float>();
-
-            input = new GenericInput(movement, jump >= 0.5f);
-            return true;
+            return movement;
         }
 
         public override bool TryGetArm(Handedness handedness, out IArm arm)

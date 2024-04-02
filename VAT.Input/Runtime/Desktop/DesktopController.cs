@@ -43,7 +43,7 @@ namespace VAT.Input.Desktop
                     //_primaryButton = new UnityButton(right.PrimaryButtonPressed, right.PrimaryButtonTouched);
                     //_secondaryButton = new UnityButton(right.SecondaryButtonPressed, right.SecondaryButtonTouched);
                     //
-                    //_thumbstick = new UnityTrackpad(right.ThumbstickAxis, right.ThumbstickPressed, right.ThumbstickTouched);
+                    _thumbstick = new UnityTrackpad(right.ThumbstickAxis, right.ThumbstickAxis, right.ThumbstickAxis);
                     //_trackpad = new UnityTrackpad(right.TrackpadAxis, right.TrackpadPressed, right.TrackpadTouched);
                     break;
             }

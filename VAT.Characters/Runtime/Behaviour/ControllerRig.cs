@@ -90,7 +90,7 @@ namespace VAT.Characters
         }
     }
 
-    public abstract class ControllerRig : CrystRig {
+    public abstract class ControllerRig : CrystRig, IBehaviourRig {
         [Header("References")]
         [SerializeField] protected Transform _leftWrist;
 
@@ -99,6 +99,12 @@ namespace VAT.Characters
         [SerializeField] protected Transform _head;
 
         [SerializeField] protected Transform vrRoot;
+
+        [SerializeField]
+        protected CrouchBehaviour _crouching;
+
+        [SerializeField]
+        protected TurnBehaviour _turning;
 
         public Camera cameraTest;
 
@@ -110,6 +116,9 @@ namespace VAT.Characters
             {
                 vitals.OnUpdatedVitals += OnUpdatedVitals;
             }
+
+            _crouching.OnRegister(this);
+            _turning.OnRegister(this);
         }
 
         public override void OnRigDisable()
@@ -120,6 +129,9 @@ namespace VAT.Characters
             {
                 vitals.OnUpdatedVitals -= OnUpdatedVitals;
             }
+
+            _crouching.OnDeregister(this);
+            _turning.OnDeregister(this);
         }
 
         private void OnUpdatedVitals(ICrystVitals vitals)
@@ -134,10 +146,39 @@ namespace VAT.Characters
             }
         }
 
+        public sealed override bool TryGetInput(out IBasicInput input)
+        {
+            var movement = OnProcessMovement();
+            var jump = OnProcessJump();
+
+            input = new GenericInput(movement, jump);
+            return true;
+        }
+
+        public override void OnLateUpdate(float deltaTime)
+        {
+            OnProcessTracking();
+
+            _crouching.Solve();
+            _turning.Solve();
+        }
+
+        protected abstract void OnProcessTracking();
+
+        protected abstract Vector3 OnProcessMovement();
+
+        protected abstract bool OnProcessJump();
+
         public override bool TryGetTrackedRig(out CrystRig rig)
         {
             rig = this;
             return true;
+        }
+
+        public SimpleTransform GetLocalHead()
+        {
+            TryGetHead(out var head);
+            return head.Transform;
         }
 
         public override bool TryGetHead(out IJoint head)
@@ -163,6 +204,41 @@ namespace VAT.Characters
                     arm = new BasicArm(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_rightWrist)));
                     return true;
             }
+        }
+
+        public SimpleTransform GetRoot()
+        {
+            return SimpleTransform.Create(transform.position, transform.rotation);
+        }
+
+        public SimpleTransform GetBehaviourSpace()
+        {
+            return SimpleTransform.Create(vrRoot.localPosition, vrRoot.localRotation);
+        }
+
+        public void SetBehaviourSpace(SimpleTransform transform)
+        {
+            vrRoot.SetLocalPositionAndRotation(transform.position, transform.rotation);
+        }
+
+        public IHand GetPrimaryHand()
+        {
+            if (TryGetArm(Handedness.RIGHT, out var arm))
+            {
+                return arm.GetHandOrNull();
+            }
+
+            return null;
+        }
+
+        public IHand GetSecondaryHand()
+        {
+            if (TryGetArm(Handedness.LEFT, out var arm))
+            {
+                return arm.GetHandOrNull();
+            }
+
+            return null;
         }
     }
 }
