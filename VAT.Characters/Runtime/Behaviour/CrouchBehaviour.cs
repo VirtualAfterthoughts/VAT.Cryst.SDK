@@ -72,9 +72,11 @@ namespace VAT.Characters
 
             float crouchAxis = thumbstick.GetAxis().y;
 
+            crouchAxis = Mathf.Clamp01((Mathf.Abs(crouchAxis) - 0.5f) * 2f) * Mathf.Sign(crouchAxis);
+
             var behaviourSpace = _behaviourRig.GetBehaviourSpace();
 
-            if (_enabled && Mathf.Abs(crouchAxis) > 0.1f)
+            if (_enabled && Mathf.Abs(crouchAxis) > 0.01f)
             {
                 float crouchDelta = crouchAxis * Time.deltaTime * 2f * behaviourSpace.lossyScale.y;
 

@@ -79,7 +79,7 @@ namespace VAT.Characters
 
         private void SnapTurnSolve(float axis)
         {
-            bool shouldSnapTurn = Mathf.Abs(axis) > 0.2f;
+            bool shouldSnapTurn = Mathf.Abs(axis) > 0.5f;
 
             if (shouldSnapTurn && !_snapTurned)
             {
@@ -103,16 +103,18 @@ namespace VAT.Characters
 
         private void SmoothTurnSolve(float axis)
         {
+            axis = Mathf.Clamp01((Mathf.Abs(axis) - 0.5f) * 2f) * Mathf.Sign(axis);
+
             _smoothAxis = Mathf.SmoothDamp(_smoothAxis, axis, ref _smoothVelocity, 0.05f);
 
-            if (Mathf.Abs(_smoothAxis) > 0.2f)
+            if (Mathf.Abs(_smoothAxis) > 0.01f)
             {
                 var root = _behaviourRig.GetBehaviourSpace();
                 var head = _behaviourRig.GetLocalHead();
 
                 var headInRoot = root.InverseTransform(head);
 
-                root.rotation = Quaternion.AngleAxis(Time.deltaTime * _smoothAxis * 500f, root.up) * root.rotation;
+                root.rotation = Quaternion.AngleAxis(Time.deltaTime * _smoothAxis * 50f * _smoothTurnSpeed, root.up) * root.rotation;
 
                 root.position += head.position - root.Transform(headInRoot).position;
 
