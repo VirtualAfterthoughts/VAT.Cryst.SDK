@@ -36,20 +36,36 @@ namespace VAT.Audio
 
         public void PlaySFX(float magnitude)
         {
+            float volume = CalculateVolume(magnitude);
+            float pitch = UnityEngine.Random.Range(0.7f, 1.2f);
+
             AudioSpawner.Spawn(new AudioSpawner.AudioRequestInfo()
             {
                 clip = _jerkClips.GetRandom(),
                 position = transform.position,
                 settings = new AudioPlaySettings()
                 {
-                    volume = Mathf.Pow((magnitude - _minAcceleration) / (_maxAcceleration - _minAcceleration), _pow),
-                    pitch = UnityEngine.Random.Range(0.7f, 1.2f)
+                    volume = volume,
+                    pitch = pitch,
                 },
+                playCallback = OnPlay,
             });
+        }
+
+        private void OnPlay(AudioSpawner.AudioCallbackInfo info)
+        {
+            info.audioPlayer.Velocity = _rigidbody.Rigidbody.velocity;
         }
 
         private Vector3 _lastVelocity;
         private float _timeSinceSFX = 0f;
+
+        private float _lastMagnitude = 0f;
+
+        private float CalculateVolume(float magnitude)
+        {
+            return Mathf.Pow((magnitude - _minAcceleration) / (_maxAcceleration - _minAcceleration), _pow);
+        }
 
         public void FixedUpdate()
         {
@@ -64,11 +80,13 @@ namespace VAT.Audio
             float magnitude = acceleration.magnitude;
 
             _timeSinceSFX += Time.deltaTime;
+            float minimumTime = Mathf.Lerp(0.1f, 0.25f, CalculateVolume(_lastMagnitude));
 
-            if (magnitude > _minAcceleration && _timeSinceSFX > 0.2f)
+            if (magnitude > _minAcceleration && (_timeSinceSFX > minimumTime || magnitude > _lastMagnitude * 2f))
             {
                 PlaySFX(magnitude);
                 _timeSinceSFX = 0f;
+                _lastMagnitude = magnitude;
             }
 
             _lastVelocity = velocity;

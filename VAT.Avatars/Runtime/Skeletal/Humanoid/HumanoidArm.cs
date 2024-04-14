@@ -170,10 +170,10 @@ namespace VAT.Avatars.Skeletal
 
                 var remapMeasurements = remappingMeasurements.Value;
 
-                var remapChestWidth = remapMeasurements.chestCircumference * 0.4f;
+                var remapChestWidth = remapMeasurements.chestCircumference * 0.7f;
                 var remapWingspan = remapMeasurements.wingspan - remapChestWidth;
 
-                var bodyChestWidth = _bodyMeasurements.chestCircumference * 0.4f;
+                var bodyChestWidth = _bodyMeasurements.chestCircumference * 0.7f;
                 var bodyWingspan = _bodyMeasurements.wingspan - bodyChestWidth;
 
                 vector *= bodyWingspan / remapWingspan;

@@ -21,6 +21,10 @@ namespace VAT.Audio
 
         private AssetPoolable _poolable = null;
 
+        private Vector3 _velocity = Vector3.zero;
+
+        public Vector3 Velocity { get { return _velocity; } set {  _velocity = value; } }
+
         public AudioSource Source => _source;
 
         private void Awake()
@@ -47,10 +51,14 @@ namespace VAT.Audio
             _source.spatialBlend = 1f;
 
             _source.Play();
+
+            _velocity = Vector3.zero;
         }
 
         public void LateUpdate()
         {
+            transform.position += _velocity * Time.deltaTime;
+
             if (!_source.isPlaying && _poolable.CanDespawn)
             {
                 _poolable.Despawn();
