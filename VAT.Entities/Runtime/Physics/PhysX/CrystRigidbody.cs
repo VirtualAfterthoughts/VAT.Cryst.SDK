@@ -43,8 +43,9 @@ namespace VAT.Entities.PhysX
         protected override void OnBodyAwake() {
             base.OnBodyAwake();
 
-            if (_rigidbody != null) {
-                _info.Apply(_rigidbody);
+            if (_rigidbody != null) 
+            {
+                _info = SimpleRigidbody.Create(_rigidbody);
                 _hasBody = true;
             }
         }
@@ -59,7 +60,8 @@ namespace VAT.Entities.PhysX
 
         protected override void OnCreateItem()
         {
-            if (!HasBody) {
+            if (!HasBody) 
+            {
                 _rigidbody = gameObject.AddOrGetComponent<Rigidbody>();
                 _info.Apply(_rigidbody);
 
@@ -69,7 +71,8 @@ namespace VAT.Entities.PhysX
 
         protected override void OnDestroyItem()
         {
-            if (HasBody) {
+            if (HasBody) 
+            {
                 _info = SimpleRigidbody.Create(_rigidbody);
 
 #if UNITY_EDITOR
@@ -115,10 +118,12 @@ namespace VAT.Entities.PhysX
         private void Reset() {
             _hasBody = TryGetComponent(out _rigidbody);
 
-            if (_hasBody) {
+            if (_hasBody)
+            {
                 _info = SimpleRigidbody.Create(_rigidbody);
             }
-            else {
+            else 
+            {
                 _info = SimpleRigidbody.Default;
                 CreateItem();
             }
@@ -127,8 +132,9 @@ namespace VAT.Entities.PhysX
         private void OnValidate() {
             _hasBody = TryGetComponent(out _rigidbody);
 
-            if (_hasBody) {
-                _info.Apply(_rigidbody);
+            if (_hasBody) 
+            {
+                _info = SimpleRigidbody.Create(_rigidbody);
             }
         }
 #endif
