@@ -1,0 +1,199 @@
+using System.Collections;
+using System.Collections.Generic;
+
+using UnityEngine;
+
+namespace VAT.Characters
+{
+    using Unity.Mathematics;
+    using UnityEngine.XR;
+    using VAT.Avatars;
+    using VAT.Avatars.Integumentary;
+    using VAT.Interaction;
+    using VAT.Shared.Data;
+    using VAT.Shared.Extensions;
+
+    public class ForcePullAbility : IAvatarAbility
+    {
+        public class ForcePullTracker
+        {
+            private IInteractor _interactor;
+
+            private IGrippable _pullingGrip;
+
+            private ConfigurableJoint _joint;
+
+            public ForcePullTracker(IInteractor interactor)
+            {
+                _interactor = interactor;
+
+                var state = _interactor.GetInteractorState();
+                state.InteractState.OnStateChanged += OnInteractStateChanged;
+                state.GrabState.OnStateChanged += OnGrabStateChanged;
+            }
+
+            public void Cleanup()
+            {
+                var state = _interactor.GetInteractorState();
+                state.InteractState.OnStateChanged -= OnInteractStateChanged;
+                state.GrabState.OnStateChanged -= OnGrabStateChanged;
+
+                _interactor = null;
+            }
+
+            public void OnGrabStateChanged(bool state)
+            {
+                if (!state && _pullingGrip != null)
+                {
+                    CancelPull();
+                }
+            }
+
+            public void OnInteractStateChanged(bool state)
+            {
+                if (state && _pullingGrip == null)
+                {
+                    var near = _interactor.GetHoveringInteractable();
+                    var far = _interactor.GetFarHoveringInteractable();
+
+                    if (near == null && far != null && far is IGrippable grip && grip.IsInteractable())
+                    {
+                        BeginPull(grip);
+                    }
+                }
+            }
+
+            private void ApplyDrag(Rigidbody grip, Rigidbody interactor)
+            {
+                var gripVel = grip.velocity;
+                var interactorVel = interactor.velocity;
+
+                var force = 50f * grip.mass * (interactorVel - gripVel);
+                force = Vector3.ClampMagnitude(force, 1000f);
+                grip.AddForce(force, ForceMode.Force);
+
+                var gripAngVel = grip.angularVelocity;
+                var interactorAngVel = interactor.angularVelocity;
+
+                var torque = (interactorAngVel - gripAngVel) * 50f;
+                torque = Vector3.ClampMagnitude(torque, 1000f);
+                grip.AddTorque(torque, ForceMode.Acceleration);
+            }
+
+            private void UpdatePull()
+            {
+                ApplyDrag(_pullingGrip.GetHostOrDefault().GetRigidbodyOrDefault(), _interactor.GetRigidbody());
+
+                var grabberPoint = _interactor.GetGrabberPoint();
+                var worldTarget = _pullingGrip.GetTargetInWorld(grabberPoint);
+                var interactorTarget = grabberPoint.GetParentTransform().Transform(_pullingGrip.GetTargetInInteractor(grabberPoint));
+
+                float distance = math.length(worldTarget.position - interactorTarget.position);
+
+                if (distance <= 0.05f)
+                {
+                    _interactor.AttachGrip(_pullingGrip);
+                    CancelPull();
+                }
+            }
+
+            private void BeginPull(IGrippable grip)
+            {
+                var host = grip.GetHostOrDefault();
+
+                if (host == null || host.GetRigidbodyOrDefault() == null || host.GetRigidbodyOrDefault().isKinematic)
+                {
+                    return;
+                }
+
+                _pullingGrip = grip;
+
+                var rb = host.GetRigidbodyOrDefault();
+                var grabPoint = _interactor.GetGrabberPoint();
+                var targetInInteractor = grip.GetTargetInInteractor(grabPoint);
+
+                var targetInWorld = grip.GetTargetInWorld(grabPoint);
+                var targetInHost = SimpleTransform.Create(rb.position, rb.rotation).InverseTransform(targetInWorld);
+
+                var interactorInHost = grip.GetTargetInHost(grabPoint);
+                var worldInteractor = rb.transform.TransformRotation(interactorInHost.rotation) * grabPoint.GetParentTransform().Transform(targetInInteractor).InverseTransformRotation(_interactor.GetRigidbody().transform.rotation);
+
+                _joint = _interactor.GetRigidbody().gameObject.AddComponent<ConfigurableJoint>();
+
+                _joint.connectedBody = rb;
+                var drive = new JointDrive() { positionSpring = 1000f, positionDamper = 0f, maximumForce = 1000f };
+                _joint.xDrive = _joint.yDrive = _joint.zDrive = drive;
+                _joint.rotationDriveMode = RotationDriveMode.Slerp;
+                _joint.slerpDrive = drive;
+                _joint.autoConfigureConnectedAnchor = false;
+                _joint.anchor = targetInInteractor.position;
+                _joint.connectedAnchor = targetInHost.position;
+
+                _joint.UpdateRotation(_joint.transform, worldInteractor);
+
+                grip.DisableInteraction();
+            }
+
+            private void CancelPull()
+            {
+                if (_pullingGrip == null)
+                {
+                    return;
+                }
+
+                _pullingGrip.EnableInteraction();
+
+                var rb = _pullingGrip.GetHostOrDefault().GetRigidbodyOrDefault();
+                var interactorRb = _interactor.GetRigidbody();
+
+                rb.velocity = interactorRb.velocity;
+                rb.angularVelocity = interactorRb.angularVelocity;
+
+                _pullingGrip = null;
+                Object.Destroy(_joint);
+            }
+
+            public void OnFixedUpdate(float deltaTime)
+            {
+                if (_pullingGrip != null)
+                {
+                    UpdatePull();
+                    return;
+                }
+            }
+        }
+
+        private readonly List<ForcePullTracker> _trackers = new();
+
+        public void OnInitiateAvatar(Avatar avatar, IAvatarRig rig)
+        {
+            var interactors = rig.GetCurrentInteractors();
+            foreach (var interactor in interactors)
+            {
+                _trackers.Add(new ForcePullTracker(interactor));
+            }
+
+            rig.RigManager.OnManagerFixedUpdate += OnFixedUpdate;
+        }
+
+        public void OnDeinitiateAvatar(Avatar avatar, IAvatarRig rig)
+        {
+            rig.RigManager.OnManagerFixedUpdate -= OnFixedUpdate;
+
+            foreach (var tracker in _trackers)
+            {
+                tracker.Cleanup();
+            }
+
+            _trackers.Clear();
+        }
+
+        private void OnFixedUpdate(float deltaTime)
+        {
+            foreach (var tracker in _trackers)
+            {
+                tracker.OnFixedUpdate(deltaTime);
+            }
+        }
+    }
+}

@@ -1,12 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Entities;
-using VAT.Entities.PhysX;
-using VAT.Input;
-using VAT.Shared.Data;
+using VAT.Input.Skeleton;
 
 namespace VAT.Interaction
 {
@@ -14,6 +12,18 @@ namespace VAT.Interaction
 
     public interface IInteractor
     {
+        IInteractable GetHoveringInteractable() 
+        { 
+            return null; 
+        }
+
+        IInteractable GetFarHoveringInteractable()
+        {
+            return null;
+        }
+
+        InteractorState GetInteractorState();
+
         bool IsInteractionLocked();
 
         void LockInteraction();
@@ -36,6 +46,6 @@ namespace VAT.Interaction
 
         void DetachGrips();
 
-        IInputController GetInputControllerOrNull();
+        IHand GetHandOrNull();
     }
 }

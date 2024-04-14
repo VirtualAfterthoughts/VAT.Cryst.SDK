@@ -5,21 +5,15 @@ using UnityEngine;
 
 namespace VAT.Interaction
 {
-    public interface IInteractable
+    public interface IInteractable : IHoverable
     {
-        event InteractorDelegate OnHoverBegin, OnHoverEnd;
-
         bool IsInteractable();
 
         void EnableInteraction();
 
         void DisableInteraction();
 
-        void BeginHover(IInteractor interactor);
-
-        void EndHover(IInteractor interactor);
-
-        (bool valid, float priority) ValidateInteractable(IInteractor interactor);
+        (bool valid, float priority) ValidateInteraction(IInteractor interactor);
 
         InteractableHost GetHostOrDefault();
 

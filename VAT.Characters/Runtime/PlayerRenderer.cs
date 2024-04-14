@@ -25,7 +25,7 @@ namespace VAT.Characters
 
         private void OnPostArt()
         {
-            var avatar = avatarRig.ActiveAvatar;
+            var avatar = avatarRig.CurrentAvatar;
             if (avatar != null)
             {
                 var skeleton = avatar.Anatomy.Skeleton.ArtBoneSkeleton;

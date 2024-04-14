@@ -18,7 +18,7 @@ namespace VAT.Characters
 
     using System;
 
-    public class AvatarRig : CrystRig
+    public class AvatarRig : CrystRig, IAvatarRig
     {
         public Avatar targetAvatar;
 
@@ -27,21 +27,46 @@ namespace VAT.Characters
 
         private Avatar _activeAvatar = null;
 
-        public Avatar ActiveAvatar => _activeAvatar;
+        public Avatar CurrentAvatar => _activeAvatar;
 
         public Action OnPostArt;
 
+        List<IAvatarAbility> _constantAbilities = null;
+
         public override void OnRigEnable()
         {
+            _constantAbilities = new List<IAvatarAbility>
+            {
+                new ForcePullAbility()
+            };
+
             ChangeAvatar();
 
             RigManager.GetVitalsOrNull().OnUpdatedVitals += OnUpdatedVitals;
+        }
+
+        private void InitiateAbilities()
+        {
+            foreach (var ability in _constantAbilities)
+            {
+                ability.OnInitiateAvatar(CurrentAvatar, this);
+            }
+        }
+
+        private void DeinitiateAbilities()
+        {
+            foreach (var ability in _constantAbilities)
+            {
+                ability.OnDeinitiateAvatar(CurrentAvatar, this);
+            }
         }
 
         public override void OnRigDisable()
         {
             if (_activeAvatar != null)
             {
+                DeinitiateAbilities();
+
                 _activeAvatar.Uninitiate();
                 _activeAvatar = null;
             }
@@ -67,6 +92,12 @@ namespace VAT.Characters
             }
         }
 
+        public void SwitchAvatar(Avatar avatar)
+        {
+            targetAvatar = avatar;
+            ChangeAvatar();
+        }
+
         [ContextMenu("Change Avatar")]
         public void ChangeAvatar()
         {
@@ -74,15 +105,26 @@ namespace VAT.Characters
             {
                 targetAvatar.transform.SetPositionAndRotation(_activeAvatar.transform.position, _activeAvatar.transform.rotation);
 
+                DeinitiateAbilities();
+
                 _activeAvatar.Uninitiate();
                 _activeAvatar.gameObject.SetActive(false);
 
                 _activeAvatar = null;
+
+                _interactors = new IInteractor[0];
             }
 
             targetAvatar.gameObject.SetActive(true);
 
             ActivateAvatar(targetAvatar);
+        }
+
+        private IInteractor[] _interactors = new IInteractor[0];
+
+        public IInteractor[] GetCurrentInteractors()
+        {
+            return _interactors;
         }
 
         public void ActivateAvatar(Avatar avatar)
@@ -97,6 +139,9 @@ namespace VAT.Characters
 
             TryGetTrackedRig(out var rig);
 
+            int index = 0;
+            _interactors = new IInteractor[arms.Length];
+
             foreach (var arm in arms)
             {
                 rig.TryGetArm(arm.Handedness, out var rigArm);
@@ -107,7 +152,7 @@ namespace VAT.Characters
 
                 var interactor = bone.UnityGameObject.AddComponent<CrystInteractor>();
                 interactor.controller = thing.GetInputControllerOrNull();
-                interactor.hand = thing.GetInputHandOrNull();
+                interactor.hand = thing;
                 interactor.arm = arm;
                 interactor.handedness = arm.Handedness;
 
@@ -118,6 +163,8 @@ namespace VAT.Characters
                 {
                     interactor.hosts.Add(((PhysBone)physBone).UnityGameObject.AddComponent<InteractableHost>());
                 }
+
+                _interactors[index++] = interactor;
             }
 
             _activeAvatar = avatar;
@@ -127,6 +174,8 @@ namespace VAT.Characters
             avatar.Write(GetPayload());
             avatar.Anatomy.Skeleton.DataBoneSkeleton.Solve();
             avatar.SolveArt();
+
+            InitiateAbilities();
         }
 
         protected virtual IAvatarPayload GetPayload()

@@ -87,13 +87,21 @@ namespace VAT.Characters
 
             float headHeight = playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
 
-            var localHead = _behaviourRig.GetLocalHead();
-            float headPos = (localHead.position + localHead.up * headHeight).y;
+            float headPos = GetHeadY(headHeight);
+
             float clampedPos = Mathf.Clamp(headPos, 0f, playerHeight);
 
             behaviourSpace.position += behaviourSpace.up * (clampedPos - headPos);
 
             _behaviourRig.SetBehaviourSpace(behaviourSpace);
+        }
+
+        public float GetHeadY(float headHeight)
+        {
+            var localHead = _behaviourRig.GetLocalHead();
+            float headPos = (localHead.position - localHead.forward * headHeight + localHead.up * headHeight).y;
+
+            return headPos;
         }
 
         public void AutoCalculateOffset()
@@ -104,7 +112,7 @@ namespace VAT.Characters
 
             float headHeight = playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
 
-            float headPos = _behaviourRig.GetLocalHead().position.y + headHeight;
+            float headPos = GetHeadY(headHeight);
 
             behaviourSpace.position += behaviourSpace.up * (playerHeight - headPos);
 

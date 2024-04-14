@@ -24,6 +24,10 @@ namespace VAT.Interaction
         private GripSwapMode _swapMode = GripSwapMode.NONE;
 
         [SerializeField]
+        [Tooltip("The modes of interaction enabled for this grip. Near means it can be interacted with in close proximity, Far means it can be interacted with from far away such as a force grab.")]
+        private HoverFlags _hoverFlags = HoverFlags.NEAR;
+
+        [SerializeField]
         [Range(0f, 10f)]
         [Tooltip("The priority of the grip compared to other grips. A value of 0 means complete priority, a value of 1 is default, and higher values are less prioritized.")]
         private float _priority = 1f;
@@ -165,7 +169,7 @@ namespace VAT.Interaction
         {
             float force = 0f;
 
-            var controller = interactor.GetInputControllerOrNull();
+            var controller = interactor.GetHandOrNull().GetInputControllerOrNull();
 
             if (controller != null)
             {
@@ -242,7 +246,7 @@ namespace VAT.Interaction
             return (false, default);
         }
 
-        public (bool valid, float priority) ValidateInteractable(IInteractor interactor)
+        public (bool valid, float priority) ValidateInteraction(IInteractor interactor)
         {
             if (!IsInteractable() || (_attachedInteractors.Count > 0 && _swapMode == GripSwapMode.SINGLE))
                 return (false, 0f);
@@ -281,9 +285,9 @@ namespace VAT.Interaction
             }
         }
 
-        public SimpleTransform GetInteractorInHost(IInteractor interactor)
+        public SimpleTransform GetTargetInHost(IGrabPoint point)
         {
-            return SimpleTransform.Create(GetHostGameObject().transform).InverseTransform(GetTargetInWorld(interactor.GetGrabberPoint()));
+            return SimpleTransform.Create(GetHostGameObject().transform).InverseTransform(GetTargetInWorld(point));
         }
 
         public SimpleTransform GetHostInInteractor(IInteractor interactor)
@@ -356,6 +360,11 @@ namespace VAT.Interaction
         public virtual SimpleTransform GetDefaultTargetInInteractor(IGrabPoint point, HandPoseData pose)
         {
             return GetTargetInInteractor(point, pose);
+        }
+
+        public HoverFlags GetHoverFlags()
+        {
+            return _hoverFlags;
         }
     }
 }

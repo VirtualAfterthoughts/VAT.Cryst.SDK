@@ -92,7 +92,7 @@ namespace VAT.Interaction
         {
             var secondaryInteractor = GetSecondaryInteractor();
 
-            if (secondaryInteractor != null && _primaryGrip.ValidateInteractable(secondaryInteractor).valid)
+            if (secondaryInteractor != null && _primaryGrip.ValidateInteraction(secondaryInteractor).valid)
             {
                 secondaryInteractor.DetachGrips();
                 secondaryInteractor.AttachGrip(_primaryGrip);

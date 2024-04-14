@@ -13,6 +13,7 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
+    using VAT.Avatars.Integumentary;
 
     public sealed class HumanoidLocomotion {
         private DataBone _feetCenter;
@@ -209,7 +210,21 @@ namespace VAT.Avatars.Skeletal
             _sacrum = sacrum;
             _result = feetCenter.Transform(_localResult);
 
-            _isGrounded = Physics.Raycast(sacrum.position, _resting.position - sacrum.position, out var hitInfo, _proportions.GetLength() * 1.3f, ~0, QueryTriggerInteraction.Ignore);
+            _isGrounded = false;
+            var hits = Physics.RaycastAll(sacrum.position, _resting.position - sacrum.position, _proportions.GetLength() * 1.3f, ~0, QueryTriggerInteraction.Ignore);
+            
+            // TEMPORARY, replace with layermask or something else later
+            foreach (var hit in hits)
+            {
+                var parent = hit.collider.transform.parent;
+                if (parent != null && parent.name == "[Rig - Physics]")
+                {
+                    continue;
+                }
+
+                _isGrounded = true;
+                break;
+            }
 
             if (_isGrounded)
             {

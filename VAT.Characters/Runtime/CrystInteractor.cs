@@ -11,6 +11,7 @@ using VAT.Entities.PhysX;
 
 using VAT.Input;
 using VAT.Input.Haptic;
+using VAT.Input.Skeleton;
 using VAT.Interaction;
 
 using VAT.Shared.Data;
@@ -24,7 +25,7 @@ namespace VAT.Characters
         public CrystRigidbody rb;
         public Handedness handedness;
         public IInputController controller;
-        public IInputHand hand;
+        public IHand hand;
         public AvatarArm arm;
         public HandPoseData openPose;
         public HandPoseData closedPose;
@@ -39,50 +40,26 @@ namespace VAT.Characters
 
         private bool _isSnatching = false;
 
-        private IInteractable _hoveringInteractable;
-        public IInteractable HoveringInteractable
-        {
-            get
-            {
-                return _hoveringInteractable;
-            }
-            set
-            {
-                // Check if we are able to hover currently
-                if (IsInteractionLocked())
-                {
-                    Debug.LogWarning("Attempted to hover an Interactable, but the Interactor cannot hover!", this);
-                    value = null;
-                }
+        private HoverHolder _hoverHolder = null;
+        public HoverHolder HoverHolder => _hoverHolder;
 
-                // Make sure this is a different interactable
-                if (_hoveringInteractable != value)
-                {
-                    // Begin hover
-                    if (_hoveringInteractable == null)
-                    {
-                        value.BeginHover(this);
-                    }
-                    // End hover
-                    else
-                    {
-                        _hoveringInteractable.EndHover(this);
-
-                        value?.BeginHover(this);
-                    }
-
-                    _hoveringInteractable = value;
-                }
-            }
-        }
+        private HoverHolder _farHoverHolder = null;
+        public HoverHolder FarHoverHolder => _farHoverHolder;
 
         private bool _isInteractionLocked = false;
 
         private AvatarGrabberPoint _grabberPoint;
 
+        private InteractorState _state;
+
         private void Awake()
         {
             rb = GetComponent<CrystRigidbody>();
+            _hoverHolder = new HoverHolder(this);
+            _farHoverHolder = new HoverHolder(this);
+            _state = new();
+
+            _state.GrabState.OnStateChanged += OnGrabStateChange;
         }
 
         private void Start()
@@ -101,8 +78,30 @@ namespace VAT.Characters
             _lastTarget = SimpleTransform.Create(transform);
         }
 
+        private void OnGrabStateChange(bool state)
+        {
+            if (state && _attachedGrip == null && _hoverHolder.HoveringInteractable is IGrippable hoveringGrip)
+            {
+                AttachGrip(hoveringGrip);
+            }
+            else if (!state && _attachedGrip != null)
+            {
+                DetachGrips();
+            }
+        }
+
         private float _pinAmount = 0f;
         private SimpleTransform _lastTarget = SimpleTransform.Default;
+
+        public IInteractable GetHoveringInteractable()
+        {
+            return HoverHolder.HoveringInteractable;
+        }
+
+        public IInteractable GetFarHoveringInteractable()
+        {
+            return FarHoverHolder.HoveringInteractable;
+        }
 
         public SimpleTransform Solve(SimpleTransform rig, SimpleTransform targetInRig)
         {
@@ -120,7 +119,7 @@ namespace VAT.Characters
             var goal = values.Item1;
             goal.rotation = target.rotation;
 
-            target = SimpleTransform.Lerp(target, values.Item1, values.Item2);
+            target = SimpleTransform.Lerp(target, goal, values.Item2);
 
             result = rig.InverseTransform(target);
 
@@ -176,11 +175,9 @@ namespace VAT.Characters
             }
         }
 
-        private bool _wasGripPose = false;
-
         public void LateUpdate()
         {
-            var blendPose = hand.GetHandPose();
+            var blendPose = hand.GetInputHandOrNull().GetHandPose();
             arm.DataArm.Hand.SetBlendPose(blendPose);
 
             float maxCurl = 0f;
@@ -190,15 +187,22 @@ namespace VAT.Characters
                 maxCurl = Mathf.Max(maxCurl, finger.GetCurl());
             }
 
+            float secondaryCurl = 0f;
+            for (var i = 1; i < blendPose.fingers.Length; i++)
+            {
+                secondaryCurl = Mathf.Max(secondaryCurl, blendPose.fingers[i].GetCurl());
+            }
+
             bool gripPose = maxCurl > grabCurl;
+            bool interactPose = secondaryCurl > grabCurl && hand.GetInputControllerOrNull()?.GetTriggerOrNull()?.GetAxis() > grabCurl;
 
             OnUpdateHover();
 
             if (_attachedGrip == null)
             {
-                if (HoveringInteractable is IGrippable garp && !gripPose && garp.GetClosedPose(this).valid)
+                if (_hoverHolder.HoveringInteractable is IGrippable hoveringGrip && !gripPose && hoveringGrip.GetClosedPose(this).valid)
                 {
-                    arm.DataArm.Hand.SetClosedPose(garp.GetClosedPose(this).data);
+                    arm.DataArm.Hand.SetClosedPose(hoveringGrip.GetClosedPose(this).data);
                 }
                 else
                 {
@@ -206,16 +210,8 @@ namespace VAT.Characters
                 }
             }
 
-            if (gripPose && !_wasGripPose && _attachedGrip == null && HoveringInteractable is IGrippable grp)
-            {
-                AttachGrip(grp);
-            }
-            else if (maxCurl < grabCurl && _attachedGrip != null)
-            {
-                DetachGrips();
-            }
-
-            _wasGripPose = gripPose;
+            _state.GrabState.State = gripPose;
+            _state.InteractState.State = interactPose;
 
             if (_isSnatching)
             {
@@ -265,7 +261,13 @@ namespace VAT.Characters
 
             ToggleCollsion(grip, true);
 
-            HoveringInteractable = null;
+            ResetHover();
+        }
+
+        private void ResetHover()
+        {
+            _hoverHolder.HoveringInteractable = null;
+            _farHoverHolder.HoveringInteractable = null;
         }
 
         private void SendGripHaptic()
@@ -330,6 +332,19 @@ namespace VAT.Characters
             }
         }
 
+        private Vector3 GetFarOrigin()
+        {
+            return Camera.main.transform.position;
+        }
+
+        private Vector3 GetFarForward()
+        {
+            Vector3 farForward = math.normalize(arm.PhysArm.Hand.Hand.Transform.position - arm.PhysArm.UpperArm.Transform.position);
+            Vector3 cameraForward = math.normalize((Vector3)arm.PhysArm.Hand.Hand.Transform.position - Camera.main.transform.position);
+            farForward = Vector3.Lerp(farForward, cameraForward, 0.5f).normalized;
+            return farForward;
+        }
+
         protected void OnUpdateHover()
         {
             if (_attachedGrip != null)
@@ -338,6 +353,35 @@ namespace VAT.Characters
             var grabCenter = _grabberPoint.GetGrabCenter();
             var colliders = Physics.OverlapSphere(grabCenter.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
             
+            var nearHover = GetInteractableFromColliders(colliders, HoverFlags.NEAR);
+
+            _hoverHolder.HoveringInteractable = nearHover;
+
+            IInteractable farHover = null;
+
+            if (nearHover == null)
+            {
+                var farForward = GetFarForward();
+                float maxDistance = 7f;
+                var farOrigin = GetFarOrigin();
+                var endPosition = farOrigin + farForward * maxDistance;
+
+                if (Physics.Raycast(farOrigin, farForward, out var hitInfo, maxDistance, ~0, QueryTriggerInteraction.Ignore))
+                {
+                    endPosition = hitInfo.point;
+                }
+
+                float radius = Mathf.Lerp(0f, 1f, Vector3.Distance(farOrigin, endPosition) / maxDistance);
+
+                var farColliders = Physics.OverlapCapsule(farOrigin, endPosition, radius);
+                farHover = GetInteractableFromColliders(farColliders, HoverFlags.FAR);
+            }
+
+            _farHoverHolder.HoveringInteractable = farHover;
+        }
+
+        private IInteractable GetInteractableFromColliders(Collider[] colliders, HoverFlags flags)
+        {
             IInteractable interactable = null;
             float lowestPriority = float.PositiveInfinity;
 
@@ -345,8 +389,9 @@ namespace VAT.Characters
             {
                 var component = collider.gameObject.GetComponentInParent<IInteractable>();
 
-                if (component != null) {
-                    var (valid, priority) = component.ValidateInteractable(this);
+                if (component != null && (component.GetHoverFlags() & flags) != 0)
+                {
+                    var (valid, priority) = component.ValidateInteraction(this);
 
                     if (valid && priority < lowestPriority)
                     {
@@ -356,7 +401,7 @@ namespace VAT.Characters
                 }
             }
 
-            HoveringInteractable = interactable;
+            return interactable;
         }
 
         public void OnDrawGizmosSelected()
@@ -368,14 +413,23 @@ namespace VAT.Characters
             Gizmos.DrawWireSphere(grabCenter.position, grabRadius);
         }
 
+        public void OnDrawGizmos()
+        {
+            var grabCenter = GetFarOrigin();
+            var forward = GetFarForward();
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(grabCenter, grabCenter + forward * 4f);
+        }
+
         public Rigidbody GetRigidbody()
         {
             return rb.Rigidbody;
         }
 
-        public IInputController GetInputControllerOrNull()
+        public IHand GetHandOrNull()
         {
-            return controller;
+            return hand;
         }
 
         public InteractorTargetData GetTargetData()
@@ -402,6 +456,11 @@ namespace VAT.Characters
         public IGrabPoint GetGrabberPoint()
         {
             return _grabberPoint;
+        }
+
+        public InteractorState GetInteractorState()
+        {
+            return _state;
         }
     }
 }
