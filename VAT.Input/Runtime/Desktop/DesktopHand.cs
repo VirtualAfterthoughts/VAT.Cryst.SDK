@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VAT.Avatars;
 using VAT.Input.Desktop;
+using VAT.Shared.Data;
 
 namespace VAT.Input
 {
@@ -50,6 +51,11 @@ namespace VAT.Input
         public HandPoseData GetHandPose()
         {
             return _handPose;
+        }
+
+        public SimpleTransform GetWristTransform()
+        {
+            return SimpleTransform.Default;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars;
+using VAT.Shared.Data;
 
 namespace VAT.Input
 {
@@ -28,6 +29,21 @@ namespace VAT.Input
             }
 
             return new HandPoseData();
+        }
+
+        public SimpleTransform GetWristTransform()
+        {
+            foreach (var provider in _providers)
+            {
+                if (!provider.IsValid())
+                {
+                    continue;
+                }
+
+                return provider.GetWristTransform();
+            }
+
+            return SimpleTransform.Default;
         }
     }
 }

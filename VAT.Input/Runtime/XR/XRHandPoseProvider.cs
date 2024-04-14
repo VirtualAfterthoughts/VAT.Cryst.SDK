@@ -5,6 +5,7 @@ using UnityEngine;
 
 using UnityEngine.XR.Hands;
 using VAT.Avatars;
+using VAT.Shared.Data;
 
 namespace VAT.Input
 {
@@ -64,6 +65,18 @@ namespace VAT.Input
         public bool IsValid()
         {
             return _subsystem != null && GetHand().isTracked;
+        }
+
+        public SimpleTransform GetWristTransform()
+        {
+            var hand = GetHand();
+
+            if (hand.GetJoint(XRHandJointID.Wrist).TryGetPose(out var pose))
+            {
+                return SimpleTransform.Create(pose.position, pose.rotation);
+            }
+
+            return SimpleTransform.Default;
         }
     }
 }

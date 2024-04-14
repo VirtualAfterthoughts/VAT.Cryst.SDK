@@ -31,6 +31,14 @@ namespace VAT.Characters
             }
 
             base.OnLateUpdate(deltaTime);
+
+            var leftWrist = XRManager.Api.LeftHand.GetWristTransform();
+            _leftWrist.transform.position = vrRoot.TransformPoint(leftWrist.position);
+            _leftWrist.transform.rotation = vrRoot.TransformRotation(leftWrist.rotation);
+
+            var rightWrist = XRManager.Api.RightHand.GetWristTransform();
+            _rightWrist.transform.position = vrRoot.TransformPoint(rightWrist.position);
+            _rightWrist.transform.rotation = vrRoot.TransformRotation(rightWrist.rotation);
         }
 
         protected override Vector3 OnProcessMovement()
