@@ -13,5 +13,17 @@ namespace VAT.Pooling
     {
         public SpawnableContentReference contentReference;
         public SpawnRules rules;
+
+        public Spawnable(Address address)
+        {
+            contentReference = new SpawnableContentReference(address);
+            rules = SpawnRules.Default;
+        }
+
+        public Spawnable(SpawnableContentReference contentReference)
+        {
+            this.contentReference = contentReference;
+            rules = SpawnRules.Default;
+        }
     }
 }

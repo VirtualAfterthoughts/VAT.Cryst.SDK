@@ -1,0 +1,18 @@
+{
+    "name": "VAT.Audio",
+    "rootNamespace": "VAT.Audio",
+    "references": [
+        "GUID:a1150eb594efb8b4588547923603507f",
+        "GUID:90a83c14fcb3592428d0406e14f847a0",
+        "GUID:2c5da6b5cc71c8446a65082f325dc51b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

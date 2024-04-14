@@ -52,12 +52,21 @@ namespace VAT.Pooling
 #endif
 
             Vector3? scale = _useScale ? transform.lossyScale : null;
-            AssetSpawner.Spawn(_spawnable, transform.position, transform.rotation, scale, OnPlace);
+            var info = new AssetSpawner.SpawnRequestInfo()
+            {
+                position = transform.position,
+                rotation = transform.rotation,
+                scale = scale,
+                spawnable = _spawnable,
+                spawnCallback = OnPlace,
+            };
+
+            AssetSpawner.Spawn(info);
         }
 
-        private void OnPlace(AssetPoolable poolable)
+        private void OnPlace(AssetSpawner.SpawnCallbackInfo info)
         {
-            placeEvent.Invoke(poolable.gameObject, this);
+            placeEvent.Invoke(info.assetPoolable.gameObject, this);
         }
 
 #if UNITY_EDITOR

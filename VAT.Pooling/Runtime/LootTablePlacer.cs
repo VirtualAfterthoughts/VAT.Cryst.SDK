@@ -36,7 +36,16 @@ namespace VAT.Pooling
             if (asset is LootTable lootTable)
             {
                 var item = lootTable.GetLootItem();
-                AssetSpawner.Spawn(item.spawnable, transform.position, transform.rotation, transform.lossyScale);
+
+                var info = new AssetSpawner.SpawnRequestInfo()
+                {
+                    position = transform.position,
+                    rotation = transform.rotation,
+                    scale = transform.lossyScale,
+                    spawnable = item.spawnable,
+                };
+
+                AssetSpawner.Spawn(info);
             }
         }
     }

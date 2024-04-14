@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Unity.Mathematics;
 using UnityEngine;
-
+using VAT.Audio;
 using VAT.Avatars;
 using VAT.Avatars.Integumentary;
 
@@ -29,6 +29,8 @@ namespace VAT.Characters
         public AvatarArm arm;
         public HandPoseData openPose;
         public HandPoseData closedPose;
+
+        public AudioClip[] grabSounds = new AudioClip[0];
 
         public HapticImpulse grabHaptic = new(0.5f, 0.01f);
 
@@ -247,9 +249,9 @@ namespace VAT.Characters
                     SendGripHaptic();
                 }
             }
-            else if (_attachedGrip != null)
+            else
             {
-                _attachedGrip.OnAttachUpdate(this);
+                _attachedGrip?.OnAttachUpdate(this);
             }
         }
 
@@ -262,6 +264,21 @@ namespace VAT.Characters
             ToggleCollsion(grip, true);
 
             ResetHover();
+
+            if (grabSounds != null && grabSounds.Length > 0)
+            {
+                var settings = AudioPlaySettings.Default;
+                settings.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
+
+                var info = new AudioSpawner.AudioRequestInfo()
+                {
+                    clip = grabSounds[0],
+                    position = transform.position,
+                    settings = settings,
+                };
+
+                AudioSpawner.Spawn(info);
+            }
         }
 
         private void ResetHover()

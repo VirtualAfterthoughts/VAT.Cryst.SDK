@@ -12,5 +12,10 @@ namespace VAT.Packaging
 #if UNITY_EDITOR
         public override Type EditorContentType => typeof(StaticSpawnableContent);
 #endif
+
+        public SpawnableContentReference(Address address)
+        {
+            Address = address;
+        }
     }
 }

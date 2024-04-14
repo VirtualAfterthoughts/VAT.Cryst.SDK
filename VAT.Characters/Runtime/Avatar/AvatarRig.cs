@@ -25,6 +25,8 @@ namespace VAT.Characters
         public HandPose openPose;
         public HandPose closedPose;
 
+        public AudioClip[] grabSounds;
+
         private Avatar _activeAvatar = null;
 
         public Avatar CurrentAvatar => _activeAvatar;
@@ -155,6 +157,7 @@ namespace VAT.Characters
                 interactor.hand = thing;
                 interactor.arm = arm;
                 interactor.handedness = arm.Handedness;
+                interactor.grabSounds = grabSounds;
 
                 interactor.openPose = openPose.data;
                 interactor.closedPose = closedPose.data;
