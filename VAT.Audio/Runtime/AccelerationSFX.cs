@@ -27,7 +27,7 @@ namespace VAT.Audio
         [SerializeField]
         [Min(0f)]
         [Tooltip("The acceleration required for maximum volume. Measured in m/s^2.")]
-        private float _maxAcceleration = 100f;
+        private float _maxAcceleration = 1000f;
 
         [SerializeField]
         [Range(1f, 10f)]
