@@ -29,14 +29,14 @@ namespace VAT.Audio
         [Tooltip("The acceleration required for maximum volume. Measured in m/s^2.")]
         private float _maxAcceleration = 1000f;
 
-        [SerializeField]
-        [Range(1f, 10f)]
-        [Tooltip("The exponent applied to the volume. A value of 1 is linear volume.")]
-        private float _pow = 2f;
-
         public void PlaySFX(float magnitude)
         {
             float volume = CalculateVolume(magnitude);
+            if (volume <= 0f)
+            {
+                return;
+            }
+
             float pitch = UnityEngine.Random.Range(0.7f, 1.2f);
 
             AudioSpawner.Spawn(new AudioSpawner.AudioRequestInfo()
@@ -64,7 +64,14 @@ namespace VAT.Audio
 
         private float CalculateVolume(float magnitude)
         {
-            return Mathf.Pow((magnitude - _minAcceleration) / (_maxAcceleration - _minAcceleration), _pow);
+			float volume = (magnitude - _minAcceleration) / (_maxAcceleration - _minAcceleration);
+
+            if (volume <= 0.1f)
+            {
+                volume = 0f;
+            }
+
+            return Mathf.Clamp01(volume);
         }
 
         public void FixedUpdate()
@@ -80,7 +87,7 @@ namespace VAT.Audio
             float magnitude = acceleration.magnitude;
 
             _timeSinceSFX += Time.deltaTime;
-            float minimumTime = Mathf.Lerp(0.1f, 0.25f, CalculateVolume(_lastMagnitude));
+            float minimumTime = Mathf.Lerp(0.05f, 0.25f, CalculateVolume(_lastMagnitude));
 
             if (magnitude > _minAcceleration && (_timeSinceSFX > minimumTime || magnitude > _lastMagnitude * 2f))
             {
