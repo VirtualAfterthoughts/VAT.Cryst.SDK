@@ -19,11 +19,14 @@ namespace VAT.Input
 
         private readonly IInputHand _hand;
 
-        public GenericHand(SimpleTransform transform, IInputController controller, IInputHand hand)
+        private readonly HandActions _actions;
+
+        public GenericHand(SimpleTransform transform, IInputController controller, IInputHand hand, HandActions actions)
         {
             _transform = transform;
             _controller = controller;
             _hand = hand;
+            _actions = actions;
         }
 
         public IInputController GetInputControllerOrNull()
@@ -34,6 +37,10 @@ namespace VAT.Input
         public IInputHand GetInputHandOrNull()
         {
             return _hand;
+        }
+        public HandActions GetActionsOrNull()
+        {
+            return _actions;
         }
     }
 }

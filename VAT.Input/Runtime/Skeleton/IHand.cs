@@ -12,5 +12,7 @@ namespace VAT.Input.Skeleton
         IInputController GetInputControllerOrNull();
 
         IInputHand GetInputHandOrNull();
+
+        HandActions GetActionsOrNull();
     }
 }

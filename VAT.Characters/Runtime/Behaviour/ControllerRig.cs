@@ -11,85 +11,6 @@ using VAT.Shared.Data;
 
 namespace VAT.Characters
 {
-    public struct BasicHand : IHand
-    {
-        public SimpleTransform Transform { get { return _transform; } set { _transform = value; } }
-
-        private SimpleTransform _transform;
-
-        public BasicHand(SimpleTransform transform)
-        {
-            _transform = transform;
-        }
-
-        public IInputController GetInputControllerOrNull()
-        {
-            return default;
-        }
-
-        public IInputHand GetInputHandOrNull()
-        {
-            return default;
-        }
-    }
-
-    public struct BasicArm : IArm
-    {
-        private IJoint[] _bones;
-
-        public BasicArm(params SimpleTransform[] transforms)
-        {
-            var bones = new IJoint[transforms.Length];
-
-            for (var i = 0; i < bones.Length; i++)
-            {
-                if (i <= 0)
-                {
-                    bones[i] = new BasicHand(transforms[i]);
-                    continue;
-                }
-
-                bones[i] = new BasicJoint(transforms[i]);
-            }
-
-            _bones = bones;
-        }
-
-        public readonly int JointCount => 1;
-
-        public readonly IJoint[] Joints => _bones;
-
-        public void SetJoint(int index, IJoint joint)
-        {
-            _bones[index] = joint;
-        }
-
-        public IJoint GetElbowOrNull()
-        {
-            if (_bones.Length > 1)
-            {
-                return _bones.ElementAt(1);
-            }
-
-            return null;
-        }
-
-        public IHand GetHandOrNull()
-        {
-            return _bones.ElementAt(0) as IHand;
-        }
-
-        public IJoint GetUpperArmOrNull()
-        {
-            if (_bones.Length > 2)
-            {
-                return _bones.ElementAt(2);
-            }
-
-            return null;
-        }
-    }
-
     public abstract class ControllerRig : CrystRig, IBehaviourRig {
         [Header("References")]
         [SerializeField] protected Transform _leftWrist;
@@ -186,16 +107,18 @@ namespace VAT.Characters
 
         public override bool TryGetArm(Handedness handedness, out IArm arm)
         {
+            var root = GetRoot();
+
             switch (handedness)
             {
                 default:
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new BasicArm(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_leftWrist)));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), null, null, null));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new BasicArm(SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_rightWrist)));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), null, null, null));
                     return true;
             }
         }

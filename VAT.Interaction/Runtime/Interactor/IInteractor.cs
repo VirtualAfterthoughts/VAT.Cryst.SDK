@@ -22,8 +22,6 @@ namespace VAT.Interaction
             return null;
         }
 
-        InteractorState GetInteractorState();
-
         bool IsInteractionLocked();
 
         void LockInteraction();

@@ -52,16 +52,11 @@ namespace VAT.Characters
 
         private AvatarGrabberPoint _grabberPoint;
 
-        private InteractorState _state;
-
         private void Awake()
         {
             rb = GetComponent<CrystRigidbody>();
             _hoverHolder = new HoverHolder(this);
             _farHoverHolder = new HoverHolder(this);
-            _state = new();
-
-            _state.GrabState.OnStateChanged += OnGrabStateChange;
         }
 
         private void Start()
@@ -78,6 +73,9 @@ namespace VAT.Characters
             arm.DataArm.Hand.SetClosedPose(closedPose);
 
             _lastTarget = SimpleTransform.Create(transform);
+
+            var actions = hand.GetActionsOrNull();
+            actions.GrabAction.OnStateChanged += OnGrabStateChange;
         }
 
         private void OnGrabStateChange(bool state)
@@ -182,27 +180,13 @@ namespace VAT.Characters
             var blendPose = hand.GetInputHandOrNull().GetHandPose();
             arm.DataArm.Hand.SetBlendPose(blendPose);
 
-            float maxCurl = 0f;
-
-            foreach (var finger in blendPose.fingers)
-            {
-                maxCurl = Mathf.Max(maxCurl, finger.GetCurl());
-            }
-
-            float secondaryCurl = 0f;
-            for (var i = 1; i < blendPose.fingers.Length; i++)
-            {
-                secondaryCurl = Mathf.Max(secondaryCurl, blendPose.fingers[i].GetCurl());
-            }
-
-            bool gripPose = maxCurl > grabCurl;
-            bool interactPose = secondaryCurl > grabCurl && hand.GetInputControllerOrNull()?.GetTriggerOrNull()?.GetAxis() > grabCurl;
+            var actions = hand.GetActionsOrNull();
 
             OnUpdateHover();
 
             if (_attachedGrip == null)
             {
-                if (_hoverHolder.HoveringInteractable is IGrippable hoveringGrip && !gripPose && hoveringGrip.GetClosedPose(this).valid)
+                if (_hoverHolder.HoveringInteractable is IGrippable hoveringGrip && !actions.GrabAction.State && hoveringGrip.GetClosedPose(this).valid)
                 {
                     arm.DataArm.Hand.SetClosedPose(hoveringGrip.GetClosedPose(this).data);
                 }
@@ -211,9 +195,6 @@ namespace VAT.Characters
                     arm.DataArm.Hand.SetClosedPose(closedPose);
                 }
             }
-
-            _state.GrabState.State = gripPose;
-            _state.ActionGrabState.State = interactPose;
 
             if (_isSnatching)
             {
@@ -473,11 +454,6 @@ namespace VAT.Characters
         public IGrabPoint GetGrabberPoint()
         {
             return _grabberPoint;
-        }
-
-        public InteractorState GetInteractorState()
-        {
-            return _state;
         }
     }
 }

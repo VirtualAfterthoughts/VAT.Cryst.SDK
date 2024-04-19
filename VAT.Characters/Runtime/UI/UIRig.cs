@@ -29,9 +29,9 @@ namespace VAT.Characters
             }
 
             behaviourRig.TryGetArm(Handedness.RIGHT, out var arm);
-            var secondaryButton = arm?.GetHandOrNull()?.GetInputControllerOrNull()?.GetSecondaryButtonOrNull();
+            var secondaryButton = arm?.GetHandOrNull()?.GetActionsOrNull()?.SecondaryAction.State;
 
-            if (secondaryButton != null && secondaryButton.GetPressed())
+            if (secondaryButton != null && secondaryButton.Value)
             {
                 uiCanvas.transform.localScale = Vector3.Slerp(uiCanvas.transform.localScale, Vector3.one, Time.deltaTime * 24f);
             }

@@ -21,6 +21,9 @@ namespace VAT.Characters
         private DesktopHand _leftHand;
         private DesktopHand _rightHand;
 
+        private HandActions _leftActions = new();
+        private HandActions _rightActions = new();
+
         public override void OnRigEnable()
         {
             base.OnRigEnable();
@@ -62,6 +65,9 @@ namespace VAT.Characters
             // Update hands
             _leftHand.Update();
             _rightHand.Update();
+
+            _leftActions.UpdateActions(_leftHand, _leftController);
+            _rightActions.UpdateActions(_rightHand, _rightController);
         }
 
         protected override bool OnProcessJump()
@@ -88,10 +94,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), _leftController, _leftHand));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), _leftController, _leftHand, _leftActions));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), _rightController, _rightHand));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), _rightController, _rightHand, _rightActions));
                     return true;
             }
         }
