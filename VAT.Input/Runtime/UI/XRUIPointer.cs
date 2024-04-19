@@ -28,17 +28,20 @@ namespace VAT.Input.UI
 
             _currentPlane = null;
             float closestDot = float.NegativeInfinity;
+            float closestDistance = float.PositiveInfinity;
 
             foreach (var collider in colliders)
             {
                 if (UIPlane.Cache.TryGet(collider.gameObject, out var hber))
                 {
                     var dot = Vector3.Dot(transform.forward, -hber.GetPlane().normal);
+                    var distance = (transform.position - hber.GetCenter()).magnitude;
 
-                    if (dot > closestDot)
+                    if (dot > closestDot || distance < closestDistance)
                     {
                         _currentPlane = hber;
                         closestDot = dot;
+                        closestDistance = distance;
                     }
                 }
             }

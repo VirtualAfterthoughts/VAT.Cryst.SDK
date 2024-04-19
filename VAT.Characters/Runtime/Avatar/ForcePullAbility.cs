@@ -28,14 +28,14 @@ namespace VAT.Characters
                 _interactor = interactor;
 
                 var state = _interactor.GetInteractorState();
-                state.InteractState.OnStateChanged += OnInteractStateChanged;
+                state.ActionGrabState.OnStateChanged += OnActionGrabStateChanged;
                 state.GrabState.OnStateChanged += OnGrabStateChanged;
             }
 
             public void Cleanup()
             {
                 var state = _interactor.GetInteractorState();
-                state.InteractState.OnStateChanged -= OnInteractStateChanged;
+                state.ActionGrabState.OnStateChanged -= OnActionGrabStateChanged;
                 state.GrabState.OnStateChanged -= OnGrabStateChanged;
 
                 _interactor = null;
@@ -49,7 +49,7 @@ namespace VAT.Characters
                 }
             }
 
-            public void OnInteractStateChanged(bool state)
+            public void OnActionGrabStateChanged(bool state)
             {
                 if (state && _pullingGrip == null)
                 {

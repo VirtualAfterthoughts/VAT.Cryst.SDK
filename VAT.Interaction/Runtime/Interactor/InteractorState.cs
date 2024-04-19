@@ -11,6 +11,6 @@ namespace VAT.Interaction
     {
         public BoolState GrabState = new();
 
-        public BoolState InteractState = new();
+        public BoolState ActionGrabState = new();
     }
 }

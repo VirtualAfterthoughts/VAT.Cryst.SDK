@@ -18,6 +18,7 @@ namespace VAT.Characters
 
     using System;
 
+    [RequireRig(typeof(IBehaviourRig))]
     public class AvatarRig : CrystRig, IAvatarRig
     {
         public Avatar targetAvatar;
@@ -139,14 +140,14 @@ namespace VAT.Characters
 
             var arms = avatar.GetArms();
 
-            TryGetTrackedRig(out var rig);
+            var behaviourRig = RigManager.GetRigOrNull<IBehaviourRig>();
 
             int index = 0;
             _interactors = new IInteractor[arms.Length];
 
             foreach (var arm in arms)
             {
-                rig.TryGetArm(arm.Handedness, out var rigArm);
+                behaviourRig.TryGetArm(arm.Handedness, out var rigArm);
                 var thing = rigArm.GetHandOrNull();
 
                 // add interactor
@@ -232,23 +233,28 @@ namespace VAT.Characters
 
         private void ApplyOffsets()
         {
-            if (!TryGetTrackedRig(out var trackedRig))
+            var behaviourRig = RigManager.GetRigOrNull<IBehaviourRig>();
+            if (behaviourRig == null)
                 return;
 
             // Rotation
             var skeleton = _activeAvatar.Anatomy.Skeleton;
-            trackedRig.transform.rotation = Quaternion.Slerp(trackedRig.transform.rotation, skeleton.PhysBoneSkeleton.GetRoot().Transform.rotation, Time.deltaTime * 12f);
+
+            var root = behaviourRig.GetRoot();
+            root.rotation = Quaternion.Slerp(root.rotation, skeleton.PhysBoneSkeleton.GetRoot().Transform.rotation, Time.deltaTime * 12f);
 
             // Position
             TryGetHead(out var thisHead);
-            trackedRig.TryGetHead(out var lastHead);
+            behaviourRig.TryGetHead(out var lastHead);
 
             var physHead = SimpleTransform.Create(transform).Transform(thisHead.Transform);
-            var head = SimpleTransform.Create(trackedRig.transform).Transform(lastHead.Transform);
+            var head = root.Transform(lastHead.Transform);
              
             var pos = (physHead.position - head.position);
-             
-            trackedRig.transform.position += (Vector3)pos;
+
+            root.position += pos;
+
+            behaviourRig.SetRoot(root);
         }
     }
 }

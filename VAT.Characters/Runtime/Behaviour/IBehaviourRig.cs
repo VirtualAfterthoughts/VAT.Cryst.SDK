@@ -13,6 +13,8 @@ namespace VAT.Characters
     {
         SimpleTransform GetRoot();
 
+        void SetRoot(SimpleTransform root);
+
         SimpleTransform GetBehaviourSpace();
 
         void SetBehaviourSpace(SimpleTransform transform);

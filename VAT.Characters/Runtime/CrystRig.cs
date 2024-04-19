@@ -59,17 +59,6 @@ namespace VAT.Characters
             return false;
         }
 
-        public virtual bool TryGetTrackedRig(out CrystRig rig)
-        {
-            if (RigIndex <= 0)
-            {
-                rig = null;
-                return false;
-            }
-
-            return LastRig.TryGetTrackedRig(out rig);
-        }
-
         public virtual bool TryGetInput(out IBasicInput input)
         {
             if (RigIndex <= 0)

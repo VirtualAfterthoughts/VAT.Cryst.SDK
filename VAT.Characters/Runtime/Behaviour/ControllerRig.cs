@@ -169,12 +169,6 @@ namespace VAT.Characters
 
         protected abstract bool OnProcessJump();
 
-        public override bool TryGetTrackedRig(out CrystRig rig)
-        {
-            rig = this;
-            return true;
-        }
-
         public SimpleTransform GetLocalHead()
         {
             TryGetHead(out var head);
@@ -209,6 +203,11 @@ namespace VAT.Characters
         public SimpleTransform GetRoot()
         {
             return SimpleTransform.Create(transform.position, transform.rotation, transform.lossyScale);
+        }
+
+        public void SetRoot(SimpleTransform root)
+        {
+            transform.SetPositionAndRotation(root.position, root.rotation);
         }
 
         public SimpleTransform GetBehaviourSpace()

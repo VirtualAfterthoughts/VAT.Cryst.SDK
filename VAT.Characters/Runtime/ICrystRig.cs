@@ -23,5 +23,7 @@ namespace VAT.Characters
         void OnRigDisable();
 
         bool TryGetArm(Handedness handedness, out IArm result);
+
+        bool TryGetHead(out IJoint head);
     }
 }

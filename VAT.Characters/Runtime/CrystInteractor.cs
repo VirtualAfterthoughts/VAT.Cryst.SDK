@@ -213,7 +213,7 @@ namespace VAT.Characters
             }
 
             _state.GrabState.State = gripPose;
-            _state.InteractState.State = interactPose;
+            _state.ActionGrabState.State = interactPose;
 
             if (_isSnatching)
             {

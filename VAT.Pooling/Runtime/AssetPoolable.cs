@@ -21,6 +21,7 @@ namespace VAT.Pooling
 
         internal AssetPoolableDelegate InternalPoolSpawnDelegate { get; set; }
         internal AssetPoolableDelegate InternalPoolDespawnDelegate { get; set; }
+        internal AssetPoolableDelegate InternalPoolDestroyDelegate { get; set; }
 
         public event AssetSpawnDelegate OnSpawnDelegate;
         public event AssetPoolableDelegate OnDespawnDelegate;
@@ -56,6 +57,8 @@ namespace VAT.Pooling
 
         private void OnDestroy()
         {
+            InternalPoolDestroyDelegate?.Invoke(this);
+
             Cache.Remove(gameObject, this);
             IDespawnable.Cache.Remove(gameObject, this);
             IRespawnable.Cache.Remove(gameObject, this);

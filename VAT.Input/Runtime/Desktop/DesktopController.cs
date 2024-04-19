@@ -29,7 +29,7 @@ namespace VAT.Input.Desktop
                     _grip = new UnityTrigger(left.GripAxis, left.GripAxis);
                     //
                     //_primaryButton = new UnityButton(left.PrimaryButtonPressed, left.PrimaryButtonTouched);
-                    //_secondaryButton = new UnityButton(left.SecondaryButtonPressed, left.SecondaryButtonTouched);
+                    _secondaryButton = new UnityButton(left.SecondaryButton, left.SecondaryButton);
                     //
                     //_thumbstick = new UnityTrackpad(left.ThumbstickAxis, left.ThumbstickPressed, left.ThumbstickTouched);
                     //_trackpad = new UnityTrackpad(left.TrackpadAxis, left.TrackpadPressed, left.TrackpadTouched);
@@ -41,7 +41,7 @@ namespace VAT.Input.Desktop
                     _grip = new UnityTrigger(right.GripAxis, right.GripAxis);
                     //
                     //_primaryButton = new UnityButton(right.PrimaryButtonPressed, right.PrimaryButtonTouched);
-                    //_secondaryButton = new UnityButton(right.SecondaryButtonPressed, right.SecondaryButtonTouched);
+                    _secondaryButton = new UnityButton(right.SecondaryButton, right.SecondaryButton);
                     //
                     _thumbstick = new UnityTrackpad(right.ThumbstickAxis, right.ThumbstickAxis, right.ThumbstickAxis);
                     //_trackpad = new UnityTrackpad(right.TrackpadAxis, right.TrackpadPressed, right.TrackpadTouched);

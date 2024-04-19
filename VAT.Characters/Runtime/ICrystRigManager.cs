@@ -11,5 +11,9 @@ namespace VAT.Characters
         event Action<float> OnManagerUpdate, OnManagerFixedUpdate, OnManagerLateUpdate;
 
         ICrystVitals GetVitalsOrNull();
+
+        TRig GetRigOrNull<TRig>() where TRig : ICrystRig;
+
+        ICrystRig[] GetRigs();
     }
 }

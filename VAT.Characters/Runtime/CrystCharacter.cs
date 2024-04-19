@@ -23,6 +23,31 @@ namespace VAT.Characters
             return _vitals;
         }
 
+        public TRig GetRigOrNull<TRig>() where TRig : ICrystRig
+        {
+            foreach (var rig in Rigs)
+            {
+                if (rig is TRig genericRig)
+                {
+                    return genericRig;
+                }
+            }
+
+            return default;
+        }
+
+        public ICrystRig[] GetRigs()
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+            {
+                return GetComponentsInChildren<ICrystRig>(false);
+            }
+#endif
+
+            return Rigs;
+        }
+
         // Events
         private void Awake()
         {
