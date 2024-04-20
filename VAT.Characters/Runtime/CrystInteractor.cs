@@ -36,7 +36,7 @@ namespace VAT.Characters
 
         public float grabCurl = 0.9f;
 
-        public float grabRadius = 0.086848f;
+        public float grabRadius = 0.1f;
 
         private IGrippable _attachedGrip;
 
@@ -103,18 +103,23 @@ namespace VAT.Characters
             return FarHoverHolder.HoveringInteractable;
         }
 
+        private SimpleTransform _lastRig = SimpleTransform.Default;
+
         public SimpleTransform Solve(SimpleTransform rig, SimpleTransform targetInRig)
         {
+            _lastRig = rig;
+
             SimpleTransform result = targetInRig;
 
             SimpleTransform target = rig.Transform(result);
+            var worldLastTarget = rig.Transform(_lastTarget);
 
-            Vector3 velocity = PhysicsExtensions.GetLinearVelocity(_lastTarget.position, target.position);
+            Vector3 velocity = PhysicsExtensions.GetLinearVelocity(worldLastTarget.position, target.position);
             _pinAmount = Mathf.Lerp(_pinAmount, 0f, Mathf.Clamp01(velocity.magnitude * 0.3f - 0.05f));
 
-            _lastTarget = target;
+            _lastTarget = rig.InverseTransform(target);
 
-            var values = GetValues();
+            var values = GetValues(rig);
 
             var goal = values.Item1;
             goal.rotation = target.rotation;
@@ -153,7 +158,7 @@ namespace VAT.Characters
 
         private float _lerp;
 
-        public (SimpleTransform, float) GetValues()
+        public (SimpleTransform, float) GetValues(SimpleTransform rig)
         {
             if (_isSnatching)
             {
@@ -164,14 +169,14 @@ namespace VAT.Characters
                 grabPoint.rotation = target.rotation;
 
                 var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform)));
-                lastTar = self;
+                lastTar = rig.InverseTransform(self);
                 _lerp = Mathf.Lerp(_lerp, 1f, Time.deltaTime * 12f);
                 return (self, _lerp);
             }
             else
             {
                 _lerp = Mathf.Lerp(_lerp, _pinAmount, Time.deltaTime * 32f);
-                return (lastTar, _lerp);
+                return (rig.Transform(lastTar), _lerp);
             }
         }
 
@@ -229,6 +234,8 @@ namespace VAT.Characters
                     ResetPin();
 
                     SendGripHaptic();
+
+                    PlayGrabSound();
                 }
             }
             else
@@ -246,7 +253,10 @@ namespace VAT.Characters
             ToggleCollsion(grip, true);
 
             ResetHover();
+        }
 
+        private void PlayGrabSound()
+        {
             if (grabSounds != null && grabSounds.Length > 0)
             {
                 var settings = AudioPlaySettings.Default;
@@ -299,7 +309,7 @@ namespace VAT.Characters
         private void ResetPin()
         {
             _pinAmount = 1f;
-            lastTar = SimpleTransform.Create(transform);
+            lastTar = _lastRig.InverseTransform(SimpleTransform.Create(transform));
         }
 
         public void DetachGrip(IGrippable grip)
