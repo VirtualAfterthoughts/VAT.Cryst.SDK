@@ -8,6 +8,7 @@ namespace VAT.Input.UI
 {
     public class XRUIPointer : MonoBehaviour, IXRUIInteractor
     {
+        public Transform relativeParent;
         public GameObject pointerRoot;
         public Transform start;
         public Transform middle;
@@ -28,10 +29,16 @@ namespace VAT.Input.UI
             return end.position;
         }
 
+        private bool _isPressed = false;
+
         public bool IsPressed()
         {
-            bool pressed = UnityEngine.InputSystem.Mouse.current.press.ReadValue() > 0.5f;
-            return pressed;
+            return _isPressed;
+        }
+
+        public void SetPressed(bool pressed)
+        {
+            _isPressed = pressed;
         }
 
         private void OnDisable()
@@ -149,14 +156,19 @@ namespace VAT.Input.UI
 
         private void LerpPositions()
         {
-            start.position = Vector3.Slerp(_lastStartPos, _startPos, Time.deltaTime * 32f);
-            _lastStartPos = start.position;
+            start.position = Vector3.Slerp(relativeParent.TransformPoint(_lastStartPos), _startPos, Time.deltaTime * 32f);
+            _lastStartPos = relativeParent.InverseTransformPoint(start.position);
 
-            middle.position = Vector3.Slerp(_lastMidPos, _middlePos, Time.deltaTime * 14f);
-            _lastMidPos = middle.position;
+            middle.position = Vector3.Slerp(relativeParent.TransformPoint(_lastMidPos), _middlePos, Time.deltaTime * 14f);
+            _lastMidPos = relativeParent.InverseTransformPoint(middle.position);
 
-            end.position = Vector3.Slerp(_lastEndPos, _endPos, Time.deltaTime * 6f);
-            _lastEndPos = end.position;
+            end.position = Vector3.Slerp(relativeParent.TransformPoint(_lastEndPos), _endPos, Time.deltaTime * 6f);
+            _lastEndPos = relativeParent.InverseTransformPoint(end.position);
+
+            if (_currentPlane != null) 
+            {
+                end.position = _currentPlane.GetPlane().ClosestPointOnPlane(end.position);
+            }
         }
 
         private void OnDrawGizmos()
