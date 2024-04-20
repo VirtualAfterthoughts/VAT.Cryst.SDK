@@ -10,9 +10,5 @@ namespace VAT.Input.Skeleton
     public interface IHand : IJoint
     {
         IInputController GetInputControllerOrNull();
-
-        IInputHand GetInputHandOrNull();
-
-        HandActions GetActionsOrNull();
     }
 }

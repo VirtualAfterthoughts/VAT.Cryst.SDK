@@ -27,14 +27,14 @@ namespace VAT.Characters
             {
                 _interactor = interactor;
 
-                var state = _interactor.GetHandOrNull().GetActionsOrNull();
+                var state = _interactor.GetHandOrNull().GetInputControllerOrNull().GetActionsOrNull();
                 state.AbilityGrabAction.OnStateChanged += OnActionGrabStateChanged;
                 state.GrabAction.OnStateChanged += OnGrabStateChanged;
             }
 
             public void Cleanup()
             {
-                var state = _interactor.GetHandOrNull().GetActionsOrNull();
+                var state = _interactor.GetHandOrNull().GetInputControllerOrNull().GetActionsOrNull();
                 state.AbilityGrabAction.OnStateChanged -= OnActionGrabStateChanged;
                 state.GrabAction.OnStateChanged -= OnGrabStateChanged;
 

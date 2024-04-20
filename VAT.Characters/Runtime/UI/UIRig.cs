@@ -29,7 +29,7 @@ namespace VAT.Characters
             }
 
             behaviourRig.TryGetArm(Handedness.RIGHT, out var arm);
-            var secondaryButton = arm?.GetHandOrNull()?.GetActionsOrNull()?.SecondaryAction.State;
+            var secondaryButton = arm?.GetHandOrNull()?.GetInputControllerOrNull().GetActionsOrNull()?.SecondaryAction.State;
 
             if (secondaryButton != null && secondaryButton.Value)
             {

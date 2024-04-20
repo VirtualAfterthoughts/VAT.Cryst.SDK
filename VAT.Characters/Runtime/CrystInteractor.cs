@@ -74,7 +74,7 @@ namespace VAT.Characters
 
             _lastTarget = SimpleTransform.Create(transform);
 
-            var actions = hand.GetActionsOrNull();
+            var actions = hand.GetInputControllerOrNull().GetActionsOrNull();
             actions.GrabAction.OnStateChanged += OnGrabStateChange;
         }
 
@@ -177,10 +177,11 @@ namespace VAT.Characters
 
         public void LateUpdate()
         {
-            var blendPose = hand.GetInputHandOrNull().GetHandPose();
+            var controller = hand.GetInputControllerOrNull();
+            var blendPose = controller.GetHandPose();
             arm.DataArm.Hand.SetBlendPose(blendPose);
 
-            var actions = hand.GetActionsOrNull();
+            var actions = controller.GetActionsOrNull();
 
             OnUpdateHover();
 

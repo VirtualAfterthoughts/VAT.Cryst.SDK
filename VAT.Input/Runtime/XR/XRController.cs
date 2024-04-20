@@ -2,9 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+
+using VAT.Avatars;
+
 using VAT.Input.Haptic;
 using VAT.Input.Unity;
 using VAT.Input.XR;
+
+using VAT.Shared.Data;
 
 namespace VAT.Input
 {
@@ -21,7 +26,11 @@ namespace VAT.Input
 
         private readonly XRHaptor _haptor;
 
-        public XRController(Handedness handedness, XRInputActions actions)
+        private readonly XRHand _hand;
+
+        private readonly HandActions _handActions;
+
+        public XRController(Handedness handedness, XRInputActions actions, XRHand hand)
         {
             switch (handedness)
             {
@@ -54,6 +63,10 @@ namespace VAT.Input
                     _haptor = new XRHaptor(right.Haptic, handedness);
                     break;
             }
+
+            _hand = hand;
+
+            _handActions = new HandActions();
         }
 
         public IInputHaptor GetHaptorOrNull()
@@ -94,6 +107,51 @@ namespace VAT.Input
         public bool HasForceSensor()
         {
             return true;
+        }
+
+        public void Update()
+        {
+            UpdateActions(_handActions, this);
+        }
+
+        private void UpdateActions(HandActions actions, XRController inputController)
+        {
+            var blendPose = inputController.GetHandPose();
+
+            float maxCurl = 0f;
+
+            foreach (var finger in blendPose.fingers)
+            {
+                maxCurl = Mathf.Max(maxCurl, finger.GetCurl());
+            }
+
+            float secondaryCurl = 0f;
+            for (var i = 1; i < blendPose.fingers.Length; i++)
+            {
+                secondaryCurl = Mathf.Max(secondaryCurl, blendPose.fingers[i].GetCurl());
+            }
+
+            bool gripPose = maxCurl > 0.7f;
+            bool interactPose = secondaryCurl > 0.7f && inputController.GetTriggerOrNull()?.GetAxis() > 0.7f;
+
+            actions.GrabAction.State = gripPose;
+            actions.AbilityGrabAction.State = interactPose;
+
+            var primaryButton = inputController.GetPrimaryButtonOrNull()?.GetPressed();
+            var secondaryButton = inputController.GetSecondaryButtonOrNull()?.GetPressed();
+
+            actions.PrimaryAction.State = primaryButton.GetValueOrDefault();
+            actions.SecondaryAction.State = secondaryButton.GetValueOrDefault();
+        }
+
+        public HandPoseData GetHandPose()
+        {
+            return _hand.GetHandPose();
+        }
+
+        public HandActions GetActionsOrNull()
+        {
+            return _handActions;
         }
     }
 }

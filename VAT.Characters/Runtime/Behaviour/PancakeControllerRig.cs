@@ -18,12 +18,6 @@ namespace VAT.Characters
         private DesktopController _leftController;
         private DesktopController _rightController;
 
-        private DesktopHand _leftHand;
-        private DesktopHand _rightHand;
-
-        private HandActions _leftActions = new();
-        private HandActions _rightActions = new();
-
         public override void OnRigEnable()
         {
             base.OnRigEnable();
@@ -33,9 +27,6 @@ namespace VAT.Characters
 
             _leftController = new DesktopController(Handedness.LEFT, _inputActions);
             _rightController = new DesktopController(Handedness.RIGHT, _inputActions);
-
-            _leftHand = new DesktopHand(_leftController);
-            _rightHand = new DesktopHand(_rightController);
         }
 
         private Vector2 _headAxis;
@@ -63,11 +54,8 @@ namespace VAT.Characters
             neckPivot.rotation = Quaternion.AngleAxis(_headAxis.x, vrRoot.up) * Quaternion.AngleAxis(_headAxis.y, -vrRoot.right) * vrRoot.rotation;
 
             // Update hands
-            _leftHand.Update();
-            _rightHand.Update();
-
-            _leftActions.UpdateActions(_leftHand, _leftController);
-            _rightActions.UpdateActions(_rightHand, _rightController);
+            _leftController.Update();
+            _rightController.Update();
         }
 
         protected override bool OnProcessJump()
@@ -94,10 +82,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), _leftController, _leftHand, _leftActions));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), _leftController));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), _rightController, _rightHand, _rightActions));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), _rightController));
                     return true;
             }
         }

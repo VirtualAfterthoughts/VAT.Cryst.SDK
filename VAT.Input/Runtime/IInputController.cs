@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using VAT.Avatars;
+
 using VAT.Input.Haptic;
 
 namespace VAT.Input
@@ -41,5 +40,9 @@ namespace VAT.Input
         IInputButton GetPrimaryButtonOrNull();
 
         IInputButton GetSecondaryButtonOrNull();
+
+        HandPoseData GetHandPose();
+
+        HandActions GetActionsOrNull();
     }
 }

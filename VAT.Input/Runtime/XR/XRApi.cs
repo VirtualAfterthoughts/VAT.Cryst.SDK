@@ -24,9 +24,6 @@ namespace VAT.Input.XR
             _inputActions = new XRInputActions();
             _inputActions.Enable();
 
-            LeftController = new XRController(Handedness.LEFT, _inputActions);
-            RightController = new XRController(Handedness.RIGHT, _inputActions);
-
             var xrHandSubsystem = manager.activeLoader.GetLoadedSubsystem<XRHandSubsystem>();
             
             if (xrHandSubsystem != null)
@@ -34,6 +31,15 @@ namespace VAT.Input.XR
                 LeftHand = new XRHand(new XRHandPoseProvider(Handedness.LEFT, xrHandSubsystem));
                 RightHand = new XRHand(new XRHandPoseProvider(Handedness.RIGHT, xrHandSubsystem));
             }
+
+            LeftController = new XRController(Handedness.LEFT, _inputActions, LeftHand);
+            RightController = new XRController(Handedness.RIGHT, _inputActions, RightHand);
+        }
+
+        public void UpdateApi()
+        {
+            LeftController.Update();
+            RightController.Update();
         }
     }
 }

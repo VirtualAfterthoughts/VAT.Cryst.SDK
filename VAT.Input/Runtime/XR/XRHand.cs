@@ -8,7 +8,7 @@ using VAT.Shared.Data;
 
 namespace VAT.Input
 {
-    public class XRHand : IInputHand
+    public class XRHand
     {
         private readonly IXRPoseProvider[] _providers;
 

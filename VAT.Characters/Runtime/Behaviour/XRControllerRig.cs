@@ -16,9 +16,6 @@ using VAT.Shared.Extensions;
 namespace VAT.Characters
 {
     public class XRControllerRig : ControllerRig {
-        private HandActions _leftActions = new();
-        private HandActions _rightActions = new();
-
         public override void OnRigEnable()
         {
             base.OnRigEnable();
@@ -36,15 +33,12 @@ namespace VAT.Characters
             base.OnLateUpdate(deltaTime);
 
             var leftWrist = XRManager.Api.LeftHand.GetWristTransform();
-            _leftWrist.transform.position = vrRoot.TransformPoint(leftWrist.position);
-            _leftWrist.transform.rotation = vrRoot.TransformRotation(leftWrist.rotation);
+            _leftWrist.transform.SetPositionAndRotation(vrRoot.TransformPoint(leftWrist.position), vrRoot.TransformRotation(leftWrist.rotation));
 
             var rightWrist = XRManager.Api.RightHand.GetWristTransform();
-            _rightWrist.transform.position = vrRoot.TransformPoint(rightWrist.position);
-            _rightWrist.transform.rotation = vrRoot.TransformRotation(rightWrist.rotation);
+            _rightWrist.transform.SetPositionAndRotation(vrRoot.TransformPoint(rightWrist.position), vrRoot.TransformRotation(rightWrist.rotation));
 
-            _leftActions.UpdateActions(XRManager.Api.LeftHand, XRManager.Api.LeftController);
-            _rightActions.UpdateActions(XRManager.Api.RightHand, XRManager.Api.RightController);
+            XRManager.Api.UpdateApi();
         }
 
         protected override Vector3 OnProcessMovement()
@@ -81,10 +75,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), XRManager.Api.LeftController, XRManager.Api.LeftHand, _leftActions));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), XRManager.Api.LeftController));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), XRManager.Api.RightController, XRManager.Api.RightHand, _leftActions));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), XRManager.Api.RightController));
                     return true;
             }
         }
