@@ -9,42 +9,50 @@ namespace VAT.Input.UI
 {
     public class XRUIInputModule : StandaloneInputModule
     {
-        public Vector3 position;
-        public Vector3 forward;
-        public Vector3 end;
+        private List<IXRUIInteractor> _interactors = new();
+        private Dictionary<IXRUIInteractor, PointerEventData> _eventDataCache = new();
 
-        private PointerEventData _pointerData;
-
-        public override void Process()
+        public void RegisterInteractor(IXRUIInteractor interactor)
         {
-            _pointerData ??= new PointerEventData(eventSystem);
+            _interactors.Add(interactor);
+            _eventDataCache[interactor] = new PointerEventData(eventSystem);
+        }
 
-            Vector2 screenPoint = Camera.main.WorldToScreenPoint(end);
+        public void DeregisterInteractor(IXRUIInteractor interactor) 
+        { 
+            _interactors.Remove(interactor);
+            _eventDataCache.Remove(interactor);
+        }
 
-            //_pointerData.selectedObject = hitInfo.collider.gameObject;
-            _pointerData.button = PointerEventData.InputButton.Left;
-            _pointerData.delta = screenPoint - _pointerData.position;
-            _pointerData.position = screenPoint;
+        private void ProcessInteractor(IXRUIInteractor interactor)
+        {
+            var data = _eventDataCache[interactor];
 
-            bool pressed = UnityEngine.InputSystem.Mouse.current.press.ReadValue() > 0.5f;
+            Vector2 screenPoint = Camera.main.WorldToScreenPoint(interactor.GetEndPosition());
+
+            data.button = PointerEventData.InputButton.Left;
+            data.delta = screenPoint - data.position;
+            data.position = screenPoint;
+
+            bool pressed = interactor.IsPressed();
             var pressState = pressed ? PointerEventData.FramePressState.Pressed : PointerEventData.FramePressState.Released;
 
             var raycastResults = new List<RaycastResult>();
-            eventSystem.RaycastAll(_pointerData, raycastResults);
+            eventSystem.RaycastAll(data, raycastResults);
 
             if (raycastResults.Count > 0)
             {
                 var result = raycastResults[0];
                 result.screenPosition = Vector2.zero;
-                _pointerData.pointerCurrentRaycast = result;
+                data.pointerCurrentRaycast = result;
             }
             else
             {
-                _pointerData.pointerCurrentRaycast = default;
+                data.pointerCurrentRaycast = default;
             }
 
-            _pointerData.pointerPress = _pointerData.pointerPressRaycast.gameObject;
-            _pointerData.pointerDrag = _pointerData.pointerPressRaycast.gameObject;
+            data.pointerPress = data.pointerPressRaycast.gameObject;
+            data.pointerDrag = data.pointerPressRaycast.gameObject;
 
             var state = Cursor.lockState;
             Cursor.lockState = CursorLockMode.None;
@@ -57,10 +65,26 @@ namespace VAT.Input.UI
             ProcessMousePress(new MouseButtonEventData()
             {
                 buttonState = pressState,
-                buttonData = _pointerData,
+                buttonData = data,
             });
-            ProcessMove(_pointerData);
-            ProcessDrag(_pointerData);
+            ProcessMove(data);
+            ProcessDrag(data);
+        }
+
+        public override void Process()
+        {
+            var state = Cursor.lockState;
+            Cursor.lockState = CursorLockMode.None;
+
+            if (state == CursorLockMode.Locked)
+            {
+                Cursor.visible = false;
+            }
+
+            foreach (var interactor in _interactors)
+            {
+                ProcessInteractor(interactor);
+            }
 
             Cursor.lockState = state;
         }

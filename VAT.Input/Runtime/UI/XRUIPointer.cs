@@ -6,8 +6,9 @@ using UnityEngine.EventSystems;
 
 namespace VAT.Input.UI
 {
-    public class XRUIPointer : MonoBehaviour
+    public class XRUIPointer : MonoBehaviour, IXRUIInteractor
     {
+        public GameObject pointerRoot;
         public Transform start;
         public Transform middle;
         public Transform end;
@@ -22,29 +23,86 @@ namespace VAT.Input.UI
 
         private UIPlane _currentPlane = null;
 
+        public Vector3 GetEndPosition()
+        {
+            return end.position;
+        }
+
+        public bool IsPressed()
+        {
+            bool pressed = UnityEngine.InputSystem.Mouse.current.press.ReadValue() > 0.5f;
+            return pressed;
+        }
+
+        private void OnDisable()
+        {
+            Deactivate();
+        }
+
+        private bool _isActive = false;
+
+        private void Activate()
+        {
+            _isActive = true;
+
+            if (EventSystem.current.currentInputModule is XRUIInputModule module)
+            {
+                module.RegisterInteractor(this);
+            }
+
+            pointerRoot.SetActive(true);
+        }
+
+        private void Deactivate()
+        {
+            _isActive = false;
+
+            if (EventSystem.current.currentInputModule is XRUIInputModule module)
+            {
+                module.DeregisterInteractor(this);
+            }
+
+            pointerRoot.SetActive(false);
+        }
+
+        private bool _isValid = false;
+
+        public void Update()
+        {
+            if (_isValid && !_isActive)
+            {
+                Activate();
+            }
+            else if (!_isValid && _isActive)
+            {
+                Deactivate();
+            }
+        }
+
         public void LateUpdate()
         {
+            _isValid = false;
+
             var colliders = Physics.OverlapSphere(transform.position, 0.01f);
 
-            _currentPlane = null;
-            float closestDot = float.NegativeInfinity;
+            UIPlane targetPlane = null;
             float closestDistance = float.PositiveInfinity;
 
             foreach (var collider in colliders)
             {
                 if (UIPlane.Cache.TryGet(collider.gameObject, out var hber))
                 {
-                    var dot = Vector3.Dot(transform.forward, -hber.GetPlane().normal);
                     var distance = (transform.position - hber.GetCenter()).magnitude;
 
-                    if (dot > closestDot || distance < closestDistance)
+                    if (distance < closestDistance)
                     {
-                        _currentPlane = hber;
-                        closestDot = dot;
+                        targetPlane = hber;
                         closestDistance = distance;
                     }
                 }
             }
+
+            _currentPlane = targetPlane;
 
             if (_currentPlane == null)
             {
@@ -80,18 +138,13 @@ namespace VAT.Input.UI
 
             end.rotation = Quaternion.LookRotation(-normal, transform.up);
 
-            if (EventSystem.current.currentInputModule is XRUIInputModule module)
-            {
-                module.position = transform.position;
-                module.forward = transform.forward;
-                module.end = end.position;
-            }
-
             _startPos = startPos;
             _endPos = endPos;
             _middlePos = (_startPos + _endPos) / 2f;
 
             LerpPositions();
+
+            _isValid = true;
         }
 
         private void LerpPositions()

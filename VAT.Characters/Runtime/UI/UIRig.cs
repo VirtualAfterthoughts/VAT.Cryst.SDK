@@ -17,6 +17,8 @@ namespace VAT.Characters
             uiCanvas.transform.localScale = Vector3.zero;
         }
 
+        private float _uiTimer = 0f;
+
         public override void OnLateUpdate(float deltaTime)
         {
             base.OnLateUpdate(deltaTime);
@@ -33,11 +35,17 @@ namespace VAT.Characters
 
             if (secondaryButton != null && secondaryButton.Value)
             {
-                uiCanvas.transform.localScale = Vector3.Slerp(uiCanvas.transform.localScale, Vector3.one, Time.deltaTime * 24f);
+                _uiTimer += Time.deltaTime;
             }
             else
             {
                 uiCanvas.transform.localScale = Vector3.Slerp(uiCanvas.transform.localScale, Vector3.zero, Time.deltaTime * 24f);
+                _uiTimer = 0f;
+            }
+
+            if (_uiTimer > 0.5f)
+            {
+                uiCanvas.transform.localScale = Vector3.Slerp(uiCanvas.transform.localScale, Vector3.one, Time.deltaTime * 24f);
             }
         }
     }
