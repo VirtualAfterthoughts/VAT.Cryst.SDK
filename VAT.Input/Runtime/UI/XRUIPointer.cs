@@ -113,7 +113,6 @@ namespace VAT.Input.UI
 
             if (_currentPlane == null)
             {
-                LerpPositions();
                 return;
             }
 
@@ -139,7 +138,6 @@ namespace VAT.Input.UI
 
             if (endPos != prevEndPos)
             {
-                LerpPositions();
                 return;
             }
 
