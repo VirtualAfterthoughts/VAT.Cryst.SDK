@@ -95,6 +95,11 @@ namespace VAT.Avatars.Skeletal
 
         public override void Solve()
         {
+            if (_physSkeleton != null)
+            {
+                WriteSkeleton(_physSkeleton);
+            }
+
             var start = _payload.GetRoot();
             _payload.TryGetHead(out var head);
 
@@ -127,8 +132,13 @@ namespace VAT.Avatars.Skeletal
             Spine.WriteTarget(start);
 
             Spine.Solve();
+
+            LeftArm.UpdateTarget();
+            RightArm.UpdateTarget();
+
             LeftArm.Solve();
             RightArm.Solve();
+
             LeftLeg.Solve();
             RightLeg.Solve();
 
@@ -139,6 +149,8 @@ namespace VAT.Avatars.Skeletal
         {
             return Neck.EyeCenter.Transform;
         }
+
+        private IHumanSkeleton _physSkeleton = null;
 
         public void WriteSkeleton(IHumanSkeleton skeleton)
         {
@@ -152,6 +164,8 @@ namespace VAT.Avatars.Skeletal
 
             PhysicsRotation = skeleton.Spine.Root.Transform.rotation;
             PhysicsPosition = skeleton.GetEyeCenter().position;
+
+            _physSkeleton = skeleton;
         }
 
         public SimpleTransform GetFloor()
