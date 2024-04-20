@@ -76,11 +76,15 @@ namespace VAT.Characters
 
             var behaviourSpace = _behaviourRig.GetBehaviourSpace();
 
+            float tipToeMult = 1.2f;
+
             if (_enabled && Mathf.Abs(crouchAxis) > 0.01f)
             {
                 float crouchDelta = crouchAxis * Time.deltaTime * 2f * behaviourSpace.lossyScale.y;
 
                 behaviourSpace.position += behaviourSpace.up * crouchDelta;
+
+                tipToeMult = 1f;
             }
 
             float playerHeight = behaviourSpace.lossyScale.y * _playerHeight;
@@ -89,7 +93,7 @@ namespace VAT.Characters
 
             float headPos = GetHeadY(headHeight);
 
-            float clampedPos = Mathf.Clamp(headPos, 0f, playerHeight);
+            float clampedPos = Mathf.Clamp(headPos, 0f, playerHeight * tipToeMult);
 
             behaviourSpace.position += behaviourSpace.up * (clampedPos - headPos);
 

@@ -118,21 +118,20 @@ namespace VAT.Input
         {
             var blendPose = inputController.GetHandPose();
 
-            float maxCurl = 0f;
-
-            foreach (var finger in blendPose.fingers)
-            {
-                maxCurl = Mathf.Max(maxCurl, finger.GetCurl());
-            }
-
             float secondaryCurl = 0f;
             for (var i = 1; i < blendPose.fingers.Length; i++)
             {
                 secondaryCurl = Mathf.Max(secondaryCurl, blendPose.fingers[i].GetCurl());
             }
 
-            bool gripPose = maxCurl > 0.7f;
-            bool interactPose = secondaryCurl > 0.7f && inputController.GetTriggerOrNull()?.GetAxis() > 0.7f;
+            var trigger = inputController.GetTriggerOrNull();
+            bool triggerPull = trigger?.GetAxis() > 0.3f;
+            bool gripPull = secondaryCurl > 0.7f;
+
+            bool triggerClick = (trigger?.GetPressed()).GetValueOrDefault();
+
+            bool gripPose = gripPull || triggerPull;
+            bool interactPose = gripPull && triggerClick;
 
             actions.GrabAction.State = gripPose;
             actions.AbilityGrabAction.State = interactPose;

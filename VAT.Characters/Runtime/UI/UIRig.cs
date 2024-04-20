@@ -43,7 +43,7 @@ namespace VAT.Characters
             var controller = hand.GetInputControllerOrNull();
             var secondaryButton = controller.GetActionsOrNull()?.SecondaryAction.State;
 
-            pointer.SetPressed(controller.GetTriggerOrNull().GetAxis() > 0.5f);
+            pointer.SetPressed(controller.GetTriggerOrNull().GetPressed());
 
             rightWrist.SetLocalPositionAndRotation(hand.Transform.position, hand.Transform.rotation);
 
