@@ -35,6 +35,8 @@ namespace VAT.Pooling
 
         private void Awake()
         {
+            AssetSpawner.Register(_spawnable);
+
             if (!_manualSpawning)
                 Trigger();
         }

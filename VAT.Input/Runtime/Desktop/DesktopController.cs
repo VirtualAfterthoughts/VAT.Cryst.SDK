@@ -32,7 +32,7 @@ namespace VAT.Input.Desktop
                 case Handedness.LEFT:
                     var left = actions.HandLeft;
                     //
-                    _trigger = new UnityTrigger(left.GripAxis, left.GripAxis);
+                    //_trigger = new UnityTrigger(left.GripAxis, left.GripAxis);
                     _grip = new UnityTrigger(left.GripAxis, left.GripAxis);
                     //
                     //_primaryButton = new UnityButton(left.PrimaryButtonPressed, left.PrimaryButtonTouched);
@@ -44,7 +44,7 @@ namespace VAT.Input.Desktop
                 case Handedness.RIGHT:
                     var right = actions.HandRight;
                     //
-                    _trigger = new UnityTrigger(right.GripAxis, right.GripAxis);
+                    _trigger = new UnityTrigger(right.TriggerAxis, right.TriggerAxis);
                     _grip = new UnityTrigger(right.GripAxis, right.GripAxis);
                     //
                     //_primaryButton = new UnityButton(right.PrimaryButtonPressed, right.PrimaryButtonTouched);

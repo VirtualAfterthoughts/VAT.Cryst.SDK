@@ -257,6 +257,15 @@ namespace VAT.Input.Desktop
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TriggerAxis"",
+                    ""type"": ""Button"",
+                    ""id"": ""ceee6804-5d75-4bbc-b850-66920c8ebb0d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -336,6 +345,17 @@ namespace VAT.Input.Desktop
                     ""action"": ""SecondaryButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5b16f9b1-3288-45fa-9e7d-dc1f5c0a89df"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TriggerAxis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -357,6 +377,7 @@ namespace VAT.Input.Desktop
             m_HandRight_GripAxis = m_HandRight.FindAction("GripAxis", throwIfNotFound: true);
             m_HandRight_ThumbstickAxis = m_HandRight.FindAction("ThumbstickAxis", throwIfNotFound: true);
             m_HandRight_SecondaryButton = m_HandRight.FindAction("SecondaryButton", throwIfNotFound: true);
+            m_HandRight_TriggerAxis = m_HandRight.FindAction("TriggerAxis", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -517,6 +538,7 @@ namespace VAT.Input.Desktop
         private readonly InputAction m_HandRight_GripAxis;
         private readonly InputAction m_HandRight_ThumbstickAxis;
         private readonly InputAction m_HandRight_SecondaryButton;
+        private readonly InputAction m_HandRight_TriggerAxis;
         public struct HandRightActions
         {
             private @DesktopInputActions m_Wrapper;
@@ -524,6 +546,7 @@ namespace VAT.Input.Desktop
             public InputAction @GripAxis => m_Wrapper.m_HandRight_GripAxis;
             public InputAction @ThumbstickAxis => m_Wrapper.m_HandRight_ThumbstickAxis;
             public InputAction @SecondaryButton => m_Wrapper.m_HandRight_SecondaryButton;
+            public InputAction @TriggerAxis => m_Wrapper.m_HandRight_TriggerAxis;
             public InputActionMap Get() { return m_Wrapper.m_HandRight; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -542,6 +565,9 @@ namespace VAT.Input.Desktop
                     @SecondaryButton.started -= m_Wrapper.m_HandRightActionsCallbackInterface.OnSecondaryButton;
                     @SecondaryButton.performed -= m_Wrapper.m_HandRightActionsCallbackInterface.OnSecondaryButton;
                     @SecondaryButton.canceled -= m_Wrapper.m_HandRightActionsCallbackInterface.OnSecondaryButton;
+                    @TriggerAxis.started -= m_Wrapper.m_HandRightActionsCallbackInterface.OnTriggerAxis;
+                    @TriggerAxis.performed -= m_Wrapper.m_HandRightActionsCallbackInterface.OnTriggerAxis;
+                    @TriggerAxis.canceled -= m_Wrapper.m_HandRightActionsCallbackInterface.OnTriggerAxis;
                 }
                 m_Wrapper.m_HandRightActionsCallbackInterface = instance;
                 if (instance != null)
@@ -555,6 +581,9 @@ namespace VAT.Input.Desktop
                     @SecondaryButton.started += instance.OnSecondaryButton;
                     @SecondaryButton.performed += instance.OnSecondaryButton;
                     @SecondaryButton.canceled += instance.OnSecondaryButton;
+                    @TriggerAxis.started += instance.OnTriggerAxis;
+                    @TriggerAxis.performed += instance.OnTriggerAxis;
+                    @TriggerAxis.canceled += instance.OnTriggerAxis;
                 }
             }
         }
@@ -576,6 +605,7 @@ namespace VAT.Input.Desktop
             void OnGripAxis(InputAction.CallbackContext context);
             void OnThumbstickAxis(InputAction.CallbackContext context);
             void OnSecondaryButton(InputAction.CallbackContext context);
+            void OnTriggerAxis(InputAction.CallbackContext context);
         }
     }
 }

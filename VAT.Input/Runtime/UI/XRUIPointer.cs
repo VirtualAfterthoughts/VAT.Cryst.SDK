@@ -41,6 +41,11 @@ namespace VAT.Input.UI
             _isPressed = pressed;
         }
 
+        private void OnEnable()
+        {
+            Deactivate();
+        }
+
         private void OnDisable()
         {
             Deactivate();
@@ -123,11 +128,15 @@ namespace VAT.Input.UI
             var rotation = _currentPlane.GetRotation();
 
             var startPos = transform.position;
-            var endPos = plane.ClosestPointOnPlane(startPos);
+            Vector3 endPos;
 
             if (plane.Raycast(new Ray(transform.position, transform.forward), out var enter))
             {
                 endPos = transform.position + transform.forward * enter;
+            }
+            else
+            {
+                return;
             }
 
             var prevEndPos = endPos;

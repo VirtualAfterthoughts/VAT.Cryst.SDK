@@ -63,26 +63,36 @@ namespace VAT.Pooling
             return _pools.Values;
         }
 
-        public bool FetchPool(Address address, out AssetPool pool)
+        public (bool success, AssetPool pool) CreatePool(Address address)
         {
-            pool = null;
+            var fetched = FetchPool(address);
 
+            if (fetched.exists)
+            {
+                return (false, fetched.pool);
+            }
+
+            if (AssetPackager.Instance.TryGetContent<ISpawnableContent>(address, out var content))
+            {
+                GameObject root = new($"Pool - {content.Info.Title}");
+                var pool = new AssetPool(content, root.transform);
+                _pools.Add(address, pool);
+                return (true, pool);
+            }
+
+            return (false, null);
+        }
+
+        public (bool exists, AssetPool pool) FetchPool(Address address)
+        {
             // If the pool already exists, we can just grab it from the dict
             if (_pools.ContainsKey(address))
             {
-                pool = _pools[address];
-                return true;
-            }
-            // Otherwise, we can attempt to create a new pool
-            else if (AssetPackager.Instance.TryGetContent<ISpawnableContent>(address, out var content))
-            {
-                GameObject root = new($"Pool - {content.Info.Title}");
-                pool = new AssetPool(content, root.transform);
-                _pools.Add(address, pool);
-                return true;
+                var pool = _pools[address];
+                return (true, pool);
             }
 
-            return false;
+            return (false, null);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]

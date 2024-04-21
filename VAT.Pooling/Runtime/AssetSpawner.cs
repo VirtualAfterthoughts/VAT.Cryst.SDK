@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using VAT.Packaging;
+
 namespace VAT.Pooling
 {
     /// <summary>
@@ -29,18 +31,34 @@ namespace VAT.Pooling
             public AssetPoolable assetPoolable;
         }
 
+        public static void Register(Spawnable spawnable)
+        {
+            PoolManager.HookOnReady(() =>
+            {
+                PoolManager.Instance.CreatePool(spawnable.contentReference.Address);
+            });
+        }
+
         public static void Spawn(SpawnRequestInfo info)
         {
-            // Hook the PoolManager incase it hasn't initialized yet
-            PoolManager.HookOnReady(() => { OnPoolManagerReady(info); });
+            PoolManager.HookOnReady(() => 
+            { 
+                OnPoolManagerReady(info); 
+            });
         }
 
         private static void OnPoolManagerReady(SpawnRequestInfo info)
         {
             // Get the pool and wait for it to be ready
-            if (PoolManager.Instance.FetchPool(info.spawnable.contentReference.Address, out var pool))
+            var (exists, pool) = PoolManager.Instance.FetchPool(info.spawnable.contentReference.Address); ;
+
+            if (exists)
             {
                 pool.HookOnReady(() => { OnPoolReady(pool, info); });
+            }
+            else
+            {
+                Debug.LogWarning($"Tried spawning a spawnable at address {info.spawnable.contentReference.Address}, but the pool hasn't been registered!");
             }
         }
 

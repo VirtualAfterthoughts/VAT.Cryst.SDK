@@ -45,13 +45,17 @@ namespace VAT.Audio
                 return;
             }
 
+            var spawnable = new Spawnable(_spawnable.Address)
+            {
+                rules = new SpawnRules(32, SpawnMode.REUSE_OLDEST),
+            };
+
+            AssetSpawner.Register(spawnable);
+
             var request = new AssetSpawner.SpawnRequestInfo()
             {
                 position = info.position,
-                spawnable = new Spawnable(_spawnable.Address)
-                {
-                    rules = new SpawnRules(32, SpawnMode.REUSE_OLDEST),
-                },
+                spawnable = spawnable,
                 spawnCallback = (i) =>
                 {
                     OnSpawn(i.assetPoolable, info);

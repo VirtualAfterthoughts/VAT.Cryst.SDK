@@ -37,6 +37,8 @@ namespace VAT.Pooling
             {
                 var item = lootTable.GetLootItem();
 
+                AssetSpawner.Register(item.spawnable);
+
                 var info = new AssetSpawner.SpawnRequestInfo()
                 {
                     position = transform.position,

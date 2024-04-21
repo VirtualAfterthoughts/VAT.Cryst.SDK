@@ -11,6 +11,7 @@ namespace VAT.Characters
     public class UIRig : CrystRig
     {
         public Transform root;
+        public Transform leftWrist;
         public Transform rightWrist;
         public GameObject uiCanvas;
         public XRUIPointer pointer;
@@ -27,6 +28,47 @@ namespace VAT.Characters
         private bool _wasPressingButton = false;
         private bool _wasHidingButton = false;
 
+        private void GetInputs(IBehaviourRig behaviourRig, Handedness handedness, out bool secondary, out bool trigger)
+        {
+            behaviourRig.TryGetArm(handedness, out var arm);
+            var hand = arm.GetHandOrNull();
+            var controller = hand.GetInputControllerOrNull();
+            var secondaryButton = controller.GetActionsOrNull()?.SecondaryAction.State;
+
+            secondary = secondaryButton.Value;
+            trigger = (controller.GetTriggerOrNull()?.GetPressed()).GetValueOrDefault();
+
+            if (handedness == Handedness.LEFT)
+            {
+                leftWrist.SetLocalPositionAndRotation(hand.Transform.position, hand.Transform.rotation);
+            }
+            else
+            {
+                rightWrist.SetLocalPositionAndRotation(hand.Transform.position, hand.Transform.rotation);
+            }
+        }
+
+        private Handedness _currentHandedness = Handedness.RIGHT;
+
+        private void SwitchHandedness(Handedness handedness)
+        {
+            if (handedness == _currentHandedness)
+            {
+                return;
+            }
+
+            if (handedness == Handedness.LEFT)
+            {
+                pointer.transform.SetParent(leftWrist, false);
+            }
+            else
+            {
+                pointer.transform.SetParent(rightWrist, false);
+            }
+
+            _currentHandedness = handedness;
+        }
+
         public override void OnLateUpdate(float deltaTime)
         {
             base.OnLateUpdate(deltaTime);
@@ -38,27 +80,36 @@ namespace VAT.Characters
                 transform.SetPositionAndRotation(root.position, root.rotation);
             }
 
-            behaviourRig.TryGetArm(Handedness.RIGHT, out var arm);
-            var hand = arm.GetHandOrNull();
-            var controller = hand.GetInputControllerOrNull();
-            var secondaryButton = controller.GetActionsOrNull()?.SecondaryAction.State;
+            GetInputs(behaviourRig, Handedness.LEFT, out var leftSecondary, out var leftTrigger);
+            GetInputs(behaviourRig, Handedness.RIGHT, out var rightSecondary, out var rightTrigger);
 
-            pointer.SetPressed(controller.GetTriggerOrNull().GetPressed());
+            if (leftTrigger)
+            {
+                SwitchHandedness(Handedness.LEFT);
+            }
+            else if (rightTrigger)
+            {
+                SwitchHandedness(Handedness.RIGHT);
+            }
 
-            rightWrist.SetLocalPositionAndRotation(hand.Transform.position, hand.Transform.rotation);
+            bool activeTrigger = _currentHandedness == Handedness.LEFT ? leftTrigger : rightTrigger;
 
-            if (!secondaryButton.Value)
+            pointer.SetPressed(activeTrigger);
+
+            bool pressingSecondary = leftSecondary || rightSecondary;
+
+            if (!pressingSecondary)
             {
                 _wasHidingButton = false;
             }
 
-            if (_isShown && secondaryButton.Value && !_wasPressingButton)
+            if (_isShown && pressingSecondary && !_wasPressingButton)
             {
                 Hide();
                 _uiTimer = 0f;
                 _wasHidingButton = true;
             }
-            else if (!_isShown && secondaryButton.Value && !_wasHidingButton)
+            else if (!_isShown && pressingSecondary && !_wasHidingButton)
             {
                 _uiTimer += Time.deltaTime;
             }
@@ -72,7 +123,7 @@ namespace VAT.Characters
                 Show();
             }
 
-            _wasPressingButton = secondaryButton.Value;
+            _wasPressingButton = pressingSecondary;
 
             if (_isShown)
             {
