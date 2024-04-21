@@ -1,0 +1,16 @@
+{
+    "name": "VAT.UI",
+    "rootNamespace": "VAT.UI",
+    "references": [
+        "GUID:2c5da6b5cc71c8446a65082f325dc51b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

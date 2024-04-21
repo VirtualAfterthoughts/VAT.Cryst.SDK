@@ -5,7 +5,7 @@ using UnityEngine;
 
 using VAT.Shared.Utilities;
 
-namespace VAT.Input
+namespace VAT.UI
 {
     [RequireComponent(typeof(Collider))]
     public class UIPlane : MonoBehaviour

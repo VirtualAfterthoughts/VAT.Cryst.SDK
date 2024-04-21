@@ -12,7 +12,6 @@ namespace VAT.Interaction
     {
         public Transform firePoint;
         public Grip triggerGrip;
-        public SpawnableContentReference selectedSpawnable;
 
         private IInteractor _mainInteractor = null;
 
@@ -69,7 +68,7 @@ namespace VAT.Interaction
         {
             if (Physics.Raycast(firePoint.position, firePoint.forward, out var hitInfo, 10f, ~0, QueryTriggerInteraction.Ignore))
             {
-                var spawnable = new Spawnable(selectedSpawnable);
+                var spawnable = new Spawnable(SpawnUI.SelectedSpawnable);
 
                 AssetSpawner.Register(spawnable);
 

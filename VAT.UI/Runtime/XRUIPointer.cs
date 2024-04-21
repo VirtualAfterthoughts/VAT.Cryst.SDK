@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace VAT.Input.UI
+namespace VAT.UI
 {
     public class XRUIPointer : MonoBehaviour, IXRUIInteractor
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace VAT.Input.UI
+namespace VAT.UI
 {
     public class XRUIInputModule : StandaloneInputModule
     {
@@ -27,7 +27,7 @@ namespace VAT.Input.UI
         private void ProcessInteractor(IXRUIInteractor interactor)
         {
             var data = _eventDataCache[interactor];
-
+            
             Vector2 screenPoint = Camera.main.WorldToScreenPoint(interactor.GetEndPosition());
 
             data.button = PointerEventData.InputButton.Left;
@@ -51,8 +51,21 @@ namespace VAT.Input.UI
                 data.pointerCurrentRaycast = default;
             }
 
-            data.pointerPress = data.pointerPressRaycast.gameObject;
-            data.pointerDrag = data.pointerPressRaycast.gameObject;
+            var newEnter = data.pointerCurrentRaycast.gameObject;
+
+            if (newEnter != data.pointerEnter)
+            {
+                ProcessMousePress(new MouseButtonEventData()
+                {
+                    buttonState = PointerEventData.FramePressState.Released,
+                    buttonData = data,
+                });
+
+                HandlePointerExitAndEnter(data, newEnter);
+            }
+
+            data.pointerEnter = newEnter;
+            data.pointerDrag = newEnter;
 
             var state = Cursor.lockState;
             Cursor.lockState = CursorLockMode.None;

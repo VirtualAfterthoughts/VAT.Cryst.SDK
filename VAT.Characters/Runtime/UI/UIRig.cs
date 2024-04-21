@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using VAT.Input;
-using VAT.Input.UI;
+using VAT.UI;
 using VAT.Shared.Extensions;
 
 namespace VAT.Characters

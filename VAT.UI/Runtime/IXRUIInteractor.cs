@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace VAT.Input.UI
+namespace VAT.UI
 {
     public interface IXRUIInteractor
     {
