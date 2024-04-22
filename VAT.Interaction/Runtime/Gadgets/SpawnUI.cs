@@ -4,7 +4,9 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 using VAT.Packaging;
+using VAT.UI;
 
 namespace VAT.Interaction
 {
@@ -12,40 +14,141 @@ namespace VAT.Interaction
     {
         public static SpawnableContentReference SelectedSpawnable = null;
 
-        public Button[] buttons;
+        public UIPageCollectionRenderer pageCollection;
+
+        public UIPageRenderer tabsPageRenderer;
+
+        private UIPage _tabsPage = null;
+        private UIPageCollection _spawnablesPageCollection = null;
+        private UIPageCollection _toolsPageCollection;
 
         private void Awake()
         {
+            CreateTabs();
+            CreateTools();
+
             AssetPackager.HookOnReady(OnPackagerReady);
+        }
+
+        private void CreateTools()
+        {
+            _toolsPageCollection = new UIPageCollection();
+            UIPage toolsPage = new();
+
+            toolsPage.AddElement(new UIPageElement()
+            {
+                DisplayName = "Spawn",
+                OnPressed = null
+            });
+
+            toolsPage.AddElement(new UIPageElement()
+            {
+                DisplayName = "Remove",
+                OnPressed = null
+            });
+
+            toolsPage.AddElement(new UIPageElement()
+            {
+                DisplayName = "Weld",
+                OnPressed = null
+            });
+
+            _toolsPageCollection.AddPage(toolsPage);
+        }
+
+        private void CreateTabs()
+        {
+            _tabsPage = new();
+
+            _tabsPage.AddElement(new UIPageElement()
+            {
+                DisplayName = "Spawnables",
+                OnPressed = ShowSpawnables,
+            });
+
+            _tabsPage.AddElement(new UIPageElement()
+            {
+                DisplayName = "Tools",
+                OnPressed = ShowTools,
+            });
+
+            _tabsPage.AddElement(new UIPageElement()
+            {
+                DisplayName = "Packages",
+                OnPressed = null
+            });
+
+            _tabsPage.AddElement(new UIPageElement()
+            {
+                DisplayName = "Authors",
+                OnPressed = null
+            });
+        }
+
+        private void ShowTools()
+        {
+            pageCollection.Render(_toolsPageCollection);
+        }
+
+        private void ShowSpawnables()
+        {
+            pageCollection.Render(_spawnablesPageCollection);
         }
 
         private void OnPackagerReady()
         {
-            foreach (var button in buttons)
-            {
-                button.gameObject.SetActive(false);
-            }
+            _spawnablesPageCollection = new UIPageCollection();
 
             var contents = AssetPackager.Instance.GetContents<ISpawnableContent>();
-            for (var i = 0; i < buttons.Length && i < contents.Count; i++)
-            {
-                buttons[i].gameObject.SetActive(true);
+            List<ISpawnableContent> contentList = new List<ISpawnableContent>();
+            contentList.AddRange(contents);
+            contentList.AddRange(contents);
+            contentList.AddRange(contents);
+            contentList.AddRange(contents);
+            contentList.AddRange(contents);
 
-                var content = contents.ElementAt(i);
+            AddSpawnablePages(contentList, _spawnablesPageCollection);
+
+            RenderAllPages();
+        }
+
+        private void AddSpawnablePages(List<ISpawnableContent> list, UIPageCollection collection)
+        {
+            int maxElements = 9;
+            int addedElements = 0;
+
+            UIPage currentPage = new();
+            collection.AddPage(currentPage);
+
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (addedElements >= maxElements)
+                {
+                    currentPage = new();
+                    collection.AddPage(currentPage);
+                    addedElements = 0;
+                }
+
+                var content = list.ElementAt(i);
                 var address = content.Address;
 
-                buttons[i].onClick.AddListener(() =>
+                currentPage.AddElement(new UIPageElement()
                 {
-                    SelectSpawnable(address);
+                    DisplayName = content.Info.Title,
+                    OnPressed = () =>
+                    {
+                        SelectSpawnable(address);
+                    }
                 });
 
-                var tmp = buttons[i].GetComponentInChildren<TMP_Text>();
-
-                if (tmp != null)
-                {
-                    tmp.text = content.Info.Title;
-                }
+                addedElements++;
             }
+        }
+
+        private void RenderAllPages()
+        {
+            pageCollection.Render(_spawnablesPageCollection);
+            tabsPageRenderer.Render(_tabsPage);
         }
 
         private void SelectSpawnable(Address address)

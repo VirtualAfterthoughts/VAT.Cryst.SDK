@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -16,7 +15,6 @@ using VAT.Cryst.Game;
 
 using Newtonsoft.Json.Linq;
 
-using System.Linq;
 using System;
 
 namespace VAT.Packaging
@@ -48,15 +46,13 @@ namespace VAT.Packaging
 
         public bool HasPackages => PackageCount > 0;
 
-        public int PackageCount => _packageCount;
+        public int PackageCount => IsReady ? Instance._loadedPackages.Count : 0;
 
-        public int ContentCount => _contentCount;
+        public int ContentCount => IsReady ? Instance._loadedContent.Count : 0;
 
         private Dictionary<Address, Package> _loadedPackages;
-        private int _packageCount;
 
         private Dictionary<Address, IContent> _loadedContent;
-        private int _contentCount;
 
         public AssetPackager(bool init = true)
         {
@@ -235,9 +231,6 @@ namespace VAT.Packaging
 
             // Apply the load options
             package.Load(options);
-
-            // Update information
-            _packageCount++;
         }
 
         public void LoadContent(IContent content)
@@ -249,8 +242,19 @@ namespace VAT.Packaging
             }
 
             _loadedContent.Add(content.Address, content);
+        }
 
-            _contentCount++;
+        public void UnloadContent(IContent content)
+        {
+            bool hasContent = _loadedContent.TryGetValue(content.Address, out var foundContent);
+
+            if (!hasContent || foundContent != content)
+            {
+                Debug.LogError($"Tried unloading content {content.Info.Title}, but it was not loaded!");
+                return;
+            }
+
+            _loadedContent.Remove(content.Address);
         }
 
         public bool HasPackage(Address address)

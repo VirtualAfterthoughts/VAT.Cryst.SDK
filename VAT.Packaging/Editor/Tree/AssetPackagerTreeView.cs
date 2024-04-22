@@ -45,7 +45,6 @@ namespace VAT.Packaging.Editor
 
                 foreach (var content in package.Contents)
                 {
-
                     if (!crateTypes.TryGetValue(content.GetType(), out TreeViewItem parent))
                     {
                         parent = new TreeViewItem
