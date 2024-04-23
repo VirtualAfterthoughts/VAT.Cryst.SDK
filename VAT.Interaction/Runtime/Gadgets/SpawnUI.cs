@@ -100,19 +100,13 @@ namespace VAT.Interaction
             _spawnablesPageCollection = new UIPageCollection();
 
             var contents = AssetPackager.Instance.GetContents<ISpawnableContent>();
-            List<ISpawnableContent> contentList = new List<ISpawnableContent>();
-            contentList.AddRange(contents);
-            contentList.AddRange(contents);
-            contentList.AddRange(contents);
-            contentList.AddRange(contents);
-            contentList.AddRange(contents);
 
-            AddSpawnablePages(contentList, _spawnablesPageCollection);
+            AddSpawnablePages(contents, _spawnablesPageCollection);
 
             RenderAllPages();
         }
 
-        private void AddSpawnablePages(List<ISpawnableContent> list, UIPageCollection collection)
+        private void AddSpawnablePages(IEnumerable<ISpawnableContent> contents, UIPageCollection collection)
         {
             int maxElements = 9;
             int addedElements = 0;
@@ -120,7 +114,7 @@ namespace VAT.Interaction
             UIPage currentPage = new();
             collection.AddPage(currentPage);
 
-            for (var i = 0; i < list.Count; i++)
+            for (var i = 0; i < contents.Count(); i++)
             {
                 if (addedElements >= maxElements)
                 {
@@ -129,7 +123,7 @@ namespace VAT.Interaction
                     addedElements = 0;
                 }
 
-                var content = list.ElementAt(i);
+                var content = contents.ElementAt(i);
                 var address = content.Address;
 
                 currentPage.AddElement(new UIPageElement()
