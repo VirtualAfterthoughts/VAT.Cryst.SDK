@@ -52,12 +52,12 @@ namespace VAT.Audio
 
             _source.Play();
 
-            _velocity = Vector3.zero;
+            Velocity = Vector3.zero;
         }
 
         public void LateUpdate()
         {
-            transform.position += _velocity * Time.deltaTime;
+            transform.position += Velocity * Time.deltaTime;
 
             if (!_source.isPlaying && _poolable.CanDespawn)
             {

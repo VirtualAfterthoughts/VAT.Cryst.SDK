@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace VAT.UI
 {
-    public class UIPageElementRenderer : MonoBehaviour
+    public class UIElementRenderer : MonoBehaviour
     {
         public Button button;
 
@@ -20,7 +20,7 @@ namespace VAT.UI
             text = GetComponentInChildren<TMP_Text>();
         }
 
-        public void Render(UIPageElement element)
+        public void Render(UIElement element)
         {
             text.text = element.DisplayName;
 

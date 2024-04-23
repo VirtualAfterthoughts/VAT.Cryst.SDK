@@ -19,6 +19,9 @@ namespace VAT.Characters
         {
             private IInteractor _interactor;
 
+            private IInteractorHoverModule _hoverModule;
+            private IInteractorFarHoverModule _farHoverModule;
+
             private IGrippable _pullingGrip;
 
             private ConfigurableJoint _joint;
@@ -26,6 +29,9 @@ namespace VAT.Characters
             public ForcePullTracker(IInteractor interactor)
             {
                 _interactor = interactor;
+
+                _hoverModule = interactor.GetModule<IInteractorHoverModule>();
+                _farHoverModule = interactor.GetModule<IInteractorFarHoverModule>();
 
                 var state = _interactor.GetHandOrNull().GetInputControllerOrNull().GetActionsOrNull();
                 state.AbilityGrabAction.OnStateChanged += OnActionGrabStateChanged;
@@ -53,8 +59,8 @@ namespace VAT.Characters
             {
                 if (state && _pullingGrip == null)
                 {
-                    var near = _interactor.GetHoveringInteractable();
-                    var far = _interactor.GetFarHoveringInteractable();
+                    var near = _hoverModule.GetHoveringInteractable();
+                    var far = _farHoverModule.GetFarHoveringInteractable();
 
                     if (near == null && far != null && far is IGrippable grip && grip.IsInteractable())
                     {

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace VAT.UI
 {
-    public class UIPageElement
+    public class UIElement
     {
         private string _displayName = string.Empty;
 

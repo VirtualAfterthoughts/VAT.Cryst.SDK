@@ -12,16 +12,6 @@ namespace VAT.Interaction
 
     public interface IInteractor
     {
-        IInteractable GetHoveringInteractable() 
-        { 
-            return null; 
-        }
-
-        IInteractable GetFarHoveringInteractable()
-        {
-            return null;
-        }
-
         bool IsInteractionLocked();
 
         void LockInteraction();
@@ -43,6 +33,12 @@ namespace VAT.Interaction
         void DetachGrip(IGrippable grip);
 
         void DetachGrips();
+
+        TModule GetModule<TModule>() where TModule : IInteractorModule;
+
+        void RegisterModule(IInteractorModule module);
+
+        void DeregisterModule(IInteractorModule module);
 
         IHand GetHandOrNull();
     }

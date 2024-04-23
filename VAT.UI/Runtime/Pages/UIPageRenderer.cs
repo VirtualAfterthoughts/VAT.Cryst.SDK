@@ -8,21 +8,21 @@ namespace VAT.UI
     public class UIPageRenderer : MonoBehaviour
     {
         [SerializeField]
-        private UIPageElementRenderer[] _pageElements = new UIPageElementRenderer[0];
+        private UIElementRenderer[] _elements = new UIElementRenderer[0];
 
-        [ContextMenu("Collect Page Elements")]
-        public void CollectPageElements()
+        [ContextMenu("Collect Elements")]
+        public void CollectElements()
         {
-            _pageElements = GetComponentsInChildren<UIPageElementRenderer>();
+            _elements = GetComponentsInChildren<UIElementRenderer>();
         }
 
         public void Render(UIPage page)
         {
             HideElements();
 
-            for (var i = 0; i < _pageElements.Length && i < page.PageElements.Count; i++)
+            for (var i = 0; i < _elements.Length && i < page.PageElements.Count; i++)
             {
-                var element = _pageElements[i];
+                var element = _elements[i];
                 element.gameObject.SetActive(true);
 
                 element.Render(page.PageElements[i]);
@@ -31,7 +31,7 @@ namespace VAT.UI
 
         public void HideElements()
         {
-            foreach (var element in _pageElements)
+            foreach (var element in _elements)
             {
                 element.gameObject.SetActive(false);
             }

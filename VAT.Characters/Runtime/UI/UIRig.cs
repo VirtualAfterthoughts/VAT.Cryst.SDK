@@ -5,6 +5,7 @@ using UnityEngine;
 using VAT.Input;
 using VAT.UI;
 using VAT.Shared.Extensions;
+using VAT.Interaction;
 
 namespace VAT.Characters
 {
@@ -16,11 +17,24 @@ namespace VAT.Characters
         public GameObject uiCanvas;
         public XRUIPointer pointer;
 
+        public SpawnUI spawnUi;
+
         public override void OnRigEnable()
         {
             base.OnRigEnable();
 
             uiCanvas.transform.localScale = Vector3.zero;
+
+            var avatarRig = RigManager.GetRigOrNull<AvatarRig>();
+            if (avatarRig != null)
+            {
+                var interactors = avatarRig.GetCurrentInteractors();
+
+                foreach (var interactor in interactors)
+                {
+                    interactor.RegisterModule(spawnUi);
+                }
+            }
         }
 
         private float _uiTimer = 0f;

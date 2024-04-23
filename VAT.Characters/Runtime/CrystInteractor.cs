@@ -19,9 +19,9 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Characters
 {
-    public class CrystInteractor : MonoBehaviour, IInteractor, IAvatarTrackingOverride
+    public class CrystInteractor : MonoBehaviour, IInteractor, IAvatarTrackingOverride, IInteractorHoverModule, IInteractorFarHoverModule
     {
-        public List<InteractableHost> hosts = new List<InteractableHost>();
+        public List<InteractableHost> hosts = new();
         public CrystRigidbody rb;
         public Handedness handedness;
         public IInputController controller;
@@ -57,6 +57,8 @@ namespace VAT.Characters
             rb = GetComponent<CrystRigidbody>();
             _hoverHolder = new HoverHolder(this);
             _farHoverHolder = new HoverHolder(this);
+
+            RegisterModule(this);
         }
 
         private void Start()
@@ -465,6 +467,31 @@ namespace VAT.Characters
         public IGrabPoint GetGrabberPoint()
         {
             return _grabberPoint;
+        }
+
+        private readonly List<IInteractorModule> _modules = new();
+
+        public TModule GetModule<TModule>() where TModule : IInteractorModule
+        {
+            foreach (var module in _modules)
+            {
+                if (module is TModule genericModule)
+                {
+                    return genericModule;
+                }
+            }
+
+            return default;
+        }
+
+        public void RegisterModule(IInteractorModule module)
+        {
+            _modules.Add(module);
+        }
+
+        public void DeregisterModule(IInteractorModule module)
+        {
+            _modules.Remove(module);
         }
     }
 }

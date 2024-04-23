@@ -7,16 +7,16 @@ namespace VAT.UI
 {
     public class UIPage
     {
-        private List<UIPageElement> _pageElements = new();
+        private List<UIElement> _pageElements = new();
 
-        public List<UIPageElement> PageElements => _pageElements;
+        public List<UIElement> PageElements => _pageElements;
 
-        public void AddElement(UIPageElement element)
+        public void AddElement(UIElement element)
         {
             _pageElements.Add(element);
         }
 
-        public void RemoveElement(UIPageElement element)
+        public void RemoveElement(UIElement element)
         {
             _pageElements.Remove(element);
         }

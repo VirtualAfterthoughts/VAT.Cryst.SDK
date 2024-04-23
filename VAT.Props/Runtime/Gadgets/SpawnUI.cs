@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,14 +7,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using VAT.Packaging;
+using VAT.Props;
 using VAT.UI;
 
 namespace VAT.Interaction
 {
-    public class SpawnUI : MonoBehaviour
+    public class SpawnUI : MonoBehaviour, IInteractorSpawnerModule
     {
-        public static SpawnableContentReference SelectedSpawnable = null;
-
         public UIPageCollectionRenderer pageCollection;
 
         public UIPageRenderer tabsPageRenderer;
@@ -21,6 +21,8 @@ namespace VAT.Interaction
         private UIPage _tabsPage = null;
         private UIPageCollection _spawnablesPageCollection = null;
         private UIPageCollection _toolsPageCollection;
+
+        public event Action<SpawnableContentReference> OnSpawnableSelected;
 
         private void Awake()
         {
@@ -35,19 +37,19 @@ namespace VAT.Interaction
             _toolsPageCollection = new UIPageCollection();
             UIPage toolsPage = new();
 
-            toolsPage.AddElement(new UIPageElement()
+            toolsPage.AddElement(new UIElement()
             {
                 DisplayName = "Spawn",
                 OnPressed = null
             });
 
-            toolsPage.AddElement(new UIPageElement()
+            toolsPage.AddElement(new UIElement()
             {
                 DisplayName = "Remove",
                 OnPressed = null
             });
 
-            toolsPage.AddElement(new UIPageElement()
+            toolsPage.AddElement(new UIElement()
             {
                 DisplayName = "Weld",
                 OnPressed = null
@@ -60,25 +62,25 @@ namespace VAT.Interaction
         {
             _tabsPage = new();
 
-            _tabsPage.AddElement(new UIPageElement()
+            _tabsPage.AddElement(new UIElement()
             {
                 DisplayName = "Spawnables",
                 OnPressed = ShowSpawnables,
             });
 
-            _tabsPage.AddElement(new UIPageElement()
+            _tabsPage.AddElement(new UIElement()
             {
                 DisplayName = "Tools",
                 OnPressed = ShowTools,
             });
 
-            _tabsPage.AddElement(new UIPageElement()
+            _tabsPage.AddElement(new UIElement()
             {
                 DisplayName = "Packages",
                 OnPressed = null
             });
 
-            _tabsPage.AddElement(new UIPageElement()
+            _tabsPage.AddElement(new UIElement()
             {
                 DisplayName = "Authors",
                 OnPressed = null
@@ -126,7 +128,7 @@ namespace VAT.Interaction
                 var content = contents.ElementAt(i);
                 var address = content.Address;
 
-                currentPage.AddElement(new UIPageElement()
+                currentPage.AddElement(new UIElement()
                 {
                     DisplayName = content.Info.Title,
                     OnPressed = () =>
@@ -147,7 +149,12 @@ namespace VAT.Interaction
 
         private void SelectSpawnable(Address address)
         {
-            SelectedSpawnable = new SpawnableContentReference(address);
-        } 
+            OnSpawnableSelected?.Invoke(new SpawnableContentReference(address));
+        }
+
+        public void SetSpawningActive(bool active)
+        {
+            gameObject.SetActive(active);
+        }
     }
 }

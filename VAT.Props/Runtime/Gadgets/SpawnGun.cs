@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VAT.Packaging;
 using VAT.Pooling;
+using VAT.Props;
 
 namespace VAT.Interaction
 {
@@ -14,6 +15,8 @@ namespace VAT.Interaction
         public Grip triggerGrip;
 
         private IInteractor _mainInteractor = null;
+
+        private SpawnableContentReference _selectedSpawnable = null;
 
         private void OnEnable()
         {
@@ -32,6 +35,14 @@ namespace VAT.Interaction
             if (_mainInteractor == null)
             {
                 _mainInteractor = interactor;
+
+                var module = interactor.GetModule<IInteractorSpawnerModule>();
+
+                if (module != null)
+                {
+                    module.OnSpawnableSelected += OnSpawnableSelected;
+                    module.SetSpawningActive(true);
+                }
             }
         }
 
@@ -40,7 +51,20 @@ namespace VAT.Interaction
             if (_mainInteractor == interactor)
             {
                 _mainInteractor = null;
+
+                var module = interactor.GetModule<IInteractorSpawnerModule>();
+
+                if (module != null)
+                {
+                    module.OnSpawnableSelected -= OnSpawnableSelected;
+                    module.SetSpawningActive(false);
+                }
             }
+        }
+        
+        private void OnSpawnableSelected(SpawnableContentReference reference)
+        {
+            _selectedSpawnable = reference;
         }
 
         private bool _wasPressingTrigger = false;
@@ -51,7 +75,7 @@ namespace VAT.Interaction
             {
                 var controller = _mainInteractor.GetHandOrNull().GetInputControllerOrNull();
                 var trigger = controller.GetTriggerOrNull();
-                var axis = trigger.GetAxis();
+                var axis = (trigger?.GetAxis()).GetValueOrDefault();
 
                 bool pressing = axis > 0.7f;
 
@@ -66,9 +90,14 @@ namespace VAT.Interaction
 
         private void Fire()
         {
+            if (_selectedSpawnable == null)
+            {
+                return;
+            }
+
             if (Physics.Raycast(firePoint.position, firePoint.forward, out var hitInfo, 10f, ~0, QueryTriggerInteraction.Ignore))
             {
-                var spawnable = new Spawnable(SpawnUI.SelectedSpawnable);
+                var spawnable = new Spawnable(_selectedSpawnable);
 
                 AssetSpawner.Register(spawnable);
 
