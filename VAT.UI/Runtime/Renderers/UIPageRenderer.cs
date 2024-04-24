@@ -16,16 +16,38 @@ namespace VAT.UI
             _elements = GetComponentsInChildren<UIElementRenderer>();
         }
 
+        private UIPage _currentPage = null;
+
         public void Render(UIPage page)
         {
+            _currentPage = page;
+
             HideElements();
 
-            for (var i = 0; i < _elements.Length && i < page.PageElements.Count; i++)
+            for (var i = 0; i < _elements.Length && i < page.Children.Count; i++)
             {
                 var element = _elements[i];
                 element.gameObject.SetActive(true);
 
-                element.Render(page.PageElements[i]);
+                element.Render(page.Children[i]);
+
+                if (page.Children[i] is UIPage pageElement)
+                {
+                    pageElement.OnSelectPage += OnSelectPage;
+                }
+            }
+        }
+
+        private void OnSelectPage(UIPage page)
+        {
+            Render(page);
+        }
+
+        public void ClimbTree()
+        {
+            if (_currentPage != null && _currentPage.Parent != null)
+            {
+                Render(_currentPage.Parent);
             }
         }
 

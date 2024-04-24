@@ -22,14 +22,11 @@ namespace VAT.UI
 
         public void Render(UIElement element)
         {
-            text.text = element.DisplayName;
+            text.text = element.Text;
 
             button.onClick.RemoveAllListeners();
 
-            button.onClick.AddListener(() => 
-            {
-                element.OnPressed?.Invoke();
-            });
+            button.onClick.AddListener(element.Press);
         }
     }
 }

@@ -6,34 +6,46 @@ using UnityEngine;
 
 namespace VAT.UI
 {
-    public class UIElement
+    public abstract class UIElement
     {
-        private string _displayName = string.Empty;
+        private UIElement _parent = null;
 
-        private Action _onPressed = null;
+        private List<UIElement> _children = null;
 
-        public virtual string DisplayName
+        private string _text = string.Empty;
+
+        public bool HasChildren => _children != null && _children.Count > 0;
+
+        public List<UIElement> Children => _children;
+
+        public UIElement Parent => _parent;
+
+        public virtual string Text
         {
             get
             {
-                return _displayName;
+                return _text;
             }
             set
             {
-                _displayName = value;
+                _text = value;
             }
         }
 
-        public virtual Action OnPressed
+        public abstract void Press();
+
+        public void AddChild(UIElement element)
         {
-            get
-            {
-                return _onPressed;
-            }
-            set
-            {
-                _onPressed = value;
-            }
+            _children ??= new List<UIElement>();
+
+            _children.Add(element);
+            element._parent = this;
+        }
+
+        public void RemoveChild(UIElement element)
+        {
+            _children.Remove(element);
+            element._parent = null;
         }
     }
 }

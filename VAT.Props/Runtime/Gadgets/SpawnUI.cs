@@ -37,21 +37,21 @@ namespace VAT.Interaction
             _toolsPageCollection = new UIPageCollection();
             UIPage toolsPage = new();
 
-            toolsPage.AddElement(new UIElement()
+            toolsPage.AddChild(new UIButton()
             {
-                DisplayName = "Spawn",
+                Text = "Spawn",
                 OnPressed = null
             });
 
-            toolsPage.AddElement(new UIElement()
+            toolsPage.AddChild(new UIButton()
             {
-                DisplayName = "Remove",
+                Text = "Remove",
                 OnPressed = null
             });
 
-            toolsPage.AddElement(new UIElement()
+            toolsPage.AddChild(new UIButton()
             {
-                DisplayName = "Weld",
+                Text = "Weld",
                 OnPressed = null
             });
 
@@ -62,29 +62,63 @@ namespace VAT.Interaction
         {
             _tabsPage = new();
 
-            _tabsPage.AddElement(new UIElement()
+            _tabsPage.AddChild(new UIButton()
             {
-                DisplayName = "Spawnables",
+                Text = "Spawnables",
                 OnPressed = ShowSpawnables,
             });
 
-            _tabsPage.AddElement(new UIElement()
+            _tabsPage.AddChild(new UIButton()
             {
-                DisplayName = "Tools",
+                Text = "Tools",
                 OnPressed = ShowTools,
             });
 
-            _tabsPage.AddElement(new UIElement()
+            _tabsPage.AddChild(new UIButton()
             {
-                DisplayName = "Packages",
+                Text = "Packages",
                 OnPressed = null
             });
 
-            _tabsPage.AddElement(new UIElement()
+            _tabsPage.AddChild(new UIButton()
             {
-                DisplayName = "Authors",
+                Text = "Authors",
                 OnPressed = null
             });
+
+            var depth0 = new UIPage()
+            {
+                Text = "Test Depth 0"
+            };
+
+            var depth10 = new UIPage()
+            {
+                Text = "Test Depth 1, 0"
+            };
+
+            var depth11 = new UIPage()
+            {
+                Text = "Test Depth 1, 1"
+            };
+
+            var depth20 = new UIButton()
+            {
+                Text = "Test Depth 2, 0"
+            };
+
+            var depth21 = new UIButton()
+            {
+                Text = "Test Depth 2, 1"
+            };
+
+            depth10.AddChild(depth20);
+            depth11.AddChild(depth21);
+
+            depth0.AddChild(depth10);
+            depth0.AddChild(depth11);
+
+
+            _tabsPage.AddChild(depth0);
         }
 
         private void ShowTools()
@@ -128,9 +162,9 @@ namespace VAT.Interaction
                 var content = contents.ElementAt(i);
                 var address = content.Address;
 
-                currentPage.AddElement(new UIElement()
+                currentPage.AddChild(new UIButton()
                 {
-                    DisplayName = content.Info.Title,
+                    Text = content.Info.Title,
                     OnPressed = () =>
                     {
                         SelectSpawnable(address);
