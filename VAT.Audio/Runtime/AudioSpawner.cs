@@ -29,13 +29,13 @@ namespace VAT.Audio
             public AudioPlayer audioPlayer;
         }
 
-        private static ContentInfo _info = new()
+        private static ShardInfo _info = new()
         {
             Title = "Audio Player",
             Hidden = true,
         };
 
-        private static DynamicSpawnableContent _spawnable = null;
+        private static DynamicSpawnableShard _spawnable = null;
 
         public static void Spawn(AudioRequestInfo info)
         {
@@ -92,7 +92,7 @@ namespace VAT.Audio
             audioPlayerGameObject.SetActive(false);
             GameObject.DontDestroyOnLoad(audioPlayerGameObject);
 
-            _spawnable = DynamicContentFactory.Create<DynamicSpawnableContent>(_info, audioPlayerGameObject);
+            _spawnable = DynamicShardFactory.Create<DynamicSpawnableShard>(_info, audioPlayerGameObject);
         }
     }
 }

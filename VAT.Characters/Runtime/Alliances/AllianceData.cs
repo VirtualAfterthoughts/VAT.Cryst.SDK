@@ -17,7 +17,7 @@ namespace VAT.Entities
     {
         [SerializeField]
         [Tooltip("The team assigned to this entity alliance.")]
-        private AllianceTeamContentReference _team;
+        private AllianceTeamShardReference _team;
 
         [SerializeField]
         [Tooltip("Is this entity an ally of its own team?")]
@@ -26,7 +26,7 @@ namespace VAT.Entities
         [SerializeField]
         private DefaultAlliance _defaultAlliance = DefaultAlliance.NEUTRAL;
 
-        public AllianceTeamContentReference Team { get { return _team; } set { _team = value; } }
+        public AllianceTeamShardReference Team { get { return _team; } set { _team = value; } }
 
         public bool AllyWithTeam { get { return _allyWithTeam; } set { _allyWithTeam = value; } }
 

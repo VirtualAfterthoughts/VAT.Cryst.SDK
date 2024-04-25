@@ -13,6 +13,6 @@ namespace VAT.Props
     {
         void SetSpawningActive(bool active);
 
-        event Action<SpawnableContentReference> OnSpawnableSelected;
+        event Action<SpawnableShardReference> OnSpawnableSelected;
     }
 }

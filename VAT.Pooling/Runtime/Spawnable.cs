@@ -11,18 +11,18 @@ namespace VAT.Pooling
     [Serializable]
     public struct Spawnable
     {
-        public SpawnableContentReference contentReference;
+        public SpawnableShardReference shardReference;
         public SpawnRules rules;
 
         public Spawnable(Address address)
         {
-            contentReference = new SpawnableContentReference(address);
+            shardReference = new SpawnableShardReference(address);
             rules = SpawnRules.Default;
         }
 
-        public Spawnable(SpawnableContentReference contentReference)
+        public Spawnable(SpawnableShardReference shardReference)
         {
-            this.contentReference = contentReference;
+            this.shardReference = shardReference;
             rules = SpawnRules.Default;
         }
     }

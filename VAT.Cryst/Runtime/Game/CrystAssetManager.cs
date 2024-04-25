@@ -21,10 +21,6 @@ namespace VAT.Cryst.Game
 
         public const string PROJECT_RELATIVE_FOLDER = PARENT_FOLDER + "/" + CRYST_ASSETS_FOLDER;
 
-        private static Action _onAssetsReady = null;
-
-        public static bool IsEditorReady => AssetDatabase.IsValidFolder(PROJECT_RELATIVE_FOLDER);
-
         /// <summary>
         /// Gets the path of the UnityEditor project.
         /// </summary>
@@ -71,28 +67,32 @@ namespace VAT.Cryst.Game
             return Path.GetFullPath(Path.Combine(GetProjectPath(), GetCrystRelativePath(path)));
         }
 
-        [InitializeOnLoadMethod]
-        private static void InternalInitializeEditor()
+        /// <summary>
+        /// Checks if a cryst relative path folder exists, and if not, creates it.
+        /// </summary>
+        /// <param name="path"></param>
+        public static void EnsureCrystFolderExists(string path)
         {
-            // Create folders
-            if (!IsEditorReady)
-            {
-                AssetDatabase.CreateFolder(PARENT_FOLDER, CRYST_ASSETS_FOLDER);
+            var directories = path.Split('/', '\\');
 
-                _onAssetsReady?.Invoke();
-                _onAssetsReady = null;
-            }
-        }
+            string lastDirectory = null;
 
-        public static void HookOnEditorReady(Action action)
-        {
-            if (IsEditorReady)
+            foreach (var directory in directories)
             {
-                action();
-            }
-            else
-            {
-                _onAssetsReady += action;
+                if (lastDirectory == null)
+                {
+                    lastDirectory = directory;
+                    continue;
+                }
+
+                string totalPath = lastDirectory + "/" + directory;
+
+                if (!AssetDatabase.IsValidFolder(totalPath))
+                {
+                    AssetDatabase.CreateFolder(lastDirectory, directory);
+                }
+
+                lastDirectory = totalPath;
             }
         }
 #endif

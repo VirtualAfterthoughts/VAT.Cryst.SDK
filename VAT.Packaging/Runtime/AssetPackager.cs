@@ -21,15 +21,15 @@ namespace VAT.Packaging
 {
     public class AssetPackager
     {
-        public const string INTERNAL_PACKAGES_GROUP = "Internal Packages";
-        public const string INTERNAL_PACKAGES_LABEL = "InternalPackage";
+        public const string INTERNAL_CRYSTALS_GROUP = "Internal Crystals";
+        public const string INTERNAL_CRYSTALS_LABEL = "InternalCrystal";
 
-        public static readonly PackageLoadOptions InternalLoadOptions = new()
+        public static readonly CrystalLoadOptions InternalLoadOptions = new()
         {
             isInternal = true,
         };
 
-        public static readonly PackageLoadOptions ExternalLoadOptions = new()
+        public static readonly CrystalLoadOptions ExternalLoadOptions = new()
         {
             isInternal = false,
         };
@@ -44,15 +44,15 @@ namespace VAT.Packaging
 
         public static bool IsReady => Instance != null && Instance._isReady;
 
-        public bool HasPackages => PackageCount > 0;
+        public bool HasCrystals => CrystalCount > 0;
 
-        public int PackageCount => IsReady ? Instance._loadedPackages.Count : 0;
+        public int CrystalCount => IsReady ? Instance._loadedCrystals.Count : 0;
 
-        public int ContentCount => IsReady ? Instance._loadedContent.Count : 0;
+        public int ShardCount => IsReady ? Instance._loadedShards.Count : 0;
 
-        private Dictionary<Address, Package> _loadedPackages;
+        private Dictionary<Address, Crystal> _loadedCrystals;
 
-        private Dictionary<Address, IContent> _loadedContent;
+        private Dictionary<Address, IShard> _loadedShards;
 
         public AssetPackager(bool init = true)
         {
@@ -89,17 +89,17 @@ namespace VAT.Packaging
 
             _isInitializing = true;
 
-            _loadedPackages = new Dictionary<Address, Package>();
-            _loadedContent = new Dictionary<Address, IContent>();
+            _loadedCrystals = new Dictionary<Address, Crystal>();
+            _loadedShards = new Dictionary<Address, IShard>();
 
             // Editor initialize
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
-                string packagePath = CrystAssetManager.GetCrystRelativePath(CRYST_PACKAGES_FOLDER);
-                if (AssetDatabase.IsValidFolder(packagePath))
+                string crystalsPath = CrystAssetManager.GetCrystRelativePath(CRYST_CRYSTALS_FOLDER);
+                if (AssetDatabase.IsValidFolder(crystalsPath))
                 {
-                    string[] folders = Directory.GetDirectories(CrystAssetManager.GetCrystPath(CRYST_PACKAGES_FOLDER));
+                    string[] folders = Directory.GetDirectories(CrystAssetManager.GetCrystPath(CRYST_CRYSTALS_FOLDER));
 
                     foreach (var folder in folders)
                     {
@@ -112,9 +112,9 @@ namespace VAT.Packaging
 
                             string final = file.Replace(CrystAssetManager.GetProjectPath(), "");
 
-                            var package = AssetDatabase.LoadAssetAtPath<Package>(final);
-                            if (package != null)
-                                LoadPackage(package);
+                            var crystal = AssetDatabase.LoadAssetAtPath<Crystal>(final);
+                            if (crystal != null)
+                                LoadCrystal(crystal);
                         }
                     }
                 }
@@ -138,25 +138,25 @@ namespace VAT.Packaging
             // Make sure addressables get initialized
             await Addressables.InitializeAsync();
 
-            // Get the resource location of built in packages
-            var keys = await Addressables.LoadResourceLocationsAsync(INTERNAL_PACKAGES_LABEL).Task;
+            // Get the resource location of built in crystals
+            var keys = await Addressables.LoadResourceLocationsAsync(INTERNAL_CRYSTALS_LABEL).Task;
 
             if (keys.Count <= 0)
             {
-                Debug.Log("No internal packages were found.");
+                Debug.Log("No internal crystals were found.");
             }
             else
             {
-                // Load built in packages
-                var handle = await Addressables.LoadAssetsAsync<TextAsset>(INTERNAL_PACKAGES_LABEL, null).Task;
+                // Load built in crystals
+                var handle = await Addressables.LoadAssetsAsync<TextAsset>(INTERNAL_CRYSTALS_LABEL, null).Task;
 
                 foreach (var asset in handle)
                 {
-                    LoadPackage(asset.text, InternalLoadOptions);
+                    LoadCrystal(asset.text, InternalLoadOptions);
                 }
             }
 
-            // Load external packages (mods)
+            // Load external crystals (mods)
             // Not implemented
 
             _isReady = true;
@@ -167,17 +167,14 @@ namespace VAT.Packaging
         }
 
 #if UNITY_EDITOR
-        public const string CRYST_PACKAGES_FOLDER = "Packages";
+        public const string CRYST_CRYSTALS_FOLDER = "Crystals";
         public const string CRYST_TEXT_ASSETS_FOLDER = "Text Assets";
 
         [InitializeOnLoadMethod]
         private static void InternalInitializeEditor()
         {
             // Initialize asset packager
-            CrystAssetManager.HookOnEditorReady(() =>
-            {
-                _instance ??= new AssetPackager(true);
-            });
+            _instance ??= new AssetPackager(true);
         }
 
         public static void EditorForceRefresh()
@@ -193,144 +190,144 @@ namespace VAT.Packaging
             _instance = new AssetPackager();
         }
 
-        public void LoadPackage(string json)
+        public void LoadCrystal(string json)
         {
-            LoadPackage(json, ExternalLoadOptions);
+            LoadCrystal(json, ExternalLoadOptions);
         }
 
-        public void LoadPackage(Package package)
+        public void LoadCrystal(Crystal crystal)
         {
-            LoadPackage(package, ExternalLoadOptions);
+            LoadCrystal(crystal, ExternalLoadOptions);
         }
 
-        public void LoadPackage(string json, PackageLoadOptions options)
+        public void LoadCrystal(string json, CrystalLoadOptions options)
         {
             JSONUnpacker unpacker = new(JObject.Parse(json));
-            unpacker.UnpackRoot(out var package, Package.Create);
+            unpacker.UnpackRoot(out var package, Crystal.Create);
 
             if (package != null)
             {
-                LoadPackage(package, options);
+                LoadCrystal(package, options);
             }
         }
 
-        public void LoadPackage(Package package, PackageLoadOptions options)
+        public void LoadCrystal(Crystal crystal, CrystalLoadOptions options)
         {
-            if (_loadedPackages.ContainsKey(package.Address))
+            if (_loadedCrystals.ContainsKey(crystal.Address))
             {
-                Debug.LogError("Tried loading a package with an already loaded address!", package);
+                Debug.LogError("Tried loading a crystal with an already loaded address!", crystal);
                 return;
             }
 
-            _loadedPackages.Add(package.Address, package);
+            _loadedCrystals.Add(crystal.Address, crystal);
 
-            foreach (var content in package.Contents)
+            foreach (var shard in crystal.Shards)
             {
-                LoadContent(content);
+                LoadShard(shard);
             }
 
             // Apply the load options
-            package.Load(options);
+            crystal.Load(options);
         }
 
-        public void LoadContent(IContent content)
+        public void LoadShard(IShard shard)
         {
-            if (_loadedContent.ContainsKey(content.Address))
+            if (_loadedShards.ContainsKey(shard.Address))
             {
-                Debug.LogError($"Tried loading content {content.Info.Title} with an already loaded address!");
+                Debug.LogError($"Tried loading shard {shard.Info.Title} with an already loaded address!");
                 return;
             }
 
-            _loadedContent.Add(content.Address, content);
+            _loadedShards.Add(shard.Address, shard);
         }
 
-        public void UnloadContent(IContent content)
+        public void UnloadShard(IShard shard)
         {
-            bool hasContent = _loadedContent.TryGetValue(content.Address, out var foundContent);
+            bool hasShard = _loadedShards.TryGetValue(shard.Address, out var foundShard);
 
-            if (!hasContent || foundContent != content)
+            if (!hasShard || foundShard != shard)
             {
-                Debug.LogError($"Tried unloading content {content.Info.Title}, but it was not loaded!");
+                Debug.LogError($"Tried unloading shard {shard.Info.Title}, but it was not loaded!");
                 return;
             }
 
-            _loadedContent.Remove(content.Address);
+            _loadedShards.Remove(shard.Address);
         }
 
-        public bool HasPackage(Address address)
+        public bool HasCrystal(Address address)
         {
-            return _loadedPackages.ContainsKey(address);
+            return _loadedCrystals.ContainsKey(address);
         }
 
-        public bool TryGetPackage(Address address, out Package package)
+        public bool TryGetCrystal(Address address, out Crystal crystal)
         {
-            if (_loadedPackages.ContainsKey(address))
+            if (_loadedCrystals.ContainsKey(address))
             {
-                package = _loadedPackages[address];
+                crystal = _loadedCrystals[address];
                 return true;
             }
 
-            package = default;
+            crystal = default;
             return false;
         }
 
-        public bool HasContent(Address address)
+        public bool HasShard(Address address)
         {
-            return _loadedContent.ContainsKey(address);
+            return _loadedShards.ContainsKey(address);
         }
 
-        public bool TryGetContent(Address address, out IContent content)
+        public bool TryGetShard(Address address, out IShard shard)
         {
-            if (_loadedContent.ContainsKey(address))
+            if (_loadedShards.ContainsKey(address))
             {
-                content = _loadedContent[address];
+                shard = _loadedShards[address];
                 return true;
             }
 
-            content = default;
+            shard = default;
             return false;
         }
 
-        public bool TryGetContent<T>(Address address, out T content) where T : IContent
+        public bool TryGetShard<T>(Address address, out T shard) where T : IShard
         {
-            if (_loadedContent.ContainsKey(address))
+            if (_loadedShards.ContainsKey(address))
             {
-                var loaded = _loadedContent[address];
+                var loaded = _loadedShards[address];
 
                 if (loaded is T result)
                 {
-                    content = result;
+                    shard = result;
                     return true;
                 }
             }
 
-            content = default;
+            shard = default;
             return false;
         }
 
-        public IReadOnlyCollection<Package> GetPackages()
+        public IReadOnlyCollection<Crystal> GetCrystals()
         {
-            return _loadedPackages.Values;
+            return _loadedCrystals.Values;
         }
 
-        public IReadOnlyCollection<IContent> GetContents()
+        public IReadOnlyCollection<IShard> GetShards()
         {
-            return _loadedContent.Values;
+            return _loadedShards.Values;
         }
 
-        public IReadOnlyCollection<T> GetContents<T>() where T : IContent
+        public IReadOnlyCollection<T> GetShards<T>() where T : IShard
         {
-            List<T> contents = new();
+            List<T> shards = new();
 
-            foreach (var content in _loadedContent.Values)
+            foreach (var shard in _loadedShards.Values)
             {
-                if (content is T value)
+                if (shard is T value)
                 {
-                    contents.Add(value);
+                    shards.Add(value);
                 }
             }
 
-            return contents;
+            return shards;
         }
     }
 }

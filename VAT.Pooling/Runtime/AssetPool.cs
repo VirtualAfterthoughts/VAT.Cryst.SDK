@@ -23,7 +23,7 @@ namespace VAT.Pooling
         // This prevents events from being called when its not ready yet.
         private Transform _tempParent;
 
-        private ISpawnableContent _content;
+        private ISpawnableShard _content;
 
         private string _assetName;
         private Vector3 _assetScale;
@@ -41,7 +41,7 @@ namespace VAT.Pooling
 
         public int SpawnedCount => _spawnedPoolables.Count;
 
-        public AssetPool(ISpawnableContent content, Transform rootTransform = null)
+        public AssetPool(ISpawnableShard content, Transform rootTransform = null)
         {
             _rootTransform = rootTransform;
 

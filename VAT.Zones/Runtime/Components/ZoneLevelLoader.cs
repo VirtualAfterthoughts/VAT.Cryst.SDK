@@ -12,13 +12,13 @@ namespace VAT.Zones
     public sealed class ZoneLevelLoader : ZoneComponent
     {
         [SerializeField]
-        private LevelContentReference _level;
+        private LevelShardReference _level;
 
         [SerializeField]
-        private LevelContentReference _loadLevel;
+        private LevelShardReference _loadLevel;
 
         [SerializeField]
-        private UnityEvent<ILevelContent> _onLoadLevel;
+        private UnityEvent<ILevelShard> _onLoadLevel;
 
         private bool _hasLoadedLevel = false;
 
@@ -34,7 +34,7 @@ namespace VAT.Zones
                 return;
             }
 
-            if (_level.TryGetContent(out var content))
+            if (_level.TryGetShard(out var content))
             {
                 _onLoadLevel?.Invoke(content);
 

@@ -72,7 +72,7 @@ namespace VAT.Pooling
                 return (false, fetched.pool);
             }
 
-            if (AssetPackager.Instance.TryGetContent<ISpawnableContent>(address, out var content))
+            if (AssetPackager.Instance.TryGetShard<ISpawnableShard>(address, out var content))
             {
                 GameObject root = new($"Pool - {content.Info.Title}");
                 var pool = new AssetPool(content, root.transform);

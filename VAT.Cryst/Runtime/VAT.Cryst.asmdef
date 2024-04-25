@@ -3,7 +3,8 @@
     "rootNamespace": "VAT.Cryst",
     "references": [
         "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:2c5da6b5cc71c8446a65082f325dc51b"
+        "GUID:2c5da6b5cc71c8446a65082f325dc51b",
+        "GUID:77ccaf49895b0d64e87cd4b4faf83c49"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

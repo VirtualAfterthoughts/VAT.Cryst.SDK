@@ -5,30 +5,27 @@ using UnityEngine;
 
 using UnityEditor;
 
-using VAT.Shared.Extensions;
-using static Codice.CM.WorkspaceServer.WorkspaceTreeDataStore;
-
 namespace VAT.Packaging.Editor
 {
-    [CustomEditor(typeof(Package))]
+    [CustomEditor(typeof(Crystal))]
     [CanEditMultipleObjects]
-    public class PackageEditor : UnityEditor.Editor
+    public class CrystalEditor : UnityEditor.Editor
     {
-        private SerializedProperty _packageInfo;
-        private SerializedProperty _contents;
+        private SerializedProperty _crystalInfo;
+        private SerializedProperty _shards;
 
         private void OnEnable()
         {
-            _packageInfo = serializedObject.FindProperty("_packageInfo");
-            _contents = serializedObject.FindProperty("_contents");
+            _crystalInfo = serializedObject.FindProperty("_crystalInfo");
+            _shards = serializedObject.FindProperty("_shards");
 
-            var package = serializedObject.targetObject as Package;
+            var package = serializedObject.targetObject as Crystal;
             package.OnValidate();
         }
 
         public override void OnInspectorGUI()
         {
-            var package = serializedObject.targetObject as Package;
+            var package = serializedObject.targetObject as Crystal;
 
             serializedObject.Update();
 
@@ -38,16 +35,16 @@ namespace VAT.Packaging.Editor
             EditorGUI.EndDisabledGroup();
 
             // Basic information that can be updated
-            EditorGUILayout.PropertyField(_packageInfo);
+            EditorGUILayout.PropertyField(_crystalInfo);
 
             // Draw content list and content buttons
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(_contents);
+            EditorGUILayout.PropertyField(_shards);
             EditorGUI.EndDisabledGroup();
 
-            if (GUILayout.Button("Add Static Content", GUILayout.Width(120)))
+            if (GUILayout.Button("Add Static Shard", GUILayout.Width(120)))
             {
-                StaticContentCreationWizard.Initialize(package);
+                StaticShardCreationWizard.Initialize(package);
             }
 
             // Space and header
@@ -58,7 +55,7 @@ namespace VAT.Packaging.Editor
             // Draw build buttons
             if (GUILayout.Button("Pack for PC", GUILayout.Width(120)))
             {
-                ExternalAssetPacker.PackPackage(package, BuildTarget.StandaloneWindows64);
+                ExternalAssetPacker.PackCrystal(package, BuildTarget.StandaloneWindows64);
             }
 
             // Draw exporting buttons

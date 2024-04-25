@@ -100,7 +100,7 @@ namespace VAT.Zones.Editor
             // Check if we can add the chunk to the level content
             if (AssetPackager.IsReady)
             {
-                foreach (var level in AssetPackager.Instance.GetContents<StaticLevelContent>())
+                foreach (var level in AssetPackager.Instance.GetShards<StaticLevelShard>())
                 {
                     if (level.MainScene.EditorScene == null)
                         continue;

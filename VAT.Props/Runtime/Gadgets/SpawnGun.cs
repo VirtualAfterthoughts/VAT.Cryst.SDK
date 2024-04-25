@@ -16,7 +16,7 @@ namespace VAT.Interaction
 
         private IInteractor _mainInteractor = null;
 
-        private SpawnableContentReference _selectedSpawnable = null;
+        private SpawnableShardReference _selectedSpawnable = null;
 
         private void OnEnable()
         {
@@ -62,7 +62,7 @@ namespace VAT.Interaction
             }
         }
         
-        private void OnSpawnableSelected(SpawnableContentReference reference)
+        private void OnSpawnableSelected(SpawnableShardReference reference)
         {
             _selectedSpawnable = reference;
         }

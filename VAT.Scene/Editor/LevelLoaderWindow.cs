@@ -11,7 +11,7 @@ namespace VAT.Scene.Editor
 {
     public class LevelLoaderWindow : EditorWindow
     {
-        private StaticLevelContent _level, _loadLevel;
+        private StaticLevelShard _level, _loadLevel;
 
         [MenuItem("VAT/Cryst SDK/Tools/Scene/Load Level", priority = -10000)]
         public static void Initialize()
@@ -28,11 +28,11 @@ namespace VAT.Scene.Editor
 
             GUILayout.Space(3);
 
-            _level = EditorGUILayout.ObjectField("Level", _level, typeof(StaticLevelContent), false) as StaticLevelContent;
+            _level = EditorGUILayout.ObjectField("Level", _level, typeof(StaticLevelShard), false) as StaticLevelShard;
 
             EditorGUI.BeginDisabledGroup(!Application.isPlaying);
             
-            _loadLevel = EditorGUILayout.ObjectField("Load Level", _loadLevel, typeof(StaticLevelContent), false) as StaticLevelContent;
+            _loadLevel = EditorGUILayout.ObjectField("Load Level", _loadLevel, typeof(StaticLevelShard), false) as StaticLevelShard;
 
             EditorGUI.EndDisabledGroup();
 
@@ -53,10 +53,10 @@ namespace VAT.Scene.Editor
 
                     var options = new SceneLoadOptions()
                     {
-                        loadLevel = new LevelContentReference(loadLevel),
+                        loadLevel = new LevelShardReference(loadLevel),
                     };
 
-                    CrystSceneManager.LoadLevel(new LevelContentReference(level), options);
+                    CrystSceneManager.LoadLevel(new LevelShardReference(level), options);
                 }
                 else
                 {

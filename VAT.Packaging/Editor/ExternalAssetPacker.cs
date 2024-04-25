@@ -14,7 +14,7 @@ namespace VAT.Packaging.Editor
 {
     public static class ExternalAssetPacker
     {
-        public static void PackPackages(BuildTarget target = BuildTarget.StandaloneWindows64, bool revealFolder = true)
+        public static void PackCrystals(BuildTarget target = BuildTarget.StandaloneWindows64, bool revealFolder = true)
         {
             if (!AssetPackager.IsReady)
             {
@@ -22,9 +22,9 @@ namespace VAT.Packaging.Editor
                 return;
             }
 
-            foreach (var package in AssetPackager.Instance.GetPackages())
+            foreach (var package in AssetPackager.Instance.GetCrystals())
             {
-                PackPackage(package, target, false);
+                PackCrystal(package, target, false);
             }
 
             if (revealFolder)
@@ -35,7 +35,7 @@ namespace VAT.Packaging.Editor
             }
         }
 
-        public static void PackPackage(Package package, BuildTarget target = BuildTarget.StandaloneWindows64, bool revealFolder = true)
+        public static void PackCrystal(Crystal crystal, BuildTarget target = BuildTarget.StandaloneWindows64, bool revealFolder = true)
         {
             // Set the build target
             var activeTarget = EditorUserBuildSettings.activeBuildTarget;
@@ -53,7 +53,7 @@ namespace VAT.Packaging.Editor
 
             // Pack the json, which will also create the addressable groups
             var jsonPacker = new JSONPacker();
-            var json = jsonPacker.PackRoot(package);
+            var json = jsonPacker.PackRoot(crystal);
 
             // Build the addressable content
             AddressablesManager.FixGroups();
@@ -61,11 +61,11 @@ namespace VAT.Packaging.Editor
             InternalBuildPackage();
 
             // Copy addressables to desired folder
-            string buildPath = ModAddressablesManager.GetBuildPath(package);
+            string buildPath = ModAddressablesManager.GetBuildPath(crystal);
             InternalCopyBuildToFolder(buildPath);
 
-            // Write the package into a json file
-            json.WriteToFile($"{buildPath}/{Package.BUILT_NAME}");
+            // Write the crystal into a json file
+            json.WriteToFile($"{buildPath}/{Crystal.BUILT_NAME}");
 
             // Reset the build settings
             AddressablesManager.SetActiveSettings();
@@ -75,7 +75,7 @@ namespace VAT.Packaging.Editor
             if (revealFolder)
             {
                 EditorUtility.RevealInFinder(buildPath + "/");
-                Debug.Log($"AssetPackager -> Successfully built {package.Address}!");
+                Debug.Log($"AssetPackager -> Successfully built {crystal.Address}!");
             }
         }
 

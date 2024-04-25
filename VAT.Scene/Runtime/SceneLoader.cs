@@ -18,14 +18,14 @@ namespace VAT.Scene
             BUILT = 1 << 2,
         }
 
-        private readonly ILevelContent _level, _loadLevel;
+        private readonly ILevelShard _level, _loadLevel;
         private readonly SceneType _type;
         private AssetLoadStatus _status;
 
         private SceneInstance _mainSceneInstance;
         private UniTask<SceneInstance> _sceneTask;
 
-        public ILevelContent Level => _level;
+        public ILevelShard Level => _level;
 
         public AssetLoadStatus Status => _status;
 
@@ -41,7 +41,7 @@ namespace VAT.Scene
             this._status = AssetLoadStatus.IDLE;
         }
 
-        public SceneLoader(ILevelContent level, ILevelContent loadLevel)
+        public SceneLoader(ILevelShard level, ILevelShard loadLevel)
         {
             this._level = level;
             this._loadLevel = loadLevel;

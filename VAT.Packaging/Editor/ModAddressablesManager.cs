@@ -13,7 +13,7 @@ namespace VAT.Packaging.Editor
 {
     public static class ModAddressablesManager
     {
-        public const string BuildPrefix = "BuiltPackages";
+        public const string BuildPrefix = "BuiltCrystals";
 
         private struct ProfileVariables
         {
@@ -47,9 +47,9 @@ namespace VAT.Packaging.Editor
             return $"{parent}/{folderPath}";
         }
 
-        public static string GetBuildPath(Package package)
+        public static string GetBuildPath(Crystal crystal)
         {
-            string folderPath = $"{BuildPrefix}/{EditorUserBuildSettings.activeBuildTarget}/{package.Address}";
+            string folderPath = $"{BuildPrefix}/{EditorUserBuildSettings.activeBuildTarget}/{crystal.Address}";
             string parent = Directory.GetParent(Application.dataPath).FullName;
             string fullPath = $"{parent}/{folderPath}";
 

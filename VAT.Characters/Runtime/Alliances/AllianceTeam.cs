@@ -9,13 +9,13 @@ namespace VAT.Entities
     public class AllianceTeam : ScriptableObject
     {
         [SerializeField]
-        private AllianceTeamContentReference[] _allies;
+        private AllianceTeamShardReference[] _allies;
 
         [SerializeField]
-        private AllianceTeamContentReference[] _enemies;
+        private AllianceTeamShardReference[] _enemies;
 
-        public AllianceTeamContentReference[] Allies => _allies;
+        public AllianceTeamShardReference[] Allies => _allies;
 
-        public AllianceTeamContentReference[] Enemies => _enemies;
+        public AllianceTeamShardReference[] Enemies => _enemies;
     }
 }

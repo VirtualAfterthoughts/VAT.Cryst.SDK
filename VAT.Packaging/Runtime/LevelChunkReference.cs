@@ -10,14 +10,14 @@ namespace VAT.Packaging
     public class LevelChunkReference
     {
         [SerializeField]
-        private LevelContentReference _contentReference;
+        private LevelShardReference _shardReference;
 
         [SerializeField]
         private string _chunkName = string.Empty;
 
         public bool TryGetChunk(out StaticCrystChunk chunk)
         {
-            if (_contentReference.TryGetContent(out var content) && content is StaticLevelContent levelContent)
+            if (_shardReference.TryGetShard(out var content) && content is StaticLevelShard levelContent)
             {
                 return levelContent.TryGetChunk(_chunkName, out chunk);
             }

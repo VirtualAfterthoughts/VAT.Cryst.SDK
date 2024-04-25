@@ -74,14 +74,14 @@ namespace VAT.Pooling
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (Application.isPlaying || _spawnable.contentReference == null)
+            if (Application.isPlaying || _spawnable.shardReference == null)
                 return;
 
-            var address = _spawnable.contentReference.Address;
+            var address = _spawnable.shardReference.Address;
 
-            if (_spawnable.contentReference.TryGetContent(out var content))
+            if (_spawnable.shardReference.TryGetShard(out var shard))
             {
-                this.name = $"Spawnable Placer ({content.ContentInfo.Title})";
+                this.name = $"Spawnable Placer ({shard.ShardInfo.Title})";
             }
             else if (address != Address.EMPTY)
             {
@@ -96,13 +96,13 @@ namespace VAT.Pooling
         private void OnDrawGizmos()
         {
             // Draw spawnable asset
-            if (_spawnable.contentReference != null && _spawnable.contentReference.TryGetContent(out var content))
+            if (_spawnable.shardReference != null && _spawnable.shardReference.TryGetShard(out var shard))
             {
                 // Do we have an editor asset?
                 // If so, draw the gizmo
-                if (content.MainAssetT != null && content.MainAssetT.EditorAssetT != null)
+                if (shard.MainAssetT != null && shard.MainAssetT.EditorAssetT != null)
                 {
-                    var go = content.MainAssetT.EditorAssetT;
+                    var go = shard.MainAssetT.EditorAssetT;
                     SimpleTransform transform;
 
                     if (!_useScale)
@@ -114,7 +114,12 @@ namespace VAT.Pooling
                         transform = SimpleTransform.Create(this.transform);
                     }
 
-                    go.DrawGameObject(transform, Color.green, false);
+                    var bounds = shard.Bounds;
+                    Gizmos.matrix = transform.localToWorldMatrix;
+
+                    Gizmos.DrawMesh(shard.PreviewMesh?.EditorAssetT);
+                    Gizmos.DrawWireCube(bounds.center, bounds.size);
+
                     return;
                 }
             }

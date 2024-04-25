@@ -11,7 +11,7 @@ namespace VAT.Pooling
     {
         [SerializeField]
         [Tooltip("The loot table to grab an item from.")]
-        private ScriptableObjectContentReference _lootTableReference;
+        private ScriptableObjectShardReference _lootTableReference;
 
         [SerializeField]
         [Tooltip("Leave false if an item in the loot table should be placed when the level loads. If you set this to true, manually call Trigger to place the item.")]
@@ -25,7 +25,7 @@ namespace VAT.Pooling
 
         public void Trigger()
         {
-            if (_lootTableReference.TryGetContent(out var content))
+            if (_lootTableReference.TryGetShard(out var content))
             {
                 content.MainAssetT.LoadAsset(OnLootTableLoaded);
             }

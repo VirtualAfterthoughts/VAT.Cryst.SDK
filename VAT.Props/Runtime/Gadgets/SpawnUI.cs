@@ -22,7 +22,7 @@ namespace VAT.Interaction
         private UIPageCollection _spawnablesPageCollection = null;
         private UIPageCollection _toolsPageCollection;
 
-        public event Action<SpawnableContentReference> OnSpawnableSelected;
+        public event Action<SpawnableShardReference> OnSpawnableSelected;
 
         private void Awake()
         {
@@ -135,14 +135,14 @@ namespace VAT.Interaction
         {
             _spawnablesPageCollection = new UIPageCollection();
 
-            var contents = AssetPackager.Instance.GetContents<ISpawnableContent>();
+            var contents = AssetPackager.Instance.GetShards<ISpawnableShard>();
 
             AddSpawnablePages(contents, _spawnablesPageCollection);
 
             RenderAllPages();
         }
 
-        private void AddSpawnablePages(IEnumerable<ISpawnableContent> contents, UIPageCollection collection)
+        private void AddSpawnablePages(IEnumerable<ISpawnableShard> contents, UIPageCollection collection)
         {
             int maxElements = 9;
             int addedElements = 0;
@@ -183,7 +183,7 @@ namespace VAT.Interaction
 
         private void SelectSpawnable(Address address)
         {
-            OnSpawnableSelected?.Invoke(new SpawnableContentReference(address));
+            OnSpawnableSelected?.Invoke(new SpawnableShardReference(address));
         }
 
         public void SetSpawningActive(bool active)

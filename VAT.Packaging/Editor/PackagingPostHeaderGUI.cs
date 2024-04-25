@@ -14,10 +14,10 @@ namespace VAT.Packaging.Editor
     {
         private struct ContentIdentifier
         {
-            public StaticContentIdentifierAttribute attribute;
+            public StaticShardIdentifierAttribute attribute;
             public Type contentType;
 
-            public ContentIdentifier(StaticContentIdentifierAttribute attribute, Type contentType)
+            public ContentIdentifier(StaticShardIdentifierAttribute attribute, Type contentType)
             {
                 this.attribute = attribute;
                 this.contentType = contentType;
@@ -25,7 +25,7 @@ namespace VAT.Packaging.Editor
         }
 
         private static Dictionary<Type, List<ContentIdentifier>> _assetTypeToIdentifier;
-        private static Dictionary<Object, StaticContent> _assetToContent;
+        private static Dictionary<Object, StaticShard> _assetToContent;
 
         private static bool _ready = false;
 
@@ -38,7 +38,7 @@ namespace VAT.Packaging.Editor
         {
             _ready = true;
 
-            _package = AssetPackager.Instance.GetPackages().FirstOrDefault();
+            _package = AssetPackager.Instance.GetCrystals().FirstOrDefault();
 
             _assetTypeToIdentifier = new();
             _assetToContent = new();
@@ -48,9 +48,9 @@ namespace VAT.Packaging.Editor
             {
                 foreach (Type type in assembly.GetTypes())
                 {
-                    if (!type.IsAbstract && type.IsSubclassOf(typeof(StaticContent)))
+                    if (!type.IsAbstract && type.IsSubclassOf(typeof(StaticShard)))
                     {
-                        var attribute = type.GetCustomAttribute<StaticContentIdentifierAttribute>();
+                        var attribute = type.GetCustomAttribute<StaticShardIdentifierAttribute>();
 
                         if (attribute != null)
                         {
@@ -63,9 +63,9 @@ namespace VAT.Packaging.Editor
                 }
             }
 
-            foreach (var content in AssetPackager.Instance.GetContents())
+            foreach (var content in AssetPackager.Instance.GetShards())
             {
-                if (content is StaticContent staticContent && staticContent.StaticAsset.EditorAsset != null)
+                if (content is StaticShard staticContent && staticContent.StaticAsset.EditorAsset != null)
                 {
                     var asset = staticContent.StaticAsset.EditorAsset;
                     _assetToContent[asset] = staticContent;
@@ -99,7 +99,7 @@ namespace VAT.Packaging.Editor
             }
         }
 
-        private static Package _package;
+        private static Crystal _package;
 
         private static void OnDrawPersistentObject(Object obj)
         {
@@ -107,7 +107,7 @@ namespace VAT.Packaging.Editor
             {
                 EditorGUI.BeginDisabledGroup(true);
 
-                EditorGUILayout.ObjectField(content.StaticPackage, content.StaticPackage.GetType(), false);
+                EditorGUILayout.ObjectField(content.StaticCrystal, content.StaticCrystal.GetType(), false);
 
                 EditorGUILayout.ObjectField(content, content.GetType(), false);
 
@@ -130,17 +130,17 @@ namespace VAT.Packaging.Editor
 
                 if (!_drawnPackage)
                 {
-                    _package = (Package)EditorGUILayout.ObjectField(_package, typeof(Package), false);
+                    _package = (Crystal)EditorGUILayout.ObjectField(_package, typeof(Crystal), false);
                     _drawnPackage = true;
                 }
 
                 foreach (var group in pair.Value)
                 {
-                    if (GUILayout.Button($"Add {group.attribute.displayName} To Package"))
+                    if (GUILayout.Button($"Add {group.attribute.displayName} To Crystal"))
                     {
                         if (_package != null)
                         {
-                            StaticContentCreationWizard.Initialize(_package, group.attribute, group.contentType, obj);
+                            StaticShardCreationWizard.Initialize(_package, group.attribute, group.contentType, obj);
                         }
                     }
                 }

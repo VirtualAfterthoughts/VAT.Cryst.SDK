@@ -20,7 +20,7 @@ namespace VAT.Packaging.Editor
 
         private bool OnDrawChunk(Rect position, SerializedProperty contentIdProperty, SerializedProperty chunkNameProperty)
         {
-            if (AssetPackager.IsReady && AssetPackager.Instance.TryGetContent<StaticLevelContent>(contentIdProperty.stringValue, out var content))
+            if (AssetPackager.IsReady && AssetPackager.Instance.TryGetShard<StaticLevelShard>(contentIdProperty.stringValue, out var content))
             {
                 if (content.Chunks.Count > 0)
                 {
@@ -65,7 +65,7 @@ namespace VAT.Packaging.Editor
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            var contentProperty = property.FindPropertyRelative("_contentReference");
+            var contentProperty = property.FindPropertyRelative("_shardReference");
             var contentIdProperty = contentProperty.FindPropertyRelative("_address").FindPropertyRelative("_id");
 
             var chunkNameProperty = property.FindPropertyRelative("_chunkName");

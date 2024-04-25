@@ -7,8 +7,8 @@ using VAT.Packaging;
 
 namespace VAT.Entities
 {
-    [StaticContentIdentifier("Alliance Team", typeof(AllianceTeam))]
-    public class StaticAllianceTeamContent : StaticContentT<AllianceTeam>
+    [StaticShardIdentifier("Alliance Team", typeof(AllianceTeam))]
+    public class StaticAllianceTeamContent : StaticShardT<AllianceTeam>
     {
         [SerializeField]
         private StaticCrystAllianceTeam _mainAsset;

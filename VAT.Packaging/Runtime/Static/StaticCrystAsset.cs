@@ -260,6 +260,8 @@ namespace VAT.Packaging
 
         public StaticCrystAssetT(string guid) : base(guid) { }
 
+        public StaticCrystAssetT() : base() { }
+
         public void LoadAsset(Action<T> onLoaded) => base.LoadAsset<T>(onLoaded);
 
         public async UniTask<T> LoadAssetAsync() => await base.LoadAssetAsync<T>();

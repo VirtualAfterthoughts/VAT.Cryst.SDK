@@ -18,7 +18,7 @@ namespace VAT.Packaging.Editor
             this.displayName = shippable.Info.Title;
 
             Texture2D icon;
-            if (shippable is Content content && content.MainAsset.EditorAsset != null)
+            if (shippable is Shard content && content.MainAsset.EditorAsset != null)
             {
                 var obj = content.MainAsset.EditorAsset;
 

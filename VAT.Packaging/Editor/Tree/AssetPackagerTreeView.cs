@@ -31,8 +31,8 @@ namespace VAT.Packaging.Editor
             var id = 0;
             var root = new TreeViewItem { id = id++, depth = -1, displayName = "Root" };
 
-            var packages = new TreeViewItem() { id = id++, depth = 0, displayName = "Packages" };
-            foreach (var package in AssetPackager.Instance.GetPackages())
+            var crystals = new TreeViewItem() { id = id++, depth = 0, displayName = "Crystals" };
+            foreach (var package in AssetPackager.Instance.GetCrystals())
             {
                 var item = new ShippableTreeViewItem(package)
                 {
@@ -41,39 +41,39 @@ namespace VAT.Packaging.Editor
                 };
                 _items.Add(item.id, item);
 
-                Dictionary<Type, TreeViewItem> crateTypes = new();
+                Dictionary<Type, TreeViewItem> shardTypes = new();
 
-                foreach (var content in package.Contents)
+                foreach (var shard in package.Shards)
                 {
-                    if (!crateTypes.TryGetValue(content.GetType(), out TreeViewItem parent))
+                    if (!shardTypes.TryGetValue(shard.GetType(), out TreeViewItem parent))
                     {
                         parent = new TreeViewItem
                         {
                             id = id++,
                             depth = 2,
-                            displayName = content.GetType().Name,
-                            icon = EditorGUIUtility.GetIconForObject(content)
+                            displayName = shard.GetType().Name,
+                            icon = EditorGUIUtility.GetIconForObject(shard)
                         };
                         item.AddChild(parent);
 
-                        crateTypes.Add(content.GetType(), parent);
+                        shardTypes.Add(shard.GetType(), parent);
                     }
 
-                    var contentItem = new ShippableTreeViewItem(content)
+                    var shardItem = new ShippableTreeViewItem(shard)
                     {
                         id = id++,
                         depth = 3,
                     };
 
-                    parent.AddChild(contentItem);
+                    parent.AddChild(shardItem);
 
-                    _items.Add(contentItem.id, contentItem);
+                    _items.Add(shardItem.id, shardItem);
                 }
 
-                packages.AddChild(item);
+                crystals.AddChild(item);
             }
 
-            root.AddChild(packages);
+            root.AddChild(crystals);
 
             return root;
         }

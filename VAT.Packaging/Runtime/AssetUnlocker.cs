@@ -7,16 +7,16 @@ namespace VAT.Packaging
 {
     public static class AssetUnlocker
     {
-        public static bool IsUnlocked(IContent content)
+        public static bool IsUnlocked(IShard shard)
         {
-            return !content.ContentInfo.Unlockable;
+            return !shard.ShardInfo.Unlockable;
         }
 
-        public static void UnlockContent(IContent content)
+        public static void UnlockShard(IShard shard)
         {
         }
         
-        public static void LockContent(IContent content)
+        public static void LockShard(IShard shard)
         {
         }
     }

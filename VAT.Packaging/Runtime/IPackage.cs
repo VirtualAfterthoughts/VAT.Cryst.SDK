@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace VAT.Packaging
 {
-    public interface IPackage : IShippable
+    public interface ICrystal : IShippable
     {
         /// <summary>
-        /// Whether or not this is a package built with the game itself.
+        /// Whether or not this is a crystal built with the game itself.
         /// </summary>
         public bool IsInternal { get; }
     }

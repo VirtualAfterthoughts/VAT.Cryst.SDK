@@ -39,13 +39,13 @@ namespace VAT.Packaging.Editor
         {
             if (AssetPackager.IsReady)
             {
-                if (AssetPackager.Instance.HasPackages)
+                if (AssetPackager.Instance.HasCrystals)
                 {
                     GUILayout.Label("AssetPackager is ready!");
                 }
                 else
                 {
-                    GUILayout.Label("Welcome to the AssetPackager! Create a Package using the button below.");
+                    GUILayout.Label("Welcome to the AssetPackager! Create a Crystal using the button below.");
                 }
 
                 DrawSpace();
@@ -87,9 +87,9 @@ namespace VAT.Packaging.Editor
 
         private void DrawCreatePackageButton()
         {
-            if (GUILayout.Button("Create Package", GUILayout.Height(20), GUILayout.Width(120)))
+            if (GUILayout.Button("Create Crystal", GUILayout.Height(20), GUILayout.Width(120)))
             {
-                PackageCreationWizard.Initialize();
+                CrystalCreationWizard.Initialize();
                 Close();
             }
         }

@@ -8,10 +8,10 @@ using VAT.Packaging;
 namespace VAT.Entities
 {
     [Serializable]
-    public class AllianceTeamContentReference : ContentReferenceT<StaticAllianceTeamContent>
+    public class AllianceTeamShardReference : ShardReferenceT<StaticAllianceTeamContent>
     {
 #if UNITY_EDITOR
-        public override Type EditorContentType => typeof(StaticAllianceTeamContent);
+        public override Type EditorShardType => typeof(StaticAllianceTeamContent);
 #endif
     }
 }

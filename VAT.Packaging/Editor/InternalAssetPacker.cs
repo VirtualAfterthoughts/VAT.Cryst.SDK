@@ -40,16 +40,16 @@ namespace VAT.Packaging.Editor
 
             AssetDatabase.CreateFolder(CrystAssetManager.PROJECT_RELATIVE_FOLDER, AssetPackager.CRYST_TEXT_ASSETS_FOLDER);
 
-            // Save all packages as text assets
-            foreach (var package in AssetPackager.Instance.GetPackages())
+            // Save all crystals as text assets
+            foreach (var crystal in AssetPackager.Instance.GetCrystals())
             {
                 var packer = new JSONPacker();
-                var json = packer.PackRoot(package);
+                var json = packer.PackRoot(crystal);
                 TextAsset textAsset = new(json.ToString());
 
-                AssetDatabase.CreateAsset(textAsset, $"{path}/{package.Info.Title}.asset");
+                AssetDatabase.CreateAsset(textAsset, $"{path}/{crystal.Info.Title}.asset");
 
-                textAsset.MarkAsAddressable(AssetPackager.INTERNAL_PACKAGES_GROUP, package.Address, AssetPackager.INTERNAL_PACKAGES_LABEL);
+                textAsset.MarkAsAddressable(AssetPackager.INTERNAL_CRYSTALS_GROUP, crystal.Address, AssetPackager.INTERNAL_CRYSTALS_LABEL);
             }
 
             // Fix any potential issues

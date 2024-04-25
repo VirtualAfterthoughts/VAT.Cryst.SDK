@@ -13,10 +13,10 @@ namespace VAT.Scene
     {
         public static readonly SceneLoadOptions Default = new()
         {
-            loadLevel = new LevelContentReference(),
+            loadLevel = new LevelShardReference(),
         };
 
-        public LevelContentReference loadLevel;
+        public LevelShardReference loadLevel;
     }
 
     public static class CrystSceneManager
@@ -25,22 +25,22 @@ namespace VAT.Scene
 
         public static SceneLoader SceneSession => _sceneSession;
 
-        public static void LoadLevel(LevelContentReference level)
+        public static void LoadLevel(LevelShardReference level)
         {
             LoadLevel(level, SceneLoadOptions.Default);
         }
 
-        public static void LoadLevel(LevelContentReference level, SceneLoadOptions options)
+        public static void LoadLevel(LevelShardReference level, SceneLoadOptions options)
         {
-            options.loadLevel.TryGetContent(out var loadLevelContent);
+            options.loadLevel.TryGetShard(out var loadLevelShard);
 
-            if (level.TryGetContent(out var levelContent))
+            if (level.TryGetShard(out var levelContent))
             {
-                InternalLoadLevelAsync(levelContent, loadLevelContent).Forget();
+                InternalLoadLevelAsync(levelContent, loadLevelShard).Forget();
             }
         }
 
-        private static async UniTaskVoid InternalLoadLevelAsync(ILevelContent level, ILevelContent loadLevel)
+        private static async UniTaskVoid InternalLoadLevelAsync(ILevelShard level, ILevelShard loadLevel)
         {
             // Unload the active session
             if (_sceneSession != null && _sceneSession.Status == AssetLoadStatus.DONE)

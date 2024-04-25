@@ -35,7 +35,7 @@ namespace VAT.Pooling
         {
             PoolManager.HookOnReady(() =>
             {
-                PoolManager.Instance.CreatePool(spawnable.contentReference.Address);
+                PoolManager.Instance.CreatePool(spawnable.shardReference.Address);
             });
         }
 
@@ -50,7 +50,7 @@ namespace VAT.Pooling
         private static void OnPoolManagerReady(SpawnRequestInfo info)
         {
             // Get the pool and wait for it to be ready
-            var (exists, pool) = PoolManager.Instance.FetchPool(info.spawnable.contentReference.Address); ;
+            var (exists, pool) = PoolManager.Instance.FetchPool(info.spawnable.shardReference.Address); ;
 
             if (exists)
             {
@@ -58,7 +58,7 @@ namespace VAT.Pooling
             }
             else
             {
-                Debug.LogWarning($"Tried spawning a spawnable at address {info.spawnable.contentReference.Address}, but the pool hasn't been registered!");
+                Debug.LogWarning($"Tried spawning a spawnable at address {info.spawnable.shardReference.Address}, but the pool hasn't been registered!");
             }
         }
 
