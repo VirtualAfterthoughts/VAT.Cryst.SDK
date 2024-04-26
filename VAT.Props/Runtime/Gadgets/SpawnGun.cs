@@ -13,6 +13,7 @@ namespace VAT.Interaction
     {
         public Transform firePoint;
         public Grip triggerGrip;
+        public MeshFilter previewMeshFilter;
 
         private IInteractor _mainInteractor = null;
 
@@ -20,6 +21,8 @@ namespace VAT.Interaction
 
         private void OnEnable()
         {
+            previewMeshFilter.transform.parent = null;
+
             triggerGrip.OnAttached += OnTriggerGripAttached;
             triggerGrip.OnDetached += OnTriggerGripDetached;
         }
@@ -69,6 +72,44 @@ namespace VAT.Interaction
 
         private bool _wasPressingTrigger = false;
 
+        private void TogglePreviewMesh(bool show)
+        {
+            if (show)
+            {
+                if (_selectedSpawnable != null && _selectedSpawnable.TryGetShard(out var shard))
+                {
+                    shard.PreviewMesh?.LoadAsset((m) =>
+                    {
+                        previewMeshFilter.sharedMesh = m;
+                    });
+                }
+            }
+            else
+            {
+                previewMeshFilter.sharedMesh = null;
+            }
+        }
+
+        private bool SpawnRaycast(out Vector3 point)
+        {
+            bool success = Physics.Raycast(firePoint.position, firePoint.forward, out var hitInfo, 10f, ~0, QueryTriggerInteraction.Ignore);
+            point = default;
+
+            if (success)
+            {
+                point = hitInfo.point;
+
+                if (_selectedSpawnable != null && _selectedSpawnable.TryGetShard(out var shard))
+                {
+                    point += 0.5f * shard.Bounds.size.y * hitInfo.normal;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         private void Update()
         {
             if (_mainInteractor != null)
@@ -79,9 +120,22 @@ namespace VAT.Interaction
 
                 bool pressing = axis > 0.7f;
 
+                if (SpawnRaycast(out var point))
+                {
+                    previewMeshFilter.transform.SetPositionAndRotation(point, Quaternion.identity);
+                }
+
+                // Trigger down
                 if (pressing && !_wasPressingTrigger)
                 {
+                    TogglePreviewMesh(true);
+                }
+                // Trigger up
+                else if (!pressing && _wasPressingTrigger)
+                {
                     Fire();
+
+                    TogglePreviewMesh(false);
                 }
 
                 _wasPressingTrigger = pressing;
@@ -95,7 +149,7 @@ namespace VAT.Interaction
                 return;
             }
 
-            if (Physics.Raycast(firePoint.position, firePoint.forward, out var hitInfo, 10f, ~0, QueryTriggerInteraction.Ignore))
+            if (SpawnRaycast(out var point))
             {
                 var spawnable = new Spawnable(_selectedSpawnable);
 
@@ -104,7 +158,7 @@ namespace VAT.Interaction
                 AssetSpawner.Spawn(new AssetSpawner.SpawnRequestInfo()
                 {
                     spawnable = spawnable,
-                    position = hitInfo.point,
+                    position = point,
                 });
             }
         }

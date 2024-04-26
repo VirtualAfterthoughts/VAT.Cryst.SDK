@@ -1,10 +1,11 @@
+using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using VAT.Cryst.Game;
 using VAT.Cryst.Utilities;
+using VAT.Serialization.JSON;
 
 namespace VAT.Packaging
 {
@@ -43,6 +44,67 @@ namespace VAT.Packaging
         public Bounds Bounds => _bounds;
 
         public IWeakAssetT<Mesh> PreviewMesh => _previewMesh;
+
+        protected override void OnPack(JSONPacker packer, JObject json)
+        {
+            base.OnPack(packer, json);
+
+            var boundsProperty = new JProperty("bounds", new JObject
+                {
+                    {
+                        "center", new JObject
+                        {
+                            {"x", Bounds.center.x},
+                            {"y", Bounds.center.y},
+                            {"z", Bounds.center.z}
+                        }
+                    },
+                    {
+                        "extents", new JObject
+                        {
+                            {"x", Bounds.extents.x},
+                            {"y", Bounds.extents.y},
+                            {"z", Bounds.extents.z}
+                        }
+                    }
+                }
+            );
+
+            json.Add(boundsProperty);
+        }
+
+        protected override void OnUnpack(JSONUnpacker unpacker, JObject json)
+        {
+            base.OnUnpack(unpacker, json);
+
+            if (json.TryGetValue("bounds", out JToken boundsToken))
+            {
+                _bounds = boundsToken.ToObject<Bounds>();
+            }
+        }
+
+        public override List<StaticPackedAsset> CollectPackedAssets()
+        {
+            var list = base.CollectPackedAssets();
+
+            list.Add(new StaticPackedAsset("PreviewMesh", _previewMesh));
+
+            return list;
+        }
+
+        protected override void OnUnpackPackedAssets(List<StaticPackedAsset> packedAssets)
+        {
+            foreach (var packedAsset in packedAssets)
+            {
+                if (packedAsset.Title == "PreviewMesh")
+                {
+                    _previewMesh = new StaticCrystAssetT<Mesh>(packedAsset.MainAsset.AssetGUID);
+                    break;
+                }
+            }
+
+            base.OnUnpackPackedAssets(packedAssets);
+        }
 
         public override void GeneratePackedAssets(bool isBuilding = false)
         {

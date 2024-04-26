@@ -18,6 +18,8 @@ namespace VAT.Interaction
 
         public UIPageRenderer tabsPageRenderer;
 
+        public ShardPreviewUI previewUI;
+
         private UIPage _tabsPage = null;
         private UIPageCollection _spawnablesPageCollection = null;
         private UIPageCollection _toolsPageCollection;
@@ -183,7 +185,13 @@ namespace VAT.Interaction
 
         private void SelectSpawnable(Address address)
         {
-            OnSpawnableSelected?.Invoke(new SpawnableShardReference(address));
+            var reference = new SpawnableShardReference(address);
+            OnSpawnableSelected?.Invoke(reference);
+
+            if (reference.TryGetShard(out var shard)) 
+            {
+                previewUI.SetShard(shard);
+            }
         }
 
         public void SetSpawningActive(bool active)
