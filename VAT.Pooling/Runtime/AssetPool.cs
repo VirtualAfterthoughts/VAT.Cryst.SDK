@@ -119,7 +119,7 @@ namespace VAT.Pooling
         private Vector3 EvaluateScale(Vector3? scale)
         {
             if (scale.HasValue)
-                return scale.Value;
+                return Vector3.Scale(_assetScale, scale.Value);
             else
                 return _assetScale;
         }

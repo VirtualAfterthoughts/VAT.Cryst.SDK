@@ -11,7 +11,7 @@ namespace VAT.Cryst.Utilities
         {
             List<CombineInstance> combineInstances = new();
 
-            var rootMatrix = root.transform.worldToLocalMatrix;
+            var rootMatrix = Matrix4x4.TRS(root.transform.position, root.transform.rotation, Vector3.one);
 
             var filters = root.GetComponentsInChildren<MeshFilter>();
             foreach (var filter in filters)

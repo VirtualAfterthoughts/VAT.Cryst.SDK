@@ -98,30 +98,17 @@ namespace VAT.Pooling
             // Draw spawnable asset
             if (_spawnable.shardReference != null && _spawnable.shardReference.TryGetShard(out var shard))
             {
-                // Do we have an editor asset?
-                // If so, draw the gizmo
-                if (shard.MainAssetT != null && shard.MainAssetT.EditorAssetT != null)
-                {
-                    var go = shard.MainAssetT.EditorAssetT;
-                    SimpleTransform transform;
+                var scale = _useScale ? this.transform.lossyScale : Vector3.one;
 
-                    if (!_useScale)
-                    {
-                        transform = SimpleTransform.Create(this.transform.position, this.transform.rotation, go.transform.lossyScale);
-                    }
-                    else
-                    {
-                        transform = SimpleTransform.Create(this.transform);
-                    }
+                SimpleTransform transform = SimpleTransform.Create(this.transform.position, this.transform.rotation, scale);
 
-                    var bounds = shard.Bounds;
-                    Gizmos.matrix = transform.localToWorldMatrix;
+                var bounds = shard.Bounds;
+                Gizmos.matrix = transform.localToWorldMatrix;
 
-                    Gizmos.DrawMesh(shard.PreviewMesh?.EditorAssetT);
-                    Gizmos.DrawWireCube(bounds.center, bounds.size);
+                Gizmos.DrawMesh(shard.PreviewMesh?.EditorAssetT);
+                Gizmos.DrawWireCube(bounds.center, bounds.size);
 
-                    return;
-                }
+                return;
             }
 
             // If the spawnable asset is never drawn, draw a question mark
