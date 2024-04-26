@@ -177,6 +177,12 @@ namespace VAT.Packaging
             CrystAssetManager.EnsureCrystFolderExists(folderPath);
 
             string path = folderPath + $"/{ShardInfo.Title} PreviewIcon.asset";
+
+            if (AssetDatabase.LoadAssetAtPath<Texture2D>(path) != null)
+            {
+                AssetDatabase.DeleteAsset(path);
+            }
+
             AssetDatabase.CreateAsset(newIcon, path);
             var textureAsset = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
 

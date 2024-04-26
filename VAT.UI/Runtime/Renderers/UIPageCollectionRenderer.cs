@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,11 @@ namespace VAT.UI
         private List<UIPage> _pages = null;
         private int _currentPage = 0;
 
+        public int CurrentPage => _currentPage + 1;
+        public int PageCount => _pages != null ? _pages.Count : 0;
+
+        public event Action<UIPage> OnPageChanged;
+
         public void Render(UIPageCollection collection)
         {
             _pages = collection.Pages;
@@ -20,11 +26,18 @@ namespace VAT.UI
             OnRender();
         }
 
+        private void OnRender(UIPage page)
+        {
+            _pageRenderer.Render(page);
+
+            OnPageChanged?.Invoke(page);
+        }
+
         private void OnRender()
         {
             if (_pages != null)
             {
-                _pageRenderer.Render(_pages[_currentPage]);
+                OnRender(_pages[_currentPage]);
             }
         }
 
