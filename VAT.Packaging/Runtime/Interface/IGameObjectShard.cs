@@ -7,6 +7,8 @@ namespace VAT.Packaging
 {
     public interface IGameObjectShard : IShardT<GameObject>
     {
+        IWeakAssetT<Texture2D> PreviewIcon { get; }
+
         IWeakAssetT<Mesh> PreviewMesh { get; }
 
         Bounds Bounds { get; }

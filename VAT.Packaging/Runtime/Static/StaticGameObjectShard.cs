@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using VAT.Cryst.Game;
 using VAT.Cryst.Utilities;
 using VAT.Serialization.JSON;
@@ -39,11 +40,16 @@ namespace VAT.Packaging
         protected StaticCrystAssetT<Mesh> _previewMesh;
 
         [SerializeField]
+        protected StaticCrystAssetT<Texture2D> _previewIcon;
+
+        [SerializeField]
         protected Bounds _bounds;
 
         public Bounds Bounds => _bounds;
 
         public IWeakAssetT<Mesh> PreviewMesh => _previewMesh;
+
+        public IWeakAssetT<Texture2D> PreviewIcon => _previewIcon;
 
         protected override void OnPack(JSONPacker packer, JObject json)
         {
@@ -88,6 +94,7 @@ namespace VAT.Packaging
             var list = base.CollectPackedAssets();
 
             list.Add(new StaticPackedAsset("PreviewMesh", _previewMesh));
+            list.Add(new StaticPackedAsset("PreviewIcon", _previewIcon));
 
             return list;
         }
@@ -96,10 +103,14 @@ namespace VAT.Packaging
         {
             foreach (var packedAsset in packedAssets)
             {
-                if (packedAsset.Title == "PreviewMesh")
+                switch (packedAsset.Title)
                 {
-                    _previewMesh = new StaticCrystAssetT<Mesh>(packedAsset.MainAsset.AssetGUID);
-                    break;
+                    case "PreviewMesh":
+                        _previewMesh = new StaticCrystAssetT<Mesh>(packedAsset.MainAsset.AssetGUID);
+                        break;
+                    case "PreviewIcon":
+                        _previewIcon = new StaticCrystAssetT<Texture2D>(packedAsset.MainAsset.AssetGUID);
+                        break;
                 }
             }
 
@@ -112,12 +123,16 @@ namespace VAT.Packaging
 
             GeneratePreviewMesh();
 
+            GeneratePreviewIcon();
+
             base.GeneratePackedAssets(isBuilding);
         }
 
         protected override void OnValidateAssets(bool isBuilding = false)
         {
             ValidateAsset(_previewMesh, Address.BuildAddress(Address, "PreviewMesh"), isBuilding);
+
+            ValidateAsset(_previewIcon, Address.BuildAddress(Address, "PreviewIcon"), isBuilding);
 
             base.OnValidateAssets(isBuilding);
         }
@@ -141,6 +156,32 @@ namespace VAT.Packaging
 
             _previewMesh = new StaticCrystAssetT<Mesh>();
             _previewMesh.ValidateGUID(meshAsset);
+#endif
+        }
+
+        private void GeneratePreviewIcon()
+        {
+#if UNITY_EDITOR
+            if (MainGameObject.EditorAssetT == null)
+            {
+                return;
+            }
+
+            EditorUtility.SetDirty(MainGameObject.EditorAssetT);
+            var icon = AssetPreview.GetAssetPreview(MainGameObject.EditorAssetT);
+            var newIcon = new Texture2D(icon.width, icon.height, icon.format, false);
+
+            newIcon.SetPixels32(icon.GetPixels32());
+
+            var folderPath = CrystAssetManager.GetCrystRelativePath($"Packed Assets/Preview Icons/{StaticCrystal.CrystalInfo.Title}");
+            CrystAssetManager.EnsureCrystFolderExists(folderPath);
+
+            string path = folderPath + $"/{ShardInfo.Title} PreviewIcon.asset";
+            AssetDatabase.CreateAsset(newIcon, path);
+            var textureAsset = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+
+            _previewIcon = new StaticCrystAssetT<Texture2D>();
+            _previewIcon.ValidateGUID(textureAsset);
 #endif
         }
 

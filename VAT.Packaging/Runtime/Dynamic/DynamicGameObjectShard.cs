@@ -10,5 +10,7 @@ namespace VAT.Packaging
         public IWeakAssetT<Mesh> PreviewMesh => null;
 
         public Bounds Bounds => new();
+
+        public IWeakAssetT<Texture2D> PreviewIcon => null;
     }
 }
