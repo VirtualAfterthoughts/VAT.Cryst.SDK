@@ -87,40 +87,6 @@ namespace VAT.Interaction
                 Text = "Authors",
                 OnPressed = null
             });
-
-            var depth0 = new UIPage()
-            {
-                Text = "Test Depth 0"
-            };
-
-            var depth10 = new UIPage()
-            {
-                Text = "Test Depth 1, 0"
-            };
-
-            var depth11 = new UIPage()
-            {
-                Text = "Test Depth 1, 1"
-            };
-
-            var depth20 = new UIButton()
-            {
-                Text = "Test Depth 2, 0"
-            };
-
-            var depth21 = new UIButton()
-            {
-                Text = "Test Depth 2, 1"
-            };
-
-            depth10.AddChild(depth20);
-            depth11.AddChild(depth21);
-
-            depth0.AddChild(depth10);
-            depth0.AddChild(depth11);
-
-
-            _tabsPage.AddChild(depth0);
         }
 
         private void ShowTools()
