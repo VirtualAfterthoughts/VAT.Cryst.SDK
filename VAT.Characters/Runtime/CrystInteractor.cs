@@ -125,7 +125,7 @@ namespace VAT.Characters
 
             var goal = values.Item1;
 
-            target = SimpleTransform.Lerp(target, goal, values.Item2);
+            target = SimpleTransform.Lerp(target, goal, Mathf.Pow(values.Item2, 2f));
 
             result = rig.InverseTransform(target);
 
