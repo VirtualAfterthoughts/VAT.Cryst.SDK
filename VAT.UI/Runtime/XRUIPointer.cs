@@ -14,6 +14,8 @@ namespace VAT.UI
         public Transform middle;
         public Transform end;
 
+        public AudioSource dragSFX;
+
         private Vector3 _lastStartPos = Vector3.zero;
         private Vector3 _lastMidPos = Vector3.zero;
         private Vector3 _lastEndPos = Vector3.zero;
@@ -26,7 +28,7 @@ namespace VAT.UI
 
         public Vector3 GetEndPosition()
         {
-            return end.position;
+            return _endPos;
         }
 
         private bool _isPressed = false;
@@ -171,6 +173,11 @@ namespace VAT.UI
 
             end.position = Vector3.Slerp(relativeParent.TransformPoint(_lastEndPos), _endPos, Time.deltaTime * 6f);
             _lastEndPos = relativeParent.InverseTransformPoint(end.position);
+
+            if (dragSFX != null)
+            {
+                dragSFX.pitch = Mathf.Clamp(Vector3.Distance(end.position, _endPos) / 0.25f, 0f, 1f);
+            }
 
             if (_currentPlane != null) 
             {
