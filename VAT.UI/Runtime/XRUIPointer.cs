@@ -91,6 +91,12 @@ namespace VAT.UI
             {
                 Deactivate();
             }
+
+            if (dragSFX != null)
+            {
+                float targetPitch = _isActive ? Vector3.Distance(end.position, _endPos) / 0.25f : 0f;
+                dragSFX.pitch = Mathf.Clamp(targetPitch, 0f, 1f);
+            }
         }
 
         public void LateUpdate()
@@ -174,11 +180,6 @@ namespace VAT.UI
             end.position = Vector3.Slerp(relativeParent.TransformPoint(_lastEndPos), _endPos, Time.deltaTime * 6f);
             _lastEndPos = relativeParent.InverseTransformPoint(end.position);
 
-            if (dragSFX != null)
-            {
-                dragSFX.pitch = Mathf.Clamp(Vector3.Distance(end.position, _endPos) / 0.25f, 0f, 1f);
-            }
-
             if (_currentPlane != null) 
             {
                 end.position = _currentPlane.GetPlane().ClosestPointOnPlane(end.position);
@@ -192,7 +193,7 @@ namespace VAT.UI
                 Gizmos.color = Color.green;
 
                 var center = _currentPlane.GetCenter();
-                //var end = center + _currentPlane.GetPlane().normal * 0.5f;
+
                 var end = transform.position;
 
                 Gizmos.DrawLine(center, end);

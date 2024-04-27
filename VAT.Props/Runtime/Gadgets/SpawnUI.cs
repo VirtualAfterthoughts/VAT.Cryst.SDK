@@ -12,7 +12,7 @@ using VAT.UI;
 
 namespace VAT.Interaction
 {
-    public class SpawnUI : MonoBehaviour, IInteractorSpawnerModule
+    public class SpawnUI : UIPanel, IInteractorSpawnerModule
     {
         public UIPageCollectionRenderer pageCollection;
 
@@ -74,18 +74,6 @@ namespace VAT.Interaction
             {
                 Text = "Tools",
                 OnPressed = ShowTools,
-            });
-
-            _tabsPage.AddChild(new UIButton()
-            {
-                Text = "Packages",
-                OnPressed = null
-            });
-
-            _tabsPage.AddChild(new UIButton()
-            {
-                Text = "Authors",
-                OnPressed = null
             });
         }
 
@@ -162,7 +150,14 @@ namespace VAT.Interaction
 
         public void SetSpawningActive(bool active)
         {
-            gameObject.SetActive(active);
+            if (active)
+            {
+                controller.SwitchDefaultPanel(this);
+            }
+            else
+            {
+                controller.ResetDefaultPanel();
+            }
         }
     }
 }

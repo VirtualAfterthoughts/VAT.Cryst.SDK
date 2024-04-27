@@ -14,7 +14,14 @@ namespace VAT.UI
 
         private void OnEnable()
         {
-            SetVisibility(false, 0f);
+            bool isSelected = false;
+
+            if (EventSystem.current != null)
+            {
+                isSelected = EventSystem.current.currentSelectedGameObject == gameObject;
+            }
+
+            SetVisibility(isSelected, 0f);
         }
 
         private void SetVisibility(bool visible, float duration = 0.1f)

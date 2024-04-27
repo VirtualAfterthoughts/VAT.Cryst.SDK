@@ -105,7 +105,10 @@ namespace VAT.Pooling
                 var bounds = shard.Bounds;
                 Gizmos.matrix = transform.localToWorldMatrix;
 
+                Gizmos.color = new Color(1f, 0f, 1f);
                 Gizmos.DrawMesh(shard.PreviewMesh?.EditorAssetT);
+
+                Gizmos.color = Color.cyan;
                 Gizmos.DrawWireCube(bounds.center, bounds.size);
 
                 return;

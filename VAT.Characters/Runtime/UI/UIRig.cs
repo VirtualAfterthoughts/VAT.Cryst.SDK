@@ -19,6 +19,8 @@ namespace VAT.Characters
 
         public SpawnUI spawnUi;
 
+        public UIPanelController panelController;
+
         public override void OnRigEnable()
         {
             base.OnRigEnable();
@@ -164,12 +166,16 @@ namespace VAT.Characters
                 root.localPosition = new Vector3(root.localPosition.x, 0f, root.localPosition.z);
 
                 var headForward = worldHead.forward;
+                headForward = transform.InverseTransformDirection(headForward);
                 headForward.y = 0f;
+                headForward = transform.TransformDirection(headForward);
 
                 root.rotation = Quaternion.LookRotation(headForward, transform.up);
             }
 
             _isShown = true;
+
+            panelController.Show();
         }
 
         public void Hide()
