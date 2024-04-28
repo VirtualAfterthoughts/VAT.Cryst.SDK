@@ -98,8 +98,7 @@ namespace VAT.Characters
 
         public override bool TryGetHead(out IJoint head)
         {
-            var simpleTransform = SimpleTransform.Create(transform).InverseTransform(SimpleTransform.Create(_head));
-            simpleTransform.lossyScale = Vector3.one;
+            var simpleTransform = SimpleTransform.Create(transform.position, transform.rotation).InverseTransform(SimpleTransform.Create(_head.position, _head.rotation));
 
             head = new BasicJoint(simpleTransform);
             return true;
@@ -115,10 +114,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), null));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist.position, _leftWrist.rotation)), null));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), null));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist.position, _rightWrist.rotation)), null));
                     return true;
             }
         }

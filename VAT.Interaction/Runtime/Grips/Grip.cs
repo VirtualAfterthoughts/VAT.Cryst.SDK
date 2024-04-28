@@ -287,12 +287,14 @@ namespace VAT.Interaction
 
         public SimpleTransform GetTargetInHost(IGrabPoint point)
         {
-            return SimpleTransform.Create(GetHostGameObject().transform).InverseTransform(GetTargetInWorld(point));
+            var hostGameObject = GetHostGameObject().transform;
+            return SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation).InverseTransform(GetTargetInWorld(point));
         }
 
         public SimpleTransform GetHostInInteractor(IInteractor interactor)
         {
-            return GetTargetInWorld(interactor.GetGrabberPoint()).InverseTransform(SimpleTransform.Create(GetHostGameObject().transform));
+            var hostGameObject = GetHostGameObject().transform;
+            return GetTargetInWorld(interactor.GetGrabberPoint()).InverseTransform(SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation));
         }
 
         public SimpleTransform GetTargetInWorld(IGrabPoint point)

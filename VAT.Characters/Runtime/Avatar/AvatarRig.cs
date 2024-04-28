@@ -186,8 +186,7 @@ namespace VAT.Characters
         {
             _activeAvatar.transform.position = LastRig.transform.position;
 
-            var root = SimpleTransform.Create(_activeAvatar.transform);
-            root.lossyScale = Vector3.one;
+            var root = SimpleTransform.Create(_activeAvatar.transform.position, _activeAvatar.transform.rotation);
 
             LastRig.TryGetHead(out var head);
             LastRig.TryGetArm(Handedness.LEFT, out var leftArm);
@@ -227,7 +226,7 @@ namespace VAT.Characters
 
         public override bool TryGetHead(out IJoint head)
         {
-            head = new BasicJoint(SimpleTransform.Create(transform).InverseTransform(_activeAvatar.Anatomy.Skeleton.PhysBoneSkeleton.GetEyeCenter()));
+            head = new BasicJoint(SimpleTransform.Create(transform.position, transform.rotation).InverseTransform(_activeAvatar.Anatomy.Skeleton.PhysBoneSkeleton.GetEyeCenter()));
             return true;
         }
 
@@ -247,7 +246,7 @@ namespace VAT.Characters
             TryGetHead(out var thisHead);
             behaviourRig.TryGetHead(out var lastHead);
 
-            var physHead = SimpleTransform.Create(transform).Transform(thisHead.Transform);
+            var physHead = SimpleTransform.Create(transform.position, transform.rotation).Transform(thisHead.Transform);
             var head = root.Transform(lastHead.Transform);
              
             var pos = (physHead.position - head.position);

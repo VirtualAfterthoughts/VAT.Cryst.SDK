@@ -84,14 +84,14 @@ namespace VAT.Characters
 
             if (_enabled && Mathf.Abs(_smoothAxis) > 0.01f)
             {
-                float crouchDelta = _smoothAxis * Time.deltaTime * 2f * behaviourSpace.lossyScale.y;
+                float crouchDelta = _smoothAxis * Time.deltaTime * 2f * behaviourSpace.scale.y;
 
                 behaviourSpace.position += behaviourSpace.up * crouchDelta;
 
                 tipToeMult = 1f;
             }
 
-            float playerHeight = behaviourSpace.lossyScale.y * _playerHeight;
+            float playerHeight = behaviourSpace.scale.y * _playerHeight;
 
             float headHeight = playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
 
@@ -116,7 +116,7 @@ namespace VAT.Characters
         {
             var behaviourSpace = _behaviourRig.GetBehaviourSpace();
 
-            float playerHeight = _playerHeight * behaviourSpace.lossyScale.y;
+            float playerHeight = _playerHeight * behaviourSpace.scale.y;
 
             float headHeight = playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
 

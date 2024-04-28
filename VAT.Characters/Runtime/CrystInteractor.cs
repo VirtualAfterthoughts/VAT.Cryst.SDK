@@ -74,7 +74,7 @@ namespace VAT.Characters
             arm.DataArm.Hand.SetOpenPose(openPose);
             arm.DataArm.Hand.SetClosedPose(closedPose);
 
-            _lastTarget = SimpleTransform.Create(transform);
+            _lastTarget = SimpleTransform.Create(transform.position, transform.rotation);
 
             var actions = hand.GetInputControllerOrNull().GetActionsOrNull();
             actions.GrabAction.OnStateChanged += OnGrabStateChange;
@@ -165,11 +165,10 @@ namespace VAT.Characters
             {
                 var grabberPoint = GetGrabberPoint();
                 var target = _attachedGrip.GetTargetInWorld(grabberPoint);
-                target.lossyScale = 1f;
                 var grabPoint = grabberPoint.GetParentTransform().Transform(_attachedGrip.GetTargetInInteractor(grabberPoint));
                 grabPoint.rotation = target.rotation;
 
-                var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform)));
+                var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation)));
                 lastTar = rig.InverseTransform(self);
                 _lerp = Mathf.Lerp(_lerp, 1f, Time.deltaTime * 12f);
                 return (self, _lerp);
@@ -310,7 +309,7 @@ namespace VAT.Characters
         private void ResetPin()
         {
             _pinAmount = 1f;
-            lastTar = _lastRig.InverseTransform(SimpleTransform.Create(transform));
+            lastTar = _lastRig.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation));
         }
 
         public void DetachGrip(IGrippable grip)

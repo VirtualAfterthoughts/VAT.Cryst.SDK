@@ -75,10 +75,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist)), XRManager.Api.LeftController));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist.position, _leftWrist.rotation)), XRManager.Api.LeftController));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist)), XRManager.Api.RightController));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist.position, _rightWrist.rotation)), XRManager.Api.RightController));
                     return true;
             }
         }

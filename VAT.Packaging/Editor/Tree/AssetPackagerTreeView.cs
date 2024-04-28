@@ -47,11 +47,18 @@ namespace VAT.Packaging.Editor
                 {
                     if (!shardTypes.TryGetValue(shard.GetType(), out TreeViewItem parent))
                     {
+                        string displayName = shard.GetType().Name;
+
+                        if (shard is StaticShard staticShard && !string.IsNullOrWhiteSpace(staticShard.EditorAssetGroup))
+                        {
+                            displayName = staticShard.EditorAssetGroup;
+                        }
+
                         parent = new TreeViewItem
                         {
                             id = id++,
                             depth = 2,
-                            displayName = shard.GetType().Name,
+                            displayName = displayName,
                             icon = EditorGUIUtility.GetIconForObject(shard)
                         };
                         item.AddChild(parent);

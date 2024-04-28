@@ -36,6 +36,10 @@ namespace VAT.Packaging
     [Serializable]
     public class ShardReferenceT<T> : ShardReference where T : IShard
     {
+#if UNITY_EDITOR
+        public override Type EditorShardType => typeof(T);
+#endif
+
         public bool TryGetShard(out T shard)
         {
             shard = default;

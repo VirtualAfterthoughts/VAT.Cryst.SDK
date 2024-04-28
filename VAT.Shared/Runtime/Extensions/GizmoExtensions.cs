@@ -55,7 +55,7 @@ namespace VAT.Shared.Extensions {
         /// <param name="transform">The target position and rotations.</param>
         /// <param name="isWireframe">Should this draw as a wireframe?</param>
         public static void DrawGameObject(this GameObject go, Transform transform, bool isWireframe = true)
-            => go.DrawGameObject(SimpleTransform.Create(transform), isWireframe);
+            => go.DrawGameObject(SimpleTransform.Create(transform.position, transform.rotation, transform.lossyScale), isWireframe);
 
         /// <summary>
         /// Draws the Gizmos of every mesh on this GameObject.
@@ -65,7 +65,7 @@ namespace VAT.Shared.Extensions {
         /// <param name="color">The color to draw.</param>
         /// <param name="isWireframe">Should this draw as a wireframe?</param>
         public static void DrawGameObject(this GameObject go, Transform transform, Color color, bool isWireframe = true) 
-            => go.DrawGameObject(SimpleTransform.Create(transform), color, isWireframe);
+            => go.DrawGameObject(SimpleTransform.Create(transform.position, transform.rotation, transform.lossyScale), color, isWireframe);
 
         /// <summary>
         /// Draws the Gizmos of every mesh on this GameObject.

@@ -27,7 +27,7 @@ namespace VAT.Avatars.Art
             get
             {
                 if (HasTransform)
-                    return SimpleTransform.Create(transform);
+                    return SimpleTransform.Create(transform.position, transform.rotation);
 
                 return SimpleTransform.Default;
             }

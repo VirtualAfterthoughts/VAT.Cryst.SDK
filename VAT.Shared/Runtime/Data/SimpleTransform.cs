@@ -10,7 +10,7 @@ namespace VAT.Shared.Data {
     using Unity.Mathematics;
 
     /// <summary>
-    /// A data structure containing a snapshot of a transform.
+    /// A transform in data form.
     /// </summary>
     [Serializable]
     public struct SimpleTransform {
@@ -20,19 +20,19 @@ namespace VAT.Shared.Data {
         public static readonly SimpleTransform Default = Create(float3.zero, quaternion.identity);
 
         /// <summary>
-        /// The world space position of the snapshot.
+        /// The position of the transform.
         /// </summary>
         public float3 position;
 
         /// <summary>
-        /// The world space rotation of the snapshot.
+        /// The rotation of the transform.
         /// </summary>
         public quaternion rotation;
 
         /// <summary>
-        /// The global scale of the snapshot.
+        /// The scale of the transform.
         /// </summary>
-        public float3 lossyScale;
+        public float3 scale;
 
         /// <summary>
         /// Matrix that transforms a point from local space into world space.
@@ -41,7 +41,7 @@ namespace VAT.Shared.Data {
         {
             get
             {
-                return Matrix4x4.TRS(position, rotation, lossyScale);
+                return Matrix4x4.TRS(position, rotation, scale);
             }
         }
 
@@ -67,16 +67,7 @@ namespace VAT.Shared.Data {
         /// <returns></returns>
         public static SimpleTransform Inverse(SimpleTransform transform)
         {
-            return Create(-transform.position, inverse(transform.rotation), transform.lossyScale);
-        }
-
-        /// <summary>
-        /// Creates a snapshot of this transform.
-        /// </summary>
-        /// <param name="transform"></param>
-        /// <returns></returns>
-        public static SimpleTransform Create(Transform transform) {
-            return Create(transform.position, transform.rotation, transform.lossyScale);
+            return Create(-transform.position, inverse(transform.rotation), transform.scale);
         }
 
         /// <summary>
@@ -95,14 +86,14 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="position"></param>
         /// <param name="rotation"></param>
-        /// <param name="lossyScale"></param>
+        /// <param name="scale"></param>
         /// <returns></returns>
-        public static SimpleTransform Create(float3 position, quaternion rotation, float3 lossyScale)
+        public static SimpleTransform Create(float3 position, quaternion rotation, float3 scale)
         {
             SimpleTransform simple;
             simple.position = position;
             simple.rotation = normalize(rotation);
-            simple.lossyScale = lossyScale;
+            simple.scale = scale;
             return simple;
         }
 
@@ -113,7 +104,7 @@ namespace VAT.Shared.Data {
         /// <returns></returns>
         public SimpleTransform Transform(SimpleTransform transform)
         {
-            return Create(TransformPoint(transform.position), TransformRotation(transform.rotation), transform.lossyScale * lossyScale);
+            return Create(TransformPoint(transform.position), TransformRotation(transform.rotation), transform.scale * scale);
         }
 
         /// <summary>
@@ -122,7 +113,7 @@ namespace VAT.Shared.Data {
         /// <param name="point"></param>
         /// <returns></returns>
         public float3 TransformPoint(float3 position) {
-            BurstCompiled_Transform.BurstCompiled_TransformPoint(position, this.position, rotation, lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_TransformPoint(position, this.position, rotation, scale, out var result);
             return result;
         }
 
@@ -142,7 +133,7 @@ namespace VAT.Shared.Data {
         /// <param name="vector"></param>
         /// <returns></returns>
         public float3 TransformVector(float3 vector) {
-            BurstCompiled_Transform.BurstCompiled_TransformVector(vector, rotation, lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_TransformVector(vector, rotation, scale, out var result);
             return result;
         }
 
@@ -152,7 +143,7 @@ namespace VAT.Shared.Data {
         /// <param name="rotation"></param>
         /// <returns></returns>
         public quaternion TransformRotation(quaternion rotation) {
-            BurstCompiled_Transform.BurstCompiled_TransformRotation(rotation, this.rotation, this.lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_TransformRotation(rotation, this.rotation, this.scale, out var result);
             return result;
         }
 
@@ -162,7 +153,7 @@ namespace VAT.Shared.Data {
         /// <param name="transform"></param>
         /// <returns></returns>
         public SimpleTransform InverseTransform(SimpleTransform transform) {
-            return Create(InverseTransformPoint(transform.position), InverseTransformRotation(transform.rotation), transform.lossyScale / lossyScale);
+            return Create(InverseTransformPoint(transform.position), InverseTransformRotation(transform.rotation), transform.scale / scale);
         }
 
         /// <summary>
@@ -171,7 +162,7 @@ namespace VAT.Shared.Data {
         /// <param name="point"></param>
         /// <returns></returns>
         public float3 InverseTransformPoint(float3 position) {
-            BurstCompiled_Transform.BurstCompiled_InverseTransformPoint(position, this.position, rotation, lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_InverseTransformPoint(position, this.position, rotation, scale, out var result);
             return result;
         }
 
@@ -191,7 +182,7 @@ namespace VAT.Shared.Data {
         /// <param name="vector"></param>
         /// <returns></returns>
         public float3 InverseTransformVector(float3 vector) {
-            BurstCompiled_Transform.BurstCompiled_InverseTransformVector(vector, rotation, lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_InverseTransformVector(vector, rotation, scale, out var result);
             return result;
         }
 
@@ -201,7 +192,7 @@ namespace VAT.Shared.Data {
         /// <param name="rotation"></param>
         /// <returns></returns>
         public quaternion InverseTransformRotation(quaternion rotation) { 
-            BurstCompiled_Transform.BurstCompiled_InverseTransformRotation(rotation, this.rotation, lossyScale, out var result);
+            BurstCompiled_Transform.BurstCompiled_InverseTransformRotation(rotation, this.rotation, scale, out var result);
             return result;
         }
 
@@ -216,7 +207,7 @@ namespace VAT.Shared.Data {
             return Create(
                 lerp(a.position, b.position, t),
                 slerp(a.rotation, b.rotation, t),
-                lerp(a.lossyScale, b.lossyScale, t)
+                lerp(a.scale, b.scale, t)
             );
         }
     }

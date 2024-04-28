@@ -119,7 +119,7 @@ namespace VAT.Characters
                 var targetInInteractor = grip.GetTargetInInteractor(grabPoint);
 
                 var targetInWorld = grip.GetTargetInWorld(grabPoint);
-                var targetInHost = SimpleTransform.Create(rb.position, rb.rotation).InverseTransform(targetInWorld);
+                var targetInHost = SimpleTransform.Create(rb.position, rb.rotation, rb.transform.localScale).InverseTransform(targetInWorld);
 
                 var interactorInHost = grip.GetTargetInHost(grabPoint);
                 var worldInteractor = rb.transform.TransformRotation(interactorInHost.rotation) * grabPoint.GetParentTransform().Transform(targetInInteractor).InverseTransformRotation(_interactor.GetRigidbody().transform.rotation);
