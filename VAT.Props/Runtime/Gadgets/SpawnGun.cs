@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using VAT.Packaging;
+using VAT.Packaging.Preview;
 using VAT.Pooling;
 using VAT.Props;
 
@@ -13,8 +14,7 @@ namespace VAT.Interaction
     {
         public Transform firePoint;
         public Grip triggerGrip;
-        public MeshFilter previewMeshFilter;
-        public Transform previewBounds;
+        public PreviewMeshRenderer previewMeshRenderer;
 
         private IInteractor _mainInteractor = null;
 
@@ -22,7 +22,7 @@ namespace VAT.Interaction
 
         private void OnEnable()
         {
-            previewMeshFilter.transform.parent = null;
+            previewMeshRenderer.transform.parent = null;
 
             triggerGrip.OnAttached += OnTriggerGripAttached;
             triggerGrip.OnDetached += OnTriggerGripDetached;
@@ -79,20 +79,13 @@ namespace VAT.Interaction
             {
                 if (_selectedSpawnable != null && _selectedSpawnable.TryGetShard(out var shard))
                 {
-                    shard.PreviewMesh?.LoadAsset((m) =>
-                    {
-                        previewMeshFilter.sharedMesh = m;
-                    });
-
-                    previewBounds.gameObject.SetActive(true);
-                    previewBounds.transform.localScale = shard.Bounds.size;
-                    previewBounds.transform.localPosition = shard.Bounds.center;
+                    previewMeshRenderer.SetShard(shard);
+                    previewMeshRenderer.Show();
                 }
             }
             else
             {
-                previewMeshFilter.sharedMesh = null;
-                previewBounds.gameObject.SetActive(false);
+                previewMeshRenderer.Hide();
             }
         }
 
@@ -128,7 +121,7 @@ namespace VAT.Interaction
 
                 if (SpawnRaycast(out var point))
                 {
-                    previewMeshFilter.transform.SetPositionAndRotation(point, Quaternion.identity);
+                    previewMeshRenderer.transform.SetPositionAndRotation(point, Quaternion.identity);
                 }
 
                 // Trigger down
