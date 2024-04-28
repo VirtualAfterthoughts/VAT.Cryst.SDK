@@ -53,6 +53,9 @@ namespace VAT.Characters
             AutoCalculateOffset();
         }
 
+        private float _smoothAxis = 0f;
+        private float _smoothVelocity = 0f;
+
         public void Solve()
         {
             var hand = _behaviourRig.GetPrimaryHand();
@@ -73,14 +76,15 @@ namespace VAT.Characters
             float crouchAxis = thumbstick.GetAxis().y;
 
             crouchAxis = Mathf.Clamp01((Mathf.Abs(crouchAxis) - 0.5f) * 2f) * Mathf.Sign(crouchAxis);
+            _smoothAxis = Mathf.SmoothDamp(_smoothAxis, crouchAxis, ref _smoothVelocity, 0.1f);
 
             var behaviourSpace = _behaviourRig.GetBehaviourSpace();
 
-            float tipToeMult = 1.2f;
+            float tipToeMult = 1.05f;
 
-            if (_enabled && Mathf.Abs(crouchAxis) > 0.01f)
+            if (_enabled && Mathf.Abs(_smoothAxis) > 0.01f)
             {
-                float crouchDelta = crouchAxis * Time.deltaTime * 2f * behaviourSpace.lossyScale.y;
+                float crouchDelta = _smoothAxis * Time.deltaTime * 2f * behaviourSpace.lossyScale.y;
 
                 behaviourSpace.position += behaviourSpace.up * crouchDelta;
 

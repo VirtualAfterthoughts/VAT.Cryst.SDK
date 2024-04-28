@@ -14,6 +14,7 @@ namespace VAT.Interaction
         public Transform firePoint;
         public Grip triggerGrip;
         public MeshFilter previewMeshFilter;
+        public Transform previewBounds;
 
         private IInteractor _mainInteractor = null;
 
@@ -82,11 +83,16 @@ namespace VAT.Interaction
                     {
                         previewMeshFilter.sharedMesh = m;
                     });
+
+                    previewBounds.gameObject.SetActive(true);
+                    previewBounds.transform.localScale = shard.Bounds.size;
+                    previewBounds.transform.localPosition = shard.Bounds.center;
                 }
             }
             else
             {
                 previewMeshFilter.sharedMesh = null;
+                previewBounds.gameObject.SetActive(false);
             }
         }
 
