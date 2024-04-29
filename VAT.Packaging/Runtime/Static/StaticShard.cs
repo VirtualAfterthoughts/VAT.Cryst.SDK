@@ -64,11 +64,6 @@ namespace VAT.Packaging
                 json.Add("mainAsset", StaticAsset.AssetGUID);
             }
 
-            if (_crystal != null)
-            {
-                json.Add("package", packer.PackReference(_crystal));
-            }
-
             var packedAssets = CollectPackedAssets();
             var packedAssetJArray = new JArray();
 
@@ -87,11 +82,6 @@ namespace VAT.Packaging
             if (json.TryGetValue("mainAsset", out var mainAsset))
             {
                 StaticAsset = new StaticCrystAsset(mainAsset.ToString());
-            }
-
-            if (json.TryGetValue("package", out var package))
-            {
-                unpacker.TryCreateFromReference(package, out _crystal, Crystal.Create);
             }
 
             if (json.TryGetValue("packedAssets", out var packedAssets))

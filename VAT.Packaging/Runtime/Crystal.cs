@@ -145,6 +145,8 @@ namespace VAT.Packaging
                     if (unpacker.TryCreateFromReference(reference, out var shard, ShardFactory.Create))
                     {
                         _shards.Add(shard);
+
+                        shard.MainCrystal = this;
                     }
                 }
             }

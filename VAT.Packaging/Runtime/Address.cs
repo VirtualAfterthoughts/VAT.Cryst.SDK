@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +18,18 @@ namespace VAT.Packaging
         [SerializeField]
         private string _id = EMPTY;
 
-        public string ID => _id;
+        [JsonProperty("id")]
+        public string ID
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+            }
+        }
 
         public Address(string id)
         {

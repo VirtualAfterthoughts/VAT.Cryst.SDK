@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Packaging;
+using VAT.Props;
 using VAT.Shared.Extensions;
 
 namespace VAT.Audio
@@ -10,7 +11,7 @@ namespace VAT.Audio
     public class ImpactSFX : MonoBehaviour
     {
         [SerializeField]
-        private VelocityAudioGroup[] _audioGroups = new VelocityAudioGroup[0];
+        private ShardReferenceT<ImpactMaterial> _materialReference;
 
         [SerializeField]
         private float _minVelocity = 0.5f;
@@ -20,20 +21,29 @@ namespace VAT.Audio
 
         private float _lastCollisionTime = 0f;
 
-        private ContactPoint _lastContactPoint = default;
-        private Vector3 _lastVelocity = Vector3.zero;
-        private VelocityAudioGroup _lastGroup;
-        private float _lastVolume;
+        private ImpactMaterial.ImpactLevel _lastGroup;
 
-        private VelocityAudioGroup? GetGroup(float velocity)
+        private ImpactMaterial.ImpactLevel? GetGroup(float velocity)
         {
-            VelocityAudioGroup? foundGroup = null;
-            for (var i = 0; i < _audioGroups.Length; i++)
+            if (!_materialReference.TryGetShard(out var shard))
+            {
+                return null;
+            }
+
+            var (valid, group) = shard.GetImpactGroup();
+
+            if (!valid)
+            {
+                return null;
+            }
+
+            ImpactMaterial.ImpactLevel? foundLevel = null;
+            for (var i = 0; i < group.impactLevels.Length; i++)
             {
                 float min = _groupSplit * i + _minVelocity;
                 if (velocity > min)
                 {
-                    foundGroup = _audioGroups[i];
+                    foundLevel = group.impactLevels[i];
                 }
                 else
                 {
@@ -41,7 +51,7 @@ namespace VAT.Audio
                 }
             }
 
-            return foundGroup;
+            return foundLevel;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -51,41 +61,45 @@ namespace VAT.Audio
 
         private void ProcessContact(float volume, ContactPoint point)
         {
-            var normal = _lastContactPoint.normal;
-            var velocity = Vector3.zero;
-
-            if (GetComponent<Rigidbody>() != null)
-            {
-                velocity = GetComponent<Rigidbody>().GetPointVelocity(point.point);
-                velocity = Quaternion.FromToRotation(Vector3.up, normal) * velocity;
-                velocity.y = 0f;
-                velocity = Quaternion.FromToRotation(normal, Vector3.up) * velocity;
-            }
-
-            AudioSpawner.Spawn(new AudioSpawner.AudioRequestInfo()
-            {
-                clip = _lastGroup.audioClips.GetRandom(),
-                position = point.point,
-                settings = new AudioPlaySettings()
-                {
-                    volume = volume,
-                    pitch = Random.Range(0.7f, 1.5f),
-                },
-                playCallback = (i) => { OnAudioPlay(i, velocity); }
-            });
-        }
-
-        private void OnCollision(Collision collision)
-        {
-            if (collision.contactCount > 0)
-            {
-                _lastContactPoint = collision.GetContact(0);
-            }
-            else
+            if (!_lastGroup.audioCollection.TryGetShard(out var collection))
             {
                 return;
             }
 
+            var clip = collection.GetRandomAudioClip();
+
+            if (clip.TryGetShard(out var shard))
+            {
+                shard.MainAssetT.LoadAsset((a) =>
+                {
+                    var normal = point.normal;
+                    var velocity = Vector3.zero;
+
+                    if (GetComponent<Rigidbody>() != null)
+                    {
+                        velocity = GetComponent<Rigidbody>().GetPointVelocity(point.point);
+                        velocity = Quaternion.FromToRotation(Vector3.up, normal) * velocity;
+                        velocity.y = 0f;
+                        velocity = Quaternion.FromToRotation(normal, Vector3.up) * velocity;
+                    }
+
+                    AudioSpawner.Spawn(new AudioSpawner.AudioRequestInfo()
+                    {
+                        clip = a,
+                        position = point.point,
+                        settings = new AudioPlaySettings()
+                        {
+                            volume = volume,
+                            pitch = Random.Range(0.7f, 1.5f),
+                        },
+                        playCallback = (i) => { OnAudioPlay(i, velocity); }
+                    });
+                });
+            }
+        }
+
+        private void OnCollision(Collision collision)
+        {
             float vel = collision.relativeVelocity.magnitude;
             var group = GetGroup(vel);
 
@@ -104,14 +118,9 @@ namespace VAT.Audio
                     return;
                 }
 
-                volume /= collision.contactCount;
-
                 _lastGroup = group.Value;
 
-                for (var i = 0; i < collision.contactCount; i++)
-                {
-                    ProcessContact(volume, collision.GetContact(i));
-                }
+                ProcessContact(volume, collision.GetContact(0));
 
                 _lastCollisionTime = Time.realtimeSinceStartup;
             }

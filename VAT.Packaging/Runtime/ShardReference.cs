@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace VAT.Packaging
         [SerializeField]
         protected Address _address = Address.EMPTY;
 
+        [JsonProperty("address")]
         public Address Address { get { return _address; } set { _address = value; } }
 
 #if UNITY_EDITOR

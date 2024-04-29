@@ -36,6 +36,32 @@ namespace VAT.Props
 
         public ImpactGroup[] ImpactGroups => _impactGroups;
 
+        public (bool valid, ImpactGroup group) GetImpactGroup()
+        {
+            foreach (var impactGroup in _impactGroups)
+            {
+                if (!impactGroup.targetMaterial.TryGetShard(out _))
+                {
+                    return (true, impactGroup);
+                }
+            }
+
+            return (false, default);
+        }
+
+        public (bool valid, ImpactGroup group) GetImpactGroup(SurfaceMaterial material)
+        {
+            foreach (var impactGroup in _impactGroups)
+            {
+                if (impactGroup.targetMaterial.TryGetShard(out var shard) && shard == material)
+                {
+                    return (true, impactGroup);
+                }
+            }
+
+            return (false, default);
+        }
+
 #if UNITY_EDITOR
         public override void OnEditorInspectorGUI(SerializedObject serializedObject)
         {
