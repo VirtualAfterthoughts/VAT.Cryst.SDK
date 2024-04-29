@@ -62,6 +62,7 @@ namespace VAT.Audio
             if (!_source.isPlaying && _poolable.CanDespawn)
             {
                 _poolable.Despawn();
+                _source.clip = null;
             }
         }
     }
