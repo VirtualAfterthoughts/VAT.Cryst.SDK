@@ -35,10 +35,14 @@ namespace VAT.Packaging
         ShardInfo ShardInfo { get; set; }
 
         ICrystal MainCrystal { get; set; }
+    }
+
+    public interface IAssetShard : IShard
+    {
         IWeakAsset MainAsset { get; }
     }
 
-    public interface IShardT<T> : IShard where T : Object
+    public interface IAssetShardT<T> : IAssetShard where T : Object
     {
         IWeakAssetT<T> MainAssetT { get; }
     }

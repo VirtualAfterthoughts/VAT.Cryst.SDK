@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace VAT.Packaging
 {
-    public interface IGameObjectShard : IShardT<GameObject>
+    public interface IGameObjectShard : IAssetShardT<GameObject>
     {
         IWeakAssetT<Texture2D> PreviewIcon { get; }
 

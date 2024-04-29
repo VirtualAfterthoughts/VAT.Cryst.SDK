@@ -1,27 +1,40 @@
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
+using UnityEditor;
 using UnityEngine;
+
+using VAT.Packaging;
+using VAT.Serialization.JSON;
 
 namespace VAT.Props
 {
-    [CreateAssetMenu(menuName = "Cryst/Props/Surface Material")]
-    public class SurfaceMaterial : ScriptableObject
+    [DataShardIdentifier("Surface Material")]
+    public class SurfaceMaterial : DataShard
     {
         [SerializeField]
         [Min(0f)]
-        [Tooltip("The density of the material.")]
-        private float _density = 1.0f;
+        [Tooltip("The density of the surface material.")]
+        private float _density = 1f;
 
-        public float Density
+#if UNITY_EDITOR
+        public override void OnEditorInspectorGUI(SerializedObject serializedObject)
         {
-            get
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(_density)));
+        }
+#endif
+
+        protected override void OnPack(JSONPacker packer, JObject json)
+        {
+            json.Add("density", _density);
+        }
+
+        protected override void OnUnpack(JSONUnpacker unpacker, JObject json)
+        {
+            if (json.TryGetValue("density", out var density))
             {
-                return _density;
-            }
-            set
-            {
-                _density = value;
+                _density = density.ToObject<float>();
             }
         }
     }

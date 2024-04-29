@@ -1,7 +1,8 @@
+using Newtonsoft.Json.Linq;
 using System;
 
 using UnityEngine;
-
+using VAT.Serialization.JSON;
 using Object = UnityEngine.Object;
 
 namespace VAT.Packaging
@@ -26,7 +27,7 @@ namespace VAT.Packaging
         }
     }
 
-    public abstract class DynamicShard : Shard
+    public abstract class DynamicShard : AssetShard
     {
         private DynamicCrystAsset _mainAsset;
         public virtual DynamicCrystAsset DynamicAsset
@@ -59,9 +60,19 @@ namespace VAT.Packaging
         {
             Address = Address.BuildAddress("Runtime", "Generated", Info.Title);
         }
+
+        protected override void OnPack(JSONPacker packer, JObject json)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnUnpack(JSONUnpacker unpacker, JObject json)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public abstract class DynamicShardT<T> : DynamicShard, IShardT<T> where T : Object
+    public abstract class DynamicShardT<T> : DynamicShard, IAssetShardT<T> where T : Object
     {
         private DynamicCrystAssetT<T> _mainAsset;
         public DynamicCrystAssetT<T> DynamicAssetT

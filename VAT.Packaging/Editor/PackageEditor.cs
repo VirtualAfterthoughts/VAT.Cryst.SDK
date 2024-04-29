@@ -19,19 +19,19 @@ namespace VAT.Packaging.Editor
             _crystalInfo = serializedObject.FindProperty("_crystalInfo");
             _shards = serializedObject.FindProperty("_shards");
 
-            var package = serializedObject.targetObject as Crystal;
-            package.OnValidate();
+            var crystal = serializedObject.targetObject as Crystal;
+            crystal.OnValidate();
         }
 
         public override void OnInspectorGUI()
         {
-            var package = serializedObject.targetObject as Crystal;
+            var crystal = serializedObject.targetObject as Crystal;
 
             serializedObject.Update();
 
             // Locked information
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField("Address", package.Address);
+            EditorGUILayout.TextField("Address", crystal.Address);
             EditorGUI.EndDisabledGroup();
 
             // Basic information that can be updated
@@ -44,7 +44,12 @@ namespace VAT.Packaging.Editor
 
             if (GUILayout.Button("Add Static Shard", GUILayout.Width(120)))
             {
-                StaticShardCreationWizard.Initialize(package);
+                StaticShardCreationWizard.Initialize(crystal);
+            }
+
+            if (GUILayout.Button("Add Data Shard", GUILayout.Width(120))) 
+            {
+                DataShardCreationWizard.Initialize(crystal);
             }
 
             // Space and header
@@ -55,13 +60,13 @@ namespace VAT.Packaging.Editor
             // Draw build buttons
             if (GUILayout.Button("Pack for PC", GUILayout.Width(120)))
             {
-                ExternalAssetPacker.PackCrystal(package, BuildTarget.StandaloneWindows64);
+                ExternalAssetPacker.PackCrystal(crystal, BuildTarget.StandaloneWindows64);
             }
 
             // Draw exporting buttons
             if (GUILayout.Button("Export as JSON", GUILayout.Width(120)))
             {
-                PackageTools.ExportPackage(package);
+                PackageTools.ExportPackage(crystal);
             }
 
             serializedObject.ApplyModifiedProperties();

@@ -6,15 +6,13 @@ using UnityEngine;
 
 namespace VAT.Packaging
 {
-    public class StaticShardIdentifierAttribute : Attribute
+    public class DataShardIdentifier : Attribute
     {
         public string displayName;
-        public Type mainAssetType;
 
-        public StaticShardIdentifierAttribute(string displayName, Type mainAssetType)
+        public DataShardIdentifier(string displayName)
         {
             this.displayName = displayName;
-            this.mainAssetType = mainAssetType;
         }
     }
 }

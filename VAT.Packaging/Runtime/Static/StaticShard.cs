@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 
 namespace VAT.Packaging
 {
-    public abstract class StaticShard : Shard
+    public abstract class StaticShard : AssetShard
     {
         protected Crystal _crystal;
         public Crystal StaticCrystal 
@@ -42,34 +42,6 @@ namespace VAT.Packaging
         public abstract StaticCrystAsset StaticAsset { get; set; }
 
         public override IWeakAsset MainAsset { get => StaticAsset; }
-
-        [SerializeField]
-        private string _addressType;
-        public virtual string AddressType
-        {
-            get
-            {
-                return _addressType;
-            }
-            set
-            {
-                _addressType = value;
-            }
-        }
-
-        public override void BuildAddress()
-        {
-            var packageInfo = StaticCrystal.CrystalInfo;
-
-            if (!string.IsNullOrWhiteSpace(AddressType))
-            {
-                Address = Address.BuildAddress(packageInfo.Author, packageInfo.Title, AddressType, ShardInfo.Title);
-            }
-            else
-            {
-                Address = Address.BuildAddress(packageInfo.Author, packageInfo.Title, ShardInfo.Title);
-            }
-        }
 
         public virtual List<StaticPackedAsset> CollectPackedAssets()
         {
@@ -108,8 +80,6 @@ namespace VAT.Packaging
             }
 
             json.Add("packedAssets", packedAssetJArray);
-
-            base.OnPack(packer, json);
         }
 
         protected override void OnUnpack(JSONUnpacker unpacker, JObject json)
@@ -138,8 +108,6 @@ namespace VAT.Packaging
 
                 OnUnpackPackedAssets(assetList);
             }
-
-            base.OnUnpack(unpacker, json);
         }
 
 #if UNITY_EDITOR
@@ -172,32 +140,17 @@ namespace VAT.Packaging
 
         protected void ValidateCrystal()
         {
-            var path = AssetDatabase.GetAssetPath(this);
-
-            if (string.IsNullOrWhiteSpace(path))
+            AssetPackager.HookOnReady(() =>
             {
-                return;
-            }
-
-            var projectPath = CrystAssetManager.GetProjectPath();
-            string folder = Path.GetDirectoryName(projectPath + "/" + path);
-
-            string[] files = Directory.GetFiles(folder);
-
-            foreach (var file in files)
-            {
-                if (!file.EndsWith(".asset"))
-                    continue;
-
-                string final = file.Replace(projectPath, "");
-
-                var crystal = AssetDatabase.LoadAssetAtPath<Crystal>(final);
-                if (crystal != null)
+                foreach (var crystal in AssetPackager.Instance.GetCrystals())
                 {
-                    StaticCrystal = crystal;
-                    break;
+                    if (crystal.Shards.Contains(this))
+                    {
+                        StaticCrystal = crystal;
+                        break;
+                    }
                 }
-            }
+            });
         }
 
         protected void ValidateAsset(StaticCrystAsset asset, Address address, bool isBuilding = false)
@@ -236,7 +189,7 @@ namespace VAT.Packaging
 #endif
     }
 
-    public abstract class StaticShardT<T> : StaticShard, IShardT<T> where T : Object
+    public abstract class StaticShardT<T> : StaticShard, IAssetShardT<T> where T : Object
     {
         public IWeakAssetT<T> MainAssetT => MainAsset as IWeakAssetT<T>;
 

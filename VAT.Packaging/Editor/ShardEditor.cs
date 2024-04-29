@@ -5,11 +5,47 @@ using UnityEngine;
 
 using UnityEditor;
 
-using VAT.Shared.Extensions;
-using UnityEditor.IMGUI.Controls;
-
 namespace VAT.Packaging.Editor
 {
+    [CustomEditor(typeof(DataShard), true)]
+    [CanEditMultipleObjects]
+    public class DataShardEditor : UnityEditor.Editor
+    {
+        private SerializedProperty _shardInfo;
+
+        protected virtual void OnEnable()
+        {
+            _shardInfo = serializedObject.FindProperty("_shardInfo");
+        }
+
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            var shard = target as DataShard;
+
+            // Locked information
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.ObjectField("Crystal", shard.Crystal, typeof(Crystal), true);
+
+            EditorGUILayout.TextField("Address", shard.Address);
+            EditorGUI.EndDisabledGroup();
+
+            // Basic information that can be updated
+            EditorGUILayout.PropertyField(_shardInfo);
+
+            // Draw data
+            GUILayout.FlexibleSpace();
+
+            shard.OnEditorInspectorGUI(serializedObject);
+
+            GUILayout.FlexibleSpace();
+
+            // Apply changes
+            serializedObject.ApplyModifiedProperties();
+        }
+    }
+
     [CustomEditor(typeof(StaticShard), true)]
     [CanEditMultipleObjects]
     public class StaticShardEditor : UnityEditor.Editor
@@ -22,8 +58,8 @@ namespace VAT.Packaging.Editor
             _shardInfo = serializedObject.FindProperty("_shardInfo");
             _mainAsset = serializedObject.FindProperty("_mainAsset");
 
-            var content = serializedObject.targetObject as StaticShard;
-            content.OnValidate();
+            var shard = serializedObject.targetObject as StaticShard;
+            shard.OnValidate();
         }
 
         public override void OnInspectorGUI()

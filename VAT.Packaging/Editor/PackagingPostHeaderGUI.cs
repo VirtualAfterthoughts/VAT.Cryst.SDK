@@ -8,16 +8,17 @@ namespace VAT.Packaging.Editor
 {
     using UnityEditor;
     using UnityEngine;
+    using static UnityEngine.GraphicsBuffer;
 
     [InitializeOnLoad]
     public static class PackagingPostHeaderGUI
     {
         private struct ContentIdentifier
         {
-            public StaticShardIdentifierAttribute attribute;
+            public StaticShardIdentifier attribute;
             public Type contentType;
 
-            public ContentIdentifier(StaticShardIdentifierAttribute attribute, Type contentType)
+            public ContentIdentifier(StaticShardIdentifier attribute, Type contentType)
             {
                 this.attribute = attribute;
                 this.contentType = contentType;
@@ -50,7 +51,7 @@ namespace VAT.Packaging.Editor
                 {
                     if (!type.IsAbstract && type.IsSubclassOf(typeof(StaticShard)))
                     {
-                        var attribute = type.GetCustomAttribute<StaticShardIdentifierAttribute>();
+                        var attribute = type.GetCustomAttribute<StaticShardIdentifier>();
 
                         if (attribute != null)
                         {
@@ -88,18 +89,69 @@ namespace VAT.Packaging.Editor
             {
                 using (new GUILayout.VerticalScope())
                 {
-                    if (editor.targets.Length > 0)
+                    if (editor.targets.Length == 1)
                     {
-                        foreach (var target in editor.targets)
-                        {
-                            OnDrawPersistentObject(target);
-                        }
+                        OnDrawPersistentObject(editor.targets[0]);
+                    }
+                    else if (editor.targets.Length > 1)
+                    {
+                        OnDrawPersistentObjects(editor.targets);
                     }
                 }
             }
         }
 
         private static Crystal _package;
+
+        private static void OnDrawPersistentObjects(Object[] objects)
+        {
+            Type consistentType = null;
+
+            foreach (var obj in objects)
+            {
+                var type = obj.GetType();
+
+                if (consistentType == null)
+                {
+                    consistentType = type;
+                }
+                else if (consistentType != type)
+                {
+                    return;
+                }
+
+                if (type.IsSubclassOf(typeof(Shippable)))
+                    return;
+            }
+
+            bool _drawnPackage = false;
+
+            foreach (var pair in _assetTypeToIdentifier)
+            {
+                if (!consistentType.IsSubclassOf(pair.Key) && pair.Key != consistentType)
+                    continue;
+
+                if (!_drawnPackage)
+                {
+                    _package = (Crystal)EditorGUILayout.ObjectField(_package, typeof(Crystal), false);
+                    _drawnPackage = true;
+                }
+
+                foreach (var group in pair.Value)
+                {
+                    if (GUILayout.Button($"Add {objects.Length} {group.attribute.displayName}s To Crystal"))
+                    {
+                        if (_package != null)
+                        {
+                            foreach (var obj in objects)
+                            {
+                                StaticShardCreationWizard.Initialize(_package, group.attribute, group.contentType, obj);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         private static void OnDrawPersistentObject(Object obj)
         {

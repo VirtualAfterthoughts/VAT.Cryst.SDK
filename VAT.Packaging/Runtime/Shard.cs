@@ -23,10 +23,23 @@ namespace VAT.Packaging
     public abstract class Shard : Shippable, IJSONPackable, IShard
     {
         public abstract ICrystal MainCrystal { get; set; }
-        public abstract IWeakAsset MainAsset { get; }
 
         [SerializeField]
         private ShardInfo _shardInfo;
+
+        [SerializeField]
+        private string _addressType;
+        public virtual string AddressType
+        {
+            get
+            {
+                return _addressType;
+            }
+            set
+            {
+                _addressType = value;
+            }
+        }
 
         public override IShippableInfo Info { get => _shardInfo; set => _shardInfo = (ShardInfo)value; }
         public ShardInfo ShardInfo { get => _shardInfo; set => _shardInfo = value; }
@@ -40,7 +53,7 @@ namespace VAT.Packaging
             OnPack(packer, json);
         }
 
-        protected virtual void OnPack(JSONPacker packer, JObject json) { }
+        protected abstract void OnPack(JSONPacker packer, JObject json);
 
         public void Unpack(JSONUnpacker unpacker, JToken token)
         {
@@ -69,6 +82,20 @@ namespace VAT.Packaging
             OnUnpack(unpacker, json);
         }
 
-        protected virtual void OnUnpack(JSONUnpacker unpacker, JObject json) { }
+        protected abstract void OnUnpack(JSONUnpacker unpacker, JObject json);
+
+        public override void BuildAddress()
+        {
+            var crystalInfo = MainCrystal.CrystalInfo;
+
+            if (!string.IsNullOrWhiteSpace(AddressType))
+            {
+                Address = Address.BuildAddress(crystalInfo.Author, crystalInfo.Title, AddressType, ShardInfo.Title);
+            }
+            else
+            {
+                Address = Address.BuildAddress(crystalInfo.Author, crystalInfo.Title, ShardInfo.Title);
+            }
+        }
     }
 }

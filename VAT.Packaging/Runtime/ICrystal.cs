@@ -10,5 +10,7 @@ namespace VAT.Packaging
         /// Whether or not this is a crystal built with the game itself.
         /// </summary>
         public bool IsInternal { get; }
+
+        CrystalInfo CrystalInfo { get; }
     }
 }

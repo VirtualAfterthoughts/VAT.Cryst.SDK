@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace VAT.Packaging
 {
-    public interface ILevelShard : IShard
+    public interface ILevelShard : IAssetShard
     {
     }
 }

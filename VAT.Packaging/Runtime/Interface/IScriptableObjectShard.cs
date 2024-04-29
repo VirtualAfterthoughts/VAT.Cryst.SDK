@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace VAT.Packaging
 {
-    public interface IScriptableObjectShard : IShardT<ScriptableObject>
+    public interface IScriptableObjectShard : IAssetShardT<ScriptableObject>
     {
     }
 }
