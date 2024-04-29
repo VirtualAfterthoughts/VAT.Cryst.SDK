@@ -139,7 +139,7 @@ namespace VAT.Packaging.Editor
             // Allow shard creation
             if (GUILayout.Button("Create Shard", GUILayout.Width(200)))
             {
-                InternalCreateShard();
+                CreateShard();
                 Close();
             }
         }
@@ -185,7 +185,51 @@ namespace VAT.Packaging.Editor
             return isValid;
         }
 
-        private void InternalCreateShard()
+        public static void CreateDefaultShard(Type type, StaticShardIdentifier identifier, Crystal crystal, Object mainAsset)
+        {
+            StaticShard shard = ShardFactory.Create(type) as StaticShard;
+            string title = mainAsset.name;
+            shard.ShardInfo = new ShardInfo()
+            {
+                Title = title
+            };
+            shard.StaticCrystal = crystal;
+            shard.AddressType = identifier?.displayName ?? "Unknown";
+            shard.BuildAddress();
+            shard.SetAsset(mainAsset);
+
+            var path = Path.GetDirectoryName(AssetDatabase.GetAssetPath(crystal));
+            var fileName = $"{path}/_{title}";
+            var fileExtension = ".asset";
+
+            var filePath = $"{fileName}{fileExtension}";
+            int suffix = 0;
+
+            // Find a unique name for the file
+            while (AssetDatabase.LoadAllAssetsAtPath(filePath).Length > 0)
+            {
+                filePath = $"{fileName}_{suffix++}{fileExtension}";
+
+                // Terminate incase we ever reach here somehow
+                if (suffix > 1000)
+                {
+                    Debug.LogError("Terminating shard creation, too many files with the same name!");
+                    return;
+                }
+            }
+
+            AssetDatabase.CreateAsset(shard, filePath);
+            crystal.Shards.Add(shard);
+
+            crystal.OnValidate();
+
+            shard.ForceSerialize();
+            crystal.ForceSerialize();
+
+            AssetPackager.EditorForceRefresh();
+        }
+
+        public void CreateShard()
         {
             StaticShard shard = ShardFactory.Create(_contentType) as StaticShard;
             shard.ShardInfo = new ShardInfo()

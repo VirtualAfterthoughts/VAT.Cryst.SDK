@@ -39,7 +39,7 @@ namespace VAT.Packaging.Editor
         {
             _ready = true;
 
-            _package = AssetPackager.Instance.GetCrystals().FirstOrDefault();
+            _crystal = AssetPackager.Instance.GetCrystals().FirstOrDefault();
 
             _assetTypeToIdentifier = new();
             _assetToContent = new();
@@ -101,7 +101,7 @@ namespace VAT.Packaging.Editor
             }
         }
 
-        private static Crystal _package;
+        private static Crystal _crystal;
 
         private static void OnDrawPersistentObjects(Object[] objects)
         {
@@ -133,7 +133,7 @@ namespace VAT.Packaging.Editor
 
                 if (!_drawnPackage)
                 {
-                    _package = (Crystal)EditorGUILayout.ObjectField(_package, typeof(Crystal), false);
+                    _crystal = (Crystal)EditorGUILayout.ObjectField(_crystal, typeof(Crystal), false);
                     _drawnPackage = true;
                 }
 
@@ -141,11 +141,11 @@ namespace VAT.Packaging.Editor
                 {
                     if (GUILayout.Button($"Add {objects.Length} {group.attribute.displayName}s To Crystal"))
                     {
-                        if (_package != null)
+                        if (_crystal != null)
                         {
                             foreach (var obj in objects)
                             {
-                                StaticShardCreationWizard.Initialize(_package, group.attribute, group.contentType, obj);
+                                StaticShardCreationWizard.CreateDefaultShard(group.contentType, group.attribute, _crystal, obj);
                             }
                         }
                     }
@@ -182,7 +182,7 @@ namespace VAT.Packaging.Editor
 
                 if (!_drawnPackage)
                 {
-                    _package = (Crystal)EditorGUILayout.ObjectField(_package, typeof(Crystal), false);
+                    _crystal = (Crystal)EditorGUILayout.ObjectField(_crystal, typeof(Crystal), false);
                     _drawnPackage = true;
                 }
 
@@ -190,9 +190,9 @@ namespace VAT.Packaging.Editor
                 {
                     if (GUILayout.Button($"Add {group.attribute.displayName} To Crystal"))
                     {
-                        if (_package != null)
+                        if (_crystal != null)
                         {
-                            StaticShardCreationWizard.Initialize(_package, group.attribute, group.contentType, obj);
+                            StaticShardCreationWizard.Initialize(_crystal, group.attribute, group.contentType, obj);
                         }
                     }
                 }
