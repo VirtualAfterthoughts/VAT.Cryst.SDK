@@ -67,7 +67,7 @@ namespace VAT.Packaging.Editor
                 DrawSpace();
 
                 _searchQuery = EditorGUILayout.TextField(_searchQuery, EditorStyles.toolbarSearchField);
-                var rect = GUILayoutUtility.GetAspectRect(2);
+                var rect = GUILayoutUtility.GetAspectRect(100f, GUILayout.ExpandHeight(true));
 
                 _packageTreeView.searchString = _searchQuery;
                 _packageTreeView.OnGUI(rect);
