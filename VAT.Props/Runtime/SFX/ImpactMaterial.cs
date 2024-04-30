@@ -28,7 +28,7 @@ namespace VAT.Props
         {
             public ImpactLevel[] impactLevels;
 
-            public ShardReferenceT<SurfaceMaterial> targetMaterial;
+            public ShardReferenceT<SurfaceMaterial> materialMask;
         }
 
         [SerializeField]
@@ -40,7 +40,7 @@ namespace VAT.Props
         {
             foreach (var impactGroup in _impactGroups)
             {
-                if (!impactGroup.targetMaterial.TryGetShard(out _))
+                if (!impactGroup.materialMask.TryGetShard(out _))
                 {
                     return (true, impactGroup);
                 }
@@ -53,7 +53,7 @@ namespace VAT.Props
         {
             foreach (var impactGroup in _impactGroups)
             {
-                if (impactGroup.targetMaterial.TryGetShard(out var shard) && shard == material)
+                if (impactGroup.materialMask.TryGetShard(out var shard) && shard == material)
                 {
                     return (true, impactGroup);
                 }
