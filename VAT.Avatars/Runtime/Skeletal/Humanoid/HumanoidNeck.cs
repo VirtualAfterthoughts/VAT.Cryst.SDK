@@ -43,7 +43,7 @@ namespace VAT.Avatars.Skeletal
 
         public quaternion chestRotation;
 
-        public float3 feetCenter;
+        public float3 feetCenterInRoot;
 
         public override void Initiate() {
             base.Initiate();
@@ -107,6 +107,8 @@ namespace VAT.Avatars.Skeletal
 
             var fromTo = Quaternion.FromToRotation(Skull.forward, chestForward) * Skull.rotation;
             float skullChestAngle = Vector3.Angle(fromTo * Vector3.up, chestUp);
+
+            var feetCenter = root.TransformPoint(feetCenterInRoot);
 
             var offsetRotation = Quaternion.FromToRotation(math.mul(chestRotation, math.up()), math.normalize(Skull.position - feetCenter)) * chestRotation;
             float lerp = (1f - cervicalHeight) - (skullChestAngle / 90f);

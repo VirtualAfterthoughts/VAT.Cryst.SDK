@@ -108,8 +108,6 @@ namespace VAT.Avatars.Skeletal
 
         public override void Solve()
         {
-            _neck.feetCenter = _locomotion.GetLocomotorCenter();
-
             SimpleTransform root = _avatarPayload.GetRoot();
 
             Root.Transform = root;
@@ -146,6 +144,8 @@ namespace VAT.Avatars.Skeletal
 
             // Solve locomotion logic for the legs
             _locomotion.Solve(root);
+
+            _neck.feetCenterInRoot = root.InverseTransformPoint(_locomotion.GetLocomotorCenter());
         }
         public override void Attach(DataBoneGroup group) {
             base.Attach(group);
