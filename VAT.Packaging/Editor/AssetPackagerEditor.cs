@@ -16,6 +16,8 @@ namespace VAT.Packaging.Editor
 
         private string _searchQuery;
 
+        private bool _isEnabled = false;
+
         [MenuItem("VAT/Cryst SDK/Asset Packager", priority = -10000)]
         public static void Initialize()
         {
@@ -33,10 +35,17 @@ namespace VAT.Packaging.Editor
             _treeViewState ??= new TreeViewState();
 
             _packageTreeView = new AssetPackagerTreeView(_treeViewState);
+
+            _isEnabled = true;
         }
 
         public void OnGUI()
         {
+            if (!_isEnabled)
+            {
+                OnEnable();
+            }
+
             if (AssetPackager.IsReady)
             {
                 if (AssetPackager.Instance.HasCrystals)
