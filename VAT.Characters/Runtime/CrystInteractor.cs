@@ -105,11 +105,9 @@ namespace VAT.Characters
             return FarHoverHolder.HoveringInteractable;
         }
 
-        private SimpleTransform _lastRig = SimpleTransform.Default;
-
         public SimpleTransform Solve(SimpleTransform rig, SimpleTransform targetInRig)
         {
-            _lastRig = rig;
+            //_latestTar = rig.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation));
 
             SimpleTransform result = targetInRig;
 
@@ -137,6 +135,8 @@ namespace VAT.Characters
                 }
             }
 
+            _latestTar = result;
+
             return result;
         }
 
@@ -155,6 +155,7 @@ namespace VAT.Characters
             _isInteractionLocked = false;
         }
 
+        private SimpleTransform _latestTar = SimpleTransform.Default;
         private SimpleTransform lastTar = SimpleTransform.Default;
 
         private float _lerp;
@@ -309,7 +310,7 @@ namespace VAT.Characters
         private void ResetPin()
         {
             _pinAmount = 1f;
-            lastTar = _lastRig.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation));
+            lastTar = _latestTar;
         }
 
         public void DetachGrip(IGrippable grip)
