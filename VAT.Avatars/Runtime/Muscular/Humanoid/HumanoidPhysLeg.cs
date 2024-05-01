@@ -28,11 +28,11 @@ namespace VAT.Avatars.Muscular
         public HumanoidPhysBone Knee => Bones[1] as HumanoidPhysBone;
         public HumanoidPhysBone Ankle => Bones[2] as HumanoidPhysBone;
 
-        IBone IHumanLeg.Hip => Hip;
+        IBone ILegGroup.Hip => Hip;
 
-        IBone IHumanLeg.Knee => Knee;
+        IBone ILegGroup.Knee => Knee;
 
-        IBone IHumanLeg.Ankle => Ankle;
+        IBone ILegGroup.Ankle => Ankle;
 
         private RelativeBone _relativeToe = null;
         public IBone Toe => _relativeToe;

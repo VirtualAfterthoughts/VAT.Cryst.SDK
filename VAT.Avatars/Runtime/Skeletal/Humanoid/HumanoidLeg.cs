@@ -25,13 +25,13 @@ namespace VAT.Avatars.Skeletal
 
         public override int BoneCount => 4;
 
-        IBone IHumanLeg.Hip => Hip;
+        IBone ILegGroup.Hip => Hip;
 
-        IBone IHumanLeg.Knee => Knee;
+        IBone ILegGroup.Knee => Knee;
 
-        IBone IHumanLeg.Ankle => Ankle;
+        IBone ILegGroup.Ankle => Ankle;
 
-        IBone IHumanLeg.Toe => Toe;
+        IBone ILegGroup.Toe => Toe;
 
         private int _legIndex;
 

@@ -4,11 +4,7 @@ using UnityEngine;
 
 namespace VAT.Avatars.REWORK
 {
-    public interface IHumanLeg : IBoneGroup
+    public interface IHumanLeg : ILegGroup
     {
-        public IBone Hip { get; }
-        public IBone Knee { get; }
-        public IBone Ankle { get; }
-        public IBone Toe { get; }
     }
 }

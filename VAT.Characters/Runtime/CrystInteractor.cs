@@ -107,8 +107,6 @@ namespace VAT.Characters
 
         public SimpleTransform Solve(SimpleTransform rig, SimpleTransform targetInRig)
         {
-            //_latestTar = rig.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation));
-
             SimpleTransform result = targetInRig;
 
             SimpleTransform target = rig.Transform(result);

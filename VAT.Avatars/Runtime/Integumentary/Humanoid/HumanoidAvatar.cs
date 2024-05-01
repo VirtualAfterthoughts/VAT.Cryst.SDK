@@ -181,5 +181,18 @@ namespace VAT.Avatars.Integumentary
 
             return array;
         }
+
+        protected override AvatarLeg[] CreateLegs()
+        {
+            var array = new AvatarLeg[2];
+            var skeleton = GenericAnatomy.GenericSkeleton;
+            var dataSkeleton = skeleton.GenericDataBoneSkeleton;
+            var physSkeleton = skeleton.GenericPhysBoneSkeleton;
+
+            array[0] = new AvatarLeg(Handedness.LEFT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, skeleton.GenericDataBoneSkeleton.LeftLeg, skeleton.GenericPhysBoneSkeleton.LeftLeg);
+            array[1] = new AvatarLeg(Handedness.RIGHT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, skeleton.GenericDataBoneSkeleton.RightLeg, skeleton.GenericPhysBoneSkeleton.RightLeg);
+
+            return array;
+        }
     }
 }
