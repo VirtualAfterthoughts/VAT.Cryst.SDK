@@ -133,7 +133,7 @@ namespace VAT.Characters
                 }
             }
 
-            _latestTar = result;
+            _latestTar = rig.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation));
 
             return result;
         }
