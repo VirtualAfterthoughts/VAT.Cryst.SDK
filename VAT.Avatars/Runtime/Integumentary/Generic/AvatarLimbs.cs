@@ -8,7 +8,7 @@ using VAT.Input;
 
 namespace VAT.Avatars.Integumentary
 {
-    public abstract partial class Avatar : MonoBehaviour, IAvatar
+    public abstract partial class Avatar : MonoBehaviour
     {
         private Dictionary<Handedness, List<AvatarArm>> _armLookup = null;
 

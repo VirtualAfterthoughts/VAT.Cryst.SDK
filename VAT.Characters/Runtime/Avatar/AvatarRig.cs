@@ -91,7 +91,7 @@ namespace VAT.Characters
                 float scale = vitals.CharacterMeasurements.height / vitals.PlayerMeasurements.height;
                 var playerMeasurements = BodyMeasurementHelper.Scale(vitals.PlayerMeasurements, scale);
 
-                _activeAvatar.Anatomy.Skeleton.DataBoneSkeleton.WriteRemappingMeasurements(playerMeasurements);
+                _activeAvatar.GetSkeleton().GetData().WriteRemappingMeasurements(playerMeasurements);
             }
         }
 
@@ -176,7 +176,7 @@ namespace VAT.Characters
             ApplyRemapping();
 
             avatar.Write(GetPayload());
-            avatar.Anatomy.Skeleton.DataBoneSkeleton.Solve();
+            avatar.GetSkeleton().GetData().Solve();
             avatar.SolveArt();
 
             InitiateAbilities();
@@ -211,8 +211,8 @@ namespace VAT.Characters
             var payload = GetPayload();
 
             _activeAvatar.Write(payload);
-            _activeAvatar.Anatomy.Skeleton.DataBoneSkeleton.Solve();
-            _activeAvatar.Anatomy.Skeleton.PhysBoneSkeleton.Solve();
+            _activeAvatar.GetSkeleton().GetData().Solve();
+            _activeAvatar.GetSkeleton().GetPhysics().Solve();
         }
 
         public override void OnLateUpdate(float deltaTime)
@@ -226,7 +226,7 @@ namespace VAT.Characters
 
         public override bool TryGetHead(out IJoint head)
         {
-            head = new BasicJoint(SimpleTransform.Create(transform.position, transform.rotation).InverseTransform(_activeAvatar.Anatomy.Skeleton.PhysBoneSkeleton.GetEyeCenter()));
+            head = new BasicJoint(SimpleTransform.Create(transform.position, transform.rotation).InverseTransform(_activeAvatar.GetSkeleton().GetPhysics().GetEyeCenter()));
             return true;
         }
 
@@ -237,10 +237,10 @@ namespace VAT.Characters
                 return;
 
             // Rotation
-            var skeleton = _activeAvatar.Anatomy.Skeleton;
+            var skeleton = _activeAvatar.GetSkeleton();
 
             var root = behaviourRig.GetRoot();
-            root.rotation = Quaternion.Slerp(root.rotation, skeleton.PhysBoneSkeleton.GetRoot().Transform.rotation, Time.deltaTime * 12f);
+            root.rotation = Quaternion.Slerp(root.rotation, skeleton.GetPhysics().GetRoot().Transform.rotation, Time.deltaTime * 12f);
 
             // Position
             TryGetHead(out var thisHead);

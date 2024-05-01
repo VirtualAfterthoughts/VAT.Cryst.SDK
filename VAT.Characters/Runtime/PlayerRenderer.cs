@@ -28,7 +28,7 @@ namespace VAT.Characters
             var avatar = avatarRig.CurrentAvatar;
             if (avatar != null)
             {
-                var skeleton = avatar.Anatomy.Skeleton.ArtBoneSkeleton;
+                var skeleton = avatar.GetSkeleton().GetArt();
                 var head = (ArtBone)skeleton.GetHead();
                 var eyeCenter = skeleton.GetEyeCenter();
 

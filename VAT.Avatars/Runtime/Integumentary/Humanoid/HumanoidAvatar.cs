@@ -25,7 +25,7 @@ namespace VAT.Avatars.Integumentary
 {
     [RequireComponent(typeof(Animator))]
     [ExecuteAlways]
-    public partial class HumanoidAvatar : AvatarT<HumanoidAvatarAnatomy> {
+    public partial class HumanoidAvatar : Avatar {
         public Animator animator;
 
         public Transform eyeCenterOverride;
@@ -42,8 +42,16 @@ namespace VAT.Avatars.Integumentary
 
         private Transform _physicsRoot;
 
-        private HumanoidAvatarAnatomy _humanoidAvatarAnatomy;
-        public override HumanoidAvatarAnatomy GenericAnatomy => _humanoidAvatarAnatomy;
+        private HumanoidAvatarSkeleton _skeleton = null;
+        public HumanoidAvatarSkeleton Skeleton => _skeleton;
+
+        private HumanoidVitals _vitals = null;
+        public HumanoidVitals Vitals => _vitals;
+
+        public override IAvatarSkeleton GetSkeleton()
+        {
+            return _skeleton;
+        }
 
         public override BodyMeasurements GetMeasurements()
         {
@@ -71,7 +79,7 @@ namespace VAT.Avatars.Integumentary
 #endif
 
         public override void WriteArtOffsets() {
-            GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.WriteOffsets(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton);
+            Skeleton.ArtSkeleton.WriteOffsets(Skeleton.DataSkeleton);
         }
 
         public override bool TryCreateHandPoser(out HandPoser poser) {
@@ -83,7 +91,7 @@ namespace VAT.Avatars.Integumentary
 
             humanPoser.proportions = proportions.rightArmProportions.handProportions;
             humanPoser.descriptor = artDescriptor.rightArmDescriptor.hand;
-            humanPoser.offset = artDescriptor.rightArmDescriptor.hand.hand.Transform.InverseTransform(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.RightArm.Hand.Hand.Transform);
+            humanPoser.offset = artDescriptor.rightArmDescriptor.hand.hand.Transform.InverseTransform(Skeleton.DataSkeleton.RightArm.Hand.Hand.Transform);
 
             humanPoser.WriteArtOffsets();
 
@@ -91,23 +99,28 @@ namespace VAT.Avatars.Integumentary
         }
 
         protected override void OnInitiate() {
-            _humanoidAvatarAnatomy = new HumanoidAvatarAnatomy(
-                new HumanoidAvatarSkeleton(new HumanoidDataSkeleton(), new HumanoidPhysSkeleton(), new HumanoidArtSkeleton()),
-                new HumanoidVitals());
+            _vitals = new HumanoidVitals();
+
+            var dataSkeleton = new HumanoidDataSkeleton();
+            var physSkeleton = new HumanoidPhysSkeleton();
+            var artSkeleton = new HumanoidArtSkeleton();
 
             base.OnInitiate();
 
             // Initiate the data/IK skeleton
-            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Initiate();
-            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.WriteProportions(proportions);
-            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.BindPose();
+            dataSkeleton.Initiate();
+            dataSkeleton.WriteProportions(proportions);
+            dataSkeleton.BindPose();
 
             // Setup the internals of the physics skeleton, but don't actually create it yet
-            GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.Initiate();
+            physSkeleton.Initiate();
 
             // Now, initiate the art skeleton
-            GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.Initiate();
-            GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.WriteTransforms(artDescriptor);
+            artSkeleton.Initiate();
+            artSkeleton.WriteTransforms(artDescriptor);
+
+            // Finally, save the skeletons
+            _skeleton = new HumanoidAvatarSkeleton(dataSkeleton, physSkeleton, artSkeleton);
         }
 
         protected override void OnInitiateRuntime() {
@@ -116,7 +129,7 @@ namespace VAT.Avatars.Integumentary
             base.OnInitiateRuntime();
 
             // Write eye center to the root transform
-            var eyeCenter = GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter;
+            var eyeCenter = Skeleton.DataSkeleton.Neck.EyeCenter;
 
             eyeCenter.rotation = transform.rotation;
 
@@ -128,24 +141,24 @@ namespace VAT.Avatars.Integumentary
             }
 
             // Properly initiate the physics skeleton
-            GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.InitiateRuntime();
-            GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.WriteProportions(proportions);
+            Skeleton.PhysSkeleton.InitiateRuntime();
+            Skeleton.PhysSkeleton.WriteProportions(proportions);
 
-            GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.SetTransformRoot(_physicsRoot);
+            Skeleton.PhysSkeleton.SetTransformRoot(_physicsRoot);
 
-            GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.WriteReferences(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton);
+            Skeleton.PhysSkeleton.WriteReferences(Skeleton.DataSkeleton);
 
             // Properly initiate the art skeleton
-            GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.WriteData(GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton);
+            Skeleton.ArtSkeleton.WriteData(Skeleton.PhysSkeleton);
             WriteArtOffsets();
 
             // Match physics skeleton to default pose
-            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.NeutralPose();
-            GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.MatchPose(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton);
+            Skeleton.DataSkeleton.NeutralPose();
+            Skeleton.PhysSkeleton.MatchPose(Skeleton.DataSkeleton);
 
             // Initialize the vitals
             var payload = new HumanoidVitalsPayload();
-            payload.InjectDependencies(proportions, GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton);
+            payload.InjectDependencies(proportions, Skeleton.PhysSkeleton);
 
             var vitalGroups = new HumanoidBoneGroupVitals[]
             {
@@ -157,27 +170,26 @@ namespace VAT.Avatars.Integumentary
                 new HumanoidLegVitals(false),
             };
 
-            GenericAnatomy.GenericVitals.InjectDependencies(vitalGroups, payload);
+            Vitals.InjectDependencies(vitalGroups, payload);
 
-            GenericAnatomy.GenericVitals.CalculateVitals();
-            GenericAnatomy.GenericVitals.ApplyVitals();
+            Vitals.CalculateVitals();
+            Vitals.ApplyVitals();
         }
 
         protected override void OnUninitiateRuntime() {
             _physicsRoot.gameObject.SetActive(false);
             Destroy(_physicsRoot.gameObject);
 
-            GenericAnatomy.GenericSkeleton.GenericArtBoneSkeleton.Deinitiate();
+            Skeleton.ArtSkeleton.Deinitiate();
         }
 
         protected override AvatarArm[] CreateArms() {
             var array = new AvatarArm[2];
-            var skeleton = GenericAnatomy.GenericSkeleton;
-            var dataSkeleton = skeleton.GenericDataBoneSkeleton;
-            var physSkeleton = skeleton.GenericPhysBoneSkeleton;
+            var dataSkeleton = Skeleton.DataSkeleton;
+            var physSkeleton = Skeleton.PhysSkeleton;
 
-            array[0] = new AvatarArm(Handedness.LEFT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, skeleton.GenericDataBoneSkeleton.LeftArm, skeleton.GenericPhysBoneSkeleton.LeftArm);
-            array[1] = new AvatarArm(Handedness.RIGHT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, skeleton.GenericDataBoneSkeleton.RightArm, skeleton.GenericPhysBoneSkeleton.RightArm);
+            array[0] = new AvatarArm(Handedness.LEFT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, dataSkeleton.LeftArm, physSkeleton.LeftArm);
+            array[1] = new AvatarArm(Handedness.RIGHT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, dataSkeleton.RightArm, physSkeleton.RightArm);
 
             return array;
         }
@@ -185,12 +197,11 @@ namespace VAT.Avatars.Integumentary
         protected override AvatarLeg[] CreateLegs()
         {
             var array = new AvatarLeg[2];
-            var skeleton = GenericAnatomy.GenericSkeleton;
-            var dataSkeleton = skeleton.GenericDataBoneSkeleton;
-            var physSkeleton = skeleton.GenericPhysBoneSkeleton;
+            var dataSkeleton = Skeleton.DataSkeleton;
+            var physSkeleton = Skeleton.PhysSkeleton;
 
-            array[0] = new AvatarLeg(Handedness.LEFT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, skeleton.GenericDataBoneSkeleton.LeftLeg, skeleton.GenericPhysBoneSkeleton.LeftLeg);
-            array[1] = new AvatarLeg(Handedness.RIGHT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, skeleton.GenericDataBoneSkeleton.RightLeg, skeleton.GenericPhysBoneSkeleton.RightLeg);
+            array[0] = new AvatarLeg(Handedness.LEFT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, dataSkeleton.LeftLeg, physSkeleton.LeftLeg);
+            array[1] = new AvatarLeg(Handedness.RIGHT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, dataSkeleton.RightLeg, physSkeleton.RightLeg);
 
             return array;
         }

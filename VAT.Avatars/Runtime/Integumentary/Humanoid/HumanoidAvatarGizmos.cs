@@ -6,12 +6,7 @@ using UnityEngine;
 using VAT.Avatars.Muscular;
 using VAT.Avatars.Proportions;
 using VAT.Avatars.Skeletal;
-using VAT.Shared.Data;
 using VAT.Shared.Extensions;
-using VAT.Shared.Math;
-using VAT.Avatars.Vitals;
-
-using static Unity.Mathematics.math;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -22,7 +17,7 @@ namespace VAT.Avatars.Integumentary
     using System.Linq;
     using Unity.Mathematics;
 
-    public partial class HumanoidAvatar : AvatarT<HumanoidAvatarAnatomy> {
+    public partial class HumanoidAvatar : Avatar {
 #if UNITY_EDITOR
         protected override void OnValidate() {
             base.OnValidate();
@@ -37,8 +32,8 @@ namespace VAT.Avatars.Integumentary
                 float3? eyeCenterRaw = EditorGetEyeCenter();
                 if (eyeCenterRaw.HasValue)
                 {
-                    GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenterRaw.Value;
-                    GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.rotation = transform.rotation;
+                    Skeleton.DataSkeleton.Neck.EyeCenter.position = eyeCenterRaw.Value;
+                    Skeleton.DataSkeleton.Neck.EyeCenter.rotation = transform.rotation;
                 }
             }
         }
@@ -73,8 +68,8 @@ namespace VAT.Avatars.Integumentary
                 float3? eyeCenter = EditorGetEyeCenter();
 
                 if (eyeCenter.HasValue) {
-                    GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenter.Value;
-                    GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.rotation = transform.rotation;
+                    Skeleton.DataSkeleton.Neck.EyeCenter.position = eyeCenter.Value;
+                    Skeleton.DataSkeleton.Neck.EyeCenter.rotation = transform.rotation;
 
                     Gizmos.color = Color.green;
                     Gizmos.DrawSphere(eyeCenter.Value, 0.02f);
@@ -85,15 +80,15 @@ namespace VAT.Avatars.Integumentary
                     // Draw meshes
                     Gizmos.color = new Color(255f, 0f, 128f, 255f) / 255f;
 
-                    DrawNeckGizmos(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck, GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.Neck, proportions.neckProportions);
+                    DrawNeckGizmos(Skeleton.DataSkeleton.Neck, Skeleton.PhysSkeleton.Neck, proportions.neckProportions);
 
-                    DrawSpineGizmos(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Spine, GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.Spine, proportions.spineProportions, proportions.neckProportions);
+                    DrawSpineGizmos(Skeleton.DataSkeleton.Spine, Skeleton.PhysSkeleton.Spine, proportions.spineProportions, proportions.neckProportions);
 
-                    DrawArmGizmos(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.LeftArm, GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.LeftArm, proportions.leftArmProportions);
-                    DrawArmGizmos(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.RightArm, GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.RightArm, proportions.rightArmProportions);
+                    DrawArmGizmos(Skeleton.DataSkeleton.LeftArm, Skeleton.PhysSkeleton.LeftArm, proportions.leftArmProportions);
+                    DrawArmGizmos(Skeleton.DataSkeleton.RightArm, Skeleton.PhysSkeleton.RightArm, proportions.rightArmProportions);
 
-                    DrawLegGizmos(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.LeftLeg, GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.LeftLeg, proportions.leftLegProportions);
-                    DrawLegGizmos(GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.RightLeg, GenericAnatomy.GenericSkeleton.GenericPhysBoneSkeleton.RightLeg, proportions.rightLegProportions);
+                    DrawLegGizmos(Skeleton.DataSkeleton.LeftLeg, Skeleton.PhysSkeleton.LeftLeg, proportions.leftLegProportions);
+                    DrawLegGizmos(Skeleton.DataSkeleton.RightLeg, Skeleton.PhysSkeleton.RightLeg, proportions.rightLegProportions);
                 }
             }
         }

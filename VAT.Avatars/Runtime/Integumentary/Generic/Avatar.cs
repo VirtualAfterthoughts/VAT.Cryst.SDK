@@ -10,19 +10,15 @@ using VAT.Input.Data;
 using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Integumentary {
-    public interface IAvatar {
-        public IAvatarAnatomy Anatomy { get; }
-    }
-
-    public abstract partial class Avatar : MonoBehaviour, IAvatar
+    public abstract partial class Avatar : MonoBehaviour
     {
         public const string PhysSkeletonName = "[Rig - Physics]";
-
-        public abstract IAvatarAnatomy Anatomy { get; }
 
         public bool Initiated => _initiated;
 
         protected bool _initiated = false;
+
+        public abstract IAvatarSkeleton GetSkeleton();
 
         public bool Uninitiate() {
             if (!_initiated)
@@ -88,11 +84,11 @@ namespace VAT.Avatars.Integumentary {
 
         public virtual void Write(IAvatarPayload payload)
         {
-            Anatomy.Skeleton.DataBoneSkeleton.Write(payload);
+            GetSkeleton().GetData().Write(payload);
         }
 
         public void SolveArt() {
-            Anatomy.Skeleton.ArtBoneSkeleton.Solve();
+            GetSkeleton().GetArt().Solve();
         }
 
         /// <summary>
@@ -126,7 +122,7 @@ namespace VAT.Avatars.Integumentary {
                 using TempGizmoColor color = TempGizmoColor.Create();
                 Gizmos.color = Color.green;
 
-                Anatomy.Skeleton.DataBoneSkeleton.DrawGizmos();
+                GetSkeleton().GetData().DrawGizmos();
             }
         }
 
@@ -144,13 +140,5 @@ namespace VAT.Avatars.Integumentary {
             OnValidate();
         }
 #endif
-    }
-
-    public abstract class AvatarT<TAnatomy> : Avatar
-        where TAnatomy : IAvatarAnatomy {
-
-        public override IAvatarAnatomy Anatomy => GenericAnatomy;
-
-        public abstract TAnatomy GenericAnatomy { get; }
     }
 }

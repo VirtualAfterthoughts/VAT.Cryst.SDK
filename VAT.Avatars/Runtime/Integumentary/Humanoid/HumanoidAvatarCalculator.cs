@@ -8,18 +8,15 @@ using UnityEditor;
 #endif
 
 using UnityEngine;
+
 using VAT.Avatars.Art;
 using VAT.Avatars.Helpers;
-using VAT.Avatars.Muscular;
-using VAT.Avatars.Proportions;
-using VAT.Avatars.Skeletal;
-using VAT.Avatars.Vitals;
-using VAT.Shared.Data;
+
 using static Unity.Mathematics.math;
 
 namespace VAT.Avatars.Integumentary
 {
-    public partial class HumanoidAvatar : AvatarT<HumanoidAvatarAnatomy>
+    public partial class HumanoidAvatar : Avatar
     {
 #if UNITY_EDITOR
         private void Reset() {
@@ -87,10 +84,10 @@ namespace VAT.Avatars.Integumentary
 
             EditorRefreshAvatar();
 
-            float3 dataNeckPosition = mul(worldToLocal, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.C1Vertebra.position);
+            float3 dataNeckPosition = mul(worldToLocal, Skeleton.DataSkeleton.Neck.C1Vertebra.position);
             float3 neckPosition = mul(worldToLocal, neck.position);
 
-            float3 skullPosition = mul(worldToLocal, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.Skull.position);
+            float3 skullPosition = mul(worldToLocal, Skeleton.DataSkeleton.Neck.Skull.position);
             float skullDifference = 1f - Mathf.Clamp01((headPosition.z - neckPosition.z) / (skullPosition.z - dataNeckPosition.z));
 
             float upperOffset = (neckPosition.z - dataNeckPosition.z) * skullDifference;
@@ -117,7 +114,7 @@ namespace VAT.Avatars.Integumentary
             float3 midway = (artDescriptor.leftArmDescriptor.upperArm.Transform.position + artDescriptor.rightArmDescriptor.upperArm.Transform.position) * 0.5f;
             float3 chestPosition = mul(worldToLocal, midway);
 
-            var lowerNeckPosition = mul(worldToLocal, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.C4Vertebra.position);
+            var lowerNeckPosition = mul(worldToLocal, Skeleton.DataSkeleton.Neck.C4Vertebra.position);
 
             proportions.neckProportions.lowerNeckEllipsoid.height = Mathf.Abs(lowerNeckPosition.y - chestPosition.y);
 
@@ -243,10 +240,10 @@ namespace VAT.Avatars.Integumentary
             float3 eyeCenter = eyeCenterRaw.Value;
 
             EditorRefreshAvatar();
-            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenter;
+            Skeleton.DataSkeleton.Neck.EyeCenter.position = eyeCenter;
 
-            HumanoidHelper.CalculateLeg(ref proportions.leftLegProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.LeftLeg, artDescriptor.leftLegDescriptor, transform); ;
-            HumanoidHelper.CalculateLeg(ref proportions.rightLegProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.RightLeg, artDescriptor.rightLegDescriptor, transform); ;
+            HumanoidHelper.CalculateLeg(ref proportions.leftLegProportions, Skeleton.DataSkeleton.LeftLeg, artDescriptor.leftLegDescriptor, transform); ;
+            HumanoidHelper.CalculateLeg(ref proportions.rightLegProportions, Skeleton.DataSkeleton.RightLeg, artDescriptor.rightLegDescriptor, transform); ;
         }
 
         public void EditorCalculateNeck()
@@ -261,9 +258,9 @@ namespace VAT.Avatars.Integumentary
             float3 eyeCenter = eyeCenterRaw.Value;
 
             EditorRefreshAvatar();
-            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenter;
+            Skeleton.DataSkeleton.Neck.EyeCenter.position = eyeCenter;
 
-            HumanoidHelper.CalculateNeck(ref proportions.neckProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton, artDescriptor);
+            HumanoidHelper.CalculateNeck(ref proportions.neckProportions, Skeleton.DataSkeleton, artDescriptor);
         }
 
         public void EditorCalculateSpine() {
@@ -277,9 +274,9 @@ namespace VAT.Avatars.Integumentary
             float3 eyeCenter = eyeCenterRaw.Value;
 
             EditorRefreshAvatar();
-            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenter;
+            Skeleton.DataSkeleton.Neck.EyeCenter.position = eyeCenter;
 
-            HumanoidHelper.CalculateSpine(ref proportions.spineProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton, artDescriptor);
+            HumanoidHelper.CalculateSpine(ref proportions.spineProportions, Skeleton.DataSkeleton, artDescriptor);
         }
 
         public void EditorCalculateArms() {
@@ -293,10 +290,10 @@ namespace VAT.Avatars.Integumentary
             float3 eyeCenter = eyeCenterRaw.Value;
 
             EditorRefreshAvatar();
-            GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.Neck.EyeCenter.position = eyeCenter;
+            Skeleton.DataSkeleton.Neck.EyeCenter.position = eyeCenter;
 
-            HumanoidHelper.CalculateArm(ref proportions.leftArmProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.LeftArm, artDescriptor.leftArmDescriptor);
-            HumanoidHelper.CalculateArm(ref proportions.rightArmProportions, GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.RightArm, artDescriptor.rightArmDescriptor);
+            HumanoidHelper.CalculateArm(ref proportions.leftArmProportions, Skeleton.DataSkeleton.LeftArm, artDescriptor.leftArmDescriptor);
+            HumanoidHelper.CalculateArm(ref proportions.rightArmProportions, Skeleton.DataSkeleton.RightArm, artDescriptor.rightArmDescriptor);
         }
 
         [ContextMenu("Auto Fill Bone Transforms from Animator")]

@@ -9,26 +9,37 @@ using VAT.Avatars.Art;
 
 namespace VAT.Avatars.Integumentary
 {
-    public sealed class HumanoidAvatarSkeleton : AvatarSkeletonT<HumanoidDataSkeleton, HumanoidPhysSkeleton, HumanoidArtSkeleton>
+    public sealed class HumanoidAvatarSkeleton : IAvatarSkeleton
     {
         private readonly HumanoidDataSkeleton _dataSkeleton;
-        public override HumanoidDataSkeleton GenericDataBoneSkeleton => _dataSkeleton;
+        public HumanoidDataSkeleton DataSkeleton => _dataSkeleton;
 
         private readonly HumanoidPhysSkeleton _physSkeleton;
-        public override HumanoidPhysSkeleton GenericPhysBoneSkeleton => _physSkeleton;
+        public HumanoidPhysSkeleton PhysSkeleton => _physSkeleton;
 
         private readonly HumanoidArtSkeleton _artSkeleton;
-        public override HumanoidArtSkeleton GenericArtBoneSkeleton => _artSkeleton;
+        public HumanoidArtSkeleton ArtSkeleton => _artSkeleton;
 
-        public HumanoidAvatarSkeleton(
-            HumanoidDataSkeleton dataSkeleton,
-            HumanoidPhysSkeleton physSkeleton,
-            HumanoidArtSkeleton artSkeleton)
+        public HumanoidAvatarSkeleton(HumanoidDataSkeleton data, HumanoidPhysSkeleton physics, HumanoidArtSkeleton art)
         {
+            _dataSkeleton = data;
+            _physSkeleton = physics;
+            _artSkeleton = art;
+        }
 
-            _dataSkeleton = dataSkeleton;
-            _physSkeleton = physSkeleton;
-            _artSkeleton = artSkeleton;
+        public DataBoneSkeleton GetData()
+        {
+            return _dataSkeleton;
+        }
+
+        public PhysBoneSkeleton GetPhysics()
+        {
+            return _physSkeleton;
+        }
+
+        public ArtBoneSkeleton GetArt()
+        {
+            return _artSkeleton;
         }
     }
 }

@@ -227,15 +227,15 @@ namespace VAT.Avatars.Editor {
                     break;
                 case BoneGroup.ARMS:
                     if (_isLeft)
-                        DrawArmHandles(ref _avatar.proportions.leftArmProportions, ref _avatar.proportions.rightArmProportions, _avatar.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.LeftArm);
+                        DrawArmHandles(ref _avatar.proportions.leftArmProportions, ref _avatar.proportions.rightArmProportions, _avatar.Skeleton.DataSkeleton.LeftArm);
                     else
-                        DrawArmHandles(ref _avatar.proportions.rightArmProportions, ref _avatar.proportions.leftArmProportions, _avatar.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.RightArm);
+                        DrawArmHandles(ref _avatar.proportions.rightArmProportions, ref _avatar.proportions.leftArmProportions, _avatar.Skeleton.DataSkeleton.RightArm);
                     break;
                 case BoneGroup.LEGS:
                     if (_isLeft)
-                        DrawLegHandles(ref _avatar.proportions.leftLegProportions, ref _avatar.proportions.rightLegProportions, _avatar.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.LeftLeg);
+                        DrawLegHandles(ref _avatar.proportions.leftLegProportions, ref _avatar.proportions.rightLegProportions, _avatar.Skeleton.DataSkeleton.LeftLeg);
                     else
-                        DrawLegHandles(ref _avatar.proportions.rightLegProportions, ref _avatar.proportions.leftLegProportions, _avatar.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton.RightLeg);
+                        DrawLegHandles(ref _avatar.proportions.rightLegProportions, ref _avatar.proportions.leftLegProportions, _avatar.Skeleton.DataSkeleton.RightLeg);
                     break;
             }
 
@@ -251,7 +251,7 @@ namespace VAT.Avatars.Editor {
         }
 
         private void DrawNeckHandles() {
-            var dataSkeleton = _avatar.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton;
+            var dataSkeleton = _avatar.Skeleton.DataSkeleton;
             var neck = dataSkeleton.Neck;
 
             if (DrawOffset(neck.Skull.position, out var skullOffset))
@@ -305,7 +305,7 @@ namespace VAT.Avatars.Editor {
         }
 
         private void DrawChestHandles() {
-            var dataSkeleton = _avatar.GenericAnatomy.GenericSkeleton.GenericDataBoneSkeleton;
+            var dataSkeleton = _avatar.Skeleton.DataSkeleton;
             var spine = dataSkeleton.Spine;
 
             if (DrawOffset(spine.T1Vertebra.position, out var upperChestOffset))

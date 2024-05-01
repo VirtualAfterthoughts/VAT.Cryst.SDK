@@ -3,7 +3,8 @@ using VAT.Avatars.REWORK;
 using VAT.Input;
 
 namespace VAT.Avatars.Integumentary {
-    public struct AvatarLeg {
+    public readonly struct AvatarLeg
+    {
         public Handedness Handedness { get; }
         public IBone DataRig { get; }
         public IBone PhysRig { get; }
@@ -17,6 +18,16 @@ namespace VAT.Avatars.Integumentary {
             PhysRig = physRig;
             DataLeg = dataLeg;
             PhysLeg = physLeg;
+        }
+
+        public Handedness GetHandedness()
+        {
+            return Handedness;
+        }
+
+        public int GetIndex()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
