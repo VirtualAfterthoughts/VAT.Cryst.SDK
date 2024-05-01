@@ -102,5 +102,10 @@ namespace VAT.Avatars.Art
         {
             return Neck.EyeCenter.Transform;
         }
+
+        public override IBone GetAnchor()
+        {
+            return Spine.Hips;
+        }
     }
 }

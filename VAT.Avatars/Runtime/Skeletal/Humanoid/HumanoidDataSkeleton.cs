@@ -228,5 +228,28 @@ namespace VAT.Avatars.Skeletal
         {
             return Neck.Skull;
         }
+
+        public override IArmGroup[] GetArms()
+        {
+            return new IArmGroup[]
+            {
+                LeftArm,
+                RightArm,
+            };
+        }
+
+        public override ILegGroup[] GetLegs()
+        {
+            return new ILegGroup[]
+            {
+                LeftLeg,
+                RightLeg,
+            };
+        }
+
+        public override IBone GetAnchor()
+        {
+            return Spine.Sacrum;
+        }
     }
 }

@@ -7,7 +7,7 @@ using VAT.Avatars.REWORK;
 
 namespace VAT.Avatars
 {
-    public interface ILegGroup : IBoneGroup
+    public interface ILegGroup : ILimbGroup
     {
         public IBone Hip { get; }
         public IBone Knee { get; }

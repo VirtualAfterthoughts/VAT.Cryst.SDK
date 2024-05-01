@@ -15,12 +15,12 @@ namespace VAT.Avatars.Art
     {
         public override int BoneCount => 7;
 
-        public ArtBone CollarBone => Bones[0] as ArtBone;
-        public ArtBone ShoulderBlade => Bones[1] as ArtBone;
-        public ArtBone UpperArm => Bones[2] as ArtBone;
-        public ArtBone LowerArm => Bones[3] as ArtBone;
-        public ArtBone Wrist => Bones[4] as ArtBone;
-        public ArtBone Carpal => Bones[5] as ArtBone;
+        public ArtBone CollarBone => Bones[0];
+        public ArtBone ShoulderBlade => Bones[1];
+        public ArtBone UpperArm => Bones[2];
+        public ArtBone LowerArm => Bones[3];
+        public ArtBone Wrist => Bones[4];
+        public ArtBone Carpal => Bones[5];
 
         public ArtBone[] LowerTwists = new ArtBone[0];
 

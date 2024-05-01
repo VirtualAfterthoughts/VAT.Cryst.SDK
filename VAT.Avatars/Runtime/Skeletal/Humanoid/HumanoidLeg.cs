@@ -12,7 +12,10 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
+
     using VAT.Avatars.REWORK;
+
+    using VAT.Input;
 
     public class HumanoidLeg : HumanoidBoneGroup, IHumanLeg
     {
@@ -32,6 +35,8 @@ namespace VAT.Avatars.Skeletal
         IBone ILegGroup.Ankle => Ankle;
 
         IBone ILegGroup.Toe => Toe;
+
+        public Handedness Handedness => isLeft ? Handedness.LEFT : Handedness.RIGHT;
 
         private int _legIndex;
 

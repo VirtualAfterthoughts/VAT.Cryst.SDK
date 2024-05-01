@@ -19,5 +19,11 @@ namespace VAT.Avatars.REWORK
 
         IBone GetHead();
         SimpleTransform GetEyeCenter();
+
+        IBone GetAnchor();
+
+        IArmGroup[] GetArms();
+
+        ILegGroup[] GetLegs();
     }
 }

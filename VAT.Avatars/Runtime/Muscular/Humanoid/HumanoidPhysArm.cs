@@ -19,6 +19,7 @@ namespace VAT.Avatars.Muscular
     using UnityEngine.XR;
     using VAT.Avatars.REWORK;
     using VAT.Cryst.Delegates;
+    using VAT.Input;
 
     public class HumanoidPhysArm : HumanoidPhysBoneGroup, IPoseableT<IHumanArm>, IHumanArm
     {
@@ -51,6 +52,8 @@ namespace VAT.Avatars.Muscular
         public IBone Carpal => _relativeCarpal;
 
         public SimpleTransform Target => _arm.Target;
+
+        public Handedness Handedness => isLeft ? Handedness.LEFT : Handedness.RIGHT;
 
         private IHumanArm _arm;
 

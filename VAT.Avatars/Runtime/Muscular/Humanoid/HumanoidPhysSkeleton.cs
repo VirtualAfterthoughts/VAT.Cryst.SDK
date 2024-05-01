@@ -200,5 +200,28 @@ namespace VAT.Avatars.Muscular
         {
             // use in future
         }
+
+        public override IArmGroup[] GetArms()
+        {
+            return new IArmGroup[]
+            {
+                LeftArm,
+                RightArm,
+            };
+        }
+
+        public override ILegGroup[] GetLegs()
+        {
+            return new ILegGroup[]
+            {
+                LeftLeg,
+                RightLeg,
+            };
+        }
+
+        public override IBone GetAnchor()
+        {
+            return Spine.Sacrum;
+        }
     }
 }

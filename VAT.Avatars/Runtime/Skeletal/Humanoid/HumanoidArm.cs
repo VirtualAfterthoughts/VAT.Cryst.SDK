@@ -11,7 +11,6 @@ using VAT.Shared.Math;
 
 namespace VAT.Avatars.Skeletal
 {
-    using PlasticPipe.PlasticProtocol.Messages;
     using Unity.Mathematics;
     using VAT.Avatars.REWORK;
     using VAT.Cryst.Delegates;
@@ -50,6 +49,9 @@ namespace VAT.Avatars.Skeletal
         IHandGroup IArmGroup.Hand => Hand;
 
         public SimpleTransform Target => _originalTarget;
+
+        public Handedness Handedness => isLeft ? Handedness.LEFT : Handedness.RIGHT;
+
         private SimpleTransform _originalTarget;
 
         private HumanoidSpine _spine;

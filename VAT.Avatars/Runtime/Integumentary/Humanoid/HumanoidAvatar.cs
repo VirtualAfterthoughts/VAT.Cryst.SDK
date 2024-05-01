@@ -182,28 +182,5 @@ namespace VAT.Avatars.Integumentary
 
             Skeleton.ArtSkeleton.Deinitiate();
         }
-
-        protected override AvatarArm[] CreateArms() {
-            var array = new AvatarArm[2];
-            var dataSkeleton = Skeleton.DataSkeleton;
-            var physSkeleton = Skeleton.PhysSkeleton;
-
-            array[0] = new AvatarArm(Handedness.LEFT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, dataSkeleton.LeftArm, physSkeleton.LeftArm);
-            array[1] = new AvatarArm(Handedness.RIGHT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, dataSkeleton.RightArm, physSkeleton.RightArm);
-
-            return array;
-        }
-
-        protected override AvatarLeg[] CreateLegs()
-        {
-            var array = new AvatarLeg[2];
-            var dataSkeleton = Skeleton.DataSkeleton;
-            var physSkeleton = Skeleton.PhysSkeleton;
-
-            array[0] = new AvatarLeg(Handedness.LEFT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, dataSkeleton.LeftLeg, physSkeleton.LeftLeg);
-            array[1] = new AvatarLeg(Handedness.RIGHT, dataSkeleton.Spine.Sacrum, physSkeleton.Spine.Sacrum, dataSkeleton.RightLeg, physSkeleton.RightLeg);
-
-            return array;
-        }
     }
 }

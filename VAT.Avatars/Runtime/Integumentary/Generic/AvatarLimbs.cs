@@ -47,13 +47,53 @@ namespace VAT.Avatars.Integumentary
             _legLookup = null;
         }
 
-        protected virtual AvatarArm[] CreateArms() {
-            return Array.Empty<AvatarArm>();
+        protected AvatarArm[] CreateArms() {
+            var skeleton = GetSkeleton();
+            var dataSkeleton = skeleton.GetData();
+            var physSkeleton = skeleton.GetPhysics();
+
+            var dataRig = dataSkeleton.GetAnchor();
+            var physRig = physSkeleton.GetAnchor();
+
+            var dataArms = dataSkeleton.GetArms();
+            var physArms = physSkeleton.GetArms();
+
+            var array = new AvatarArm[dataArms.Length];
+
+            for (var i = 0; i < array.Length; i++)
+            {
+                var dataArm = dataArms[i];
+                var physArm = physArms[i];
+
+                array[i] = new AvatarArm(dataArm.Handedness, dataRig, physRig, dataArm, physArm);
+            }
+
+            return array;
         }
 
-        protected virtual AvatarLeg[] CreateLegs()
+        protected AvatarLeg[] CreateLegs()
         {
-            return Array.Empty<AvatarLeg>();
+            var skeleton = GetSkeleton();
+            var dataSkeleton = skeleton.GetData();
+            var physSkeleton = skeleton.GetPhysics();
+
+            var dataRig = dataSkeleton.GetAnchor();
+            var physRig = physSkeleton.GetAnchor();
+
+            var dataLegs = dataSkeleton.GetLegs();
+            var physLegs = physSkeleton.GetLegs();
+
+            var array = new AvatarLeg[dataLegs.Length];
+
+            for (var i = 0; i < array.Length; i++)
+            {
+                var dataLeg = dataLegs[i];
+                var physLeg = physLegs[i];
+
+                array[i] = new AvatarLeg(dataLeg.Handedness, dataRig, physRig, dataLeg, physLeg);
+            }
+
+            return array;
         }
 
         public bool TryGetArm(Handedness handedness, out AvatarArm arm) {

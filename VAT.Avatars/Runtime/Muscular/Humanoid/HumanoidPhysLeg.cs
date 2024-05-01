@@ -17,6 +17,7 @@ namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
     using VAT.Avatars.REWORK;
+    using VAT.Input;
 
     public class HumanoidPhysLeg : HumanoidPhysBoneGroup, IPoseableT<IHumanLeg>, IHumanLeg
     {
@@ -36,6 +37,8 @@ namespace VAT.Avatars.Muscular
 
         private RelativeBone _relativeToe = null;
         public IBone Toe => _relativeToe;
+
+        public Handedness Handedness => isLeft ? Handedness.LEFT : Handedness.RIGHT;
 
         private IHumanLeg _leg;
 

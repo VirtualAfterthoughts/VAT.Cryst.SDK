@@ -104,5 +104,10 @@ namespace VAT.Avatars.Muscular
 
         public abstract IBone GetHead();
         public abstract SimpleTransform GetEyeCenter();
+
+        public abstract IArmGroup[] GetArms();
+
+        public abstract ILegGroup[] GetLegs();
+        public abstract IBone GetAnchor();
     }
 }

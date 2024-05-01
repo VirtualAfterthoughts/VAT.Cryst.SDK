@@ -84,6 +84,21 @@ namespace VAT.Avatars.Skeletal
 
         public abstract DataBone GetRoot();
 
+
+        void ISkeleton.Deinitiate()
+        {
+
+        }
+
+        public abstract IBone GetHead();
+        public abstract SimpleTransform GetEyeCenter();
+
+        public abstract IArmGroup[] GetArms();
+
+        public abstract ILegGroup[] GetLegs();
+
+        public abstract IBone GetAnchor();
+
 #if UNITY_EDITOR
         public void DrawGizmos() {
             OnDrawGizmos();
@@ -96,14 +111,6 @@ namespace VAT.Avatars.Skeletal
                 }
             }
         }
-
-        void ISkeleton.Deinitiate()
-        {
-            
-        }
-
-        public abstract IBone GetHead();
-        public abstract SimpleTransform GetEyeCenter();
 #endif
     }
 }

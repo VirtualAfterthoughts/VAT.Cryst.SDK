@@ -10,7 +10,7 @@ using VAT.Shared.Data;
 
 namespace VAT.Avatars.REWORK
 {
-    public interface IArmGroup : IBoneGroup
+    public interface IArmGroup : ILimbGroup
     {
         public IBone UpperArm { get; }
         public IBone Elbow { get; }
