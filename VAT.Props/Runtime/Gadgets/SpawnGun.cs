@@ -113,7 +113,7 @@ namespace VAT.Interaction
         {
             if (_mainInteractor != null)
             {
-                var controller = _mainInteractor.GetHandOrNull().GetInputControllerOrNull();
+                var controller = _mainInteractor.GetInputHandOrNull().GetInputControllerOrNull();
                 var trigger = controller.GetTriggerOrNull();
                 var axis = (trigger?.GetAxis()).GetValueOrDefault();
 

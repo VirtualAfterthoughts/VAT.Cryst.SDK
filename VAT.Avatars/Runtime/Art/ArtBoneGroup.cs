@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 
 namespace VAT.Avatars.Art
 {

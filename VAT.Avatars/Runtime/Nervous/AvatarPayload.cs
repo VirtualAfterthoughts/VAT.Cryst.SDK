@@ -14,9 +14,9 @@ namespace VAT.Avatars.Nervous {
 
         public SimpleTransform[] GetHeads();
 
-        public bool TryGetArm(Handedness handedness, out IArm result);
+        public bool TryGetArm(Handedness handedness, out IInputArm result);
 
-        public IArm[] GetArms(Handedness handedness);
+        public IInputArm[] GetArms(Handedness handedness);
 
         public bool TryGetPelvis(out SimpleTransform result);
 
@@ -39,9 +39,9 @@ namespace VAT.Avatars.Nervous {
 
         public SimpleTransform Head { get; set; }
 
-        public IArm LeftArm { get; set; }
+        public IInputArm LeftArm { get; set; }
 
-        public IArm RightArm { get; set; }
+        public IInputArm RightArm { get; set; }
 
         public IBasicInput Input { get; set; }
 
@@ -50,14 +50,14 @@ namespace VAT.Avatars.Nervous {
             return Array.Empty<SimpleTransform>();
         }
 
-        public readonly IArm[] GetArms(Handedness handedness)
+        public readonly IInputArm[] GetArms(Handedness handedness)
         {
             return handedness switch
             {
-                Handedness.LEFT => new IArm[] { LeftArm },
-                Handedness.RIGHT => new IArm[] { RightArm },
-                Handedness.BOTH => new IArm[] { LeftArm, RightArm },
-                _ => Array.Empty<IArm>(),
+                Handedness.LEFT => new IInputArm[] { LeftArm },
+                Handedness.RIGHT => new IInputArm[] { RightArm },
+                Handedness.BOTH => new IInputArm[] { LeftArm, RightArm },
+                _ => Array.Empty<IInputArm>(),
             };;
         }
 
@@ -87,7 +87,7 @@ namespace VAT.Avatars.Nervous {
             return false;
         }
 
-        public readonly bool TryGetArm(Handedness handedness, out IArm result)
+        public readonly bool TryGetArm(Handedness handedness, out IInputArm result)
         {
             switch (handedness)
             {

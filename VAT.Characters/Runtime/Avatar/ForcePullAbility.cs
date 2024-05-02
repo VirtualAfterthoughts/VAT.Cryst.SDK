@@ -33,14 +33,14 @@ namespace VAT.Characters
                 _hoverModule = interactor.GetModule<IInteractorHoverModule>();
                 _farHoverModule = interactor.GetModule<IInteractorFarHoverModule>();
 
-                var state = _interactor.GetHandOrNull().GetInputControllerOrNull().GetActionsOrNull();
+                var state = _interactor.GetInputHandOrNull().GetInputControllerOrNull().GetActionsOrNull();
                 state.AbilityGrabAction.OnStateChanged += OnActionGrabStateChanged;
                 state.GrabAction.OnStateChanged += OnGrabStateChanged;
             }
 
             public void Cleanup()
             {
-                var state = _interactor.GetHandOrNull().GetInputControllerOrNull().GetActionsOrNull();
+                var state = _interactor.GetInputHandOrNull().GetInputControllerOrNull().GetActionsOrNull();
                 state.AbilityGrabAction.OnStateChanged -= OnActionGrabStateChanged;
                 state.GrabAction.OnStateChanged -= OnGrabStateChanged;
 

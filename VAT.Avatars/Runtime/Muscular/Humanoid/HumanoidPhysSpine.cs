@@ -17,7 +17,7 @@ namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
 
-    using VAT.Avatars.REWORK;
+    using VAT.Avatars.Bones;
     using VAT.Shared.Extensions;
 
     public class HumanoidPhysSpine : HumanoidPhysBoneGroup, IHumanSpine

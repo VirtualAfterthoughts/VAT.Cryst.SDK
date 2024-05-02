@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars.Muscular;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Avatars.Skeletal;
 
 using VAT.Shared.Data;
@@ -81,7 +81,7 @@ namespace VAT.Avatars.Art
             RightLeg.WriteOffsets(skeleton.RightLeg);
         }
 
-        public override void Solve() {
+        public override void Solve(float deltaTime) {
             Spine.Solve();
 
             LeftLeg.Solve();

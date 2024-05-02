@@ -1,19 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
-using UnityEngine;
-
-using VAT.Avatars.Skeletal;
-using VAT.Cryst;
 using VAT.Input;
+
 using VAT.Shared.Data;
 
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 
 namespace VAT.Avatars.Muscular
 {
-    public abstract class PhysBoneSkeleton : ISkeleton, IRigT<PhysBone> {
+    public abstract class PhysBoneSkeleton : ISkeleton {
         public abstract int BoneGroupCount { get; }
 
         public abstract PhysBoneGroup[] BoneGroups { get; }
@@ -24,7 +19,7 @@ namespace VAT.Avatars.Muscular
 
         public abstract void InitiateRuntime();
 
-        public virtual void Solve() {
+        public virtual void Solve(float deltaTime) {
             for (var i = 0; i < BoneGroupCount; i++)
                 GetGroup(i).Solve();
         }
@@ -87,17 +82,7 @@ namespace VAT.Avatars.Muscular
 
         public abstract SimpleTransform GetFloor();
 
-        void ISkeleton.Initiate()
-        {
-            throw new NotImplementedException();
-        }
-
         void ISkeleton.Deinitiate()
-        {
-            throw new NotImplementedException();
-        }
-
-        void ISkeleton.Solve()
         {
             throw new NotImplementedException();
         }

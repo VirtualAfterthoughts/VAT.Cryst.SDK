@@ -8,13 +8,13 @@ using VAT.Input;
 
 using VAT.Avatars.Nervous;
 
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Input.Data;
 using VAT.Shared.Data;
 
 namespace VAT.Avatars.Skeletal
 {
-    public abstract class DataBoneSkeleton : ISkeleton, IRigT<DataBone> {
+    public abstract class DataBoneSkeleton : ISkeleton {
         public abstract DataBoneGroup[] BoneGroups { get; }
         public abstract int BoneGroupCount { get; }
 
@@ -28,7 +28,7 @@ namespace VAT.Avatars.Skeletal
 
         public abstract void Initiate();
 
-        public abstract void Solve();
+        public abstract void Solve(float deltaTime);
 
         public abstract void WriteRemappingMeasurements(BodyMeasurements measurements);
 

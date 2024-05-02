@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 
 using VAT.Shared.Data;
 
@@ -18,7 +18,7 @@ namespace VAT.Avatars.Art
         public abstract void Initiate();
         public virtual void Deinitiate() { }
 
-        public abstract void Solve();
+        public abstract void Solve(float deltaTime);
 
         public abstract IBone GetHead();
         public abstract SimpleTransform GetEyeCenter();

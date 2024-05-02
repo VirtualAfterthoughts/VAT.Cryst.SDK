@@ -5,18 +5,18 @@ using UnityEngine;
 
 namespace VAT.Input.Skeleton
 {
-    public readonly struct GenericArm : IArm
+    public readonly struct GenericArm : IInputArm
     {
-        private readonly IJoint[] _joints;
-        public readonly IJoint[] Joints => _joints;
+        private readonly IInputJoint[] _joints;
+        public readonly IInputJoint[] Joints => _joints;
 
         public readonly int JointCount => Joints.Length;
 
-        private readonly IHand _hand;
+        private readonly IInputHand _hand;
 
-        public GenericArm(IHand hand, params IJoint[] joints)
+        public GenericArm(IInputHand hand, params IInputJoint[] joints)
         {
-            _joints = new IJoint[joints.Length + 1];
+            _joints = new IInputJoint[joints.Length + 1];
             _joints[0] = hand;
 
             for (var i = 0; i < joints.Length; i++)
@@ -27,17 +27,17 @@ namespace VAT.Input.Skeleton
             _hand = hand;
         }
 
-        public readonly IHand GetHandOrNull()
+        public readonly IInputHand GetHandOrNull()
         {
             return _hand;
         }
 
-        public readonly IJoint GetElbowOrNull()
+        public readonly IInputJoint GetElbowOrNull()
         {
             return Joints.ElementAtOrDefault(1);
         }
 
-        public readonly IJoint GetUpperArmOrNull()
+        public readonly IInputJoint GetUpperArmOrNull()
         {
             return Joints.ElementAtOrDefault(2);
         }

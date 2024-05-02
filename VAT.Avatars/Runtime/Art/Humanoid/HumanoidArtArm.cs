@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 using VAT.Avatars.Muscular;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Avatars.Skeletal;
 
 using VAT.Shared.Data;

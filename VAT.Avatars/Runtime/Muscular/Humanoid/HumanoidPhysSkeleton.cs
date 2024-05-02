@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars.Proportions;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Avatars.Skeletal;
 using VAT.Cryst;
 using VAT.Input;
@@ -101,9 +101,9 @@ namespace VAT.Avatars.Muscular
             IgnoreCollisions(true);
         }
 
-        public override void Solve()
+        public override void Solve(float deltaTime)
         {
-            base.Solve();
+            base.Solve(deltaTime);
 
             _skeleton.WriteSkeleton(this);
         }

@@ -40,6 +40,6 @@ namespace VAT.Interaction
 
         void DeregisterModule(IInteractorModule module);
 
-        IHand GetHandOrNull();
+        IInputHand GetInputHandOrNull();
     }
 }

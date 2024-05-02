@@ -67,13 +67,8 @@ namespace VAT.Avatars.Editor {
                 
                 GUILayout.Space(5);
 
-                EditorGUILayout.HelpBox("If your Avatar is not in a T-Pose, either:\n" +
-                    "1. Manually rotate the bones to match a T-Pose, or\n" +
-                    "2. Use the \"Set Animator Pose\" button.", MessageType.Warning);
-
-                if (GUILayout.Button("Set Animator Pose")) {
-                    _avatar.EditorSetAnimatorPose();
-                }
+                EditorGUILayout.HelpBox("A T-Pose or A-Pose is recommended for best avatar setup, but " +
+                    "Crystalline will attempt to resolve most default poses.", MessageType.Warning);
 
                 if (GUILayout.Button("Auto Calculate Proportions")) {
                     _avatar.EditorCalculateProportions();

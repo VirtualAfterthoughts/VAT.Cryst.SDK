@@ -96,7 +96,7 @@ namespace VAT.Characters
             return head.Transform;
         }
 
-        public override bool TryGetHead(out IJoint head)
+        public override bool TryGetHead(out IInputJoint head)
         {
             var simpleTransform = SimpleTransform.Create(transform.position, transform.rotation).InverseTransform(SimpleTransform.Create(_head.position, _head.rotation));
 
@@ -104,7 +104,7 @@ namespace VAT.Characters
             return true;
         }
 
-        public override bool TryGetArm(Handedness handedness, out IArm arm)
+        public override bool TryGetArm(Handedness handedness, out IInputArm arm)
         {
             var root = GetRoot();
 
@@ -142,7 +142,7 @@ namespace VAT.Characters
             vrRoot.SetLocalPositionAndRotation(transform.position, transform.rotation);
         }
 
-        public IHand GetPrimaryHand()
+        public IInputHand GetPrimaryHand()
         {
             if (TryGetArm(Handedness.RIGHT, out var arm))
             {
@@ -152,7 +152,7 @@ namespace VAT.Characters
             return null;
         }
 
-        public IHand GetSecondaryHand()
+        public IInputHand GetSecondaryHand()
         {
             if (TryGetArm(Handedness.LEFT, out var arm))
             {

@@ -21,8 +21,8 @@ namespace VAT.Characters
 
         SimpleTransform GetLocalHead();
 
-        IHand GetPrimaryHand();
+        IInputHand GetPrimaryHand();
 
-        IHand GetSecondaryHand();
+        IInputHand GetSecondaryHand();
     }
 }

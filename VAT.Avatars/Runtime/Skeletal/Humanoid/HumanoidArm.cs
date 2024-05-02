@@ -12,7 +12,7 @@ using VAT.Shared.Math;
 namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
-    using VAT.Avatars.REWORK;
+    using VAT.Avatars.Bones;
     using VAT.Cryst.Delegates;
     using VAT.Input;
     using VAT.Input.Data;
@@ -48,7 +48,7 @@ namespace VAT.Avatars.Skeletal
 
         IHandGroup IArmGroup.Hand => Hand;
 
-        public SimpleTransform Target => _originalTarget;
+        public SimpleTransform EndTarget => _originalTarget;
 
         public Handedness Handedness => isLeft ? Handedness.LEFT : Handedness.RIGHT;
 

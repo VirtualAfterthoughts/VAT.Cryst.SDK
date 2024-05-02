@@ -16,7 +16,7 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
-    using VAT.Avatars.REWORK;
+    using VAT.Avatars.Bones;
 
     public class HumanoidPhysNeck : HumanoidPhysBoneGroup, IPoseableT<IHumanNeck>, IHumanNeck
     {

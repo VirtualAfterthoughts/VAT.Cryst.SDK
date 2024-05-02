@@ -7,7 +7,7 @@ using VAT.Shared.Extensions;
 
 using static Unity.Mathematics.math;
 
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 
 namespace VAT.Avatars.Skeletal {
     using Unity.Mathematics;

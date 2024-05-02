@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VAT.Avatars.Constants;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Cryst.Interfaces;
 using VAT.Shared.Data;
 

@@ -72,7 +72,7 @@ namespace VAT.Characters
             return movement;
         }
 
-        public override bool TryGetArm(Handedness handedness, out IArm arm)
+        public override bool TryGetArm(Handedness handedness, out IInputArm arm)
         {
             var root = SimpleTransform.Create(transform.position, transform.rotation);
 

@@ -8,7 +8,7 @@ using VAT.Avatars.Proportions;
 using VAT.Avatars.Nervous;
 
 using VAT.Shared.Data;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Input.Data;
 
 namespace VAT.Avatars.Skeletal

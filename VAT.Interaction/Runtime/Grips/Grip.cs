@@ -169,7 +169,7 @@ namespace VAT.Interaction
         {
             float force = 0f;
 
-            var controller = interactor.GetHandOrNull().GetInputControllerOrNull();
+            var controller = interactor.GetInputHandOrNull().GetInputControllerOrNull();
 
             if (controller != null)
             {

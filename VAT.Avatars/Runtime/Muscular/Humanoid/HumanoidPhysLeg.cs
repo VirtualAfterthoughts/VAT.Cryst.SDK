@@ -16,7 +16,8 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
-    using VAT.Avatars.REWORK;
+    using VAT.Avatars.Bones;
+    using VAT.Cryst.Delegates;
     using VAT.Input;
 
     public class HumanoidPhysLeg : HumanoidPhysBoneGroup, IPoseableT<IHumanLeg>, IHumanLeg
@@ -40,7 +41,21 @@ namespace VAT.Avatars.Muscular
 
         public Handedness Handedness => isLeft ? Handedness.LEFT : Handedness.RIGHT;
 
+        public SimpleTransform EndTarget => _leg.EndTarget;
+
         private IHumanLeg _leg;
+
+        public event TargetProcessorCallback OnProcessTarget
+        {
+            add
+            {
+                _leg.OnProcessTarget += value;
+            }
+            remove
+            {
+                _leg.OnProcessTarget -= value;
+            }
+        }
 
         public override void Initiate()
         {

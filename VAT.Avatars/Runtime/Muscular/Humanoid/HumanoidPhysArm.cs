@@ -17,7 +17,7 @@ namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
     using UnityEngine.XR;
-    using VAT.Avatars.REWORK;
+    using VAT.Avatars.Bones;
     using VAT.Cryst.Delegates;
     using VAT.Input;
 
@@ -51,7 +51,7 @@ namespace VAT.Avatars.Muscular
         private RelativeBone _relativeCarpal = null;
         public IBone Carpal => _relativeCarpal;
 
-        public SimpleTransform Target => _arm.Target;
+        public SimpleTransform EndTarget => _arm.EndTarget;
 
         public Handedness Handedness => isLeft ? Handedness.LEFT : Handedness.RIGHT;
 

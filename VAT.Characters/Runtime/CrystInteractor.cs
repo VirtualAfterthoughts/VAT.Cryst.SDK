@@ -25,7 +25,7 @@ namespace VAT.Characters
         public CrystRigidbody rb;
         public Handedness handedness;
         public IInputController controller;
-        public IHand hand;
+        public IInputHand hand;
         public AvatarArm arm;
         public HandPoseData openPose;
         public HandPoseData closedPose;
@@ -441,7 +441,7 @@ namespace VAT.Characters
             return rb.Rigidbody;
         }
 
-        public IHand GetHandOrNull()
+        public IInputHand GetInputHandOrNull()
         {
             return hand;
         }
@@ -451,7 +451,7 @@ namespace VAT.Characters
             return new InteractorTargetData()
             {
                 rig = arm.PhysRig.Transform,
-                targetInRig = arm.DataRig.Transform.InverseTransform(arm.DataArm.Target)
+                targetInRig = arm.DataRig.Transform.InverseTransform(arm.DataArm.EndTarget)
             };
         }
 

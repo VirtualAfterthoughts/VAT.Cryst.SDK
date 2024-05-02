@@ -176,8 +176,8 @@ namespace VAT.Characters
             ApplyRemapping();
 
             avatar.Write(GetPayload());
-            avatar.GetSkeleton().GetData().Solve();
-            avatar.SolveArt();
+            avatar.GetSkeleton().GetData().Solve(1f);
+            avatar.GetSkeleton().GetArt().Solve(1f);
 
             InitiateAbilities();
         }
@@ -211,20 +211,20 @@ namespace VAT.Characters
             var payload = GetPayload();
 
             _activeAvatar.Write(payload);
-            _activeAvatar.GetSkeleton().GetData().Solve();
-            _activeAvatar.GetSkeleton().GetPhysics().Solve();
+            _activeAvatar.GetSkeleton().GetData().Solve(deltaTime);
+            _activeAvatar.GetSkeleton().GetPhysics().Solve(deltaTime);
         }
 
         public override void OnLateUpdate(float deltaTime)
         {
-            _activeAvatar.SolveArt();
+            _activeAvatar.GetSkeleton().GetArt().Solve(deltaTime);
 
             ApplyOffsets();
 
             OnPostArt?.Invoke();
         }
 
-        public override bool TryGetHead(out IJoint head)
+        public override bool TryGetHead(out IInputJoint head)
         {
             head = new BasicJoint(SimpleTransform.Create(transform.position, transform.rotation).InverseTransform(_activeAvatar.GetSkeleton().GetPhysics().GetEyeCenter()));
             return true;

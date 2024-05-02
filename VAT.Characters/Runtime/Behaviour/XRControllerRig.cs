@@ -59,7 +59,7 @@ namespace VAT.Characters
             return button.GetPressed();
         }
 
-        public override bool TryGetArm(Handedness handedness, out IArm arm)
+        public override bool TryGetArm(Handedness handedness, out IInputArm arm)
         {
             if (!XRManager.HasApi())
             {

@@ -21,21 +21,9 @@ namespace VAT.Avatars.Integumentary
 #if UNITY_EDITOR
         private void Reset() {
             if (TryGetComponent(out animator)) {
-                EditorSetAnimatorPose();
                 EditorAutoFillBoneTransforms();
                 EditorCalculateProportions();
             }
-        }
-
-        [ContextMenu("Set Animator Pose")]
-        public void EditorSetAnimatorPose()
-        {
-            Undo.RegisterChildrenOrderUndo(animator.gameObject, "Set Animator Pose");
-
-            var controller = animator.runtimeAnimatorController;
-            animator.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("Animations/Controllers/controller_AvatarDefault");
-            animator.Update(0f);
-            animator.runtimeAnimatorController = controller;
         }
 
         [ContextMenu("Calculate Proportions from Animator")]

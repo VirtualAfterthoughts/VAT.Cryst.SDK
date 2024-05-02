@@ -13,8 +13,8 @@ namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
 
-    using VAT.Avatars.REWORK;
-
+    using VAT.Avatars.Bones;
+    using VAT.Cryst.Delegates;
     using VAT.Input;
 
     public class HumanoidLeg : HumanoidBoneGroup, IHumanLeg
@@ -38,6 +38,10 @@ namespace VAT.Avatars.Skeletal
 
         public Handedness Handedness => isLeft ? Handedness.LEFT : Handedness.RIGHT;
 
+        public SimpleTransform EndTarget => _originalTarget;
+
+        private SimpleTransform _originalTarget = SimpleTransform.Default;
+
         private int _legIndex;
 
         private HumanoidSpine _spine;
@@ -46,6 +50,8 @@ namespace VAT.Avatars.Skeletal
 
         private HumanoidSpineProportions _spineProportions;
         private HumanoidLegProportions _legProportions;
+
+        public event TargetProcessorCallback OnProcessTarget;
 
         public override void WriteProportions(HumanoidProportions proportions) {
             _spineProportions = proportions.spineProportions;
@@ -79,8 +85,18 @@ namespace VAT.Avatars.Skeletal
             // Get our locomotor and its solved heel position
             var locomotor = _spine.Locomotion.Locomotors[_legIndex];
 
+            var target = locomotor.Result;
+            
+            _originalTarget = target;
+
+            // Apply any overrides
+            if (OnProcessTarget != null)
+            {
+                target = OnProcessTarget(target);
+            }
+
             // Then, simply solve with that as the target
-            LegSolve(locomotor.Result);
+            LegSolve(target);
         }
 
         private void LegSolve(SimpleTransform target) {

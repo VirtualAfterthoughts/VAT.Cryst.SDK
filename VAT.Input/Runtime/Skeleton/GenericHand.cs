@@ -9,7 +9,7 @@ using VAT.Shared.Data;
 
 namespace VAT.Input
 {
-    public readonly struct GenericHand : IHand
+    public readonly struct GenericHand : IInputHand
     {
         public readonly SimpleTransform Transform => _transform;
 

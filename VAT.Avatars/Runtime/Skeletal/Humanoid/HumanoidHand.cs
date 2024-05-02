@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 using VAT.Avatars.Proportions;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Input;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;

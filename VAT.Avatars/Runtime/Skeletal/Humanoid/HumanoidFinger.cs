@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.XR;
 using VAT.Avatars.Proportions;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 using VAT.Shared.Utilities;

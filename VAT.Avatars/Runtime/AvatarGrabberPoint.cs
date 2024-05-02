@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Avatars.Integumentary;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Interaction;
 using VAT.Shared.Data;
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace VAT.Avatars.Muscular
 {
     using UnityEngine;
-    using VAT.Avatars.REWORK;
+    using VAT.Avatars.Bones;
 
     public abstract class PhysBoneGroup : IBoneGroup {
         public abstract int BoneCount { get; }

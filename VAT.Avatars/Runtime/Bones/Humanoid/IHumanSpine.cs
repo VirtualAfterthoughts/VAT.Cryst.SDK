@@ -1,0 +1,16 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace VAT.Avatars.Bones
+{
+    public interface IHumanSpine : IBoneGroup
+    {
+        public IBone Root { get; }
+        public IBone TargetRoot { get; }
+        public IBone Sacrum { get; }
+        public IBone L1Vertebra { get; }
+        public IBone T7Vertebra { get; }
+        public IBone T1Vertebra { get; }
+    }
+}

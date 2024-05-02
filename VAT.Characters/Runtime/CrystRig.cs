@@ -47,13 +47,13 @@ namespace VAT.Characters
         public virtual void OnLateUpdate(float deltaTime) { }
         public virtual void OnUpdate(float deltaTime) { }
 
-        public virtual bool TryGetHead(out IJoint head)
+        public virtual bool TryGetHead(out IInputJoint head)
         {
             head = default;
             return false;
         }
 
-        public virtual bool TryGetArm(Handedness handedness, out IArm arm)
+        public virtual bool TryGetArm(Handedness handedness, out IInputArm arm)
         {
             arm = default;
             return false;

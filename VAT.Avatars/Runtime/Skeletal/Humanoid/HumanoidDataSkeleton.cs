@@ -8,7 +8,7 @@ using VAT.Avatars.Proportions;
 using VAT.Avatars.Nervous;
 
 using VAT.Input;
-using VAT.Avatars.REWORK;
+using VAT.Avatars.Bones;
 using VAT.Shared.Data;
 using VAT.Input.Data;
 
@@ -93,7 +93,7 @@ namespace VAT.Avatars.Skeletal
             LocoLeg.WriteProportions(proportions.leftLegProportions.GetLength() + proportions.spineProportions.pelvisEllipsoid.height * 0.24f + proportions.leftLegProportions.ankleEllipsoid.height);
         }
 
-        public override void Solve()
+        public override void Solve(float deltaTime)
         {
             if (_physSkeleton != null)
             {
