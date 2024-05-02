@@ -97,9 +97,7 @@ namespace VAT.Avatars.Editor {
 
                         hand.parent = avatarTransform;
                         avatarTransform.SetPositionAndRotation(hand.position, hand.rotation);
-                        hand.localPosition = Vector3.zero;
-                        hand.localRotation = Quaternion.identity;
-
+                        hand.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
                         Transform hips = instance.artDescriptor.spineDescriptor.hips.transform;
                         if (hips != null) {
                             hips.parent = hand;
