@@ -84,6 +84,12 @@ namespace VAT.Characters
         {
             if (state && _attachedGrip == null && _hoverHolder.HoveringInteractable is IGrippable hoveringGrip)
             {
+                // Validate grip
+                if (!hoveringGrip.ValidateInteraction(this).valid)
+                {
+                    return;
+                }
+
                 AttachGrip(hoveringGrip);
             }
             else if (!state && _attachedGrip != null)
