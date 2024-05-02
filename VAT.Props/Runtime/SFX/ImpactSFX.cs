@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+
+using VAT.Entities;
+using VAT.Entities.PhysX;
 using VAT.Packaging;
 using VAT.Props;
-using VAT.Shared.Extensions;
 
 namespace VAT.Audio
 {
     public class ImpactSFX : MonoBehaviour
     {
+        [Header("References")]
+        [SerializeField]
+        private CrystRigidbody _body = null;
+
         [SerializeField]
         private ShardReferenceT<ImpactMaterial> _materialReference;
 
+        [Header("Settings")]
         [SerializeField]
         private float _minVelocity = 0.5f;
 
@@ -75,12 +82,9 @@ namespace VAT.Audio
                     var normal = point.normal;
                     var velocity = Vector3.zero;
 
-                    if (GetComponent<Rigidbody>() != null)
+                    if (_body != null && _body.HasBody)
                     {
-                        velocity = GetComponent<Rigidbody>().GetPointVelocity(point.point);
-                        velocity = Quaternion.FromToRotation(Vector3.up, normal) * velocity;
-                        velocity.y = 0f;
-                        velocity = Quaternion.FromToRotation(normal, Vector3.up) * velocity;
+                        velocity = _body.Rigidbody.GetPointVelocity(point.point);
                     }
 
                     AudioSpawner.Spawn(new AudioSpawner.AudioRequestInfo()

@@ -91,7 +91,10 @@ namespace VAT.Interaction
         {
             _spawnablesPageCollection = new UIPageCollection();
 
-            var contents = AssetPackager.Instance.GetShards<ISpawnableShard>();
+            var contents = AssetPackager.Instance.GetShards<ISpawnableShard>().ToList();
+
+            contents.RemoveAll(s => s.ShardInfo.Hidden);
+            contents.RemoveAll(s => s.GetType() != typeof(StaticSpawnableShard));
 
             AddSpawnablePages(contents, _spawnablesPageCollection);
 
