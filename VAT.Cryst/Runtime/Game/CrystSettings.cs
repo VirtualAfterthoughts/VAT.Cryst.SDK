@@ -63,12 +63,17 @@ namespace VAT.Cryst.Game
             LoadSettingsFromAddress().ContinueWith(() =>
             {
                 // Check loaded settings
+                bool success = true;
+
                 if (_loadedSettings == null)
                 {
-                    CreateDefaultSettings();
+                    success = CreateDefaultSettings();
                 }
 
-                Selection.SetActiveObjectWithContext(_loadedSettings, _loadedSettings);
+                if (success)
+                {
+                    Selection.SetActiveObjectWithContext(_loadedSettings, _loadedSettings);
+                }
             });
         }
 
@@ -86,6 +91,13 @@ namespace VAT.Cryst.Game
         {
             if (_loadedSettings == null)
             {
+                bool create = EditorUtility.DisplayDialog("Missing Settings", "There are currently no CrystSettings for this project. Add them?", "Yes", "No");
+
+                if (!create)
+                {
+                    return false;
+                }
+
                 var newSettings = CreateInstance<CrystSettings>();
 
                 var path = CrystAssetManager.GetCrystRelativePath("Settings");
