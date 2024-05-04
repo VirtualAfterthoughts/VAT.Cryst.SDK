@@ -49,6 +49,8 @@ namespace VAT.Packaging
             json.Add("address", Address.ID);
             json.Add("title", Info.Title);
             json.Add("description", Info.Description);
+            json.Add("unlockable", ShardInfo.Unlockable);
+            json.Add("hidden", ShardInfo.Hidden);
 
             OnPack(packer, json);
         }
@@ -75,6 +77,16 @@ namespace VAT.Packaging
             if (json.TryGetValue("description", out var description))
             {
                 info.Description = description.ToString();
+            }
+
+            if (json.TryGetValue("unlockable", out var unlockable))
+            {
+                info.Unlockable = unlockable.ToObject<bool>();
+            }
+
+            if (json.TryGetValue("hidden", out var hidden))
+            {
+                info.Hidden = hidden.ToObject<bool>();
             }
 
             ShardInfo = info;
