@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,5 +12,7 @@ namespace VAT.Avatars.Bones
         IBone Knee { get; }
         IBone Ankle { get; }
         IBone Toe { get; }
+
+        event Action<Vector3> OnStep;
     }
 }

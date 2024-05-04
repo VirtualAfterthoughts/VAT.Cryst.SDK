@@ -17,6 +17,8 @@ namespace VAT.Characters
     using VAT.Input.Data;
 
     using System;
+    using VAT.Audio;
+    using VAT.Packaging;
 
     [RequireRig(typeof(IBehaviourRig))]
     public class AvatarRig : CrystRig, IAvatarRig
@@ -27,6 +29,8 @@ namespace VAT.Characters
         public HandPose closedPose;
 
         public AudioClip[] grabSounds;
+
+        public ShardReferenceT<AudioCollection> footstepSounds;
 
         private Avatar _activeAvatar = null;
 
@@ -171,6 +175,13 @@ namespace VAT.Characters
                 _interactors[index++] = interactor;
             }
 
+            var legs = avatar.GetLegs();
+
+            foreach (var leg in legs)
+            {
+                leg.DataLeg.OnStep += OnStep;
+            }
+
             _activeAvatar = avatar;
 
             ApplyRemapping();
@@ -180,6 +191,35 @@ namespace VAT.Characters
             avatar.GetSkeleton().GetArt().Solve(1f);
 
             InitiateAbilities();
+        }
+
+        protected void OnStep(Vector3 position)
+        {
+            if (!footstepSounds.TryGetShard(out var shard))
+            {
+                return;
+            }
+
+            var clip = shard.GetRandomAudioClip();
+
+            if (!clip.TryGetShard(out var clipShard))
+            {
+                return;
+            }
+
+            clipShard.MainAssetT.LoadAsset((c) =>
+            {
+                AudioSpawner.Spawn(new AudioSpawner.AudioRequestInfo()
+                {
+                    position = position,
+                    settings = new AudioPlaySettings()
+                    {
+                        volume = UnityEngine.Random.Range(0.1f, 0.4f),
+                        pitch = 1f,
+                    },
+                    clip = c,
+                });
+            });
         }
 
         protected virtual IAvatarPayload GetPayload()

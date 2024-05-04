@@ -11,6 +11,7 @@ using static Unity.Mathematics.math;
 
 namespace VAT.Avatars.Skeletal
 {
+    using System;
     using Unity.Mathematics;
 
     using VAT.Avatars.Bones;
@@ -52,6 +53,18 @@ namespace VAT.Avatars.Skeletal
         private HumanoidLegProportions _legProportions;
 
         public event TargetProcessorCallback OnProcessTarget;
+
+        public event Action<Vector3> OnStep
+        {
+            add
+            {
+                _spine.Locomotion.Locomotors[_legIndex].OnStep += value;
+            }
+            remove
+            {
+                _spine.Locomotion.Locomotors[_legIndex].OnStep -= value;
+            }
+        }
 
         public override void WriteProportions(HumanoidProportions proportions) {
             _spineProportions = proportions.spineProportions;

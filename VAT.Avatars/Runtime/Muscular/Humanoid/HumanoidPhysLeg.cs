@@ -15,6 +15,7 @@ using static Unity.Mathematics.math;
 
 namespace VAT.Avatars.Muscular
 {
+    using System;
     using Unity.Mathematics;
     using VAT.Avatars.Bones;
     using VAT.Cryst.Delegates;
@@ -44,6 +45,18 @@ namespace VAT.Avatars.Muscular
         public SimpleTransform EndTarget => _leg.EndTarget;
 
         private IHumanLeg _leg;
+
+        public event Action<Vector3> OnStep
+        {
+            add
+            {
+                _leg.OnStep += value;
+            }
+            remove
+            {
+                _leg.OnStep -= value;
+            }
+        }
 
         public event TargetProcessorCallback OnProcessTarget
         {

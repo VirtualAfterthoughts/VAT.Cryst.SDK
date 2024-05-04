@@ -12,6 +12,7 @@ using static Unity.Mathematics.math;
 
 namespace VAT.Avatars.Skeletal
 {
+    using System;
     using Unity.Mathematics;
     using VAT.Avatars.Integumentary;
 
@@ -161,6 +162,8 @@ namespace VAT.Avatars.Skeletal
         private SimpleTransform _result = SimpleTransform.Default;
         public SimpleTransform Result => _result;
 
+        public event Action<Vector3> OnStep;
+
         private SimpleTransform _stepFrom = SimpleTransform.Default;
         private SimpleTransform _stepTo = SimpleTransform.Default;
 
@@ -238,7 +241,7 @@ namespace VAT.Avatars.Skeletal
 
             _threshold = Mathf.Lerp(0.8f, 0.6f, _velocity.magnitude / (4f * _legMultiplier));
 
-            _stepSpeed = Mathf.Lerp(0.7f, 1f, _velocity.magnitude / (4f * _legMultiplier)) * Mathf.Sqrt(_legMultiplier);
+            _stepSpeed = Mathf.Lerp(0.9f, 1.2f, _velocity.magnitude / (4f * _legMultiplier)) * Mathf.Sqrt(_legMultiplier);
 
             // Get the resting foot position and rotation
             float restOffset = _hipOffset * 1.5f;
@@ -328,6 +331,8 @@ namespace VAT.Avatars.Skeletal
             _stepping = false;
             _result = _feetCenter.Transform(_stepTo);
             _localResult = _feetCenter.InverseTransform(_result);
+
+            OnStep?.Invoke(_result.position);
         }
     }
 }

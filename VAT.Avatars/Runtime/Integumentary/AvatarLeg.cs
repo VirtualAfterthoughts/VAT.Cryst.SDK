@@ -19,15 +19,5 @@ namespace VAT.Avatars.Integumentary {
             DataLeg = dataLeg;
             PhysLeg = physLeg;
         }
-
-        public Handedness GetHandedness()
-        {
-            return Handedness;
-        }
-
-        public int GetIndex()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
