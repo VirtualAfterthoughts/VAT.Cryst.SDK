@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Cryst.Game;
 using VAT.Packaging;
 using VAT.Pooling;
 
@@ -29,23 +29,17 @@ namespace VAT.Audio
             public AudioPlayer audioPlayer;
         }
 
-        private static ShardInfo _info = new()
-        {
-            Title = "Audio Player",
-            Hidden = true,
-        };
-
-        private static DynamicSpawnableShard _spawnable = null;
+        private static SpawnableShardReference _audioPlayerReference = null;
 
         public static void Spawn(AudioRequestInfo info)
         {
-            if (_spawnable == null)
+            if (_audioPlayerReference == null)
             {
-                Debug.LogWarning("Tried spawning from the AudioSpawner, but the spawnable isn't ready yet!");
+                Debug.LogWarning("Tried spawning from the AudioSpawner, but the spawnable hasn't been loaded!");
                 return;
             }
 
-            var spawnable = new Spawnable(_spawnable.Address)
+            var spawnable = new Spawnable(_audioPlayerReference.Address)
             {
                 rules = new SpawnRules(32, SpawnMode.REUSE_OLDEST),
             };
@@ -81,18 +75,27 @@ namespace VAT.Audio
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         private static void RuntimeInitialize()
         {
-            PoolManager.HookOnReady(CreateSpawnable);
+            CrystSettings.HookOnLoad(OnLoadSettings);
         }
 
-        private static void CreateSpawnable()
+        private static void OnLoadSettings()
         {
-            var audioPlayerGameObject = new GameObject("Audio Player");
-            audioPlayerGameObject.AddComponent<AudioPlayer>();
+            var settings = CrystSettings.LoadedSettings;
+            var audioSettings = settings.GetSettings<CrystAudioSettings>();
 
-            audioPlayerGameObject.SetActive(false);
-            GameObject.DontDestroyOnLoad(audioPlayerGameObject);
+            if (audioSettings == null)
+            {
+                Debug.LogWarning("The current CrystSettings is missing AudioSettings! Audio spawning will not function!");
+                return;
+            }
 
-            _spawnable = DynamicShardFactory.Create<DynamicSpawnableShard>(_info, audioPlayerGameObject);
+            if (audioSettings.AudioPlayerReference == null || audioSettings.AudioPlayerReference.Address == Address.EMPTY)
+            {
+                Debug.LogWarning("The current CrystAudioSettings contain an invalid audio player reference! Audio spawning will not function!");
+                return;
+            }
+
+            _audioPlayerReference = audioSettings.AudioPlayerReference;
         }
     }
 }

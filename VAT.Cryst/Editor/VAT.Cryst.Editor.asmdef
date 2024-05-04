@@ -1,0 +1,18 @@
+{
+    "name": "VAT.Cryst.Editor",
+    "rootNamespace": "VAT.Cryst.Editor",
+    "references": [
+        "GUID:da0c0cee52ead1942830bb1939fcf23c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

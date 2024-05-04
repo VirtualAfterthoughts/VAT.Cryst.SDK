@@ -1,6 +1,7 @@
-using Cysharp.Threading.Tasks;
-using System.Collections;
+using System;
 using System.Collections.Generic;
+
+using Cysharp.Threading.Tasks;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,7 +13,6 @@ using VAT.Cryst.Addressables;
 
 namespace VAT.Cryst.Game
 {
-    using System;
     using UnityEngine.AddressableAssets;
 
     public class CrystSettings : ScriptableObject
@@ -34,6 +34,76 @@ namespace VAT.Cryst.Game
         }
 
         private static Action _onSettingsLoaded = null;
+
+        [SerializeField]
+        private List<SubCrystSettings> _subSettings = new();
+
+        public SubCrystSettings GetSettings(Type type)
+        {
+            foreach (var settings in _subSettings)
+            {
+                if (settings.GetType() == type)
+                {
+                    return settings;
+                }
+            }
+
+            return null;
+        }
+
+        public TSettings GetSettings<TSettings>() where TSettings : SubCrystSettings
+        {
+            foreach (var settings in _subSettings)
+            {
+                if (settings is TSettings result)
+                {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        public void AddSettings(SubCrystSettings settings)
+        {
+            _subSettings.Add(settings);
+
+#if UNITY_EDITOR
+            ValidateSettings();
+#endif
+        }
+
+        public void RemoveSettings(SubCrystSettings settings)
+        {
+            _subSettings.Remove(settings);
+
+#if UNITY_EDITOR
+            ValidateSettings();
+#endif
+        }
+
+#if UNITY_EDITOR
+        private void ValidateSettings()
+        {
+            var path = AssetDatabase.GetAssetPath(this);
+            
+            var allSubAssets = AssetDatabase.LoadAllAssetRepresentationsAtPath(path);
+
+            foreach (var subAsset in allSubAssets)
+            {
+                if (subAsset is not SubCrystSettings subSettings)
+                {
+                    continue;
+                }
+
+                // Not in list?
+                if (!_subSettings.Contains(subSettings))
+                {
+                    AssetDatabase.RemoveObjectFromAsset(subSettings);
+                }
+            }
+        }
+#endif
 
         public static void HookOnLoad(Action action)
         {
@@ -80,6 +150,12 @@ namespace VAT.Cryst.Game
         [MenuItem("VAT/Cryst SDK/Settings")]
         private static void OpenSettings()
         {
+            if (_loadedSettings != null)
+            {
+                Selection.SetActiveObjectWithContext(_loadedSettings, _loadedSettings);
+                return;
+            }
+
             LoadSettingsFromAddress().ContinueWith(() =>
             {
                 // Check loaded settings
@@ -100,10 +176,16 @@ namespace VAT.Cryst.Game
         public void OnValidate()
         {
             EditorValidateAddressable();
+            ValidateSettings();
         }
 
         public void EditorValidateAddressable()
         {
+            if (this.IsAddressable())
+            {
+                return;
+            }
+
             var group = AddressablesExtensions.CreateOrFindGroup("Settings");
 
             if (!group.GetSchema<PersistentGroupSchema>())

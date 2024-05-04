@@ -173,6 +173,12 @@ namespace VAT.Packaging
 
             EditorUtility.SetDirty(MainGameObject.EditorAssetT);
             var icon = AssetPreview.GetAssetPreview(MainGameObject.EditorAssetT);
+
+            if (icon == null)
+            {
+                return;
+            }
+
             var newIcon = new Texture2D(icon.width, icon.height, icon.format, false);
 
             newIcon.SetPixels32(icon.GetPixels32());
