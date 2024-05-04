@@ -197,8 +197,10 @@ namespace VAT.Avatars.Skeletal
             _hipOffset = mult * _proportions.hipSeparationOffset;
         }
 
+        private Vector3 _groundNormal = Vector3.up;
+
         public void PreSolve(SimpleTransform sacrum, SimpleTransform feetCenter, Vector3 velocity) {
-            _velocity = velocity;
+            feetCenter.rotation = Quaternion.FromToRotation(feetCenter.up, _groundNormal) * feetCenter.rotation;
 
             _lastFeetRotation = _feetCenter.rotation;
             _feetCenter = feetCenter;
@@ -209,10 +211,10 @@ namespace VAT.Avatars.Skeletal
             _sacrum = sacrum;
             _result = feetCenter.Transform(_localResult);
 
-
             // Get the resting foot position and rotation
             float restOffset = _hipOffset * 1.5f;
-            _resting = SimpleTransform.Create(feetCenter.position + feetCenter.right * restOffset, feetCenter.rotation);
+            var rotation = feetCenter.rotation;
+            _resting = SimpleTransform.Create(feetCenter.position + feetCenter.right * restOffset, rotation);
 
             if (!_steppedOnce)
             {
@@ -225,6 +227,8 @@ namespace VAT.Avatars.Skeletal
             var hits = Physics.RaycastAll(sacrum.position, _resting.position - sacrum.position, _proportions.GetLength() * 1.3f, ~0, QueryTriggerInteraction.Ignore);
 
             // TEMPORARY, replace with layermask or something else later
+            RaycastHit? closestHit = null;
+
             foreach (var hit in hits)
             {
                 var parent = hit.collider.transform.parent;
@@ -234,8 +238,34 @@ namespace VAT.Avatars.Skeletal
                 }
 
                 _isGrounded = true;
-                break;
+                
+                if (!closestHit.HasValue)
+                {
+                    closestHit = hit;
+                }
+                else if (hit.distance < closestHit.Value.distance) { }
+                {
+                    closestHit = hit;
+                }
             }
+
+            if (closestHit.HasValue)
+            {
+                _groundNormal = closestHit.Value.normal;
+            }
+            else
+            {
+                _groundNormal = feetCenter.up;
+            }
+
+            // Zero velocity height relative to ground
+            var worldToGround = Quaternion.FromToRotation(_groundNormal, Vector3.up);
+
+            velocity = worldToGround * velocity;
+            velocity.y = 0f;
+            velocity = Quaternion.Inverse(worldToGround) * velocity;
+
+            _velocity = velocity;
 
             if (_isGrounded)
             {
@@ -256,10 +286,12 @@ namespace VAT.Avatars.Skeletal
         }
 
         private float3 ClampPosition(float3 position) {
-            position = _feetCenter.InverseTransformPoint(position);
+            var feetCenter = _feetCenter;
+
+            position = feetCenter.InverseTransformPoint(position);
             float3 extents = new(0.5f * _legMultiplier, 2f * _legMultiplier, 0.5f * _legMultiplier);
             position = clamp(position, -extents, extents);
-            position = _feetCenter.TransformPoint(position);
+            position = feetCenter.TransformPoint(position);
 
             return position;
         }
@@ -305,7 +337,7 @@ namespace VAT.Avatars.Skeletal
                     float max = distance(_sacrum.position, _feetCenter.position) * 0.66f;
 
                     stepHeight = (stepHeight + max - abs(stepHeight - max)) * 0.4f;
-                    pos += (Vector3)_feetCenter.up * stepHeight;
+                    pos += _groundNormal * stepHeight;
 
                     if (stepHeight < 0.2f * _legMultiplier && _isGrounded) 
                     {
