@@ -1,11 +1,13 @@
 using Newtonsoft.Json.Linq;
-using System;
+
 using System.Collections.Generic;
+
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
+
 using VAT.Cryst.Game;
 using VAT.Cryst.Utilities;
+
 using VAT.Serialization.JSON;
 
 namespace VAT.Packaging
@@ -128,6 +130,7 @@ namespace VAT.Packaging
             base.GeneratePackedAssets(isBuilding);
         }
 
+#if UNITY_EDITOR
         protected override void OnValidateAssets(bool isBuilding = false)
         {
             ValidateAsset(_previewMesh, Address.BuildAddress(Address, "PreviewMesh"), isBuilding);
@@ -136,6 +139,7 @@ namespace VAT.Packaging
 
             base.OnValidateAssets(isBuilding);
         }
+#endif
 
         private void GeneratePreviewMesh()
         {

@@ -7,12 +7,14 @@ using UnityEditor;
 #endif
 
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
-using VAT.Shared.Extensions;
+using VAT.Cryst.Addressables;
 
 namespace VAT.Cryst.Game
 {
+    using System;
+    using UnityEngine.AddressableAssets;
+
     public class CrystSettings : ScriptableObject
     {
         public const string Address = "CrystSettings";
@@ -28,6 +30,20 @@ namespace VAT.Cryst.Game
                 }
 
                 return _loadedSettings;
+            }
+        }
+
+        private static Action _onSettingsLoaded = null;
+
+        public static void HookOnLoad(Action action)
+        {
+            if (_loadedSettings != null)
+            {
+                action();
+            }
+            else
+            {
+                _onSettingsLoaded += action;
             }
         }
 
@@ -54,6 +70,10 @@ namespace VAT.Cryst.Game
             var handle = await Addressables.LoadAssetAsync<CrystSettings>(keys[0]);
 
             _loadedSettings = handle;
+
+            // Invoke load callback
+            _onSettingsLoaded?.Invoke();
+            _onSettingsLoaded = null;
         }
 
 #if UNITY_EDITOR
@@ -84,7 +104,16 @@ namespace VAT.Cryst.Game
 
         public void EditorValidateAddressable()
         {
-            this.MarkAsAddressable("Settings", Address, Address, true);
+            var group = AddressablesExtensions.CreateOrFindGroup("Settings");
+
+            if (!group.GetSchema<PersistentGroupSchema>())
+            {
+                group.AddSchema<PersistentGroupSchema>();
+            }
+
+            var entry = this.SetAddressable(group);
+
+            entry.SetAddress(Address);
         }
 
         public static bool CreateDefaultSettings()
@@ -109,6 +138,8 @@ namespace VAT.Cryst.Game
 
                 _loadedSettings = AssetDatabase.LoadAssetAtPath<CrystSettings>(assetPath);
                 _loadedSettings.EditorValidateAddressable();
+
+                return true;
             }
 
             return false;

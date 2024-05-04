@@ -1,10 +1,5 @@
-using log4net.Util;
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
-using VAT.Avatars.Integumentary;
 using VAT.Avatars.Bones;
 using VAT.Interaction;
 using VAT.Shared.Data;

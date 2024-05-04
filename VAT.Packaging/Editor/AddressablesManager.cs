@@ -8,8 +8,9 @@ using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Build.AnalyzeRules;
 using UnityEditor.AddressableAssets.Settings;
-using UnityEngine.Assertions.Must;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
+
+using VAT.Cryst.Addressables;
 
 namespace VAT.Packaging.Editor
 {
@@ -47,7 +48,15 @@ namespace VAT.Packaging.Editor
                 return;
 
             foreach (var group in settings.groups.ToArray())
+            {
+                // Check for blacklisted schemas
+                if (group.GetSchema<PersistentGroupSchema>())
+                {
+                    continue;
+                }
+
                 settings.RemoveGroup(group);
+            }
 
             AssetDatabase.SaveAssets();
         }

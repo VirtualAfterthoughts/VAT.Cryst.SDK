@@ -7,9 +7,8 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-using VAT.Cryst.Game;
+using VAT.Cryst.Addressables;
 using VAT.Serialization.JSON;
-using VAT.Shared.Extensions;
 
 using Object = UnityEngine.Object;
 
@@ -150,7 +149,10 @@ namespace VAT.Packaging
             var editorAsset = asset.EditorAsset;
             if (isBuilding && editorAsset && !editorAsset.IsAddressable())
             {
-                editorAsset.MarkAsAddressable(AddressableGroupName, address, null);
+                var group = AddressablesExtensions.CreateOrFindGroup(AddressableGroupName);
+                var entry = editorAsset.SetAddressable(group);
+
+                entry.SetAddress(address);
             }
         }
 

@@ -1,7 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using Unity.Mathematics;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 using UnityEngine;
+
 using VAT.Avatars;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
@@ -68,14 +75,13 @@ namespace VAT.Interaction
             return grabPoint;
         }
 
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-#if UNITY_EDITOR
-            if (UnityEditor.Selection.activeGameObject != gameObject)
+            if (Selection.activeGameObject != gameObject)
             {
                 return;
             }
-#endif
 
             Transform target = _target ? _target : transform;
 
@@ -97,5 +103,6 @@ namespace VAT.Interaction
                 Gizmos.DrawLine(target.position, target.position + secondaryAxis * worldRadius * 2f);
             }
         }
+#endif
     }
 }

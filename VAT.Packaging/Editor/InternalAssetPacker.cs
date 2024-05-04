@@ -1,11 +1,10 @@
 using UnityEditor;
 using UnityEngine;
 
+using VAT.Cryst.Addressables;
 using VAT.Cryst.Game;
 
 using VAT.Serialization.JSON;
-
-using VAT.Shared.Extensions;
 
 namespace VAT.Packaging.Editor
 {
@@ -14,6 +13,7 @@ namespace VAT.Packaging.Editor
         /// <summary>
         /// Packs all internal text assets with default settings.
         /// </summary>
+        [MenuItem("VAT/Debug/Pack Game Assets")]
         public static void PackTextAssets()
         {
             PackTextAssets(false);
@@ -48,7 +48,12 @@ namespace VAT.Packaging.Editor
 
                 AssetDatabase.CreateAsset(textAsset, $"{path}/{crystal.Info.Title}.asset");
 
-                textAsset.MarkAsAddressable(AssetPackager.INTERNAL_CRYSTALS_GROUP, crystal.Address, AssetPackager.INTERNAL_CRYSTALS_LABEL);
+                var group = AddressablesExtensions.CreateOrFindGroup(AssetPackager.INTERNAL_CRYSTALS_GROUP);
+
+                var entry = textAsset.SetAddressable(group);
+
+                entry.SetAddress(crystal.Address);
+                entry.SetLabel(AssetPackager.INTERNAL_CRYSTALS_LABEL, true);
             }
 
             // Fix any potential issues
