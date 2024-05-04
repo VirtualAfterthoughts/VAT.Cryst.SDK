@@ -142,6 +142,7 @@ namespace VAT.Avatars.Muscular
 
             Vector3 error = (targetAngularVelocity - Foot.Body.AngularVelocity);
             _integral += error * dt;
+            _integral = Vector3.ClampMagnitude(_integral, 0.5f);
 
             Vector3 pidv = kdg * error + kdg * 2f * _integral;
 

@@ -277,7 +277,7 @@ namespace VAT.Avatars.Skeletal
 
             _result.position = ClampPosition(_result.position);
 
-            _stepSpeed = Mathf.Lerp(0.8f, 1.1f, CalculateVelocityLerp(_velocity)) * Mathf.Sqrt(_legMultiplier);
+            _stepSpeed = Mathf.Lerp(0.8f, 1.1f, CalculateVelocityLerp(_velocity)) * _legMultiplier;
         }
 
         private float CalculateVelocityLerp(Vector3 velocity)
