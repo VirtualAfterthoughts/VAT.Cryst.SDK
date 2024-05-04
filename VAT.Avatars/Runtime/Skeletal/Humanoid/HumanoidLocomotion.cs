@@ -73,13 +73,13 @@ namespace VAT.Avatars.Skeletal
 
         private Vector3 _lastFeetCenter;
 
-        public void Solve(SimpleTransform root, float3 velocity = default) {
+        public void Solve(SimpleTransform root, SimpleTransform sacrum, float3 velocity = default) {
             // Position the feet center
-            float feetAngle = Vector3.Angle(root.up, _sacrum.up);
-            Vector3 feetAxis = Vector3.Cross(root.up, _sacrum.up);
+            float feetAngle = Vector3.Angle(root.up, sacrum.up);
+            Vector3 feetAxis = Vector3.Cross(root.up, sacrum.up);
 
             _feetCenter.position = Vector3.ProjectOnPlane(_l1Vertebra.position - root.position, root.up) + (Vector3)root.position;
-            _feetCenter.rotation = Quaternion.AngleAxis(-feetAngle, feetAxis) * _sacrum.rotation;
+            _feetCenter.rotation = Quaternion.AngleAxis(-feetAngle, feetAxis) * sacrum.rotation;
 
             var postFeetPos = _feetCenter.position;
             velocity = PhysicsExtensions.GetLinearVelocity(_lastFeetCenter, postFeetPos);
@@ -87,7 +87,7 @@ namespace VAT.Avatars.Skeletal
 
             // Presolve the locomotors
             for (var i = 0; i < Locomotors.Length; i++) {
-                Locomotors[i].PreSolve(_sacrum.Transform, _feetCenter.Transform, velocity);
+                Locomotors[i].PreSolve(sacrum, _feetCenter.Transform, velocity);
             }
 
             bool canStep = true;
@@ -141,7 +141,7 @@ namespace VAT.Avatars.Skeletal
         public static AnimationCurve StepCurve = new(new(0f, 0f, 0.04f, 0.04f, 0f, 0.3f), new(0.25f, 0.5f, 0.003f, 0.003f, 0.5f, 0.8f), new(0.5f, 0.4f, -0.9f, -0.9f, 0.34f, 0.5f), new(1f, 0f, 0.05f, 0.05f, 0.45f, 0f));
 
         private HumanoidLegProportions _proportions;
-        private float _legLength;
+        public float _legLength;
         public float _legMultiplier;
         private bool _isLeft;
 
@@ -308,7 +308,13 @@ namespace VAT.Avatars.Skeletal
             _threshold = Mathf.Lerp(0.9f, 0.6f, CalculateVelocityLerp(_velocityAtStep));
 
             var fromPos = ClampPosition(_result.position);
-            var toPos = _resting.position + (float3)Vector3.ClampMagnitude(_legMultiplier * 0.01f * _velocityAtStep, 0.15f * _legMultiplier);
+
+            var offsetVelocity = _velocityAtStep;
+            offsetVelocity = _feetCenter.InverseTransformDirection(offsetVelocity);
+            offsetVelocity.x = 0f;
+            offsetVelocity = _feetCenter.TransformDirection(offsetVelocity);
+
+            var toPos = _resting.position + (float3)Vector3.ClampMagnitude(_legMultiplier * 0.01f * offsetVelocity, 0.15f * _legMultiplier);
 
             _stepFrom = _feetCenter.InverseTransform(SimpleTransform.Create(fromPos, _result.rotation));
             _stepTo = _feetCenter.InverseTransform(SimpleTransform.Create(toPos, _resting.rotation));

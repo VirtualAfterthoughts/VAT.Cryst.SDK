@@ -106,6 +106,8 @@ namespace VAT.Avatars.Skeletal
             _targetRoot = targetRoot;
         }
 
+        private Quaternion _sacrumRotation = Quaternion.identity;
+
         public override void Solve()
         {
             SimpleTransform root = _avatarPayload.GetRoot();
@@ -136,14 +138,18 @@ namespace VAT.Avatars.Skeletal
             Vector3 vector = Quaternion.AngleAxis(cervicalHeight * 90f, thoracicRotation * t1Right) * root.up;
             float tiltAngle = Vector3.Angle(vector, t1Up);
             Vector3 tiltAxis = Vector3.Cross(vector, t1Up);
-            Quaternion sacrumRotation = Quaternion.AngleAxis(-ThoraxTilt.Evaluate(tiltAngle), tiltAxis) * T1Vertebra.rotation;
+            _sacrumRotation = Quaternion.AngleAxis(-ThoraxTilt.Evaluate(tiltAngle), tiltAxis) * T1Vertebra.rotation;
 
-            T7Vertebra.rotation = Quaternion.Lerp(T1Vertebra.rotation, sacrumRotation, 0.3f);
-            L1Vertebra.rotation = Quaternion.Lerp(T1Vertebra.rotation, sacrumRotation, 0.5f);
-            Sacrum.rotation = sacrumRotation;
+            var initialSacrum = SimpleTransform.Create(Sacrum.position, _sacrumRotation);
+
+            SacrumPull();
+
+            T7Vertebra.rotation = Quaternion.Lerp(T1Vertebra.rotation, _sacrumRotation, 0.3f);
+            L1Vertebra.rotation = Quaternion.Lerp(T1Vertebra.rotation, _sacrumRotation, 0.5f);
+            Sacrum.rotation = _sacrumRotation;
 
             // Solve locomotion logic for the legs
-            _locomotion.Solve(root);
+            _locomotion.Solve(root, initialSacrum);
 
             _neck.feetCenterInRoot = root.InverseTransformPoint(_locomotion.GetLocomotorCenter());
         }
@@ -151,6 +157,31 @@ namespace VAT.Avatars.Skeletal
             base.Attach(group);
 
             _neck = group as HumanoidNeck;
+        }
+
+        private void SacrumPull()
+        {
+            float leftYPull = SolveSacrumYPull(_locomotion.Locomotors[0]);
+            float rightYPull = SolveSacrumYPull(_locomotion.Locomotors[1]);
+
+            float yPull = leftYPull - rightYPull;
+
+            var yOffset = Quaternion.AngleAxis(25f * yPull, math.mul(_sacrumRotation, Vector3.up));
+            _sacrumRotation = yOffset * _sacrumRotation;
+        }
+
+        private float SolveSacrumYPull(HumanoidLocomotor locomotor)
+        {
+            var pull = locomotor.Result.position - Sacrum.position;
+            pull /= locomotor._legLength;
+
+            var forward = math.mul(_sacrumRotation, Vector3.forward);
+            var up = math.mul(_sacrumRotation, Vector3.up);
+
+            var yPlane = Vector3.ProjectOnPlane(pull, up);
+            float yDot = Vector3.Dot(yPlane, forward);
+
+            return Mathf.Clamp(yDot, -1f, 1f);
         }
     }
 }
