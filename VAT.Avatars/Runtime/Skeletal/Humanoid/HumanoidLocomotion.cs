@@ -14,6 +14,7 @@ namespace VAT.Avatars.Skeletal
 {
     using System;
     using Unity.Mathematics;
+    using UnityEngine.UIElements;
     using VAT.Avatars.Integumentary;
 
     public sealed class HumanoidLocomotion {
@@ -117,7 +118,7 @@ namespace VAT.Avatars.Skeletal
                             bestValue = stepDistance;
                         }
                     }
-                    else if (stepAngle > 45f) {
+                    else if (stepAngle > 55f) {
                         if (stepAngle > bestAngle) {
                             stepIndex = i;
                             bestAngle = stepAngle;
@@ -172,18 +173,16 @@ namespace VAT.Avatars.Skeletal
         private bool _stepping = false;
         public bool Stepping => _stepping;
 
-        private readonly AnimationCurve _stepHeightCurve = new(new(0f, 0f, 0.04f, 0.04f, 0f, 0.25f), new(0.5f, 1f, -0.04f, -0.04f, 0.45f, 0.5f), new(0.7f, 1f, 0.01f, 0.01f, 0.35f, 0.23f), new(1f, 0f, 0.05f, 0.05f, 0.45f, 0f));
         private readonly AnimationCurve _heelHeightCurve = new(new Keyframe(0f, 0f, 0.05f, 0.05f), new Keyframe(0.2f, 1f, 4.082311f, 4.082311f, 0.2641137f, 0.0278182f), new(0.7f, 0.5f), new Keyframe(1f, 0f, 0.01742062f, 0.01742062f, 0.6331643f, 0f));
 
         private float _stepSpeed = 1.42f;
-        private float _initialStepDistance = 1f;
+
         private float _targetStepTime = 0f;
         private float _stepTime = 0f;
         public float StepPercent => _stepTime / _targetStepTime;
 
-        private float _timeOfStopStepping;
         private float _threshold = 0.55f;
-        public bool IsThreshold => (Stepping && StepPercent < _threshold) || (_timeOfStopStepping < 0.015f);
+        public bool IsThreshold => (Stepping && StepPercent < _threshold);
 
         private bool _isGrounded = true;
         public bool CanStep => true;
@@ -201,7 +200,6 @@ namespace VAT.Avatars.Skeletal
         }
 
         public void PreSolve(SimpleTransform sacrum, SimpleTransform feetCenter, Vector3 velocity) {
-            _timeOfStopStepping += Time.deltaTime;
             _velocity = velocity;
 
             _lastFeetRotation = _feetCenter.rotation;
@@ -239,9 +237,7 @@ namespace VAT.Avatars.Skeletal
 
             _result.position = ClampPosition(_result.position);
 
-            _threshold = Mathf.Lerp(0.8f, 0.6f, _velocity.magnitude / (4f * _legMultiplier));
-
-            _stepSpeed = Mathf.Lerp(0.9f, 1.2f, _velocity.magnitude / (4f * _legMultiplier)) * Mathf.Sqrt(_legMultiplier);
+            _stepSpeed = Mathf.Lerp(0.8f, 1.2f, _velocity.magnitude / (4f * _legMultiplier)) * Mathf.Sqrt(_legMultiplier);
 
             // Get the resting foot position and rotation
             float restOffset = _hipOffset * 1.5f;
@@ -268,23 +264,22 @@ namespace VAT.Avatars.Skeletal
 
             _velocityAtStep = _velocity;
 
+            _threshold = Mathf.Lerp(0.8f, 0.6f, _velocityAtStep.magnitude / (4f * _legMultiplier));
+
             var fromPos = ClampPosition(_result.position);
-            var toPos = _resting.position + (float3)Vector3.ClampMagnitude(_legMultiplier * 0.07f * _velocityAtStep, 0.15f * _legMultiplier);
+            var toPos = _resting.position + (float3)Vector3.ClampMagnitude(_legMultiplier * 0.02f * _velocityAtStep, 0.15f * _legMultiplier);
 
             _stepFrom = _feetCenter.InverseTransform(SimpleTransform.Create(fromPos, _result.rotation));
             _stepTo = _feetCenter.InverseTransform(SimpleTransform.Create(toPos, _resting.rotation));
 
-            float angle = Quaternion.Angle(_stepFrom.rotation, _stepTo.rotation);
-            angle = Mathf.Lerp(0f, 1f, angle / 180f);
+            var stepDist = distance(_stepFrom.position, _stepTo.position) + _legLength * 0.25f;
+            var stepSp  = _stepSpeed;
 
-            _initialStepDistance = (distance(_stepFrom.position, _stepTo.position) + angle);
-            _targetStepTime = _initialStepDistance / _stepSpeed;
+            _targetStepTime = stepDist / stepSp;
         }
 
         public void Solve() {
             if (_stepping) {
-                _targetStepTime = Mathf.Lerp(_targetStepTime, _initialStepDistance / _stepSpeed, Time.deltaTime * 24f);
-
                 if (StepPercent >= 1f) {
                     EndStep();
                 }
@@ -299,7 +294,7 @@ namespace VAT.Avatars.Skeletal
                     float stepHeight = CurveFootHeight(StepPercent) * 0.15f * (min(length(_velocityAtStep * _legMultiplier) + 1f, 8f * _legMultiplier));
                     float max = distance(_sacrum.position, _feetCenter.position) * 0.66f;
 
-                    stepHeight = (stepHeight + max - abs(stepHeight - max)) * 0.5f;
+                    stepHeight = (stepHeight + max - abs(stepHeight - max)) * 0.3f;
                     pos += (Vector3)_feetCenter.up * stepHeight;
 
                     if (stepHeight < 0.1f * _legMultiplier && _isGrounded) {
@@ -309,7 +304,7 @@ namespace VAT.Avatars.Skeletal
                     _stepFrom = _feetCenter.InverseTransform(stepFromWorld);
 
                     var right = mul(rot, math.right());
-                    float maxAngle = Mathf.Lerp(45f, 70f, _velocityAtStep.magnitude / (1f * _legMultiplier));
+                    float maxAngle = Mathf.Lerp(60f, 70f, _velocityAtStep.magnitude / (1f * _legMultiplier));
                     rot = Quaternion.AngleAxis(maxAngle * _heelHeightCurve.Evaluate(lerp), right) * rot;
 
                     _result = SimpleTransform.Create(pos, rot);
@@ -327,12 +322,14 @@ namespace VAT.Avatars.Skeletal
 
         private void EndStep() {
             _stepTime = 0f;
-            _timeOfStopStepping = 0f;
             _stepping = false;
             _result = _feetCenter.Transform(_stepTo);
             _localResult = _feetCenter.InverseTransform(_result);
 
-            OnStep?.Invoke(_result.position);
+            if (_isGrounded)
+            {
+                OnStep?.Invoke(_result.position);
+            }
         }
     }
 }
