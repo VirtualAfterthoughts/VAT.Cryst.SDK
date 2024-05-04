@@ -84,6 +84,8 @@ namespace VAT.Avatars.Muscular
             _fender.center = _radius * 1.5f * Vector3.up;
         }
 
+        private Vector3 _integral = Vector3.zero;
+
         public override void Solve()
         {
             float shrinkMult = (1f - _leg._footShrink);
@@ -137,7 +139,12 @@ namespace VAT.Avatars.Muscular
             float dt = Time.fixedDeltaTime;
             float g = 1 / (1 + kd * dt + kp * dt * dt);
             float kdg = (kd + kp * dt) * g;
-            Vector3 pidv = kdg * (targetAngularVelocity - Foot.Body.AngularVelocity);
+
+            Vector3 error = (targetAngularVelocity - Foot.Body.AngularVelocity);
+            _integral += error * dt;
+
+            Vector3 pidv = kdg * error + kdg * 2f * _integral;
+
             Quaternion rotInertia2World = Foot.Rigidbody.Rigidbody.inertiaTensorRotation * Foot.Transform.rotation;
             pidv = Quaternion.Inverse(rotInertia2World) * pidv;
             pidv.Scale(Foot.Rigidbody.Rigidbody.inertiaTensor);
