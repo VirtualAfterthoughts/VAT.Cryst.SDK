@@ -215,7 +215,7 @@ namespace VAT.Characters
                     settings = new AudioPlaySettings()
                     {
                         volume = UnityEngine.Random.Range(0.1f, 0.4f),
-                        pitch = 1f,
+                        pitch = UnityEngine.Random.Range(0.7f, 1.1f),
                     },
                     clip = c,
                 });
