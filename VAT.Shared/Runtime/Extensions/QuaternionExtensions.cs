@@ -15,17 +15,6 @@ namespace VAT.Shared.Extensions {
 		/// </summary>
 		/// <param name="q"></param>
 		/// <returns></returns>
-		public static Quaternion Shortest(this Quaternion q) {
-			if (q.w < 0)
-				q = new Quaternion(-q.x, -q.y, -q.z, -q.w);
-			return q;
-		}
-
-		/// <summary>
-		/// Returns a version of this displacement quat that is ensured to be the shortest distance.
-		/// </summary>
-		/// <param name="q"></param>
-		/// <returns></returns>
 		public static quaternion shortest(this quaternion q) {
 			if (q.value.w < 0)
 				q = new quaternion(-q.value.x, -q.value.y, -q.value.z, -q.value.w);
@@ -33,17 +22,6 @@ namespace VAT.Shared.Extensions {
 		}
 
 		// Thanks to https://gist.github.com/aeroson/043001ca12fe29ee911e for the implementation of base quaternion functions
-
-		/// <summary>
-		/// Quaternion.ToAngleAxis but for the Mathematics package
-		/// </summary>
-		/// <param name="q"></param>
-		/// <param name="angle"></param>
-		/// <param name="axis"></param>
-		public static void toangleaxis(this quaternion q, out float angle, out float3 axis) {
-			q.toaxisangle(out axis, out angle);
-			angle = degrees(angle);
-		}
 
 		/// <summary>
 		/// Quaternion.ToAngleAxis in radians but for the Mathematics package, following a similar naming scheme to quaternion.AxisAngle which is in radians.

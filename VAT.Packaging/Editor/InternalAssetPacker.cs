@@ -14,7 +14,6 @@ namespace VAT.Packaging.Editor
         /// <summary>
         /// Packs all internal text assets with default settings.
         /// </summary>
-        [MenuItem("VAT/Internal/Pack Text Assets")]
         public static void PackTextAssets()
         {
             PackTextAssets(false);

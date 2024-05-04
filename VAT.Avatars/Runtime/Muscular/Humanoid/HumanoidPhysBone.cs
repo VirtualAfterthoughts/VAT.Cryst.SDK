@@ -10,7 +10,6 @@ using VAT.Entities.PhysX;
 
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
-using VAT.Shared.Utilities;
 
 namespace VAT.Avatars.Muscular
 {
@@ -20,8 +19,6 @@ namespace VAT.Avatars.Muscular
 
         public float spring = 500f;
         public float damper = 10f;
-
-        public Float3DerivativeTracker positionTracker = new(2);
 
         public HumanoidPhysBone(string name) : base(name) { }
 

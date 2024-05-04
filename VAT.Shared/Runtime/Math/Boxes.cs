@@ -196,29 +196,6 @@ namespace VAT.Shared.Math {
         }
 
         /// <summary>
-        /// Calculates the closest point on a box face.
-        /// </summary>
-        /// /// <param name="point">The point in local space.</param>
-        /// <param name="center">The center of the box in local space.</param>
-        /// <param name="size">The size of the box in local space.</param>
-        /// <param name="face">The desired face.</param>
-        /// <returns>The closest point on the face.</returns>
-        public static Vector3 ClosestPointOnFace(Vector3 point, Vector3 center, Vector3 size, Faces face)
-        {
-            var normal = GetFaceNormal(face);
-            var extents = size * 0.5f;
-
-            var origin = center + Vector3.Scale(normal, extents);
-
-            var plane = new Plane(normal, origin);
-            var result = plane.ClosestPointOnPlane(point);
-
-            result = result.Clamp(-extents, extents);
-
-            return result;
-        }
-
-        /// <summary>
         /// Retrieves the face info for all faces contained in the flag.
         /// </summary>
         /// <param name="center">The center of the box in local space.</param>

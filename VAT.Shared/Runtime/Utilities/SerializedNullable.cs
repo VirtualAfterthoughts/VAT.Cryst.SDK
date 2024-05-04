@@ -79,24 +79,4 @@ namespace VAT.Shared
 
         public static implicit operator Vector3?(SerializedNullableVector3 value) => value.HasValue() ? value.Value : null;
     }
-
-    [Serializable]
-    public class SerializedNullableQuaternion : SerializedNullableT<Quaternion>
-    {
-        public SerializedNullableQuaternion(Quaternion value) : base(value) { }
-
-        public static implicit operator SerializedNullableQuaternion(Quaternion value) => new(value);
-
-        public static implicit operator Quaternion?(SerializedNullableQuaternion value) => value.HasValue() ? value.Value : null;
-    }
-
-    [Serializable]
-    public class SerializedNullableFloat : SerializedNullableT<float>
-    {
-        public SerializedNullableFloat(float value) : base(value) { }
-
-        public static implicit operator SerializedNullableFloat(float value) => new(value);
-
-        public static implicit operator float?(SerializedNullableFloat value) => value.HasValue() ? value.Value : null;
-    }
 }

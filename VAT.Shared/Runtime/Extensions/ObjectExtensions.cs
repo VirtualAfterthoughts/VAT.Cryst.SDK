@@ -6,23 +6,6 @@ namespace VAT.Shared.Extensions {
 
     public static partial class ObjectExtensions {
         /// <summary>
-        /// Removes a set of Unity objects if they exist.
-        /// </summary>
-        /// <param name="objects"></param>
-        public static void TryDestroy(params Object[] objects) {
-            TryDestroy(0f, objects);
-        }
-
-        /// <summary>
-        /// Removes a set of Unity objects if they exist.
-        /// </summary>
-        /// <param name="objects"></param>
-        public static void TryDestroy(float t, params Object[] objects) {
-            for (var i = 0; i < objects.Length; i++)
-                TryDestroy(objects[i], t);
-        }
-
-        /// <summary>
         /// Removes a GameObject, component, or asset if it exists.
         /// </summary>
         /// <param name="obj"></param>
