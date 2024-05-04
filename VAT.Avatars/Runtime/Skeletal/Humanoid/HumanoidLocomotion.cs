@@ -249,14 +249,17 @@ namespace VAT.Avatars.Skeletal
                 }
             }
 
-            if (closestHit.HasValue)
+            Vector3 newNormal;
+            if (closestHit.HasValue && Vector3.Angle(feetCenter.up, closestHit.Value.normal) <= 70f)
             {
-                _groundNormal = closestHit.Value.normal;
+                newNormal = closestHit.Value.normal;
             }
             else
             {
-                _groundNormal = feetCenter.up;
+                newNormal = feetCenter.up;
             }
+
+            _groundNormal = Vector3.Slerp(_groundNormal, newNormal, Time.deltaTime * 12f);
 
             // Zero velocity height relative to ground
             var worldToGround = Quaternion.FromToRotation(_groundNormal, Vector3.up);
