@@ -328,7 +328,14 @@ namespace VAT.Avatars.Skeletal
 
             var offsetVelocity = _velocityAtStep;
             offsetVelocity = _feetCenter.InverseTransformDirection(offsetVelocity);
-            offsetVelocity.x = 0f;
+
+            float sign = _isLeft ? -1f : 1f;
+
+            if (Mathf.Sign(offsetVelocity.x) != sign)
+            {
+                offsetVelocity.x = 0f;
+            }
+
             offsetVelocity = _feetCenter.TransformDirection(offsetVelocity);
 
             var velocityIncrease = Vector3.ClampMagnitude(offsetVelocity / _maxSpeed, 1f);
