@@ -73,6 +73,8 @@ namespace VAT.Avatars.Skeletal
 
         private Vector3 _lastFeetCenter;
 
+        private Vector3 _lastVelocity;
+
         public void Solve(SimpleTransform root, SimpleTransform sacrum, float3 velocity = default) {
             // Position the feet center
             float feetAngle = Vector3.Angle(root.up, sacrum.up);
@@ -84,6 +86,15 @@ namespace VAT.Avatars.Skeletal
             var postFeetPos = _feetCenter.position;
             velocity = PhysicsExtensions.GetLinearVelocity(_lastFeetCenter, postFeetPos);
             _lastFeetCenter = postFeetPos;
+
+            var acceleration = ((Vector3)velocity - _lastVelocity) / Time.fixedDeltaTime;
+
+            if (acceleration.magnitude > 10000f)
+            {
+                velocity = Vector3.zero;
+            }
+
+            _lastVelocity = velocity;
 
             // Presolve the locomotors
             for (var i = 0; i < Locomotors.Length; i++) {
@@ -229,7 +240,7 @@ namespace VAT.Avatars.Skeletal
 
             // Ground check
             _isGrounded = false;
-            var hits = Physics.RaycastAll(sacrum.position, _resting.position - sacrum.position, _proportions.GetLength() * 1.3f, ~0, QueryTriggerInteraction.Ignore);
+            var hits = Physics.RaycastAll(sacrum.position, _resting.position - sacrum.position, _proportions.GetLength() * 1.5f, ~0, QueryTriggerInteraction.Ignore);
 
             // TEMPORARY, replace with layermask or something else later
             RaycastHit? closestHit = null;
