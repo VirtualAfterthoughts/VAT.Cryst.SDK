@@ -86,11 +86,14 @@ namespace VAT.Avatars.Muscular
 
         private Vector3 _integral = Vector3.zero;
 
+        private Vector3 _stairForce = Vector3.zero;
+
         public override void Solve()
         {
             float shrinkMult = (1f - _leg._footShrink);
             _locoBall.radius = _radius * shrinkMult;
-            _fender.radius = _radius * 1.25f * shrinkMult;
+
+            float fenderRadius = _radius * 1.25f * shrinkMult;
 
             var kneeTarget = Knee.Parent.TransformBone(_leg.Knee.Parent, _leg.Knee);
             Knee.Solve(kneeTarget);
@@ -128,6 +131,10 @@ namespace VAT.Avatars.Muscular
 
             _targetVelocity = Knee.Transform.TransformDirection(vel) - footVelocity;
 
+            StairSolve(ref fenderRadius);
+
+            _fender.radius = Mathf.Lerp(_fender.radius, fenderRadius, Time.deltaTime * 14f);
+
             // Ball torque
             float radius = _locoBall.radius;
             float3 targetAngularVelocity = new Vector3(_targetVelocity.z, _targetVelocity.y, -_targetVelocity.x) / radius;
@@ -151,6 +158,36 @@ namespace VAT.Avatars.Muscular
             pidv.Scale(Foot.Rigidbody.Rigidbody.inertiaTensor);
             pidv = rotInertia2World * pidv;
             Foot.Body.AddTorque(pidv);
+        }
+
+        private void StairSolve(ref float fenderRadius)
+        {
+            var worldDown = Physics.gravity.normalized;
+
+            float stepRadius = _locoBall.radius * 0.95f;
+            var raycast = Physics.Raycast(_locoBall.transform.position - stepRadius * Vector3.up, _targetVelocity.normalized, out var hitInfo, fenderRadius * 1.4f, ~0, QueryTriggerInteraction.Ignore);
+
+            if (raycast && Vector3.Angle(worldDown, hitInfo.normal) >= 70f && Vector3.Dot(_targetVelocity, -hitInfo.normal) >= 0.5f)
+            {
+                float totalHeight = _fender.center.y + fenderRadius;
+                var stairUp = hitInfo.point + totalHeight * -worldDown;
+                var stairCenter = stairUp - hitInfo.normal * 0.1f;
+
+                var stairCast = Physics.Raycast(stairCenter, worldDown, out var stairHit, totalHeight * 0.9f, ~0, QueryTriggerInteraction.Ignore);
+
+                if (stairCast && Vector3.Angle(stairHit.normal, hitInfo.normal) >= 70f)
+                {
+                    var stairDistance = Mathf.Clamp01(Vector3.Distance(hitInfo.point, stairHit.point) / _locoBall.radius);
+
+                    _stairForce += 50f * stairDistance * _targetVelocity;
+
+                    fenderRadius *= 1f - stairDistance;
+                }
+            }
+
+            var stairDebt = _stairForce * 0.01f;
+            _stairForce -= stairDebt;
+            Foot.Rigidbody.AddForce(stairDebt, CrystForceMode.Acceleration);
         }
 
         public void MatchPose(LocoLeg leg) {
