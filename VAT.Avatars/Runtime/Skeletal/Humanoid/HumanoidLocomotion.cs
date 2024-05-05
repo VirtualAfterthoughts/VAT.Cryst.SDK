@@ -197,6 +197,7 @@ namespace VAT.Avatars.Skeletal
         }
 
         private Vector3 _groundNormal = Vector3.up;
+        private Vector3 _groundVelocity = Vector3.zero;
 
         public void PreSolve(SimpleTransform sacrum, SimpleTransform feetCenter, Vector3 velocity) {
             feetCenter.rotation = Quaternion.FromToRotation(feetCenter.up, _groundNormal) * feetCenter.rotation;
@@ -248,10 +249,17 @@ namespace VAT.Avatars.Skeletal
                 }
             }
 
+            _groundVelocity = Vector3.zero;
+
             Vector3 newNormal;
             if (closestHit.HasValue && Vector3.Angle(feetCenter.up, closestHit.Value.normal) <= 70f)
             {
                 newNormal = closestHit.Value.normal;
+
+                if (closestHit.Value.rigidbody)
+                {
+                    _groundVelocity = closestHit.Value.rigidbody.GetPointVelocity(closestHit.Value.point);
+                }
             }
             else
             {
@@ -261,6 +269,8 @@ namespace VAT.Avatars.Skeletal
             _groundNormal = Vector3.Slerp(_groundNormal, newNormal, Time.deltaTime * 12f);
 
             // Zero velocity height relative to ground
+            velocity -= _groundVelocity;
+
             var worldToGround = Quaternion.FromToRotation(_groundNormal, Vector3.up);
 
             velocity = worldToGround * velocity;
