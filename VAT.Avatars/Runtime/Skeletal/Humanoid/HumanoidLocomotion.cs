@@ -13,9 +13,8 @@ using static Unity.Mathematics.math;
 namespace VAT.Avatars.Skeletal
 {
     using System;
+
     using Unity.Mathematics;
-    using UnityEngine.UIElements;
-    using VAT.Avatars.Integumentary;
 
     public sealed class HumanoidLocomotion {
         private DataBone _feetCenter;
@@ -108,7 +107,7 @@ namespace VAT.Avatars.Skeletal
                     float stepDistance = Vector3.Distance(locomotor.Result.position, locomotor.Resting.position);
                     float stepAngle = Quaternion.Angle(locomotor.Result.rotation, locomotor.Resting.rotation);
 
-                    if (stepDistance > 0.1f * locomotor._legMultiplier)
+                    if (stepDistance > 0.2f * locomotor._legMultiplier)
                     {
                         if (stepDistance > bestValue)
                         {
