@@ -7,15 +7,14 @@ using VAT.Avatars.Proportions;
 
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
-using VAT.Shared.Math;
+using VAT.Avatars.Bones;
+using VAT.Cryst.Delegates;
+using VAT.Input;
+using VAT.Input.Data;
 
 namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
-    using VAT.Avatars.Bones;
-    using VAT.Cryst.Delegates;
-    using VAT.Input;
-    using VAT.Input.Data;
 
     public class HumanoidArm : HumanoidBoneGroup, IHumanArm
     {
@@ -215,6 +214,9 @@ namespace VAT.Avatars.Skeletal
             else
             {
                 ElbowRelax();
+
+                WristLimit();
+
                 ElbowLimit();
             }
 
@@ -348,6 +350,56 @@ namespace VAT.Avatars.Skeletal
             Carpal.rotation = Quaternion.AngleAxis(-CarpalBend.Evaluate(bendAngle), bendAxis) * _target.rotation;
 
             Hand.Hand.rotation = _target.rotation;
+        }
+
+        private float _smoothWristLimit = 0f;
+
+        private void WristLimit()
+        {
+            Quaternion unlimitedRotation = Hand.Hand.rotation;
+            LimitRotationInWrist(unlimitedRotation, out var flexion, out var deviation);
+
+            // Rotate elbow to allow for limits
+            float limitAngle = 0f;
+            float handednessMult = (isLeft ? 1f : -1f);
+
+            limitAngle += Mathf.Clamp(flexion * handednessMult, -70f, 70f);
+            limitAngle += Mathf.Clamp(-Mathf.Abs(deviation) * handednessMult, -70f, 70f);
+
+            _smoothWristLimit = Mathf.Lerp(_smoothWristLimit, limitAngle, Time.deltaTime * 24f);
+
+            UpperArm.rotation = Quaternion.AngleAxis(_smoothWristLimit, _armVector) * UpperArm.rotation;
+
+            // Update wrist, ignore limits on hand for best control
+            WristSolve();
+        }
+
+        private Quaternion LimitRotationInWrist(Quaternion hand, out float flexionOffset, out float deviationOffset)
+        {
+            Quaternion unlimitedRotation = hand;
+            Quaternion limitedRotation = unlimitedRotation;
+
+            // Flexion
+            var flexionRotation = Quaternion.FromToRotation(unlimitedRotation * Vector3.right, Wrist.right) * unlimitedRotation;
+            float flexionAngle = Vector3.SignedAngle(Wrist.forward, flexionRotation * Vector3.forward, Wrist.right);
+
+            float clampedFlexion = Mathf.Clamp(flexionAngle, -90f, 90f);
+
+            flexionOffset = clampedFlexion - flexionAngle;
+
+            limitedRotation = Quaternion.AngleAxis(flexionOffset, Wrist.right) * limitedRotation;
+
+            // Deviation
+            var deviationRotation = Quaternion.FromToRotation(unlimitedRotation * Vector3.up, Wrist.up) * unlimitedRotation;
+            float deviationAngle = Vector3.SignedAngle(Wrist.right, deviationRotation * Vector3.right, Wrist.up);
+
+            float clampedDeviation = Mathf.Clamp(deviationAngle, -70f, 70f);
+
+            deviationOffset = clampedDeviation - deviationAngle;
+
+            limitedRotation = Quaternion.AngleAxis(deviationOffset, Wrist.up) * limitedRotation;
+
+            return limitedRotation;
         }
 
         private void ElbowRelax()
