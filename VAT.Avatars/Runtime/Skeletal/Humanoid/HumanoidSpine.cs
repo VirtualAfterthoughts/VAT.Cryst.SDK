@@ -118,6 +118,8 @@ namespace VAT.Avatars.Skeletal
 
             root.position += _floorOffset;
 
+            HipSink();
+
             quaternion chestRotation = _neck.chestRotation;
             chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Time.deltaTime * 7f);
             lastChestRotation = root.InverseTransformRotation(chestRotation);
@@ -182,6 +184,17 @@ namespace VAT.Avatars.Skeletal
             float yDot = Vector3.Dot(yPlane, forward);
 
             return Mathf.Clamp(yDot, -1f, 1f);
+        }
+
+        private void HipSink()
+        {
+            float supportedWeight = (_locomotion.Locomotors[0].WeightSupport + _locomotion.Locomotors[1].WeightSupport) / 2f;
+
+            float sinkValue = Mathf.Clamp01(1f - supportedWeight) * 2f;
+
+            float neckHeight = -_neckProportions.lowerNeckEllipsoid.height;
+
+            T1Vertebra.localPosition = new(0f, neckHeight + (sinkValue * neckHeight), _spineProportions.upperChestOffsetZ);
         }
     }
 }
