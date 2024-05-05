@@ -101,13 +101,13 @@ namespace VAT.Avatars.Skeletal
                 for (int i = 0; i < Locomotors.Length; i++)
                 {
                     var locomotor = Locomotors[i];
-                    if (locomotor.Stepping || !locomotor.CanStep)
+                    if (!locomotor.CanStep)
                         continue;
 
                     float stepDistance = Vector3.Distance(locomotor.Result.position, locomotor.Resting.position);
                     float stepAngle = Quaternion.Angle(locomotor.Result.rotation, locomotor.Resting.rotation);
 
-                    if (stepDistance > 0.2f * locomotor._legMultiplier)
+                    if (stepDistance > locomotor._maxStepDistance * locomotor._legMultiplier)
                     {
                         if (stepDistance > bestValue)
                         {
@@ -170,8 +170,6 @@ namespace VAT.Avatars.Skeletal
         private bool _stepping = false;
         public bool Stepping => _stepping;
 
-        private readonly AnimationCurve _heelHeightCurve = new(new Keyframe(0f, 0f, 0.05f, 0.05f), new Keyframe(0.2f, 1f, 4.082311f, 4.082311f, 0.2641137f, 0.0278182f), new(0.7f, 0.5f), new Keyframe(1f, 0f, 0.01742062f, 0.01742062f, 0.6331643f, 0f));
-
         private float _stepSpeed = 1.42f;
 
         private float _targetStepTime = 0f;
@@ -182,7 +180,9 @@ namespace VAT.Avatars.Skeletal
         public bool IsThreshold => (Stepping && StepPercent < _threshold);
 
         private bool _isGrounded = true;
-        public bool CanStep => true;
+        public bool CanStep => !Stepping || StepPercent > 0.75f;
+
+        public float _maxStepDistance = 0.3f;
 
         public void Initiate(HumanoidLegProportions proportions, bool isLeft) {
             _proportions = proportions;
@@ -289,7 +289,9 @@ namespace VAT.Avatars.Skeletal
 
             _result.position = ClampPosition(_result.position);
 
-            _stepSpeed = Mathf.Lerp(0.8f, 1.1f, CalculateVelocityLerp(_velocity)) * _legMultiplier;
+            _stepSpeed = Mathf.Lerp(0.6f, 1f, CalculateVelocityLerp(_velocity)) * _legMultiplier;
+
+            _maxStepDistance = Mathf.Lerp(0.4f, 0.05f, CalculateVelocityLerp(_velocity));
         }
 
         private float CalculateVelocityLerp(Vector3 velocity)
@@ -314,7 +316,7 @@ namespace VAT.Avatars.Skeletal
 
             _velocityAtStep = _velocity;
 
-            _threshold = Mathf.Lerp(0.9f, 0.6f, CalculateVelocityLerp(_velocityAtStep));
+            _threshold = 0.6f;
 
             var fromPos = ClampPosition(_result.position);
 
@@ -354,7 +356,7 @@ namespace VAT.Avatars.Skeletal
                     float stepHeight = CurveFootHeight(StepPercent) * 0.15f * (min(length(_velocityAtStep * _legMultiplier) + 1f, 8f * _legMultiplier));
                     float max = distance(_sacrum.position, _feetCenter.position) * 0.66f;
 
-                    stepHeight = (stepHeight + max - abs(stepHeight - max)) * 0.4f;
+                    stepHeight = (stepHeight + max - abs(stepHeight - max)) * 0.5f;
                     pos += _groundNormal * stepHeight;
 
                     if (stepHeight < 0.2f * _legMultiplier && _isGrounded) 
@@ -365,8 +367,22 @@ namespace VAT.Avatars.Skeletal
                     _stepFrom = _feetCenter.InverseTransform(stepFromWorld);
 
                     var right = mul(rot, math.right());
-                    float maxAngle = Mathf.Lerp(45f, 80f, CalculateVelocityLerp(_velocityAtStep));
-                    rot = Quaternion.AngleAxis(maxAngle * _heelHeightCurve.Evaluate(lerp), right) * rot;
+                    float maxAngle = 25f;
+
+                    float heelHeight = Mathf.Clamp01(-stepHeight * 10f * _legMultiplier * ((StepPercent - 0.5f) * 2f));
+
+                    float velLerp = CalculateVelocityLerp(_velocity);
+
+                    if (StepPercent > 0.5f)
+                    {
+                        heelHeight *= Mathf.Lerp(4f, 0.1f, velLerp);
+                    }
+                    else
+                    {
+                        heelHeight *= Mathf.Lerp(2f, 2.5f, velLerp);
+                    }
+
+                    rot = Quaternion.AngleAxis(maxAngle * heelHeight, right) * rot;
 
                     _result = SimpleTransform.Create(pos, rot);
 
