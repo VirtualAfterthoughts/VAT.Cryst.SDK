@@ -80,6 +80,12 @@ namespace VAT.Characters
             actions.GrabAction.OnStateChanged += OnGrabStateChange;
         }
 
+        private void OnDisable()
+        {
+            ResetHover();
+            DetachGrips();
+        }
+
         private void OnGrabStateChange(bool state)
         {
             if (state && _attachedGrip == null && _hoverHolder.HoveringInteractable is IGrippable hoveringGrip)

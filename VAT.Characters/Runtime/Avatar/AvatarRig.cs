@@ -19,6 +19,7 @@ namespace VAT.Characters
     using System;
     using VAT.Audio;
     using VAT.Packaging;
+    using VAT.Avatars.Sounds;
 
     [RequireRig(typeof(IBehaviourRig))]
     public class AvatarRig : CrystRig, IAvatarRig
@@ -40,6 +41,8 @@ namespace VAT.Characters
 
         List<IAvatarAbility> _constantAbilities = null;
 
+        private AvatarSounds _avatarSounds = null;
+
         public override void OnRigEnable()
         {
             _constantAbilities = new List<IAvatarAbility>
@@ -58,6 +61,8 @@ namespace VAT.Characters
             {
                 ability.OnInitiateAvatar(CurrentAvatar, this);
             }
+
+            _avatarSounds = CurrentAvatar.GetComponent<AvatarSounds>();
         }
 
         private void DeinitiateAbilities()
@@ -66,12 +71,16 @@ namespace VAT.Characters
             {
                 ability.OnDeinitiateAvatar(CurrentAvatar, this);
             }
+
+            _avatarSounds = null;
         }
 
         public override void OnRigDisable()
         {
             if (_activeAvatar != null)
             {
+                OnExitingAvatar?.Invoke(_activeAvatar);
+
                 DeinitiateAbilities();
 
                 _activeAvatar.Uninitiate();
@@ -112,6 +121,8 @@ namespace VAT.Characters
             {
                 targetAvatar.transform.SetPositionAndRotation(_activeAvatar.transform.position, _activeAvatar.transform.rotation);
 
+                OnExitingAvatar?.Invoke(_activeAvatar);
+
                 DeinitiateAbilities();
 
                 _activeAvatar.Uninitiate();
@@ -128,6 +139,8 @@ namespace VAT.Characters
         }
 
         private IInteractor[] _interactors = new IInteractor[0];
+
+        public event Action<Avatar> OnSwitchedAvatar, OnExitingAvatar;
 
         public IInteractor[] GetCurrentInteractors()
         {
@@ -191,10 +204,19 @@ namespace VAT.Characters
             avatar.GetSkeleton().GetArt().Solve(1f);
 
             InitiateAbilities();
+
+            OnSwitchedAvatar?.Invoke(avatar);
         }
 
         protected void OnStep(Vector3 position)
         {
+            var footstepSounds = this.footstepSounds;
+
+            if (_avatarSounds != null && _avatarSounds.FootstepLevels.Length > 0)
+            {
+                footstepSounds = _avatarSounds.FootstepLevels[0];
+            }
+
             if (!footstepSounds.TryGetShard(out var shard))
             {
                 return;

@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+
 using VAT.Input;
 using VAT.UI;
-using VAT.Shared.Extensions;
 using VAT.Interaction;
 
 namespace VAT.Characters
 {
+    using VAT.Avatars.Integumentary;
+
     public class UIRig : CrystRig
     {
         public Transform root;
@@ -27,6 +29,17 @@ namespace VAT.Characters
 
             uiCanvas.transform.localScale = Vector3.zero;
 
+            var avatarRig = RigManager.GetRigOrNull<AvatarRig>();
+            avatarRig.OnSwitchedAvatar += OnSwitchedAvatar;
+
+            if (avatarRig.CurrentAvatar != null)
+            {
+                OnSwitchedAvatar(avatarRig.CurrentAvatar);
+            }
+        }
+
+        private void OnSwitchedAvatar(Avatar avatar)
+        {
             var avatarRig = RigManager.GetRigOrNull<AvatarRig>();
             if (avatarRig != null)
             {

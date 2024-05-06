@@ -22,5 +22,11 @@ namespace VAT.Avatars.Sounds
         [SerializeField]
         [Tooltip("Sounds for changes in avatar health.")]
         private HealthSounds _healthSounds = new();
+
+        public AudioCollectionReference[] EffortLevels {  get { return _effortLevels; }  set { _effortLevels = value; } }
+
+        public AudioCollectionReference[] FootstepLevels { get { return _footstepLevels; } set { _footstepLevels = value; } }
+
+        public HealthSounds HealthSounds { get { return _healthSounds; } set { _healthSounds = value; } }
     }
 }
