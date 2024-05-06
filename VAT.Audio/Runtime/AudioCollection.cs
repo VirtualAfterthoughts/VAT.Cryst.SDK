@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -12,6 +13,9 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Audio
 {
+    [Serializable]
+    public class AudioCollectionReference : ShardReferenceT<AudioCollection> { }
+
     [DataShardIdentifier("Audio Collection")]
     public class AudioCollection : DataShard
     {
