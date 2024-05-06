@@ -58,6 +58,11 @@ namespace VAT.Avatars.Integumentary
             return proportions.GetMeasurements();
         }
 
+        public override IAvatarStats GetStats()
+        {
+            return Vitals.GetStats(proportions);
+        }
+
 #if UNITY_EDITOR
         public void Update() {
             if (Application.isPlaying)

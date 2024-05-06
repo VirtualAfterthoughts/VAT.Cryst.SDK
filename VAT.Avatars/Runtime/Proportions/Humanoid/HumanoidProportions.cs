@@ -46,7 +46,7 @@ namespace VAT.Avatars.Proportions {
             return wingspan;
         }
 
-        private float GetCircumference(float a, float b)
+        public float GetCircumference(float a, float b)
         {
             return 2f * Mathf.PI * Mathf.Sqrt((a * a + b * b) / 2f);
         }

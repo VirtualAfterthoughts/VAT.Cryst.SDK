@@ -112,6 +112,8 @@ namespace VAT.Avatars.Integumentary {
 
         public abstract BodyMeasurements GetMeasurements();
 
+        public abstract IAvatarStats GetStats();
+
 #if UNITY_EDITOR
         protected virtual void OnDrawGizmos() {
             if (Initiated) {

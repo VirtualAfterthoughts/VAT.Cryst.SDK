@@ -18,6 +18,7 @@ namespace VAT.Avatars.Editor {
     using Unity.Mathematics;
 
     using UnityEditor;
+    using VAT.Entities.Stats;
 
     [CustomEditor(typeof(HumanoidAvatar), true)]
     public sealed class HumanoidAvatarEditor : Editor {
@@ -131,11 +132,23 @@ namespace VAT.Avatars.Editor {
 
             var measurements = _avatar.GetMeasurements();
 
+            EditorGUILayout.LabelField("Measurements", EditorStyles.whiteLargeLabel);
+
             EditorGUILayout.FloatField("Height", measurements.height);
 
             EditorGUILayout.FloatField("Wingspan", measurements.wingspan);
 
             EditorGUILayout.FloatField("Chest Circumference", measurements.chestCircumference);
+
+            var stats = _avatar.GetStats();
+
+            EditorGUILayout.LabelField("Stats", EditorStyles.whiteLargeLabel);
+
+            EditorGUILayout.FloatField("Health", stats.GetStat<IHealthStat>().Health);
+            
+            EditorGUILayout.FloatField("Strength", stats.GetStat<IStrengthStat>().Strength);
+
+            EditorGUILayout.FloatField("Speed", stats.GetStat<ISpeedStat>().Speed);
 
             EditorGUI.EndDisabledGroup();
 
