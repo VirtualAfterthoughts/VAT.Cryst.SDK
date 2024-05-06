@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VAT.Input;
 
-namespace VAT.Avatars
+namespace VAT.Input.Data
 {
     public static class HandPoseCreator
     {

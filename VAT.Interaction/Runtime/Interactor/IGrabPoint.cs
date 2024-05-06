@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Avatars;
-
 using VAT.Shared.Data;
 
 namespace VAT.Interaction

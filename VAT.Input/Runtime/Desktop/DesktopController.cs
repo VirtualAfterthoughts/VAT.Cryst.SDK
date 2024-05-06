@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using VAT.Avatars;
 
+using VAT.Input.Data;
 using VAT.Input.Haptic;
 using VAT.Input.Unity;
-using VAT.Shared.Data;
 
 namespace VAT.Input.Desktop
 {

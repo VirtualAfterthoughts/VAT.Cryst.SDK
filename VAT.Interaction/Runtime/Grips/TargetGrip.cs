@@ -9,7 +9,7 @@ using UnityEditor;
 
 using UnityEngine;
 
-using VAT.Avatars;
+using VAT.Input.Data;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 

@@ -5,18 +5,14 @@ using UnityEngine;
 
 using VAT.Avatars.Posing;
 using VAT.Avatars.Skeletal;
-using VAT.Shared.Data;
+using VAT.Input.Data;
+using VAT.Characters;
+using VAT.Cryst.Game;
+using VAT.Interaction;
 
 namespace VAT.Avatars.Editor
 {
-    using System;
     using UnityEditor;
-    using UnityEngine.XR;
-    using VAT.Characters;
-    using VAT.Cryst.Game;
-    using VAT.Input;
-    using VAT.Interaction;
-    using VAT.Shared.Extensions;
 
     [CustomEditor(typeof(HumanoidHandPoser))]
     public sealed class HumanoidHandPoserEditor : Editor

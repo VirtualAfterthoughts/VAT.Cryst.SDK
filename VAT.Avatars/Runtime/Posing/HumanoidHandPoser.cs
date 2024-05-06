@@ -8,11 +8,10 @@ using UnityEditor;
 using UnityEngine;
 
 using VAT.Avatars.Art;
-using VAT.Avatars.Helpers;
 using VAT.Avatars.Proportions;
 using VAT.Avatars.Skeletal;
 using VAT.Characters;
-using VAT.Input;
+using VAT.Input.Data;
 using VAT.Interaction;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;

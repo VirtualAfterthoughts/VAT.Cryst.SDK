@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace VAT.Avatars
+namespace VAT.Input.Data
 {
     [Serializable]
     public struct PhalanxPoseData

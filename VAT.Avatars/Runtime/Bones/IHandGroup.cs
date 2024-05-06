@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Shared.Data;
+using VAT.Input.Data;
 
 namespace VAT.Avatars.Bones
 {

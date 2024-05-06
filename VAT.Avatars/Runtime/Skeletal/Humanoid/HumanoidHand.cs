@@ -9,6 +9,7 @@ using VAT.Avatars.Bones;
 using VAT.Input;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
+using VAT.Input.Data;
 
 namespace VAT.Avatars.Skeletal
 {

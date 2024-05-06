@@ -1,4 +1,4 @@
-using VAT.Avatars;
+using VAT.Input.Data;
 
 using VAT.Input.Haptic;
 

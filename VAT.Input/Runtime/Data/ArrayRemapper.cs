@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace VAT.Input
+namespace VAT.Input.Data
 {
     public static class ArrayRemapper
     {

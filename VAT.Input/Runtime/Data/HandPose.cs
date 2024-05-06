@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Avatars;
-
-namespace VAT.Input
+namespace VAT.Input.Data
 {
     [CreateAssetMenu(fileName = "New Hand Pose", menuName = "Cryst/Input/Hand Pose")]
     public class HandPose : ScriptableObject

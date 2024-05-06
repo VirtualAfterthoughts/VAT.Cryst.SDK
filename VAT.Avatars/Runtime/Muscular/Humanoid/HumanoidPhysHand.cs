@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
+
 using VAT.Avatars.Constants;
 using VAT.Avatars.Bones;
-using VAT.Cryst.Interfaces;
+using VAT.Input.Data;
 using VAT.Shared.Data;
 
 namespace VAT.Avatars.Muscular

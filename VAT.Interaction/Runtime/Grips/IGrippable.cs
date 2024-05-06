@@ -3,9 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Avatars;
-using VAT.Input;
-using VAT.Shared.Data;
+using VAT.Input.Data;
 
 namespace VAT.Interaction
 {

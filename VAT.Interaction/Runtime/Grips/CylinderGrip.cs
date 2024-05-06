@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using VAT.Avatars;
+
+using VAT.Input.Data;
 using VAT.Shared.Data;
-using VAT.Shared.Extensions;
 
 namespace VAT.Interaction
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Unity.Mathematics;
 using UnityEngine;
+
 using VAT.Audio;
 using VAT.Avatars;
 using VAT.Avatars.Integumentary;
@@ -13,6 +14,7 @@ using VAT.Input;
 using VAT.Input.Haptic;
 using VAT.Input.Skeleton;
 using VAT.Interaction;
+using VAT.Input.Data;
 
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Avatars;
+using VAT.Input.Data;
 
 using VAT.Input.Haptic;
 using VAT.Input.Unity;
