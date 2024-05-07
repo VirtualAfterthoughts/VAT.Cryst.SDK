@@ -10,34 +10,26 @@ using UnityEngine;
 using VAT.Packaging;
 using VAT.Serialization.JSON;
 
-namespace VAT.Props
+namespace VAT.Combat
 {
-    [DisplayName("Surface Material")]
-    public class SurfaceMaterial : DataShard
+    [DisplayName("Attack Type")]
+    public class AttackType : DataShard
     {
-        [SerializeField]
-        [Min(0f)]
-        [Tooltip("The density of the surface material.")]
-        private float _density = 1f;
-
 #if UNITY_EDITOR
         public override void OnEditorInspectorGUI(SerializedObject serializedObject)
         {
-            EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(_density)));
+            throw new System.NotImplementedException();
         }
 #endif
 
         protected override void OnPack(JSONPacker packer, JObject json)
         {
-            json.Add("density", _density);
+            throw new System.NotImplementedException();
         }
 
         protected override void OnUnpack(JSONUnpacker unpacker, JObject json)
         {
-            if (json.TryGetValue("density", out var density))
-            {
-                _density = density.ToObject<float>();
-            }
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 
@@ -16,7 +17,7 @@ namespace VAT.Packaging.Editor
         private string _title = "My Data Shard";
 
         private Type _shardType;
-        private DataShardIdentifier _shardIdentifier;
+        private string _shardDisplayName = string.Empty;
 
         public static void Initialize(Crystal crystal)
         {
@@ -43,22 +44,26 @@ namespace VAT.Packaging.Editor
         {
             if (!type.IsAbstract && type.IsSubclassOf(typeof(DataShard)))
             {
-                var attribute = type.GetCustomAttribute<DataShardIdentifier>();
+                string displayName = type.Name;
+
+                var attribute = type.GetCustomAttribute<DisplayNameAttribute>();
 
                 if (attribute != null)
                 {
-                    if (!header)
-                    {
-                        menu.AddDisabledItem(new GUIContent($"{type.Assembly.GetName().Name} Data Shards"));
-                        header = true;
-                    }
-
-                    menu.AddItem(new GUIContent(attribute.displayName), false, () =>
-                    {
-                        _shardType = type;
-                        _shardIdentifier = attribute;
-                    });
+                    displayName = attribute.DisplayName;
                 }
+
+                if (!header)
+                {
+                    menu.AddDisabledItem(new GUIContent($"{type.Assembly.GetName().Name} Data Shards"));
+                    header = true;
+                }
+
+                menu.AddItem(new GUIContent(displayName), false, () =>
+                {
+                    _shardType = type;
+                    _shardDisplayName = displayName;
+                });
             }
         }
 
@@ -83,7 +88,7 @@ namespace VAT.Packaging.Editor
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Shard Type");
 
-            if (GUILayout.Button(_shardIdentifier != null ? _shardIdentifier.displayName : "", EditorStyles.objectField))
+            if (GUILayout.Button(_shardDisplayName, EditorStyles.objectField))
             {
                 var menu = new GenericMenu();
                 LoadShardTypes(menu);
@@ -93,7 +98,7 @@ namespace VAT.Packaging.Editor
             EditorGUILayout.EndHorizontal();
 
             // Recreate address
-            string identifier = _shardIdentifier?.displayName ?? "Unknown";
+            string identifier = _shardDisplayName;
 
             _address = Address.BuildAddress(_crystal.CrystalInfo.Author, _crystal.CrystalInfo.Title, identifier, _title);
 
@@ -157,7 +162,7 @@ namespace VAT.Packaging.Editor
                 Title = _title
             };
             shard.Address = _address;
-            shard.AddressType = _shardIdentifier?.displayName ?? "Unknown";
+            shard.AddressType = _shardDisplayName;
 
             var path = Path.GetDirectoryName(AssetDatabase.GetAssetPath(_crystal));
             var fileName = $"{path}/_{_title}";

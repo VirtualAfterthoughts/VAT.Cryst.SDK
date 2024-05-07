@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 using UnityEditor;
 using UnityEngine;
@@ -14,7 +15,7 @@ using VAT.Serialization.JSON;
 
 namespace VAT.Props
 {
-    [DataShardIdentifier("Impact Material")]
+    [DisplayName("Impact Material")]
     public class ImpactMaterial : DataShard
     {
         [Serializable]
