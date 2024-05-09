@@ -5,7 +5,6 @@ using UnityEngine;
 
 using VAT.Avatars.Bones;
 using VAT.Shared.Data;
-using static UnityEngine.GraphicsBuffer;
 
 namespace VAT.Avatars.Art
 {

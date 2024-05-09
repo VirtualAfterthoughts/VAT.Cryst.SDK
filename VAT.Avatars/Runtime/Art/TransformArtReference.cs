@@ -9,14 +9,14 @@ using VAT.Shared.Data;
 namespace VAT.Avatars.Art
 {
     [Serializable]
-    public struct TransformArtReference : IArtReference
+    public class TransformArtReference : IArtReference
     {
         public Transform transform;
 
         [HideInInspector]
         public SimpleTransform offset;
 
-        public readonly bool HasTransform {
+        public bool HasTransform {
             get {
                 return transform != null;
             }
@@ -59,7 +59,7 @@ namespace VAT.Avatars.Art
         }
 
         public SimpleTransform ArtOffset {
-            readonly get { return offset; }
+            get { return offset; }
             set { offset = value; }
         }
 

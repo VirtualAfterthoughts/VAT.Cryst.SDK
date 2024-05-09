@@ -52,7 +52,7 @@ namespace VAT.Avatars.Art
         public HumanBodyBones? proximalBone, middleBone, distalBone;
 
         public void AutoFillBones(Animator animator) {
-            metaCarpal = new TransformArtReference();
+            metaCarpal = new TransformArtReference(null);
 
             if (proximalBone.HasValue)
                 proximal = new TransformArtReference(animator.GetBoneTransform(proximalBone.Value));

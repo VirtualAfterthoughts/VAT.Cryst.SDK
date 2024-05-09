@@ -85,6 +85,12 @@ namespace VAT.Packaging.Editor
                 OnReady();
             }
 
+            // Set crystal if its missing
+            if (_crystal == null && AssetPackager.Instance.CrystalCount > 0)
+            {
+                _crystal = AssetPackager.Instance.GetCrystals().FirstOrDefault();
+            }
+
             if (EditorUtility.IsPersistent(Selection.activeObject))
             {
                 using (new GUILayout.VerticalScope())
@@ -190,6 +196,7 @@ namespace VAT.Packaging.Editor
                 {
                     if (GUILayout.Button($"Add {group.attribute.displayName} To Crystal"))
                     {
+                        // Make sure crystal exists before opening creation wizard
                         if (_crystal != null)
                         {
                             StaticShardCreationWizard.Initialize(_crystal, group.attribute, group.contentType, obj);

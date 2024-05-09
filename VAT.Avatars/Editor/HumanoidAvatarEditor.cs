@@ -18,6 +18,7 @@ namespace VAT.Avatars.Editor {
     using Unity.Mathematics;
 
     using UnityEditor;
+    using UnityEditor.SceneManagement;
     using VAT.Entities.Stats;
 
     [CustomEditor(typeof(HumanoidAvatar), true)]
@@ -88,7 +89,7 @@ namespace VAT.Avatars.Editor {
 
                     if (instance.TryCreateHandPoser(out var poser)) {
                         // Rename poser
-                        instance.gameObject.hideFlags = HideFlags.DontSaveInEditor;
+                        instance.gameObject.hideFlags = HideFlags.DontSaveInBuild;
                         instance.gameObject.name = $"{_avatar.name} Hand Poser";
                         Transform avatarTransform = instance.transform;
 
@@ -108,6 +109,28 @@ namespace VAT.Avatars.Editor {
 
                         foreach (var mesh in instance.GetComponentsInChildren<SkinnedMeshRenderer>(true)) {
                             mesh.rootBone = hand;
+                        }
+
+                        // Make sure to save poser object
+                        EditorUtility.SetDirty(poser.gameObject);
+                        EditorSceneManager.MarkSceneDirty(poser.gameObject.scene);
+
+                        // Recursive destroy incase of dependent components
+                        var gameObject = instance.gameObject;
+                        
+                        for (var i = 0; i < 8; i++)
+                        {
+                            foreach (var behaviour in gameObject.GetComponentsInChildren<MonoBehaviour>(true))
+                            {
+                                try
+                                {
+                                    if (behaviour != handPoser && behaviour != instance)
+                                    {
+                                        DestroyImmediate(behaviour);
+                                    }
+                                }
+                                catch { }
+                            }
                         }
 
                         DestroyImmediate(instance);
