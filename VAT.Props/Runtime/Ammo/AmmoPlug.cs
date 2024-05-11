@@ -39,7 +39,7 @@ namespace VAT.Props.Ammo
                     float newSpring = Mathf.Lerp(currSpring, 5000f * force, Time.deltaTime * 6f);
                     _insertJoint.slerpDrive = new JointDrive() { positionSpring = newSpring, positionDamper = 100f * (force + 0.05f), maximumForce = float.PositiveInfinity };
 
-                    if (Vector3.Distance(insidePoint.position, transform.position) < 0.01f)
+                    if (Vector3.Distance(insidePoint.position, transform.position) < 0.05f)
                     {
                         CompleteInsert();
                     }
