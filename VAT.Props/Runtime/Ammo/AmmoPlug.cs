@@ -53,7 +53,7 @@ namespace VAT.Props.Ammo
 
                     float currSpring = _insertJoint.slerpDrive.positionSpring;
                     float newSpring = Mathf.Lerp(currSpring, 5000f * force, Time.deltaTime * 6f);
-                    _insertJoint.slerpDrive = new JointDrive() { positionSpring = newSpring, positionDamper = 100f * (force + 0.05f), maximumForce = float.PositiveInfinity };
+                    _insertJoint.slerpDrive = new JointDrive() { positionSpring = newSpring, positionDamper = newSpring * 0.1f, maximumForce = float.PositiveInfinity };
 
                     float ejectDistance = State == PlugState.EJECTING ? 0.1f : 0.5f;
 
