@@ -263,7 +263,7 @@ namespace VAT.Characters
             _attachedGrip = grip;
             _isSnatching = true;
 
-            ToggleCollsion(grip, true);
+            grip.GetHostOrDefault()?.ConnectHosts(new InteractableHostGroup(hosts));
 
             ResetHover();
         }
@@ -329,29 +329,10 @@ namespace VAT.Characters
         {
             grip.OnDetachConfirm(this);
 
-            ToggleCollsion(grip, false);
+            grip.GetHostOrDefault()?.DisconnectHosts(new InteractableHostGroup(hosts));
 
             _attachedGrip = null;
             _isSnatching = false;
-        }
-
-        public void ToggleCollsion(IGrippable grip, bool ignore)
-        {
-            var gripHost = grip.GetHostOrDefault();
-
-            if (gripHost != null)
-            {
-                foreach (var host in hosts)
-                {
-                    foreach (var col1 in host.Colliders)
-                    {
-                        foreach (var col2 in gripHost.GetColliders())
-                        {
-                            Physics.IgnoreCollision(col1, col2, ignore);
-                        }
-                    }
-                }
-            }
         }
 
         private Vector3 GetFarOrigin()

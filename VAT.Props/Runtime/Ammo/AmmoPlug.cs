@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Interaction;
 using VAT.Interaction.Attachments;
 
 namespace VAT.Props.Ammo
@@ -58,6 +58,8 @@ namespace VAT.Props.Ammo
 
         protected override void OnBeginInsert(Socket socket)
         {
+            socket.Host.ConnectHosts(new InteractableHostGroup(Host));
+
             var ammoSocket = socket as AmmoSocket;
             var outsidePoint = ammoSocket.OutsidePoint;
 
@@ -82,11 +84,15 @@ namespace VAT.Props.Ammo
             _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(outsidePoint.position);
             _insertJoint.connectedBody = socket.Host.GetRigidbodyOrDefault();
 
+            _insertJoint.enableCollision = true;
+
             Host.transform.rotation = startRotation;
         }
 
         protected override void OnCompleteEject(Socket socket)
         {
+            socket.Host.DisconnectHosts(new InteractableHostGroup(Host));
+
             Destroy(_insertJoint);
             _insertJoint = null;
         }
@@ -100,6 +106,8 @@ namespace VAT.Props.Ammo
             _insertJoint.yMotion = ConfigurableJointMotion.Locked;
 
             _insertJoint.angularXMotion = _insertJoint.angularYMotion = _insertJoint.angularZMotion = ConfigurableJointMotion.Locked;
+
+            Host.DisableInteraction();
         }
     }
 }

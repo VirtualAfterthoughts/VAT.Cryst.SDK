@@ -17,6 +17,8 @@ namespace VAT.Interaction
 
         private InteractableHostManager _manager;
 
+        private List<InteractableHostGroup> _connectedHosts = new();
+
         public List<Collider> Colliders => _colliders;
 
         public VirtualController VirtualController { get; } = new VirtualController();
@@ -26,6 +28,26 @@ namespace VAT.Interaction
             return _rb;
         }
 
+        public void ConnectHosts(InteractableHostGroup group)
+        {
+            foreach (var connected in _connectedHosts)
+            {
+                connected.IgnoreCollision(group, true);
+            }
+
+            _connectedHosts.Add(group);
+        }
+
+        public void DisconnectHosts(InteractableHostGroup group)
+        {
+            _connectedHosts.Remove(group);
+
+            foreach (var connected in _connectedHosts)
+            {
+                connected.IgnoreCollision(group, false);
+            }
+        }
+
         public Collider[] GetColliders()
         {
             return Colliders.ToArray();
@@ -33,6 +55,8 @@ namespace VAT.Interaction
 
         private void Awake()
         {
+            _connectedHosts.Add(new InteractableHostGroup(this));
+
             _rb = gameObject.GetComponent<Rigidbody>();
 
             foreach (var collider in GetComponentsInChildren<Collider>())

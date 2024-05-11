@@ -185,6 +185,8 @@ namespace VAT.Characters
                     interactor.hosts.Add(((PhysBone)physBone).UnityGameObject.AddComponent<InteractableHost>());
                 }
 
+                interactor.hosts.Add(((PhysBone)arm.PhysArm.Hand.Hand).UnityGameObject.AddComponent<InteractableHost>());
+
                 _interactors[index++] = interactor;
             }
 
