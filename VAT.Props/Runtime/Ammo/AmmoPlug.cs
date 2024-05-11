@@ -39,7 +39,7 @@ namespace VAT.Props.Ammo
                     float newSpring = Mathf.Lerp(currSpring, 5000f * force, Time.deltaTime * 6f);
                     _insertJoint.slerpDrive = new JointDrive() { positionSpring = newSpring, positionDamper = 100f * (force + 0.05f), maximumForce = float.PositiveInfinity };
 
-                    if (Vector3.Distance(insidePoint.position, transform.position) < 0.005f)
+                    if (Vector3.Distance(insidePoint.position, transform.position) < 0.01f)
                     {
                         CompleteInsert();
                     }
@@ -67,13 +67,13 @@ namespace VAT.Props.Ammo
             Host.transform.rotation = socket.Host.transform.rotation;
 
             _insertJoint = Host.GetRigidbodyOrDefault().gameObject.AddComponent<ConfigurableJoint>();
-            _insertJoint.xMotion = _insertJoint.yMotion = _insertJoint.zMotion = ConfigurableJointMotion.Locked;
-
-            _insertJoint.angularXMotion = _insertJoint.angularYMotion = _insertJoint.angularZMotion = ConfigurableJointMotion.Free;
-
+            
+            _insertJoint.xDrive = _insertJoint.zDrive = new JointDrive() { positionSpring = 5000000f, positionDamper = 10000f, maximumForce =  float.PositiveInfinity };
+            
             var insideToOut = ammoSocket.InsidePoint.position - ammoSocket.OutsidePoint.position;
             _insertJoint.secondaryAxis = _insertJoint.transform.InverseTransformDirection(insideToOut.normalized);
-            _insertJoint.yMotion = ConfigurableJointMotion.Limited;
+
+            _insertJoint.xMotion = _insertJoint.yMotion = _insertJoint.zMotion = ConfigurableJointMotion.Limited;
             _insertJoint.linearLimit = new SoftJointLimit() { limit = insideToOut.magnitude };
 
             _insertJoint.yDrive = new JointDrive() { positionDamper = 10f, maximumForce = 10f };
