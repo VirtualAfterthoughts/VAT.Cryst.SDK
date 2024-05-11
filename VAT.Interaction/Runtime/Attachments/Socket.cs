@@ -31,6 +31,14 @@ namespace VAT.Interaction.Attachments
 
         public virtual bool IsLocked => RegisteredPlugs.Count > 0;
 
+        public void EjectPlugs()
+        {
+            foreach (var plug in RegisteredPlugs)
+            {
+                plug.ConfirmEject();
+            }
+        }
+
         public bool IsPlugLocked(Plug plug)
         {
             return LockedPlugs.Contains(plug);

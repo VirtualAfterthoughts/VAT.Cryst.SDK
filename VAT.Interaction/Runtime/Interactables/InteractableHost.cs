@@ -19,6 +19,8 @@ namespace VAT.Interaction
 
         private List<InteractableHostGroup> _connectedHosts = new();
 
+        public List<InteractableHostGroup> ConnectedHosts => _connectedHosts;
+
         public List<Collider> Colliders => _colliders;
 
         public VirtualController VirtualController { get; } = new VirtualController();

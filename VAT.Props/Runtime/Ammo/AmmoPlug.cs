@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using VAT.Interaction;
 using VAT.Interaction.Attachments;
+using VAT.Shared.Data;
 
 namespace VAT.Props.Ammo
 {
     public class AmmoPlug : Plug
     {
         private ConfigurableJoint _insertJoint = null;
+        private ConfigurableJointSpace _jointSpace = null;
 
         public void OnTriggerEnter(Collider other)
         {
@@ -33,17 +35,33 @@ namespace VAT.Props.Ammo
 
                     var dot = Vector3.Dot((insidePoint.position - outsidePoint.position) / distance, (outsidePoint.position - transform.position) / distance);
 
+                    if (dot < -0.7f && State != PlugState.EJECTING)
+                    {
+                        _insertJoint.yDrive = new JointDrive() { positionSpring = 50000f, positionDamper = 50f, maximumForce = 1000f };
+                        var targetPos = _jointSpace.GetTargetPositionWorld(_insertJoint.transform.position);
+                        targetPos.x = 0f;
+                        targetPos.z = 0f;
+                        _insertJoint.targetPosition = Vector3.MoveTowards(targetPos, _insertJoint.targetPosition, 0.001f);
+                    }
+                    else
+                    {
+                        _insertJoint.yDrive = new JointDrive() { positionDamper = 5f, maximumForce = 100f };
+                        _insertJoint.targetPosition = Vector3.zero;
+                    }
+
                     float force = 1f - Mathf.Clamp01(dot * 5f);
 
                     float currSpring = _insertJoint.slerpDrive.positionSpring;
                     float newSpring = Mathf.Lerp(currSpring, 5000f * force, Time.deltaTime * 6f);
                     _insertJoint.slerpDrive = new JointDrive() { positionSpring = newSpring, positionDamper = 100f * (force + 0.05f), maximumForce = float.PositiveInfinity };
 
-                    if (Vector3.Distance(insidePoint.position, transform.position) < 0.015f)
+                    float ejectDistance = State == PlugState.EJECTING ? 0.1f : 0.5f;
+
+                    if (State != PlugState.EJECTING && Vector3.Distance(insidePoint.position, transform.position) < 0.01f)
                     {
                         CompleteInsert();
                     }
-                    else if (dot > 0f && Vector3.Distance(outsidePoint.position, transform.position) > distance * 0.5f)
+                    else if (dot > 0f && Vector3.Distance(outsidePoint.position, transform.position) > distance * ejectDistance)
                     {
                         CompleteEject();
                     }
@@ -53,12 +71,15 @@ namespace VAT.Props.Ammo
 
         protected override void OnBeginEject(Socket socket)
         {
-            
+            FreeJoint(socket);
         }
 
         protected override void OnBeginInsert(Socket socket)
         {
-            socket.Host.ConnectHosts(new InteractableHostGroup(Host));
+            foreach (var group in Host.ConnectedHosts)
+            {
+                socket.Host.ConnectHosts(group);
+            }
 
             var ammoSocket = socket as AmmoSocket;
             var outsidePoint = ammoSocket.OutsidePoint;
@@ -87,11 +108,43 @@ namespace VAT.Props.Ammo
             _insertJoint.enableCollision = true;
 
             Host.transform.rotation = startRotation;
+
+            _jointSpace = new ConfigurableJointSpace(_insertJoint);
+        }
+
+        private void FreeJoint(Socket socket)
+        {
+            var ammoSocket = socket as AmmoSocket;
+            var outsidePoint = ammoSocket.OutsidePoint;
+
+            _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(outsidePoint.position);
+
+            _insertJoint.yMotion = ConfigurableJointMotion.Limited;
+            _insertJoint.angularXMotion = _insertJoint.angularYMotion = _insertJoint.angularZMotion = ConfigurableJointMotion.Free;
+
+            Host.EnableInteraction();
+        }
+
+        private void LockJoint(Socket socket)
+        {
+            var ammoSocket = socket as AmmoSocket;
+            var insidePoint = ammoSocket.InsidePoint;
+
+            _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(insidePoint.position);
+
+            _insertJoint.yMotion = ConfigurableJointMotion.Locked;
+
+            _insertJoint.angularXMotion = _insertJoint.angularYMotion = _insertJoint.angularZMotion = ConfigurableJointMotion.Locked;
+
+            Host.DisableInteraction();
         }
 
         protected override void OnCompleteEject(Socket socket)
         {
-            socket.Host.DisconnectHosts(new InteractableHostGroup(Host));
+            foreach (var group in Host.ConnectedHosts)
+            {
+                socket.Host.DisconnectHosts(group);
+            }
 
             Destroy(_insertJoint);
             _insertJoint = null;
@@ -99,15 +152,7 @@ namespace VAT.Props.Ammo
 
         protected override void OnCompleteInsert(Socket socket)
         {
-            var ammoSocket = socket as AmmoSocket;
-            var insidePoint = ammoSocket.InsidePoint;
-
-            _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(insidePoint.position);
-            _insertJoint.yMotion = ConfigurableJointMotion.Locked;
-
-            _insertJoint.angularXMotion = _insertJoint.angularYMotion = _insertJoint.angularZMotion = ConfigurableJointMotion.Locked;
-
-            Host.DisableInteraction();
+            LockJoint(socket);
         }
     }
 }
