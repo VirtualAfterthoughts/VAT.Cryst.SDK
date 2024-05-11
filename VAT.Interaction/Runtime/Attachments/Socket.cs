@@ -29,6 +29,8 @@ namespace VAT.Interaction.Attachments
 
         public List<Plug> LockedPlugs => _lockedPlugs;
 
+        public virtual bool IsLocked => RegisteredPlugs.Count > 0;
+
         public bool IsPlugLocked(Plug plug)
         {
             return LockedPlugs.Contains(plug);

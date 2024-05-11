@@ -130,7 +130,7 @@ namespace VAT.Characters
                 var drive = new JointDrive() { positionSpring = 1000f, positionDamper = 0f, maximumForce = 1000f };
                 _joint.xDrive = _joint.yDrive = _joint.zDrive = drive;
                 _joint.rotationDriveMode = RotationDriveMode.Slerp;
-                _joint.slerpDrive = drive;
+                _joint.slerpDrive = new JointDrive() { positionSpring = 1000f, positionDamper = 50f, maximumForce = 1000f };
                 _joint.autoConfigureConnectedAnchor = false;
                 _joint.anchor = targetInInteractor.position;
                 _joint.connectedAnchor = targetInHost.position;

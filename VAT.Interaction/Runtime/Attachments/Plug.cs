@@ -15,11 +15,17 @@ namespace VAT.Interaction.Attachments
 
     public abstract class Plug : MonoBehaviour
     {
+        [SerializeField]
+        private InteractableHost _host = null;
+
+        public InteractableHost Host { get { return _host; } set { _host = value; } }
+
         private Socket _insertedSocket = null;
         private bool _isLocked = false;
         private PlugState _state = PlugState.NONE;
 
         public Socket InsertedSocket => _insertedSocket;
+        public bool IsInserted => InsertedSocket != null;
         public bool IsLocked => _isLocked;
         public PlugState State => _state;
 
