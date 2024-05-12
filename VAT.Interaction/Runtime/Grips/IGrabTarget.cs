@@ -10,18 +10,18 @@ namespace VAT.Interaction
 {
     public interface IGrabTarget
     {
-        SimpleTransform GetTargetInHost(IPalm point);
+        SimpleTransform GetTargetInHost(IPalmPoint point);
 
-        SimpleTransform GetTargetInWorld(IPalm point);
+        SimpleTransform GetTargetInWorld(IPalmPoint point);
 
-        SimpleTransform GetTargetInInteractor(IPalm point);
+        SimpleTransform GetTargetInInteractor(IPalmPoint point);
 
-        SimpleTransform GetTargetInWorld(IPalm point, HandPoseData pose);
+        SimpleTransform GetTargetInWorld(IPalmPoint point, HandPoseData pose);
 
-        SimpleTransform GetTargetInInteractor(IPalm point, HandPoseData pose);
+        SimpleTransform GetTargetInInteractor(IPalmPoint point, HandPoseData pose);
 
-        SimpleTransform GetDefaultTargetInWorld(IPalm point, HandPoseData pose);
+        SimpleTransform GetDefaultTargetInWorld(IPalmPoint point, HandPoseData pose);
 
-        SimpleTransform GetDefaultTargetInInteractor(IPalm point, HandPoseData pose);
+        SimpleTransform GetDefaultTargetInInteractor(IPalmPoint point, HandPoseData pose);
     }
 }

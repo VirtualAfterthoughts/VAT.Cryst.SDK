@@ -50,7 +50,7 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(IPalm point, HandPoseData pose)
+        public override SimpleTransform GetTargetInWorld(IPalmPoint point, HandPoseData pose)
         {
             var pivot = GetPivotInWorld(point, pose);
             var normalRelative = point.GetDefaultPoint().InverseTransformDirection(point.GetNormal());
@@ -59,7 +59,7 @@ namespace VAT.Interaction
             return pivot;
         }
 
-        public override SimpleTransform GetPivotInWorld(IPalm point, HandPoseData pose)
+        public override SimpleTransform GetPivotInWorld(IPalmPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
 
@@ -68,7 +68,7 @@ namespace VAT.Interaction
             return SimpleTransform.Create(target.position, rotation);
         }
 
-        public override SimpleTransform GetPivotInInteractor(IPalm point, HandPoseData pose)
+        public override SimpleTransform GetPivotInInteractor(IPalmPoint point, HandPoseData pose)
         {
             var grabPoint = base.GetPivotInInteractor(point, pose);
             grabPoint.position += math.down() * GetWorldRadius();

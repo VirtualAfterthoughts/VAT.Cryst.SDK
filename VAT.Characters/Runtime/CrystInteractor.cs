@@ -456,7 +456,7 @@ namespace VAT.Characters
             _interactorOverrides.Remove(interactorOverride);
         }
 
-        public IPalm GetPalm()
+        public IPalmPoint GetPalm()
         {
             return _grabberPoint;
         }

@@ -6,7 +6,7 @@ using VAT.Shared.Data;
 
 namespace VAT.Characters
 {
-    public class AvatarGrabberPoint : IPalm
+    public class AvatarGrabberPoint : IPalmPoint
     {
         public IHandGroup hand;
         public float radius;

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Input;
 using VAT.Input.Data;
 using VAT.Shared.Data;
 
@@ -284,7 +284,7 @@ namespace VAT.Interaction
             }
         }
 
-        public SimpleTransform GetTargetInHost(IPalm point)
+        public SimpleTransform GetTargetInHost(IPalmPoint point)
         {
             var hostGameObject = GetHostGameObject().transform;
             return SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation).InverseTransform(GetTargetInWorld(point));
@@ -296,32 +296,29 @@ namespace VAT.Interaction
             return GetTargetInWorld(interactor.GetPalm()).InverseTransform(SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation));
         }
 
-        public SimpleTransform GetTargetInWorld(IPalm point)
+        public SimpleTransform GetTargetInWorld(IPalmPoint point)
         {
             return GetTargetInWorld(point, _defaultClosedPose.data);
         }
 
-        public abstract SimpleTransform GetTargetInWorld(IPalm point, HandPoseData pose);
+        public abstract SimpleTransform GetTargetInWorld(IPalmPoint point, HandPoseData pose);
 
-        public virtual SimpleTransform GetPivotInWorld(IPalm point, HandPoseData pose)
+        public virtual SimpleTransform GetPivotInWorld(IPalmPoint point, HandPoseData pose)
         {
             return GetTargetInWorld(point, pose);
         }
 
-        public SimpleTransform GetTargetInInteractor(IPalm point)
+        public SimpleTransform GetTargetInInteractor(IPalmPoint point)
         {
             return GetTargetInInteractor(point, _defaultClosedPose.data);
         }
-        private Quaternion GetAxisOffset(IPalm point, HandPoseData pose)
+        private Quaternion GetAxisOffset(IPalmPoint point, HandPoseData pose)
         {
-            var grabPoint = point.GetDefaultPoint();
-            var normal = -point.GetNormal();
-
-            float dot = Vector3.Dot(grabPoint.right, normal);
+            var handedness = point.GetHandedness();
 
             var offset = pose.rotationOffset.normalized;
 
-            if (dot > 0f)
+            if (handedness == Handedness.RIGHT)
             {
                 offset.ToAngleAxis(out var angle, out var axis);
                 axis.z = -axis.z;
@@ -333,7 +330,7 @@ namespace VAT.Interaction
             return offset;
         }
 
-        public SimpleTransform GetTargetInInteractor(IPalm point, HandPoseData pose)
+        public SimpleTransform GetTargetInInteractor(IPalmPoint point, HandPoseData pose)
         {
             var offset = GetAxisOffset(point, pose);
 
@@ -343,7 +340,7 @@ namespace VAT.Interaction
             return local;
         }
 
-        public virtual SimpleTransform GetPivotInInteractor(IPalm point, HandPoseData pose)
+        public virtual SimpleTransform GetPivotInInteractor(IPalmPoint point, HandPoseData pose)
         {
             return GetTargetInInteractor(point, pose);
         }
@@ -353,12 +350,12 @@ namespace VAT.Interaction
             return _host;
         }
 
-        public virtual SimpleTransform GetDefaultTargetInWorld(IPalm point, HandPoseData pose)
+        public virtual SimpleTransform GetDefaultTargetInWorld(IPalmPoint point, HandPoseData pose)
         {
             return GetTargetInWorld(point, pose);
         }
 
-        public virtual SimpleTransform GetDefaultTargetInInteractor(IPalm point, HandPoseData pose)
+        public virtual SimpleTransform GetDefaultTargetInInteractor(IPalmPoint point, HandPoseData pose)
         {
             return GetTargetInInteractor(point, pose);
         }
