@@ -57,7 +57,7 @@ namespace VAT.Props.Ammo
 
                     float ejectDistance = State == PlugState.EJECTING ? 0.1f : 0.5f;
 
-                    if (State != PlugState.EJECTING && Vector3.Distance(insidePoint.position, transform.position) < 0.01f)
+                    if (State != PlugState.EJECTING && dot <= -0.93f)
                     {
                         CompleteInsert();
                     }
