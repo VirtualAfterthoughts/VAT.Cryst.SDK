@@ -13,7 +13,7 @@ namespace VAT.Props.Ammo
         private ConfigurableJoint _insertJoint = null;
         private ConfigurableJointSpace _jointSpace = null;
 
-        public void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (!IsInserted && other.TryGetComponent<AmmoSocket>(out var socket) && !socket.IsLocked)
             {

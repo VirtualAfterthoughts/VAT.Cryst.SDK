@@ -29,6 +29,12 @@ namespace VAT.Interaction.Attachments
         public bool IsLocked => _isLocked;
         public PlugState State => _state;
 
+        public void ForceInsert(Socket socket)
+        {
+            ConfirmInsert(socket);
+            CompleteInsert();
+        }
+
         public void ConfirmInsert(Socket socket)
         {
             _insertedSocket = socket;
@@ -48,6 +54,12 @@ namespace VAT.Interaction.Attachments
             _insertedSocket.LockPlug(this);
 
             OnCompleteInsert(_insertedSocket);
+        }
+
+        public void ForceEject()
+        {
+            ConfirmEject();
+            CompleteEject();
         }
 
         public void ConfirmEject()
