@@ -148,25 +148,5 @@ namespace VAT.Interaction
         {
             _interactables.Remove(interactable);
         }
-
-#if UNITY_EDITOR
-        public void OnDrawGizmos()
-        {
-            if (!Application.isPlaying)
-            {
-                return;   
-            }
-
-            Gizmos.color = Color.magenta;
-
-            foreach (var link in Links)
-            {
-                foreach (var host in link.linkedGroup.hosts)
-                {
-                    Gizmos.DrawLine(transform.position, host.transform.position);
-                }
-            }
-        }
-#endif
     }
 }

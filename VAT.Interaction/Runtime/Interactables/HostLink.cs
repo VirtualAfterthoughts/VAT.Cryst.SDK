@@ -43,6 +43,18 @@ namespace VAT.Interaction
                 link.host.SelfGroup.IgnoreCollision(linkedGroup, ignore);
 
                 link.linkedGroup.IgnoreCollision(linkedGroup, ignore);
+
+                foreach (var host in linkedGroup.hosts)
+                {
+                    foreach (var otherLink in  host.Links)
+                    {
+                        link.host.SelfGroup.IgnoreCollision(otherLink.host.SelfGroup, ignore);
+                        link.host.SelfGroup.IgnoreCollision(otherLink.linkedGroup, ignore);
+
+                        link.linkedGroup.IgnoreCollision(otherLink.host.SelfGroup, ignore);
+                        link.linkedGroup.IgnoreCollision(otherLink.linkedGroup, ignore);
+                    }
+                }
             }
         }
     }
