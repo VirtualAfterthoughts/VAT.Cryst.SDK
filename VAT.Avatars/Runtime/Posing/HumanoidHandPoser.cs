@@ -100,11 +100,11 @@ namespace VAT.Avatars.Posing
                 var targetInHand = targetGrip.GetDefaultTargetInInteractor(grabberPoint, handPoseData);
                 var targetInWorld = targetGrip.GetDefaultTargetInWorld(grabberPoint, handPoseData);
 
-                transform.rotation = (targetInWorld.rotation * Quaternion.Inverse(grabberPoint.GetParentTransform().Transform(targetInHand).rotation) * transform.rotation);
+                transform.rotation = (targetInWorld.rotation * Quaternion.Inverse(grabberPoint.GetHostTransform().Transform(targetInHand).rotation) * transform.rotation);
 
                 Solve();
 
-                transform.position += (Vector3)(targetInWorld.position - grabberPoint.GetParentTransform().Transform(targetInHand).position);
+                transform.position += (Vector3)(targetInWorld.position - grabberPoint.GetHostTransform().Transform(targetInHand).position);
             }
         }
 

@@ -51,10 +51,10 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(IGrabPoint point, HandPoseData pose)
+        public override SimpleTransform GetTargetInWorld(IPalm point, HandPoseData pose)
         {
             var target = GetTargetTransform();
-            var grabPoint = point.GetDefaultGrabPoint();
+            var grabPoint = point.GetDefaultPoint();
 
             var distance = ((Vector3)grabPoint.position - target.position);
             var relativeDistance = target.InverseTransformDirection(distance);
@@ -66,7 +66,7 @@ namespace VAT.Interaction
             fixedDirection.y = 0f;
             var direction = target.TransformDirection(fixedDirection.normalized);
 
-            var grabRotation = Quaternion.FromToRotation(-point.GetGrabNormal(), direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(-point.GetNormal(), direction) * grabPoint.rotation;
             Vector3 grabUp = grabRotation * Vector3.up;
             Vector3 targetUp = target.up * Mathf.Sign(Vector3.Dot(target.up, grabUp));
             grabRotation = Quaternion.FromToRotation(grabUp, targetUp) * grabRotation;
@@ -74,7 +74,7 @@ namespace VAT.Interaction
             return SimpleTransform.Create(target.position + target.up * upOffset + direction * GetWorldRadius(), grabRotation);
         }
 
-        public override SimpleTransform GetDefaultTargetInWorld(IGrabPoint point, HandPoseData pose)
+        public override SimpleTransform GetDefaultTargetInWorld(IPalm point, HandPoseData pose)
         {
             var target = GetTargetTransform();
 
@@ -83,8 +83,8 @@ namespace VAT.Interaction
             var grabRotation = target.rotation;
             var grabPosition = target.position;
 
-            var grabPoint = point.GetDefaultGrabPoint();
-            var normal = -point.GetGrabNormal();
+            var grabPoint = point.GetDefaultPoint();
+            var normal = -point.GetNormal();
 
             float dot = Vector3.Dot(grabPoint.right, normal);
 

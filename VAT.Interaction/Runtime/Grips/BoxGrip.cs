@@ -39,9 +39,9 @@ namespace VAT.Interaction
             return _target;
         }
 
-        public override SimpleTransform GetTargetInWorld(IGrabPoint point, HandPoseData pose)
+        public override SimpleTransform GetTargetInWorld(IPalm point, HandPoseData pose)
         {
-            var grabPoint = point.GetDefaultGrabPoint();
+            var grabPoint = point.GetDefaultPoint();
             var targetTransform = GetTargetTransform();
             var localGrabPoint = targetTransform.InverseTransformPoint(grabPoint.position);
 
@@ -51,7 +51,7 @@ namespace VAT.Interaction
                 var worldPoint = targetTransform.TransformPoint(face.Value.ClosestPoint(localGrabPoint));
                 var worldNormal = targetTransform.TransformDirection(face.Value.normal);
 
-                var grabRotation = Quaternion.FromToRotation(-point.GetGrabNormal(), worldNormal) * grabPoint.rotation;
+                var grabRotation = Quaternion.FromToRotation(-point.GetNormal(), worldNormal) * grabPoint.rotation;
 
                 return SimpleTransform.Create(worldPoint, grabRotation);
             }
@@ -59,7 +59,7 @@ namespace VAT.Interaction
             return grabPoint;
         }
 
-        public override SimpleTransform GetDefaultTargetInWorld(IGrabPoint point, HandPoseData pose)
+        public override SimpleTransform GetDefaultTargetInWorld(IPalm point, HandPoseData pose)
         {
             var targetTransform = GetTargetTransform();
 

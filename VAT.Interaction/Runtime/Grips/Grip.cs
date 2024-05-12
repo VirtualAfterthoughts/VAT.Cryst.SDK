@@ -250,10 +250,10 @@ namespace VAT.Interaction
             if (!IsInteractable() || (_attachedInteractors.Count > 0 && _swapMode == GripSwapMode.SINGLE))
                 return (false, 0f);
 
-            var grabberPoint = interactor.GetGrabberPoint();
+            var grabberPoint = interactor.GetPalm();
 
             var target = GetTargetInWorld(grabberPoint);
-            var grabCenter = grabberPoint.GetGrabCenter();
+            var grabCenter = grabberPoint.GetProximityCenter();
 
             float distance = ((Vector3)(target.position - grabCenter.position)).magnitude;
 
@@ -284,7 +284,7 @@ namespace VAT.Interaction
             }
         }
 
-        public SimpleTransform GetTargetInHost(IGrabPoint point)
+        public SimpleTransform GetTargetInHost(IPalm point)
         {
             var hostGameObject = GetHostGameObject().transform;
             return SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation).InverseTransform(GetTargetInWorld(point));
@@ -293,29 +293,29 @@ namespace VAT.Interaction
         public SimpleTransform GetHostInInteractor(IInteractor interactor)
         {
             var hostGameObject = GetHostGameObject().transform;
-            return GetTargetInWorld(interactor.GetGrabberPoint()).InverseTransform(SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation));
+            return GetTargetInWorld(interactor.GetPalm()).InverseTransform(SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation));
         }
 
-        public SimpleTransform GetTargetInWorld(IGrabPoint point)
+        public SimpleTransform GetTargetInWorld(IPalm point)
         {
             return GetTargetInWorld(point, _defaultClosedPose.data);
         }
 
-        public abstract SimpleTransform GetTargetInWorld(IGrabPoint point, HandPoseData pose);
+        public abstract SimpleTransform GetTargetInWorld(IPalm point, HandPoseData pose);
 
-        public virtual SimpleTransform GetPivotInWorld(IGrabPoint point, HandPoseData pose)
+        public virtual SimpleTransform GetPivotInWorld(IPalm point, HandPoseData pose)
         {
             return GetTargetInWorld(point, pose);
         }
 
-        public SimpleTransform GetTargetInInteractor(IGrabPoint point)
+        public SimpleTransform GetTargetInInteractor(IPalm point)
         {
             return GetTargetInInteractor(point, _defaultClosedPose.data);
         }
-        private Quaternion GetAxisOffset(IGrabPoint point, HandPoseData pose)
+        private Quaternion GetAxisOffset(IPalm point, HandPoseData pose)
         {
-            var grabPoint = point.GetDefaultGrabPoint();
-            var normal = -point.GetGrabNormal();
+            var grabPoint = point.GetDefaultPoint();
+            var normal = -point.GetNormal();
 
             float dot = Vector3.Dot(grabPoint.right, normal);
 
@@ -333,17 +333,17 @@ namespace VAT.Interaction
             return offset;
         }
 
-        public SimpleTransform GetTargetInInteractor(IGrabPoint point, HandPoseData pose)
+        public SimpleTransform GetTargetInInteractor(IPalm point, HandPoseData pose)
         {
             var offset = GetAxisOffset(point, pose);
 
-            var local = point.GetParentTransform().InverseTransform(point.GetGrabPoint(pose.centerOfPressure));
+            var local = point.GetHostTransform().InverseTransform(point.GetPoint(pose.centerOfPressure));
 
             local.rotation *= offset;
             return local;
         }
 
-        public virtual SimpleTransform GetPivotInInteractor(IGrabPoint point, HandPoseData pose)
+        public virtual SimpleTransform GetPivotInInteractor(IPalm point, HandPoseData pose)
         {
             return GetTargetInInteractor(point, pose);
         }
@@ -353,12 +353,12 @@ namespace VAT.Interaction
             return _host;
         }
 
-        public virtual SimpleTransform GetDefaultTargetInWorld(IGrabPoint point, HandPoseData pose)
+        public virtual SimpleTransform GetDefaultTargetInWorld(IPalm point, HandPoseData pose)
         {
             return GetTargetInWorld(point, pose);
         }
 
-        public virtual SimpleTransform GetDefaultTargetInInteractor(IGrabPoint point, HandPoseData pose)
+        public virtual SimpleTransform GetDefaultTargetInInteractor(IPalm point, HandPoseData pose)
         {
             return GetTargetInInteractor(point, pose);
         }

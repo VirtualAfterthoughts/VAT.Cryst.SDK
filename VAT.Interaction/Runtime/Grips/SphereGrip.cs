@@ -26,24 +26,24 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(IGrabPoint point, HandPoseData pose)
+        public override SimpleTransform GetTargetInWorld(IPalm point, HandPoseData pose)
         {
             var target = GetTargetTransform();
-            var grabPoint = point.GetParentTransform().Transform(GetTargetInInteractor(point, pose));
+            var grabPoint = point.GetHostTransform().Transform(GetTargetInInteractor(point, pose));
             var direction = ((Vector3)grabPoint.position - target.position).normalized;
 
-            var grabRotation = Quaternion.FromToRotation(-point.GetGrabNormal(), direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(-point.GetNormal(), direction) * grabPoint.rotation;
 
             return SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
         }
 
-        public override SimpleTransform GetDefaultTargetInWorld(IGrabPoint point, HandPoseData pose)
+        public override SimpleTransform GetDefaultTargetInWorld(IPalm point, HandPoseData pose)
         {
             var target = GetTargetTransform();
             var direction = target.right;
 
-            var grabPoint = point.GetDefaultGrabPoint();
-            var normal = -point.GetGrabNormal();
+            var grabPoint = point.GetDefaultPoint();
+            var normal = -point.GetNormal();
 
             float dot = Vector3.Dot(grabPoint.right, normal);
 

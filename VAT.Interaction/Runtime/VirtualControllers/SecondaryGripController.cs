@@ -118,10 +118,10 @@ namespace VAT.Interaction
                 var primaryHand = _primaryGrip.GetFirstInteractor();
                 var primaryTransform = primaryHand.GetRigidbody().transform;
 
-                var grabberPoint = payload.ActivePair.Interactor.GetGrabberPoint();
+                var grabberPoint = payload.ActivePair.Interactor.GetPalm();
 
                 var secondaryTransform = payload.ActivePair.Interactor.GetRigidbody().transform;
-                var secondaryGrabTransform = grabberPoint.GetParentTransform().Transform(payload.ActivePair.Grip.GetTargetInInteractor(grabberPoint));
+                var secondaryGrabTransform = grabberPoint.GetHostTransform().Transform(payload.ActivePair.Grip.GetTargetInInteractor(grabberPoint));
                 var grabTarget = payload.ActivePair.Grip.GetTargetInWorld(grabberPoint);
                 var relativeToGrab = secondaryGrabTransform.InverseTransform(SimpleTransform.Create(secondaryTransform.position, secondaryTransform.rotation));
 

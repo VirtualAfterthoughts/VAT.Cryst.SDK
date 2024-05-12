@@ -90,9 +90,9 @@ namespace VAT.Characters
             {
                 ApplyDrag(_pullingGrip.GetHostOrDefault().GetRigidbodyOrDefault(), _interactor.GetRigidbody());
 
-                var grabberPoint = _interactor.GetGrabberPoint();
+                var grabberPoint = _interactor.GetPalm();
                 var worldTarget = _pullingGrip.GetTargetInWorld(grabberPoint);
-                var interactorTarget = grabberPoint.GetParentTransform().Transform(_pullingGrip.GetTargetInInteractor(grabberPoint));
+                var interactorTarget = grabberPoint.GetHostTransform().Transform(_pullingGrip.GetTargetInInteractor(grabberPoint));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);
 
@@ -115,14 +115,14 @@ namespace VAT.Characters
                 _pullingGrip = grip;
 
                 var rb = host.GetRigidbodyOrDefault();
-                var grabPoint = _interactor.GetGrabberPoint();
+                var grabPoint = _interactor.GetPalm();
                 var targetInInteractor = grip.GetTargetInInteractor(grabPoint);
 
                 var targetInWorld = grip.GetTargetInWorld(grabPoint);
                 var targetInHost = SimpleTransform.Create(rb.position, rb.rotation, rb.transform.localScale).InverseTransform(targetInWorld);
 
                 var interactorInHost = grip.GetTargetInHost(grabPoint);
-                var worldInteractor = rb.transform.TransformRotation(interactorInHost.rotation) * grabPoint.GetParentTransform().Transform(targetInInteractor).InverseTransformRotation(_interactor.GetRigidbody().transform.rotation);
+                var worldInteractor = rb.transform.TransformRotation(interactorInHost.rotation) * grabPoint.GetHostTransform().Transform(targetInInteractor).InverseTransformRotation(_interactor.GetRigidbody().transform.rotation);
 
                 _joint = _interactor.GetRigidbody().gameObject.AddComponent<ConfigurableJoint>();
 

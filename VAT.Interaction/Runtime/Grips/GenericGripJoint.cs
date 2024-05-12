@@ -2,23 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 
 namespace VAT.Interaction
 {
     public class GenericGripJoint : IGripJoint
     {
+        private Grip _grip;
+        private IInteractor _interactor;
         private ConfigurableJoint _joint = null;
+
+        private ConfigurableJointSpace _jointSpace = null;
 
         private bool _isFree = false;
 
         public void AttachJoints(IInteractor interactor, Grip grip)
         {
+            _grip = grip;
+
+            _interactor = interactor;
+
             var rb = interactor.GetRigidbody();
 
-            var grabberPoint = interactor.GetGrabberPoint();
-            var grabPoint = grabberPoint.GetParentTransform().Transform(grip.GetTargetInInteractor(grabberPoint));
+            var grabberPoint = interactor.GetPalm();
+            var grabPoint = grabberPoint.GetHostTransform().Transform(grip.GetTargetInInteractor(grabberPoint));
 
             var target = grip.GetTargetInHost(grabberPoint);
             var hostTransform = grip.GetHostGameObject().transform;
@@ -39,10 +47,12 @@ namespace VAT.Interaction
             }
 
             joint.autoConfigureConnectedAnchor = false;
-            joint.anchor = grip.GetPivotInInteractor(interactor.GetGrabberPoint(), grip.GetClosedPose(interactor).data).position;
-            joint.SetWorldConnectedAnchor(grip.GetPivotInWorld(interactor.GetGrabberPoint(), grip.GetClosedPose(interactor).data).position);
+            joint.anchor = grip.GetPivotInInteractor(interactor.GetPalm(), grip.GetClosedPose(interactor).data).position;
+            joint.SetWorldConnectedAnchor(grip.GetPivotInWorld(interactor.GetPalm(), grip.GetClosedPose(interactor).data).position);
 
             _joint = joint;
+
+            _jointSpace = new ConfigurableJointSpace(joint);
 
             rb.transform.rotation = initialRotation;
         }
@@ -71,6 +81,14 @@ namespace VAT.Interaction
                     maximumForce = force
                 };
             }
+
+            var grabberPoint = _interactor.GetPalm();
+            var target = _grip.GetTargetInWorld(grabberPoint);
+            var selfTarget = grabberPoint.GetHostTransform().Transform(_grip.GetTargetInInteractor(grabberPoint));
+
+            target = target.Transform(selfTarget.InverseTransform(grabberPoint.GetHostTransform()));
+
+            _jointSpace.SetTargetRotationWorld(target.rotation);
         }
 
         public void FreeJoints()

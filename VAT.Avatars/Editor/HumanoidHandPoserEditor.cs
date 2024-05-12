@@ -232,8 +232,8 @@ namespace VAT.Avatars.Editor
 
             var bone = _poser.Hand.Hand;
 
-            var grabPoint = grabberPoint.GetDefaultGrabPoint();
-            var normal = -grabberPoint.GetGrabNormal();
+            var grabPoint = grabberPoint.GetDefaultPoint();
+            var normal = -grabberPoint.GetNormal();
 
             float dot = Vector3.Dot(grabPoint.right, normal);
 

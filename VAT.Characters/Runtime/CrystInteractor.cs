@@ -176,9 +176,9 @@ namespace VAT.Characters
         {
             if (_isSnatching)
             {
-                var grabberPoint = GetGrabberPoint();
+                var grabberPoint = GetPalm();
                 var target = _attachedGrip.GetTargetInWorld(grabberPoint);
-                var grabPoint = grabberPoint.GetParentTransform().Transform(_attachedGrip.GetTargetInInteractor(grabberPoint));
+                var grabPoint = grabberPoint.GetHostTransform().Transform(_attachedGrip.GetTargetInInteractor(grabberPoint));
                 grabPoint.rotation = target.rotation;
 
                 var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation)));
@@ -217,9 +217,9 @@ namespace VAT.Characters
 
             if (_isSnatching)
             {
-                var grabberPoint = GetGrabberPoint();
+                var grabberPoint = GetPalm();
                 var worldTarget = _attachedGrip.GetTargetInWorld(grabberPoint);
-                var interactorTarget = grabberPoint.GetParentTransform().Transform(_attachedGrip.GetTargetInInteractor(grabberPoint));
+                var interactorTarget = grabberPoint.GetHostTransform().Transform(_attachedGrip.GetTargetInInteractor(grabberPoint));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);
 
@@ -353,7 +353,7 @@ namespace VAT.Characters
             if (_attachedGrip != null)
                 return;
 
-            var grabCenter = _grabberPoint.GetGrabCenter();
+            var grabCenter = _grabberPoint.GetProximityCenter();
             var colliders = Physics.OverlapSphere(grabCenter.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
             
             var nearHover = GetInteractableFromColliders(colliders, HoverFlags.NEAR);
@@ -412,7 +412,7 @@ namespace VAT.Characters
             if (_attachedGrip != null)
                 return;
 
-            var grabCenter = _grabberPoint.GetGrabCenter();
+            var grabCenter = _grabberPoint.GetProximityCenter();
             Gizmos.DrawWireSphere(grabCenter.position, grabRadius);
         }
 
@@ -456,7 +456,7 @@ namespace VAT.Characters
             _interactorOverrides.Remove(interactorOverride);
         }
 
-        public IGrabPoint GetGrabberPoint()
+        public IPalm GetPalm()
         {
             return _grabberPoint;
         }
