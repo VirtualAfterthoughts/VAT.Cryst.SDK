@@ -10,10 +10,6 @@ namespace VAT.Interaction
 {
     public interface IGrabTarget
     {
-        SimpleTransform GetTargetInHost(PalmPoint point);
-
-        SimpleTransform GetTargetInWorld(PalmPoint point);
-
         SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose);
 
         SimpleTransform GetDefaultTargetInWorld(PalmPoint point, HandPoseData pose);

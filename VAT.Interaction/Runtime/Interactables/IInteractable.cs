@@ -15,6 +15,8 @@ namespace VAT.Interaction
 
         (bool valid, float priority) ValidateInteraction(IInteractor interactor);
 
+        GameObject GetHostGameObject();
+
         InteractableHost GetHost();
 
         void FindHost();

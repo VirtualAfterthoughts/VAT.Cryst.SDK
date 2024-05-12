@@ -28,7 +28,7 @@ namespace VAT.Interaction
             var grabberPoint = interactor.GetPalm();
             var grabPoint = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, grip.GetDefaultPose()));
 
-            var target = grip.GetTargetInHost(grabberPoint);
+            var target = GrabTargetHelper.GetTargetInHost(grip, grabberPoint);
             var hostTransform = grip.GetHostGameObject().transform;
 
             // Match grab rotation, so that the joint initializes with proper target
@@ -83,7 +83,7 @@ namespace VAT.Interaction
             }
 
             var grabberPoint = _interactor.GetPalm();
-            var target = _grip.GetTargetInWorld(grabberPoint);
+            var target = _grip.GetTargetInWorld(grabberPoint, _grip.GetDefaultPose());
             var selfTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _grip.GetDefaultPose()));
 
             target = target.Transform(selfTarget.InverseTransform(grabberPoint.GetHostTransform()));

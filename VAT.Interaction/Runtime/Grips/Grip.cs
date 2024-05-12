@@ -252,7 +252,7 @@ namespace VAT.Interaction
 
             var grabberPoint = interactor.GetPalm();
 
-            var target = GetTargetInWorld(grabberPoint);
+            var target = GetTargetInWorld(grabberPoint, GetDefaultPose());
             var grabCenter = grabberPoint.GetProximityCenter();
 
             float distance = ((Vector3)(target.position - grabCenter.position)).magnitude;
@@ -282,17 +282,6 @@ namespace VAT.Interaction
             {
                 return gameObject;
             }
-        }
-
-        public SimpleTransform GetTargetInHost(PalmPoint point)
-        {
-            var hostGameObject = GetHostGameObject().transform;
-            return SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation).InverseTransform(GetTargetInWorld(point));
-        }
-
-        public SimpleTransform GetTargetInWorld(PalmPoint point)
-        {
-            return GetTargetInWorld(point, _defaultClosedPose.data);
         }
 
         public abstract SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose);

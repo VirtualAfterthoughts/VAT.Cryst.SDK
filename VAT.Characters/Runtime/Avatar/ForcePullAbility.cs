@@ -91,7 +91,7 @@ namespace VAT.Characters
                 ApplyDrag(_pullingGrip.GetHost().GetRigidbody(), _interactor.GetRigidbody());
 
                 var grabberPoint = _interactor.GetPalm();
-                var worldTarget = _pullingGrip.GetTargetInWorld(grabberPoint);
+                var worldTarget = _pullingGrip.GetTargetInWorld(grabberPoint, _pullingGrip.GetDefaultPose());
                 var interactorTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _pullingGrip.GetDefaultPose()));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);
@@ -118,10 +118,10 @@ namespace VAT.Characters
                 var grabPoint = _interactor.GetPalm();
                 var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(grabPoint, grip.GetDefaultPose());
 
-                var targetInWorld = grip.GetTargetInWorld(grabPoint);
+                var targetInWorld = grip.GetTargetInWorld(grabPoint, grip.GetDefaultPose());
                 var targetInHost = SimpleTransform.Create(rb.position, rb.rotation, rb.transform.localScale).InverseTransform(targetInWorld);
 
-                var interactorInHost = grip.GetTargetInHost(grabPoint);
+                var interactorInHost = GrabTargetHelper.GetTargetInHost(grip, grabPoint);
                 var worldInteractor = rb.transform.TransformRotation(interactorInHost.rotation) * grabPoint.GetHostTransform().Transform(targetInInteractor).InverseTransformRotation(_interactor.GetRigidbody().transform.rotation);
 
                 _joint = _interactor.GetRigidbody().gameObject.AddComponent<ConfigurableJoint>();

@@ -39,5 +39,11 @@ namespace VAT.Interaction
             local.rotation *= offset;
             return local;
         }
+
+        public static SimpleTransform GetTargetInHost(IGrippable grip, PalmPoint point)
+        {
+            var host = grip.GetHostGameObject().transform;
+            return SimpleTransform.Create(host.position, host.rotation).InverseTransform(grip.GetTargetInWorld(point, grip.GetDefaultPose()));
+        }
     }
 }
