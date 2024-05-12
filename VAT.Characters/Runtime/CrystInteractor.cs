@@ -134,6 +134,7 @@ namespace VAT.Characters
             var values = GetValues(rig);
 
             var goal = values.Item1;
+            goal.rotation = target.rotation;
 
             target = SimpleTransform.Lerp(target, goal, Mathf.Pow(values.Item2, 2f));
 
