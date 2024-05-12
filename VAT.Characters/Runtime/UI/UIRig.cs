@@ -60,12 +60,12 @@ namespace VAT.Characters
         private void GetInputs(IBehaviourRig behaviourRig, Handedness handedness, out bool secondary, out bool trigger)
         {
             behaviourRig.TryGetArm(handedness, out var arm);
-            var hand = arm.GetHandOrNull();
-            var controller = hand.GetInputControllerOrNull();
-            var secondaryButton = controller.GetActionsOrNull()?.SecondaryAction.State;
+            var hand = arm.GetHand();
+            var controller = hand.GetInputController();
+            var secondaryButton = controller.GetActions()?.SecondaryAction.State;
 
             secondary = secondaryButton.Value;
-            trigger = (controller.GetTriggerOrNull()?.GetPressed()).GetValueOrDefault();
+            trigger = (controller.GetTrigger()?.GetPressed()).GetValueOrDefault();
 
             if (handedness == Handedness.LEFT)
             {

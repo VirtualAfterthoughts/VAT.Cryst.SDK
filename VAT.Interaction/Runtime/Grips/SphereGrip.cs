@@ -29,7 +29,7 @@ namespace VAT.Interaction
         public override SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
-            var grabPoint = point.GetHostTransform().Transform(GetTargetInInteractor(point, pose));
+            var grabPoint = point.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(point, pose));
             var direction = ((Vector3)grabPoint.position - target.position).normalized;
 
             var grabRotation = Quaternion.FromToRotation(-point.GetNormal(), direction) * grabPoint.rotation;

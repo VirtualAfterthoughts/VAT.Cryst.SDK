@@ -31,7 +31,7 @@ namespace VAT.Interaction
             var rb = interactor.GetRigidbody();
 
             var grabberPoint = interactor.GetPalm();
-            var grabPoint = grabberPoint.GetHostTransform().Transform(grip.GetTargetInInteractor(grabberPoint));
+            var grabPoint = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, grip.GetDefaultPose()));
 
             float dot = Vector3.Dot(grabPoint.up, _center.up);
 
@@ -49,11 +49,11 @@ namespace VAT.Interaction
             joint.axis = Quaternion.Inverse(initialRotation) * grabPoint.up;
             joint.secondaryAxis = Quaternion.Inverse(initialRotation) * grabPoint.forward;
 
-            var host = grip.GetHostOrDefault();
+            var host = grip.GetHost();
 
             if (host != null)
             {
-                joint.connectedBody = host.GetRigidbodyOrDefault();
+                joint.connectedBody = host.GetRigidbody();
             }
 
             joint.autoConfigureConnectedAnchor = false;

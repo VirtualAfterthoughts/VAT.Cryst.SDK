@@ -97,7 +97,7 @@ namespace VAT.Avatars.Posing
                     radius = 0f,
                 };
 
-                var targetInHand = targetGrip.GetDefaultTargetInInteractor(grabberPoint, handPoseData);
+                var targetInHand = GrabTargetHelper.GetTargetInInteractor(grabberPoint, handPoseData);
                 var targetInWorld = targetGrip.GetDefaultTargetInWorld(grabberPoint, handPoseData);
 
                 transform.rotation = (targetInWorld.rotation * Quaternion.Inverse(grabberPoint.GetHostTransform().Transform(targetInHand).rotation) * transform.rotation);

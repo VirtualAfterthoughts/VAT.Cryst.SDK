@@ -27,17 +27,17 @@ namespace VAT.Input.Skeleton
             _hand = hand;
         }
 
-        public readonly IInputHand GetHandOrNull()
+        public readonly IInputHand GetHand()
         {
             return _hand;
         }
 
-        public readonly IInputJoint GetElbowOrNull()
+        public readonly IInputJoint GetElbow()
         {
             return Joints.ElementAtOrDefault(1);
         }
 
-        public readonly IInputJoint GetUpperArmOrNull()
+        public readonly IInputJoint GetUpperArm()
         {
             return Joints.ElementAtOrDefault(2);
         }

@@ -14,14 +14,8 @@ namespace VAT.Interaction
 
         SimpleTransform GetTargetInWorld(PalmPoint point);
 
-        SimpleTransform GetTargetInInteractor(PalmPoint point);
-
         SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose);
 
-        SimpleTransform GetTargetInInteractor(PalmPoint point, HandPoseData pose);
-
         SimpleTransform GetDefaultTargetInWorld(PalmPoint point, HandPoseData pose);
-
-        SimpleTransform GetDefaultTargetInInteractor(PalmPoint point, HandPoseData pose);
     }
 }

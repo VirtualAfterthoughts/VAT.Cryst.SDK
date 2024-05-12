@@ -10,7 +10,7 @@ namespace VAT.Characters
     {
         event Action<float> OnManagerUpdate, OnManagerFixedUpdate, OnManagerLateUpdate;
 
-        ICrystVitals GetVitalsOrNull();
+        ICrystVitals GetVitals();
 
         TRig GetRigOrNull<TRig>() where TRig : ICrystRig;
 

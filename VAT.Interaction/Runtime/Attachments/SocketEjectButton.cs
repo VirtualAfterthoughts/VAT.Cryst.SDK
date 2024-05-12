@@ -31,7 +31,7 @@ namespace VAT.Interaction.Attachments
             if (_mainInteractor == null)
             {
                 _mainInteractor = interactor;
-                interactor.GetInputHandOrNull().GetInputControllerOrNull().GetActionsOrNull().SecondaryAction.OnStateChanged += OnSecondaryActionChanged;
+                interactor.GetInputHand().GetInputController().GetActions().SecondaryAction.OnStateChanged += OnSecondaryActionChanged;
             }
         }
 
@@ -40,7 +40,7 @@ namespace VAT.Interaction.Attachments
             if (_mainInteractor == interactor)
             {
                 _mainInteractor = null;
-                interactor.GetInputHandOrNull().GetInputControllerOrNull().GetActionsOrNull().SecondaryAction.OnStateChanged -= OnSecondaryActionChanged;
+                interactor.GetInputHand().GetInputController().GetActions().SecondaryAction.OnStateChanged -= OnSecondaryActionChanged;
             }
         }
 

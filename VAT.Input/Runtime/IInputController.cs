@@ -10,13 +10,13 @@ namespace VAT.Input
         {
             float force = 0f;
 
-            var trigger = GetTriggerOrNull();
+            var trigger = GetTrigger();
             if (trigger != null)
             {
                 force += trigger.GetForce() * 0.25f;
             }
 
-            var grip = GetGripOrNull();
+            var grip = GetGrip();
             if (grip != null)
             {
                 force += grip.GetForce() * 0.75f;
@@ -27,22 +27,22 @@ namespace VAT.Input
 
         bool HasForceSensor();
 
-        IInputHaptor GetHaptorOrNull();
+        IInputHaptor GetHaptor();
 
-        IInputTrigger GetTriggerOrNull();
+        IInputTrigger GetTrigger();
 
-        IInputTrigger GetGripOrNull();
+        IInputTrigger GetGrip();
 
-        IInputTrackpad GetThumbstickOrNull();
+        IInputTrackpad GetThumbstick();
 
-        IInputTrackpad GetTrackpadOrNull();
+        IInputTrackpad GetTrackpad();
 
-        IInputButton GetPrimaryButtonOrNull();
+        IInputButton GetPrimaryButton();
 
-        IInputButton GetSecondaryButtonOrNull();
+        IInputButton GetSecondaryButton();
 
         HandPoseData GetHandPose();
 
-        HandActions GetActionsOrNull();
+        HandActions GetActions();
     }
 }

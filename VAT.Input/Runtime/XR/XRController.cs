@@ -69,37 +69,37 @@ namespace VAT.Input
             _handActions = new HandActions();
         }
 
-        public IInputHaptor GetHaptorOrNull()
+        public IInputHaptor GetHaptor()
         {
             return _haptor;
         }
 
-        public IInputTrigger GetGripOrNull()
+        public IInputTrigger GetGrip()
         {
             return _grip;
         }
 
-        public IInputButton GetPrimaryButtonOrNull()
+        public IInputButton GetPrimaryButton()
         {
             return _primaryButton;
         }
 
-        public IInputButton GetSecondaryButtonOrNull()
+        public IInputButton GetSecondaryButton()
         {
             return _secondaryButton;
         }
 
-        public IInputTrackpad GetThumbstickOrNull()
+        public IInputTrackpad GetThumbstick()
         {
             return _thumbstick;
         }
 
-        public IInputTrackpad GetTrackpadOrNull()
+        public IInputTrackpad GetTrackpad()
         {
             return _trackpad;
         }
 
-        public IInputTrigger GetTriggerOrNull()
+        public IInputTrigger GetTrigger()
         {
             return _trigger;
         }
@@ -124,7 +124,7 @@ namespace VAT.Input
                 secondaryCurl = Mathf.Max(secondaryCurl, blendPose.fingers[i].GetCurl());
             }
 
-            var trigger = inputController.GetTriggerOrNull();
+            var trigger = inputController.GetTrigger();
             bool triggerPull = trigger?.GetAxis() > 0.3f;
             bool gripPull = secondaryCurl > 0.7f;
 
@@ -136,8 +136,8 @@ namespace VAT.Input
             actions.GrabAction.State = gripPose;
             actions.AbilityGrabAction.State = interactPose;
 
-            var primaryButton = inputController.GetPrimaryButtonOrNull()?.GetPressed();
-            var secondaryButton = inputController.GetSecondaryButtonOrNull()?.GetPressed();
+            var primaryButton = inputController.GetPrimaryButton()?.GetPressed();
+            var secondaryButton = inputController.GetSecondaryButton()?.GetPressed();
 
             actions.PrimaryAction.State = primaryButton.GetValueOrDefault();
             actions.SecondaryAction.State = secondaryButton.GetValueOrDefault();
@@ -148,7 +148,7 @@ namespace VAT.Input
             return _hand.GetHandPose();
         }
 
-        public HandActions GetActionsOrNull()
+        public HandActions GetActions()
         {
             return _handActions;
         }

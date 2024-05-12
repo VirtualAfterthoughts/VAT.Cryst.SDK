@@ -38,11 +38,11 @@ namespace VAT.Interaction
 
             var joint = rb.gameObject.AddComponent<ConfigurableJoint>();
 
-            var host = grip.GetHostOrDefault();
+            var host = grip.GetHost();
 
             if (host != null)
             {
-                joint.connectedBody = host.GetRigidbodyOrDefault();
+                joint.connectedBody = host.GetRigidbody();
             }
 
             joint.autoConfigureConnectedAnchor = false;

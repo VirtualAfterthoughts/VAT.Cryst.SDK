@@ -21,7 +21,7 @@ namespace VAT.Characters
         {
             _behaviourRig = behaviourRig;
 
-            var vitals = behaviourRig.RigManager?.GetVitalsOrNull();
+            var vitals = behaviourRig.RigManager?.GetVitals();
 
             if (vitals != null)
             {
@@ -34,7 +34,7 @@ namespace VAT.Characters
 
         public void OnDeregister(IBehaviourRig behaviourRig)
         {
-            var vitals = behaviourRig.RigManager?.GetVitalsOrNull();
+            var vitals = behaviourRig.RigManager?.GetVitals();
 
             if (vitals != null)
             {
@@ -59,14 +59,14 @@ namespace VAT.Characters
         public void Solve()
         {
             var hand = _behaviourRig.GetPrimaryHand();
-            var controller = hand.GetInputControllerOrNull();
+            var controller = hand.GetInputController();
 
             if (controller == null)
             {
                 return;
             }
 
-            var thumbstick = controller.GetThumbstickOrNull();
+            var thumbstick = controller.GetThumbstick();
 
             if (thumbstick == null)
             {

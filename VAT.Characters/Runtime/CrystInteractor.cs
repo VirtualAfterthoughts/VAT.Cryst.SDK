@@ -73,12 +73,11 @@ namespace VAT.Characters
 
             arm.RegisterTrackingOverride(this);
 
-            arm.DataArm.Hand.SetOpenPose(openPose);
-            arm.DataArm.Hand.SetClosedPose(closedPose);
+            ResetPose();
 
             _lastTarget = SimpleTransform.Create(transform.position, transform.rotation);
 
-            var actions = hand.GetInputControllerOrNull().GetActionsOrNull();
+            var actions = hand.GetInputController().GetActions();
             actions.GrabAction.OnStateChanged += OnGrabStateChange;
         }
 
@@ -179,7 +178,7 @@ namespace VAT.Characters
             {
                 var grabberPoint = GetPalm();
                 var target = _attachedGrip.GetTargetInWorld(grabberPoint);
-                var grabPoint = grabberPoint.GetHostTransform().Transform(_attachedGrip.GetTargetInInteractor(grabberPoint));
+                var grabPoint = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetDefaultPose()));
                 grabPoint.rotation = target.rotation;
 
                 var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation)));
@@ -194,13 +193,14 @@ namespace VAT.Characters
             }
         }
 
+
         public void LateUpdate()
         {
-            var controller = hand.GetInputControllerOrNull();
+            var controller = hand.GetInputController();
             var blendPose = controller.GetHandPose();
             arm.DataArm.Hand.SetBlendPose(blendPose);
 
-            var actions = controller.GetActionsOrNull();
+            var actions = controller.GetActions();
 
             OnUpdateHover();
 
@@ -212,7 +212,7 @@ namespace VAT.Characters
                 }
                 else
                 {
-                    arm.DataArm.Hand.SetClosedPose(closedPose);
+                    ResetPose();
                 }
             }
 
@@ -220,7 +220,7 @@ namespace VAT.Characters
             {
                 var grabberPoint = GetPalm();
                 var worldTarget = _attachedGrip.GetTargetInWorld(grabberPoint);
-                var interactorTarget = grabberPoint.GetHostTransform().Transform(_attachedGrip.GetTargetInInteractor(grabberPoint));
+                var interactorTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetDefaultPose()));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);
 
@@ -230,7 +230,7 @@ namespace VAT.Characters
                     var targetPose = data;
                     var newPose = HandPoseCreator.Lerp(openPose, targetPose, grabRadius / distance);
 
-                    arm.DataArm.Hand.SetClosedPose(newPose);
+                    SetClosedPose(newPose);
                 }
 
                 _attachedGrip.OnAttachUpdate(this);
@@ -264,7 +264,7 @@ namespace VAT.Characters
             _attachedGrip = grip;
             _isSnatching = true;
 
-            grip.GetHostOrDefault()?.ConnectHosts(new InteractableHostGroup(hosts));
+            grip.GetHost()?.ConnectHosts(new InteractableHostGroup(hosts));
 
             ResetHover();
         }
@@ -295,7 +295,7 @@ namespace VAT.Characters
 
         private void SendGripHaptic()
         {
-            var haptor = controller?.GetHaptorOrNull();
+            var haptor = controller?.GetHaptor();
 
             if (haptor != null)
             {
@@ -305,8 +305,7 @@ namespace VAT.Characters
 
         public void DetachGrips()
         {
-            arm.DataArm.Hand.SetOpenPose(openPose);
-            arm.DataArm.Hand.SetClosedPose(closedPose);
+            ResetPose();
 
             if (_attachedGrip != null)
             {
@@ -330,7 +329,7 @@ namespace VAT.Characters
         {
             grip.OnDetachConfirm(this);
 
-            grip.GetHostOrDefault()?.DisconnectHosts(new InteractableHostGroup(hosts));
+            grip.GetHost()?.DisconnectHosts(new InteractableHostGroup(hosts));
 
             _attachedGrip = null;
             _isSnatching = false;
@@ -431,7 +430,7 @@ namespace VAT.Characters
             return rb.Rigidbody;
         }
 
-        public IInputHand GetInputHandOrNull()
+        public IInputHand GetInputHand()
         {
             return hand;
         }
@@ -485,6 +484,22 @@ namespace VAT.Characters
         public void DeregisterModule(IInteractorModule module)
         {
             _modules.Remove(module);
+        }
+
+        public void ResetPose()
+        {
+            arm.DataArm.Hand.SetOpenPose(openPose);
+            arm.DataArm.Hand.SetClosedPose(closedPose);
+        }
+
+        public void SetClosedPose(HandPoseData pose)
+        {
+            arm.DataArm.Hand.SetClosedPose(pose);
+        }
+
+        public void SetOpenPose(HandPoseData pose)
+        {
+            arm.DataArm.Hand.SetOpenPose(pose);
         }
     }
 }

@@ -156,7 +156,7 @@ namespace VAT.Avatars.Skeletal
             Handedness handedness = isLeft ? Handedness.LEFT : Handedness.RIGHT;
             _avatarPayload.TryGetArm(handedness, out var arm);
 
-            var hand = arm.GetHandOrNull();
+            var hand = arm.GetHand();
             if (hand != null)
             {
                 _target = root.Transform(hand.Transform);
@@ -188,7 +188,7 @@ namespace VAT.Avatars.Skeletal
 
             _originalTarget = _target;
 
-            var elbow = arm.GetElbowOrNull();
+            var elbow = arm.GetElbow();
             _hasElbow = elbow != null;
             if (_hasElbow)
             {

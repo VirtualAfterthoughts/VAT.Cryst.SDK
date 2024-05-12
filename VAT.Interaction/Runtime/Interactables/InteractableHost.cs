@@ -25,7 +25,7 @@ namespace VAT.Interaction
 
         public VirtualController VirtualController { get; } = new VirtualController();
 
-        public Rigidbody GetRigidbodyOrDefault()
+        public Rigidbody GetRigidbody()
         {
             return _rb;
         }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-
+using VAT.Input.Data;
 using VAT.Input.Skeleton;
 
 namespace VAT.Interaction
@@ -40,6 +40,12 @@ namespace VAT.Interaction
 
         void DeregisterModule(IInteractorModule module);
 
-        IInputHand GetInputHandOrNull();
+        IInputHand GetInputHand();
+
+        void ResetPose();
+
+        void SetClosedPose(HandPoseData pose);
+
+        void SetOpenPose(HandPoseData pose);
     }
 }

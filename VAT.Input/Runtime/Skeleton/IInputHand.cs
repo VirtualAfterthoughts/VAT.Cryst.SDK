@@ -9,6 +9,6 @@ namespace VAT.Input.Skeleton
 {
     public interface IInputHand : IInputJoint
     {
-        IInputController GetInputControllerOrNull();
+        IInputController GetInputController();
     }
 }

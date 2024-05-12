@@ -87,7 +87,7 @@ namespace VAT.Props.Ammo
             var startRotation = Host.transform.rotation;
             Host.transform.rotation = socket.Host.transform.rotation;
 
-            _insertJoint = Host.GetRigidbodyOrDefault().gameObject.AddComponent<ConfigurableJoint>();
+            _insertJoint = Host.GetRigidbody().gameObject.AddComponent<ConfigurableJoint>();
             
             _insertJoint.xDrive = _insertJoint.zDrive = new JointDrive() { positionSpring = 5000000f, positionDamper = 10000f, maximumForce =  float.PositiveInfinity };
             
@@ -103,7 +103,7 @@ namespace VAT.Props.Ammo
             _insertJoint.autoConfigureConnectedAnchor = false;
             _insertJoint.anchor = _insertJoint.transform.InverseTransformPoint(transform.position);
             _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(outsidePoint.position);
-            _insertJoint.connectedBody = socket.Host.GetRigidbodyOrDefault();
+            _insertJoint.connectedBody = socket.Host.GetRigidbody();
 
             _insertJoint.enableCollision = true;
 

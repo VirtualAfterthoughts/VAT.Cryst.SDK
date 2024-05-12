@@ -43,7 +43,7 @@ namespace VAT.Characters
 
         protected override Vector3 OnProcessMovement()
         {
-            var thumbstick = XRManager.Api.LeftController.GetThumbstickOrNull();
+            var thumbstick = XRManager.Api.LeftController.GetThumbstick();
 
             var movementAxis = thumbstick.GetAxis();
             var flattenedHead = Quaternion.LookRotation(_head.forward.FlattenNeck(_head.up, transform.up), transform.up);
@@ -54,7 +54,7 @@ namespace VAT.Characters
 
         protected override bool OnProcessJump()
         {
-            var button = XRManager.Api.RightController.GetPrimaryButtonOrNull();
+            var button = XRManager.Api.RightController.GetPrimaryButton();
 
             return button.GetPressed();
         }

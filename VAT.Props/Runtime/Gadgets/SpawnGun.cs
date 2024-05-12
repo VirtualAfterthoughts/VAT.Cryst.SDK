@@ -113,8 +113,8 @@ namespace VAT.Interaction
         {
             if (_mainInteractor != null)
             {
-                var controller = _mainInteractor.GetInputHandOrNull().GetInputControllerOrNull();
-                var trigger = controller.GetTriggerOrNull();
+                var controller = _mainInteractor.GetInputHand().GetInputController();
+                var trigger = controller.GetTrigger();
                 var axis = (trigger?.GetAxis()).GetValueOrDefault();
 
                 bool pressing = axis > 0.7f;

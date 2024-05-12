@@ -23,7 +23,7 @@ namespace VAT.Input
             _controller = controller;
         }
 
-        public IInputController GetInputControllerOrNull()
+        public IInputController GetInputController()
         {
             return _controller;
         }

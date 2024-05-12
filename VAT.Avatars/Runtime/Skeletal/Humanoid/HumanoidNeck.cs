@@ -125,8 +125,8 @@ namespace VAT.Avatars.Skeletal
             _avatarPayload.TryGetArm(Handedness.LEFT, out var leftArm);
             _avatarPayload.TryGetArm(Handedness.RIGHT, out var rightArm);
 
-            var leftHand = leftArm.GetHandOrNull();
-            var rightHand = rightArm.GetHandOrNull();
+            var leftHand = leftArm.GetHand();
+            var rightHand = rightArm.GetHand();
 
             var leftHandTransform = _avatarPayload.GetRoot().Transform(leftHand.Transform);
             var rightHandTransform = _avatarPayload.GetRoot().Transform(rightHand.Transform);

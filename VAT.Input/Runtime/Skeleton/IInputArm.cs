@@ -7,10 +7,10 @@ namespace VAT.Input.Skeleton
 {
     public interface IInputArm : IInputLimb
     {
-        IInputHand GetHandOrNull();
+        IInputHand GetHand();
 
-        IInputJoint GetElbowOrNull();
+        IInputJoint GetElbow();
 
-        IInputJoint GetUpperArmOrNull();
+        IInputJoint GetUpperArm();
     }
 }

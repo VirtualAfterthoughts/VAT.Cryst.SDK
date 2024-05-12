@@ -52,7 +52,7 @@ namespace VAT.Characters
 
             ChangeAvatar();
 
-            RigManager.GetVitalsOrNull().OnUpdatedVitals += OnUpdatedVitals;
+            RigManager.GetVitals().OnUpdatedVitals += OnUpdatedVitals;
         }
 
         private void InitiateAbilities()
@@ -87,7 +87,7 @@ namespace VAT.Characters
                 _activeAvatar = null;
             }
 
-            RigManager.GetVitalsOrNull().OnUpdatedVitals -= OnUpdatedVitals;
+            RigManager.GetVitals().OnUpdatedVitals -= OnUpdatedVitals;
         }
 
         private void OnUpdatedVitals(ICrystVitals vitals)
@@ -97,7 +97,7 @@ namespace VAT.Characters
 
         public void ApplyRemapping()
         {
-            var vitals = RigManager.GetVitalsOrNull();
+            var vitals = RigManager.GetVitals();
 
             if (vitals != null && _activeAvatar != null)
             {
@@ -151,7 +151,7 @@ namespace VAT.Characters
         {
             avatar.Initiate();
 
-            var vitals = RigManager.GetVitalsOrNull();
+            var vitals = RigManager.GetVitals();
             vitals.CharacterMeasurements = avatar.GetMeasurements();
             vitals.UpdateVitals();
 
@@ -165,13 +165,13 @@ namespace VAT.Characters
             foreach (var arm in arms)
             {
                 behaviourRig.TryGetArm(arm.Handedness, out var rigArm);
-                var thing = rigArm.GetHandOrNull();
+                var thing = rigArm.GetHand();
 
                 // add interactor
                 var bone = (PhysBone)arm.PhysArm.Hand.Hand;
 
                 var interactor = bone.UnityGameObject.AddComponent<CrystInteractor>();
-                interactor.controller = thing.GetInputControllerOrNull();
+                interactor.controller = thing.GetInputController();
                 interactor.hand = thing;
                 interactor.arm = arm;
                 interactor.handedness = arm.Handedness;

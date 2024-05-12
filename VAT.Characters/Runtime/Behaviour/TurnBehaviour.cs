@@ -48,14 +48,14 @@ namespace VAT.Characters
             }
 
             var hand = _behaviourRig.GetPrimaryHand();
-            var controller = hand.GetInputControllerOrNull();
+            var controller = hand.GetInputController();
 
             if (controller == null)
             {
                 return;
             }
 
-            var thumbstick = controller.GetThumbstickOrNull();
+            var thumbstick = controller.GetThumbstick();
 
             if (thumbstick == null)
             {

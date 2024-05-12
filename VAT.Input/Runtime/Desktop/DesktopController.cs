@@ -65,13 +65,13 @@ namespace VAT.Input.Desktop
 
         public void Update()
         {
-            var trigger = GetTriggerOrNull();
+            var trigger = GetTrigger();
 
             if (trigger != null)
             {
                 HandPoseCreator.SetCurls(_handPose.fingers[0].phalanges, trigger.GetAxis());
             }
-            var grip = GetGripOrNull();
+            var grip = GetGrip();
 
             float curl = grip.GetAxis();
 
@@ -106,49 +106,49 @@ namespace VAT.Input.Desktop
             }
 
             bool gripPose = maxCurl > 0.7f;
-            bool interactPose = secondaryCurl > 0.7f && inputController.GetTriggerOrNull()?.GetAxis() > 0.7f;
+            bool interactPose = secondaryCurl > 0.7f && inputController.GetTrigger()?.GetAxis() > 0.7f;
 
             actions.GrabAction.State = gripPose;
             actions.AbilityGrabAction.State = interactPose;
 
-            var primaryButton = inputController.GetPrimaryButtonOrNull()?.GetPressed();
-            var secondaryButton = inputController.GetSecondaryButtonOrNull()?.GetPressed();
+            var primaryButton = inputController.GetPrimaryButton()?.GetPressed();
+            var secondaryButton = inputController.GetSecondaryButton()?.GetPressed();
 
             actions.PrimaryAction.State = primaryButton.GetValueOrDefault();
             actions.SecondaryAction.State = secondaryButton.GetValueOrDefault();
         }
 
-        public IInputHaptor GetHaptorOrNull()
+        public IInputHaptor GetHaptor()
         {
             return null;
         }
 
-        public IInputTrigger GetGripOrNull()
+        public IInputTrigger GetGrip()
         {
             return _grip;
         }
 
-        public IInputButton GetPrimaryButtonOrNull()
+        public IInputButton GetPrimaryButton()
         {
             return _primaryButton;
         }
 
-        public IInputButton GetSecondaryButtonOrNull()
+        public IInputButton GetSecondaryButton()
         {
             return _secondaryButton;
         }
 
-        public IInputTrackpad GetThumbstickOrNull()
+        public IInputTrackpad GetThumbstick()
         {
             return _thumbstick;
         }
 
-        public IInputTrackpad GetTrackpadOrNull()
+        public IInputTrackpad GetTrackpad()
         {
             return _trackpad;
         }
 
-        public IInputTrigger GetTriggerOrNull()
+        public IInputTrigger GetTrigger()
         {
             return _trigger;
         }
@@ -163,7 +163,7 @@ namespace VAT.Input.Desktop
             return _handPose;
         }
 
-        public HandActions GetActionsOrNull()
+        public HandActions GetActions()
         {
             return _handActions;
         }

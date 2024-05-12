@@ -33,14 +33,14 @@ namespace VAT.Characters
                 _hoverModule = interactor.GetModule<IInteractorHoverModule>();
                 _farHoverModule = interactor.GetModule<IInteractorFarHoverModule>();
 
-                var state = _interactor.GetInputHandOrNull().GetInputControllerOrNull().GetActionsOrNull();
+                var state = _interactor.GetInputHand().GetInputController().GetActions();
                 state.AbilityGrabAction.OnStateChanged += OnActionGrabStateChanged;
                 state.GrabAction.OnStateChanged += OnGrabStateChanged;
             }
 
             public void Cleanup()
             {
-                var state = _interactor.GetInputHandOrNull().GetInputControllerOrNull().GetActionsOrNull();
+                var state = _interactor.GetInputHand().GetInputController().GetActions();
                 state.AbilityGrabAction.OnStateChanged -= OnActionGrabStateChanged;
                 state.GrabAction.OnStateChanged -= OnGrabStateChanged;
 
@@ -88,11 +88,11 @@ namespace VAT.Characters
 
             private void UpdatePull()
             {
-                ApplyDrag(_pullingGrip.GetHostOrDefault().GetRigidbodyOrDefault(), _interactor.GetRigidbody());
+                ApplyDrag(_pullingGrip.GetHost().GetRigidbody(), _interactor.GetRigidbody());
 
                 var grabberPoint = _interactor.GetPalm();
                 var worldTarget = _pullingGrip.GetTargetInWorld(grabberPoint);
-                var interactorTarget = grabberPoint.GetHostTransform().Transform(_pullingGrip.GetTargetInInteractor(grabberPoint));
+                var interactorTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _pullingGrip.GetDefaultPose()));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);
 
@@ -105,18 +105,18 @@ namespace VAT.Characters
 
             private void BeginPull(IGrippable grip)
             {
-                var host = grip.GetHostOrDefault();
+                var host = grip.GetHost();
 
-                if (host == null || host.GetRigidbodyOrDefault() == null || host.GetRigidbodyOrDefault().isKinematic)
+                if (host == null || host.GetRigidbody() == null || host.GetRigidbody().isKinematic)
                 {
                     return;
                 }
 
                 _pullingGrip = grip;
 
-                var rb = host.GetRigidbodyOrDefault();
+                var rb = host.GetRigidbody();
                 var grabPoint = _interactor.GetPalm();
-                var targetInInteractor = grip.GetTargetInInteractor(grabPoint);
+                var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(grabPoint, grip.GetDefaultPose());
 
                 var targetInWorld = grip.GetTargetInWorld(grabPoint);
                 var targetInHost = SimpleTransform.Create(rb.position, rb.rotation, rb.transform.localScale).InverseTransform(targetInWorld);
@@ -149,7 +149,7 @@ namespace VAT.Characters
 
                 _pullingGrip.EnableInteraction();
 
-                var rb = _pullingGrip.GetHostOrDefault().GetRigidbodyOrDefault();
+                var rb = _pullingGrip.GetHost().GetRigidbody();
                 var interactorRb = _interactor.GetRigidbody();
 
                 rb.velocity = interactorRb.velocity;

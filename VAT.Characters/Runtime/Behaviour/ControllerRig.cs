@@ -31,7 +31,7 @@ namespace VAT.Characters
 
         public override void OnRigEnable()
         {
-            var vitals = RigManager.GetVitalsOrNull();
+            var vitals = RigManager.GetVitals();
 
             if (vitals != null)
             {
@@ -44,7 +44,7 @@ namespace VAT.Characters
 
         public override void OnRigDisable()
         {
-            var vitals = RigManager.GetVitalsOrNull();
+            var vitals = RigManager.GetVitals();
 
             if (vitals != null)
             {
@@ -146,7 +146,7 @@ namespace VAT.Characters
         {
             if (TryGetArm(Handedness.RIGHT, out var arm))
             {
-                return arm.GetHandOrNull();
+                return arm.GetHand();
             }
 
             return null;
@@ -156,7 +156,7 @@ namespace VAT.Characters
         {
             if (TryGetArm(Handedness.LEFT, out var arm))
             {
-                return arm.GetHandOrNull();
+                return arm.GetHand();
             }
 
             return null;
