@@ -54,6 +54,8 @@ namespace VAT.Characters
 
         private AvatarGrabberPoint _grabberPoint;
 
+        private InteractableHostGroup _armGroup;
+
         private void Awake()
         {
             rb = GetComponent<CrystRigidbody>();
@@ -79,6 +81,8 @@ namespace VAT.Characters
 
             var actions = hand.GetInputController().GetActions();
             actions.GrabAction.OnStateChanged += OnGrabStateChange;
+
+            _armGroup = new InteractableHostGroup(hosts);
         }
 
         private void OnDisable()
@@ -264,7 +268,7 @@ namespace VAT.Characters
             _attachedGrip = grip;
             _isSnatching = true;
 
-            grip.GetHost()?.ConnectHosts(new InteractableHostGroup(hosts));
+            grip.GetHost()?.ConnectHosts(_armGroup);
 
             ResetHover();
         }
@@ -329,7 +333,7 @@ namespace VAT.Characters
         {
             grip.OnDetachConfirm(this);
 
-            grip.GetHost()?.DisconnectHosts(new InteractableHostGroup(hosts));
+            grip.GetHost()?.DisconnectHosts(_armGroup);
 
             _attachedGrip = null;
             _isSnatching = false;
