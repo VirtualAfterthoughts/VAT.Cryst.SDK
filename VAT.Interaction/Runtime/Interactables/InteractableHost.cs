@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using UnityEngine;
 using VAT.Entities.PhysX;
 using VAT.Shared.Extensions;
@@ -17,36 +17,47 @@ namespace VAT.Interaction
 
         private InteractableHostManager _manager;
 
-        private List<InteractableHostGroup> _connectedHosts = new();
+        private List<HostLink> _links = new();
 
-        public List<InteractableHostGroup> ConnectedHosts => _connectedHosts;
+        public List<HostLink> Links => _links;
 
         public List<Collider> Colliders => _colliders;
 
         public VirtualController VirtualController { get; } = new VirtualController();
+
+        private InteractableHostGroup _selfGroup = null;
+
+        public InteractableHostGroup SelfGroup => _selfGroup;
 
         public Rigidbody GetRigidbody()
         {
             return _rb;
         }
 
-        public void ConnectHosts(InteractableHostGroup group)
+        public void Link(HostLink link)
         {
-            foreach (var connected in _connectedHosts)
-            {
-                connected.IgnoreCollision(group, true);
-            }
-
-            _connectedHosts.Add(group);
+            _links.Add(link);
         }
 
-        public void DisconnectHosts(InteractableHostGroup group)
+        public void Unlink(HostLink link)
         {
-            _connectedHosts.Remove(group);
+            _links.Remove(link);
+        }
 
-            foreach (var connected in _connectedHosts)
+        public void AttachGroup(InteractableHostGroup group)
+        {
+            var link = new HostLink() { host = this, linkedGroup = group };
+            link.Attach();
+        }
+
+        public void DetachGroup(InteractableHostGroup group)
+        {
+            foreach (var link in Links.ToList())
             {
-                connected.IgnoreCollision(group, false);
+                if (link.host == this && link.linkedGroup == group)
+                {
+                    link.Detach();
+                }
             }
         }
 
@@ -57,7 +68,7 @@ namespace VAT.Interaction
 
         private void Awake()
         {
-            _connectedHosts.Add(new InteractableHostGroup(this));
+            _selfGroup = new InteractableHostGroup(this);
 
             _rb = gameObject.GetComponent<Rigidbody>();
 
@@ -131,5 +142,25 @@ namespace VAT.Interaction
         {
             _interactables.Remove(interactable);
         }
+
+#if UNITY_EDITOR
+        public void OnDrawGizmos()
+        {
+            if (!Application.isPlaying)
+            {
+                return;   
+            }
+
+            Gizmos.color = Color.magenta;
+
+            foreach (var link in Links)
+            {
+                foreach (var host in link.linkedGroup.hosts)
+                {
+                    Gizmos.DrawLine(transform.position, host.transform.position);
+                }
+            }
+        }
+#endif
     }
 }

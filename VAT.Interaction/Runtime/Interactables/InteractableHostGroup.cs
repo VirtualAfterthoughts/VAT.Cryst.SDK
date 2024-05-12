@@ -10,21 +10,6 @@ namespace VAT.Interaction
     {
         public List<InteractableHost> hosts;
 
-        public override int GetHashCode()
-        {
-            int code = 0;
-            foreach (var host in hosts)
-            {
-                code += host.GetHashCode();
-            }
-            return code;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return GetHashCode() == obj.GetHashCode();
-        }
-
         public InteractableHostGroup(params InteractableHost[] hosts)
         {
             this.hosts = hosts.ToList();

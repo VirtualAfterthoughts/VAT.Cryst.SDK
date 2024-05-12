@@ -268,7 +268,7 @@ namespace VAT.Characters
             _attachedGrip = grip;
             _isSnatching = true;
 
-            grip.GetHost()?.ConnectHosts(_armGroup);
+            grip.GetHost()?.AttachGroup(_armGroup);
 
             ResetHover();
         }
@@ -333,7 +333,7 @@ namespace VAT.Characters
         {
             grip.OnDetachConfirm(this);
 
-            grip.GetHost()?.DisconnectHosts(_armGroup);
+            grip.GetHost()?.DetachGroup(_armGroup);
 
             _attachedGrip = null;
             _isSnatching = false;

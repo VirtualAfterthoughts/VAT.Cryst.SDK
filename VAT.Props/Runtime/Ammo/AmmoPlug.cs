@@ -76,10 +76,7 @@ namespace VAT.Props.Ammo
 
         protected override void OnBeginInsert(Socket socket)
         {
-            foreach (var group in Host.ConnectedHosts)
-            {
-                socket.Host.ConnectHosts(group);
-            }
+            socket.Host.AttachGroup(Host.SelfGroup);
 
             var ammoSocket = socket as AmmoSocket;
             var outsidePoint = ammoSocket.OutsidePoint;
@@ -119,8 +116,10 @@ namespace VAT.Props.Ammo
 
             _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(outsidePoint.position);
 
-            _insertJoint.yMotion = ConfigurableJointMotion.Limited;
+            _insertJoint.xMotion = _insertJoint.yMotion = _insertJoint.zMotion = ConfigurableJointMotion.Limited;
             _insertJoint.angularXMotion = _insertJoint.angularYMotion = _insertJoint.angularZMotion = ConfigurableJointMotion.Free;
+
+            _insertJoint.projectionMode = JointProjectionMode.None;
 
             Host.EnableInteraction();
         }
@@ -132,19 +131,20 @@ namespace VAT.Props.Ammo
 
             _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(insidePoint.position);
 
-            _insertJoint.yMotion = ConfigurableJointMotion.Locked;
+            _insertJoint.xMotion = _insertJoint.yMotion = _insertJoint.zMotion = ConfigurableJointMotion.Locked;
 
             _insertJoint.angularXMotion = _insertJoint.angularYMotion = _insertJoint.angularZMotion = ConfigurableJointMotion.Locked;
+
+            _insertJoint.projectionMode = JointProjectionMode.PositionAndRotation;
+            _insertJoint.projectionDistance = 0f;
+            _insertJoint.projectionAngle = 0f;
 
             Host.DisableInteraction();
         }
 
         protected override void OnCompleteEject(Socket socket)
         {
-            foreach (var group in Host.ConnectedHosts)
-            {
-                socket.Host.DisconnectHosts(group);
-            }
+            socket.Host.DetachGroup(Host.SelfGroup);
 
             Destroy(_insertJoint);
             _insertJoint = null;
