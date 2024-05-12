@@ -40,10 +40,10 @@ namespace VAT.Interaction
             return local;
         }
 
-        public static SimpleTransform GetTargetInHost(IGrippable grip, PalmPoint point)
+        public static SimpleTransform GetTargetInHost(IGrippable grip, PalmPoint point, HandPoseData pose)
         {
             var host = grip.GetHostGameObject().transform;
-            return SimpleTransform.Create(host.position, host.rotation).InverseTransform(grip.GetTargetInWorld(point, grip.GetDefaultPose()));
+            return SimpleTransform.Create(host.position, host.rotation).InverseTransform(grip.GetTargetInWorld(point, pose));
         }
     }
 }

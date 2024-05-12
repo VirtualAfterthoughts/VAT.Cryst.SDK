@@ -315,5 +315,15 @@ namespace VAT.Interaction
         {
             return _hoverFlags;
         }
+
+        public SimpleTransform GetTargetInHost(IInteractor interactor)
+        {
+            return GrabTargetHelper.GetTargetInHost(this, interactor.GetPalm(), GetClosedPose(interactor).data);
+        }
+
+        public void SetTargetInHost(IInteractor interactor, SimpleTransform target)
+        {
+            
+        }
     }
 }

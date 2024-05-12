@@ -26,6 +26,10 @@ namespace VAT.Interaction
 
         HandPoseData GetDefaultPose();
 
+        SimpleTransform GetTargetInHost(IInteractor interactor);
+
+        void SetTargetInHost(IInteractor interactor, SimpleTransform target);
+
         SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose);
 
         SimpleTransform GetDefaultTargetInWorld(PalmPoint point, HandPoseData pose);
