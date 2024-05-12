@@ -52,12 +52,11 @@ namespace VAT.Interaction
 
         public void DetachGroup(InteractableHostGroup group)
         {
-            foreach (var link in Links.ToList())
+            var linksToDetach = Links.Where((link) => link.linkedGroup == group);
+
+            foreach (var link in linksToDetach)
             {
-                if (link.host == this && link.linkedGroup == group)
-                {
-                    link.Detach();
-                }
+                link.Detach();
             }
         }
 
