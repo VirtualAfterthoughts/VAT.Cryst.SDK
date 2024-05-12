@@ -20,7 +20,7 @@ namespace VAT.Interaction
 
         InteractorTargetData GetTargetData();
 
-        IPalmPoint GetPalm();
+        PalmPoint GetPalm();
 
         Rigidbody GetRigidbody();
 

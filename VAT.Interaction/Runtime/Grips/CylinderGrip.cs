@@ -51,7 +51,7 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(IPalmPoint point, HandPoseData pose)
+        public override SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
             var grabPoint = point.GetDefaultPoint();
@@ -74,7 +74,7 @@ namespace VAT.Interaction
             return SimpleTransform.Create(target.position + target.up * upOffset + direction * GetWorldRadius(), grabRotation);
         }
 
-        public override SimpleTransform GetDefaultTargetInWorld(IPalmPoint point, HandPoseData pose)
+        public override SimpleTransform GetDefaultTargetInWorld(PalmPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
 
