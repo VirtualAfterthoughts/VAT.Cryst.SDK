@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
+using static UnityEngine.GraphicsBuffer;
 
 namespace VAT.Interaction
 {
     public class CylinderGripJoint : IGripJoint
     {
+        private IInteractor _interactor;
+        private Grip _grip;
+
         private Transform _center;
         private float _radius;
         private float _height;
@@ -22,12 +26,17 @@ namespace VAT.Interaction
 
         private ConfigurableJoint _joint = null;
 
+        private ConfigurableJointSpace _jointSpace = null;
+
         public ConfigurableJoint Joint => _joint;
 
         private bool _isFree = false;
 
         public void AttachJoints(IInteractor interactor, Grip grip)
         {
+            _grip = grip;
+            _interactor = interactor;
+
             var rb = interactor.GetRigidbody();
 
             var grabberPoint = interactor.GetPalm();
@@ -67,6 +76,8 @@ namespace VAT.Interaction
 
             _joint.swapBodies = true;
 
+            _jointSpace = new ConfigurableJointSpace(_joint);
+
             rb.transform.rotation = initialRotation;
         }
 
@@ -81,25 +92,81 @@ namespace VAT.Interaction
             if (_isFree)
             {
                 _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = Mathf.Lerp(_joint.xDrive.positionSpring, 5000f, Time.deltaTime * 0.5f), positionDamper = 0f, maximumForce = float.PositiveInfinity };
+
+                var gripTarget = GetGripTarget();
+
+                _joint.targetPosition = GetTargetPosition(gripTarget);
+                _joint.targetRotation = GetTargetRotation(gripTarget);
             }
             else
             {
-                float force = Mathf.LerpUnclamped(0f, 5000f, Mathf.Pow(friction, 4f));
+                float force = Mathf.LerpUnclamped(0f, 10000f, Mathf.Pow(friction, 4f));
 
                 _joint.xDrive = new JointDrive()
                 {
-                    positionSpring = 0f,
-                    positionDamper = force * 10f,
+                    positionSpring = force * 10f,
+                    positionDamper = force * 0.1f,
                     maximumForce = force
                 };
 
                 _joint.angularXDrive = new JointDrive()
                 {
-                    positionSpring = 0f,
+                    positionSpring = force * 10f,
                     positionDamper = force * 0.1f,
                     maximumForce = force
                 };
+
+                _joint.angularYZDrive = new JointDrive()
+                {
+                    positionSpring = force * 0.1f,
+                    positionDamper = force * 0.1f,
+                    maximumForce = force * 0.01f,
+                };
+
+                UpdateTargets();
             }
+        }
+
+        private SimpleTransform GetGripTarget()
+        {
+            var grabberPoint = _interactor.GetPalm();
+            var target = _grip.GetTargetInWorld(grabberPoint, _grip.GetDefaultPose());
+            var selfTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _grip.GetDefaultPose()));
+
+            target = target.Transform(selfTarget.InverseTransform(grabberPoint.GetHostTransform()));
+
+            return target;
+        }
+
+        private Vector3 GetTargetPosition(SimpleTransform gripTarget)
+        {
+            var targetPos = _jointSpace.GetTargetPositionWorld(gripTarget.position);
+
+            targetPos.y = 0f;
+            targetPos.z = 0f;
+            targetPos.x = -targetPos.x;
+
+            return targetPos;
+        }
+
+        private Quaternion GetTargetRotation(SimpleTransform gripTarget)
+        {
+            var targetRot = _jointSpace.GetTargetRotationWorld(gripTarget.rotation);
+            targetRot = Quaternion.Inverse(targetRot);
+            return targetRot;
+        }
+
+        private void UpdateTargets()
+        {
+            var target = GetGripTarget();
+
+            var targetRot = GetTargetRotation(target);
+
+            _joint.targetRotation = Quaternion.RotateTowards(targetRot, _joint.targetRotation, 10f);
+
+            var targetPos = GetTargetPosition(target);
+
+            _joint.targetPosition = Vector3.MoveTowards(targetPos, _joint.targetPosition, 0.05f);
         }
 
         public void FreeJoints()
@@ -116,14 +183,21 @@ namespace VAT.Interaction
 
         public void LockJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Locked);
+            _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Limited);
             _joint.angularXMotion = ConfigurableJointMotion.Free;
+
+            _joint.angularYLimit = _joint.angularZLimit = new SoftJointLimit() { limit = 40f };
 
             _joint.linearLimit = new SoftJointLimit() { limit = _height * 0.5f };
 
             _joint.xDrive = new JointDrive() { positionSpring = 0f, positionDamper = 1000f, maximumForce = 500000f };
 
             _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
+
+            var gripTarget = GetGripTarget();
+
+            _joint.targetPosition = GetTargetPosition(gripTarget);
+            _joint.targetRotation = GetTargetRotation(gripTarget);
 
             _isFree = false;
         }
