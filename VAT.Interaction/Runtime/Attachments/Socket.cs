@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -31,6 +32,8 @@ namespace VAT.Interaction.Attachments
 
         public virtual bool IsLocked => RegisteredPlugs.Count > 0;
 
+        public event Action<Plug> OnRegisterPlug, OnUnregisterPlug, OnLockPlug, OnUnlockPlug;
+
         public void EjectPlugs()
         {
             foreach (var plug in RegisteredPlugs)
@@ -52,21 +55,29 @@ namespace VAT.Interaction.Attachments
         public void RegisterPlug(Plug plug)
         {
             _registeredPlugs.Add(plug);
+
+            OnRegisterPlug?.Invoke(plug);
         }
 
         public void UnregisterPlug(Plug plug)
         {
             _registeredPlugs.Remove(plug);
+
+            OnUnregisterPlug?.Invoke(plug);
         }
 
         public void LockPlug(Plug plug)
         {
             _lockedPlugs.Add(plug);
+
+            OnLockPlug?.Invoke(plug);
         }
 
         public void UnlockPlug(Plug plug)
         {
             _lockedPlugs.Remove(plug);
+
+            OnUnlockPlug?.Invoke(plug);
         }
     }
 }
