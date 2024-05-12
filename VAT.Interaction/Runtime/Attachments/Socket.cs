@@ -38,6 +38,11 @@ namespace VAT.Interaction.Attachments
         {
             foreach (var plug in RegisteredPlugs)
             {
+                if (!plug.IsLocked)
+                {
+                    continue;
+                }
+
                 plug.ConfirmEject();
             }
         }
