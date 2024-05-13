@@ -28,7 +28,7 @@ namespace VAT.Input
                 return provider.GetHandPose();
             }
 
-            return new HandPoseData();
+            return HandPoseHelper.DefaultOpenPose;
         }
 
         public SimpleTransform GetWristTransform()
