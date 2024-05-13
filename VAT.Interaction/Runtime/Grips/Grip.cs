@@ -232,7 +232,7 @@ namespace VAT.Interaction
                 return (true, _defaultOpenPose.data);
             }
 
-            return (false, default);
+            return (false, HandPoseHelper.DefaultOpenPose);
         }
 
         public virtual (bool valid, HandPoseData data) GetClosedPose(IInteractor interactor)
@@ -242,7 +242,7 @@ namespace VAT.Interaction
                 return (true, _defaultClosedPose.data);
             }
 
-            return (false, default);
+            return (false, HandPoseHelper.DefaultClosedPose);
         }
 
         public (bool valid, float priority) ValidateInteraction(IInteractor interactor)
@@ -293,7 +293,7 @@ namespace VAT.Interaction
 
         public HandPoseData GetDefaultPose()
         {
-            return _defaultClosedPose.data;
+            return _defaultClosedPose ? _defaultClosedPose.data : HandPoseHelper.DefaultClosedPose;
         }
 
         public virtual SimpleTransform GetPivotInInteractor(PalmPoint point, HandPoseData pose)

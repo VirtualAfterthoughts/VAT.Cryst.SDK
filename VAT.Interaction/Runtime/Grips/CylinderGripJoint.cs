@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
-using static UnityEngine.GraphicsBuffer;
 
 namespace VAT.Interaction
 {
@@ -93,10 +93,8 @@ namespace VAT.Interaction
             {
                 _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = Mathf.Lerp(_joint.xDrive.positionSpring, 5000f, Time.deltaTime * 0.5f), positionDamper = 0f, maximumForce = float.PositiveInfinity };
 
-                var gripTarget = GetGripTarget();
-
-                _joint.targetPosition = GetTargetPosition(gripTarget);
-                _joint.targetRotation = GetTargetRotation(gripTarget);
+                _joint.targetPosition = GetTargetPosition();
+                _joint.targetRotation = GetTargetRotation();
             }
             else
             {
@@ -111,14 +109,14 @@ namespace VAT.Interaction
 
                 _joint.angularXDrive = new JointDrive()
                 {
-                    positionSpring = force * 10f,
+                    positionSpring = force * 1f,
                     positionDamper = force * 0.1f,
-                    maximumForce = force * 10f
+                    maximumForce = force * 0.1f,
                 };
 
                 _joint.angularYZDrive = new JointDrive()
                 {
-                    positionSpring = force * 0.25f,
+                    positionSpring = force,
                     positionDamper = force * 0.1f,
                     maximumForce = force,
                 };
@@ -127,20 +125,9 @@ namespace VAT.Interaction
             }
         }
 
-        private SimpleTransform GetGripTarget()
+        private Vector3 GetTargetPosition()
         {
-            var grabberPoint = _interactor.GetPalm();
-            var target = _grip.GetTargetInWorld(grabberPoint, _grip.GetClosedPose(_interactor).data);
-            var selfTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _grip.GetDefaultPose()));
-
-            target = target.Transform(selfTarget.InverseTransform(grabberPoint.GetHostTransform()));
-            target.rotation = grabberPoint.GetHostTransform().rotation;
-            return target;
-        }
-
-        private Vector3 GetTargetPosition(SimpleTransform gripTarget)
-        {
-            var targetPos = _jointSpace.GetTargetPositionWorld(gripTarget.position);
+            var targetPos = _jointSpace.GetTargetPositionWorld(_interactor.GetPalm().GetHostTransform().position);
 
             targetPos.y = 0f;
             targetPos.z = 0f;
@@ -149,22 +136,28 @@ namespace VAT.Interaction
             return targetPos;
         }
 
-        private Quaternion GetTargetRotation(SimpleTransform gripTarget)
+        private Quaternion GetTargetRotation()
         {
-            var targetRot = _jointSpace.GetTargetRotationWorld(gripTarget.rotation);
+            Quaternion targetRot = _jointSpace.GetTargetRotationWorld(_interactor.GetPalm().GetHostTransform().rotation);
             targetRot = Quaternion.Inverse(targetRot);
+
+            targetRot.ToAngleAxis(out var angle, out var axis);
+
+            axis.y = 0f;
+            axis.z = 0f;
+
+            targetRot = Quaternion.AngleAxis(angle, axis);
+
             return targetRot;
         }
 
         private void UpdateTargets(float friction)
         {
-            var target = GetGripTarget();
-
-            var targetRot = GetTargetRotation(target);
+            var targetRot = GetTargetRotation();
 
             _joint.targetRotation = Quaternion.RotateTowards(targetRot, _joint.targetRotation, 10f * friction);
 
-            var targetPos = GetTargetPosition(target);
+            var targetPos = GetTargetPosition();
 
             _joint.targetPosition = Vector3.MoveTowards(targetPos, _joint.targetPosition, 0.05f * friction);
         }
@@ -195,10 +188,8 @@ namespace VAT.Interaction
 
             _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
 
-            var gripTarget = GetGripTarget();
-
-            _joint.targetPosition = GetTargetPosition(gripTarget);
-            _joint.targetRotation = GetTargetRotation(gripTarget);
+            _joint.targetPosition = GetTargetPosition();
+            _joint.targetRotation = GetTargetRotation();
 
             _isFree = false;
         }
