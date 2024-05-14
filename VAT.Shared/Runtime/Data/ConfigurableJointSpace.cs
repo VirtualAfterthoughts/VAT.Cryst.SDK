@@ -150,6 +150,11 @@ namespace VAT.Shared.Data
             else
                 BurstCompiled_ConfigurableJointExtensions.BurstCompiled_GetTargetRotationWorld(jointRotation, initialJoint.rotation, target, out result);
 
+            if (joint.swapBodies)
+            {
+                result = inverse(result);
+            }
+
             return result;
         }
 

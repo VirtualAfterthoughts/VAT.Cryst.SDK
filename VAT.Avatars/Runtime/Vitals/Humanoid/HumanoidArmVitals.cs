@@ -34,8 +34,8 @@ namespace VAT.Avatars.Vitals
             float totalNewtons = 1800f;
 
             _arm.UpperArm.ConfigureJoint(totalNewtons * 0.5f);
-            _arm.Elbow.ConfigureJoint(totalNewtons * 0.375f);
-            _arm.Hand.Hand.ConfigureJoint(totalNewtons * 0.125f);
+            _arm.Elbow.ConfigureJoint(totalNewtons * 0.4f);
+            _arm.Hand.Hand.ConfigureJoint(totalNewtons * 0.1f);
         }
 
         public override void ApplyVitals() {

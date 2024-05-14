@@ -139,7 +139,6 @@ namespace VAT.Interaction
         private Quaternion GetTargetRotation()
         {
             Quaternion targetRot = _jointSpace.GetTargetRotationWorld(_interactor.GetPalm().GetHostTransform().rotation);
-            targetRot = Quaternion.Inverse(targetRot);
 
             targetRot.ToAngleAxis(out var angle, out var axis);
 
