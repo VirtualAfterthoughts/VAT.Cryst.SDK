@@ -42,6 +42,7 @@ namespace VAT.Avatars.Skeletal
         public AnimationCurve CervicalTilt = new(new(0f, 0f, 1f, 1f), new(40f, 45f, 0.54f, 0.54f), new(100f, 60f));
 
         public quaternion chestRotation;
+        public quaternion rawChestRotation;
 
         public float3 feetCenterInRoot;
 
@@ -113,6 +114,8 @@ namespace VAT.Avatars.Skeletal
             var offsetRotation = Quaternion.FromToRotation(math.mul(chestRotation, math.up()), math.normalize(Skull.position - feetCenter)) * chestRotation;
             float lerp = (1f - cervicalHeight) - (skullChestAngle / 90f);
             chestRotation = Quaternion.Lerp(chestRotation, offsetRotation, lerp);
+
+            rawChestRotation = chestRotation;
 
             ChestPull();
 

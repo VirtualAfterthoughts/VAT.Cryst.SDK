@@ -121,13 +121,15 @@ namespace VAT.Avatars.Skeletal
             HipSink();
 
             quaternion chestRotation = _neck.chestRotation;
-            chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Time.deltaTime * 7f);
+            chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Time.deltaTime * 14f);
             lastChestRotation = root.InverseTransformRotation(chestRotation);
 
             T1Vertebra.rotation = chestRotation;
 
-            Vector3 t1Up = T1Vertebra.up;
-            Vector3 t1Right = T1Vertebra.right;
+            var rawChestRot = Quaternion.Slerp(_neck.rawChestRotation, _neck.chestRotation, 0.25f);
+
+            Vector3 t1Up = math.mul(rawChestRot, math.up());
+            Vector3 t1Right = math.mul(rawChestRot, math.right());
 
             float height = _measurements.height;
 
@@ -140,7 +142,7 @@ namespace VAT.Avatars.Skeletal
             Vector3 vector = Quaternion.AngleAxis(cervicalHeight * 90f, thoracicRotation * t1Right) * root.up;
             float tiltAngle = Vector3.Angle(vector, t1Up);
             Vector3 tiltAxis = Vector3.Cross(vector, t1Up);
-            _sacrumRotation = Quaternion.AngleAxis(-ThoraxTilt.Evaluate(tiltAngle), tiltAxis) * T1Vertebra.rotation;
+            _sacrumRotation = Quaternion.AngleAxis(-ThoraxTilt.Evaluate(tiltAngle), tiltAxis) * rawChestRot;
 
             var initialSacrum = SimpleTransform.Create(Sacrum.position, _sacrumRotation);
 
