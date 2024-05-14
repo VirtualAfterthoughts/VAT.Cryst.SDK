@@ -190,7 +190,7 @@ namespace VAT.Avatars.Skeletal
         {
             float supportedWeight = (_locomotion.Locomotors[0].WeightSupport + _locomotion.Locomotors[1].WeightSupport) / 2f;
 
-            float sinkValue = Mathf.Clamp01(1f - supportedWeight) * 2f;
+            float sinkValue = Mathf.Clamp01(1f - supportedWeight) * 1.5f;
 
             float neckHeight = -_neckProportions.lowerNeckEllipsoid.height;
 

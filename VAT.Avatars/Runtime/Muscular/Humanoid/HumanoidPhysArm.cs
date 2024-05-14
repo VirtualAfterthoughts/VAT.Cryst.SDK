@@ -16,7 +16,7 @@ using VAT.Shared.Data;
 namespace VAT.Avatars.Muscular
 {
     using Unity.Mathematics;
-    using UnityEngine.XR;
+
     using VAT.Avatars.Bones;
     using VAT.Cryst.Delegates;
     using VAT.Input;
@@ -88,9 +88,17 @@ namespace VAT.Avatars.Muscular
         {
             Clavicle.Solve(Clavicle.Parent.TransformBone(_arm.Clavicle.Parent, _arm.Clavicle));
             Scapula.Solve(Scapula.Parent.TransformBone(_arm.Scapula.Parent, _arm.Scapula));
-            UpperArm.Solve(UpperArm.Parent.TransformBone(_arm.UpperArm.Parent, _arm.UpperArm));
-            Elbow.Solve(Elbow.Parent.TransformBone(_arm.Elbow.Parent, _arm.Elbow));
-            Hand.Hand.Solve(Elbow.TransformBone(_arm.Elbow, _arm.Hand.Hand));
+
+            var upperArmTarget = UpperArm.Parent.TransformBone(_arm.UpperArm.Parent, _arm.UpperArm);
+            UpperArm.Solve(upperArmTarget);
+
+            var elbowTarget = Elbow.Parent.TransformBone(_arm.Elbow.Parent, _arm.Elbow);
+
+            Elbow.Solve(elbowTarget);
+
+            var handTarget = Elbow.TransformBone(_arm.Elbow, _arm.Hand.Hand);
+
+            Hand.Hand.Solve(handTarget);
         }
 
         public void WriteProportions(HumanoidArmProportions proportions)

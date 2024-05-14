@@ -88,16 +88,28 @@ namespace VAT.Shared.Data
         /// <returns></returns>
         public float3 GetTargetPositionWorld(float3 target)
         {
-            quaternion worldRotation = inverse(joint.GetJointRotation());
+            quaternion worldRotation = inverse(jointRotation);
+
+            if (!joint.swapBodies)
+            {
+                worldRotation = mul(worldRotation, mul(initialJoint.rotation, inverse(rigidbody.rotation)));
+            }
+            else if (connectedBody)
+            {
+                worldRotation = mul(worldRotation, mul(initialConnected.rotation, inverse(connectedBody.rotation)));
+            }
 
             float3 resultPosition = initialJoint.position - target;
             resultPosition -= initialJoint.position - (float3)joint.GetWorldConnectedAnchor();
-            resultPosition -= mul(initialJoint.transform.rotation, (float3)joint.anchor * (float3)joint.transform.lossyScale);
-
-            if (joint.configuredInWorldSpace)
-                worldRotation = mul(worldRotation, mul(initialJoint.rotation, inverse(joint.transform.rotation)));
+            resultPosition -= mul(rigidbody.rotation, (float3)joint.anchor * (float3)joint.transform.lossyScale);
 
             resultPosition = mul(worldRotation, resultPosition);
+
+            if (joint.swapBodies)
+            {
+                resultPosition = -resultPosition;
+            }
+
             return resultPosition;
         }
 

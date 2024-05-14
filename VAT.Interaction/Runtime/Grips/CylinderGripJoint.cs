@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -91,10 +92,10 @@ namespace VAT.Interaction
         {
             if (_isFree)
             {
-                _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = Mathf.Lerp(_joint.xDrive.positionSpring, 5000f, Time.deltaTime * 0.5f), positionDamper = 0f, maximumForce = float.PositiveInfinity };
-
                 _joint.targetPosition = GetTargetPosition();
                 _joint.targetRotation = GetTargetRotation();
+
+                _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = Mathf.Lerp(_joint.xDrive.positionSpring, 5000f, Time.deltaTime * 0.5f), positionDamper = 0f, maximumForce = float.PositiveInfinity };
             }
             else
             {
@@ -131,7 +132,6 @@ namespace VAT.Interaction
 
             targetPos.y = 0f;
             targetPos.z = 0f;
-            targetPos.x = -targetPos.x;
 
             return targetPos;
         }

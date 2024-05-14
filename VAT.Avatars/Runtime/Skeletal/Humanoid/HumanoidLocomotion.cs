@@ -305,7 +305,7 @@ namespace VAT.Avatars.Skeletal
 
             _result.position = ClampPosition(_result.position);
 
-            _stepSpeed = Mathf.Lerp(0.5f, 1.4f, CalculateVelocityLerp(_velocity)) * _legMultiplier;
+            _stepSpeed = Mathf.Lerp(0.5f, 1.8f, CalculateVelocityLerp(_velocity)) * _legMultiplier;
 
             _maxStepDistance = 0.3f;
         }
@@ -379,7 +379,7 @@ namespace VAT.Avatars.Skeletal
                     var pos = Vector3.LerpUnclamped(stepFromWorld.position, stepToWorld.position, lerp);
                     var rot = Quaternion.LerpUnclamped(stepFromWorld.rotation, stepToWorld.rotation, lerp);
 
-                    float stepHeight = CurveFootHeight(StepPercent) * 0.4f * (CalculateVelocityLerp(_velocityAtStep) + 1f) * _legLength;
+                    float stepHeight = CurveFootHeight(StepPercent) * 0.3f * (CalculateVelocityLerp(_velocityAtStep) + 1f) * _legLength;
                     float max = distance(_sacrum.position, _feetCenter.position) / _legLength;
 
                     stepHeight *= max;
