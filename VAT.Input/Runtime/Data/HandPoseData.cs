@@ -16,7 +16,6 @@ namespace VAT.Input.Data
             for (var i = 0; i < fingers.Length; i++)
             {
                 fingers[i].splay = pose.fingers[i].splay;
-                fingers[i].pressure = pose.fingers[i].pressure;
 
                 fingers[i].phalanges = new PhalanxPoseData[pose.fingers[i].phalanges.Length];
                 pose.fingers[i].phalanges.CopyTo(fingers[i].phalanges, 0);
@@ -28,7 +27,6 @@ namespace VAT.Input.Data
                 thumbs[i].spread = pose.thumbs[i].spread;
                 thumbs[i].stretched = pose.thumbs[i].stretched;
                 thumbs[i].twist = pose.thumbs[i].twist;
-                thumbs[i].pressure = pose.thumbs[i].pressure;
 
                 thumbs[i].phalanges = new PhalanxPoseData[pose.thumbs[i].phalanges.Length];
                 pose.thumbs[i].phalanges.CopyTo(thumbs[i].phalanges, 0);

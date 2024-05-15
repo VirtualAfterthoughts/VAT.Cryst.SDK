@@ -18,9 +18,6 @@ namespace VAT.Input.Data
         [Range(-1f, 1f)]
         public float twist;
 
-        [Range(0f, 1f)]
-        public float pressure;
-
         public PhalanxPoseData[] phalanges;
 
         public float GetCurl()
