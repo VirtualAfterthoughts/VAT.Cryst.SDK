@@ -181,7 +181,7 @@ namespace VAT.Characters
             if (_isSnatching)
             {
                 var grabberPoint = GetPalm();
-                var target = _attachedGrip.GetTargetInWorld(grabberPoint, _attachedGrip.GetDefaultPose());
+                var target = GrabTargetHelper.GetTargetInWorld(_attachedGrip, this);
                 var grabPoint = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetDefaultPose()));
                 grabPoint.rotation = target.rotation;
 
@@ -223,7 +223,7 @@ namespace VAT.Characters
             if (_isSnatching)
             {
                 var grabberPoint = GetPalm();
-                var worldTarget = _attachedGrip.GetTargetInWorld(grabberPoint, _attachedGrip.GetDefaultPose());
+                var worldTarget = GrabTargetHelper.GetTargetInWorld(_attachedGrip, this);
                 var interactorTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetDefaultPose()));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);

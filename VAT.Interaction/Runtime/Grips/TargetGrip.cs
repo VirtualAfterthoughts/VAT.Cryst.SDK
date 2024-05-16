@@ -50,13 +50,16 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose)
+        public override SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose)
         {
             var pivot = GetPivotInWorld(point, pose);
             var normalRelative = point.GetDefaultPoint().InverseTransformDirection(point.GetNormal());
             pivot.position -= pivot.TransformDirection(normalRelative) * GetWorldRadius();
 
-            return pivot;
+            var host = GetHostGameObject().transform;
+            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
+
+            return hostTransform.InverseTransform(pivot);
         }
 
         public override SimpleTransform GetPivotInWorld(PalmPoint point, HandPoseData pose)

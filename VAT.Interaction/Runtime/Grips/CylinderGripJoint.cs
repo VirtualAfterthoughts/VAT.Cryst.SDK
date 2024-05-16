@@ -92,8 +92,10 @@ namespace VAT.Interaction
         {
             if (_isFree)
             {
-                _joint.targetPosition = GetTargetPosition();
-                _joint.targetRotation = GetTargetRotation();
+                var target = GetGripTarget();
+
+                _joint.targetPosition = GetTargetPosition(target);
+                _joint.targetRotation = GetTargetRotation(target);
 
                 _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = Mathf.Lerp(_joint.xDrive.positionSpring, 5000f, Time.deltaTime * 0.5f), positionDamper = 0f, maximumForce = float.PositiveInfinity };
             }
@@ -126,9 +128,19 @@ namespace VAT.Interaction
             }
         }
 
-        private Vector3 GetTargetPosition()
+        private SimpleTransform GetGripTarget()
         {
-            var targetPos = _jointSpace.GetTargetPositionWorld(_interactor.GetPalm().GetHostTransform().position);
+            var grabberPoint = _interactor.GetPalm();
+            var target = GrabTargetHelper.GetTargetInWorld(_grip, _interactor);
+            var selfTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _grip.GetDefaultPose()));
+
+            target = target.Transform(selfTarget.InverseTransform(grabberPoint.GetHostTransform()));
+            return target;
+        }
+
+        private Vector3 GetTargetPosition(SimpleTransform target)
+        {
+            var targetPos = _jointSpace.GetTargetPositionWorld(target.position);
 
             targetPos.y = 0f;
             targetPos.z = 0f;
@@ -136,9 +148,9 @@ namespace VAT.Interaction
             return targetPos;
         }
 
-        private Quaternion GetTargetRotation()
+        private Quaternion GetTargetRotation(SimpleTransform target)
         {
-            Quaternion targetRot = _jointSpace.GetTargetRotationWorld(_interactor.GetPalm().GetHostTransform().rotation);
+            Quaternion targetRot = _jointSpace.GetTargetRotationWorld(target.rotation);
 
             targetRot.ToAngleAxis(out var angle, out var axis);
 
@@ -152,11 +164,13 @@ namespace VAT.Interaction
 
         private void UpdateTargets(float friction)
         {
-            var targetRot = GetTargetRotation();
+            var target = GetGripTarget();
+
+            var targetRot = GetTargetRotation(target);
 
             _joint.targetRotation = Quaternion.RotateTowards(targetRot, _joint.targetRotation, 10f * friction);
 
-            var targetPos = GetTargetPosition();
+            var targetPos = GetTargetPosition(target);
 
             _joint.targetPosition = Vector3.MoveTowards(targetPos, _joint.targetPosition, 0.05f * friction);
         }
@@ -187,8 +201,10 @@ namespace VAT.Interaction
 
             _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
 
-            _joint.targetPosition = GetTargetPosition();
-            _joint.targetRotation = GetTargetRotation();
+            var target = GetGripTarget();
+
+            _joint.targetPosition = GetTargetPosition(target);
+            _joint.targetRotation = GetTargetRotation(target);
 
             _isFree = false;
         }

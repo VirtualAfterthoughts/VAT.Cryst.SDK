@@ -91,14 +91,14 @@ namespace VAT.Avatars.Posing
         {
             if (targetGrip != null)
             {
-                AvatarGrabberPoint grabberPoint = new AvatarGrabberPoint()
+                AvatarGrabberPoint grabberPoint = new()
                 {
                     hand = Hand,
                     radius = 0f,
                 };
 
                 var targetInHand = GrabTargetHelper.GetTargetInInteractor(grabberPoint, handPoseData);
-                var targetInWorld = targetGrip.GetDefaultTargetInWorld(grabberPoint, handPoseData);
+                var targetInWorld = GrabTargetHelper.CalculateDefaultTargetInWorld(targetGrip, grabberPoint, handPoseData);
 
                 transform.rotation = (targetInWorld.rotation * Quaternion.Inverse(grabberPoint.GetHostTransform().Transform(targetInHand).rotation) * transform.rotation);
 

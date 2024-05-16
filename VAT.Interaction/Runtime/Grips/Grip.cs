@@ -252,7 +252,7 @@ namespace VAT.Interaction
 
             var grabberPoint = interactor.GetPalm();
 
-            var target = GetTargetInWorld(grabberPoint, GetDefaultPose());
+            var target = GrabTargetHelper.GetTargetInWorld(this, interactor);
             var grabCenter = grabberPoint.GetProximityCenter();
 
             float distance = ((Vector3)(target.position - grabCenter.position)).magnitude;
@@ -284,11 +284,9 @@ namespace VAT.Interaction
             }
         }
 
-        public abstract SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose);
-
         public virtual SimpleTransform GetPivotInWorld(PalmPoint point, HandPoseData pose)
         {
-            return GetTargetInWorld(point, pose);
+            return GrabTargetHelper.CalculateTargetInWorld(this, point, pose);
         }
 
         public HandPoseData GetDefaultPose()
@@ -306,11 +304,6 @@ namespace VAT.Interaction
             return _host;
         }
 
-        public virtual SimpleTransform GetDefaultTargetInWorld(PalmPoint point, HandPoseData pose)
-        {
-            return GetTargetInWorld(point, pose);
-        }
-
         public HoverFlags GetHoverFlags()
         {
             return _hoverFlags;
@@ -318,12 +311,19 @@ namespace VAT.Interaction
 
         public SimpleTransform GetTargetInHost(IInteractor interactor)
         {
-            return GrabTargetHelper.GetTargetInHost(this, interactor.GetPalm(), GetClosedPose(interactor).data);
+            return CalculateTargetInHost(interactor.GetPalm(), GetClosedPose(interactor).data);
         }
 
         public void SetTargetInHost(IInteractor interactor, SimpleTransform target)
         {
             
+        }
+
+        public abstract SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose);
+
+        public virtual SimpleTransform CalculateDefaultTargetInHost(PalmPoint point, HandPoseData pose)
+        {
+            return CalculateTargetInHost(point, pose);
         }
     }
 }

@@ -39,11 +39,14 @@ namespace VAT.Interaction
             return _target;
         }
 
-        public override SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose)
+        public override SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose)
         {
             var grabPoint = point.GetDefaultPoint();
             var targetTransform = GetTargetTransform();
             var localGrabPoint = targetTransform.InverseTransformPoint(grabPoint.position);
+
+            var host = GetHostGameObject().transform;
+            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
 
             var face = Geometry.ClosestFace(localGrabPoint, _center, _size, Faces.EVERYTHING);
             if (face.HasValue)
@@ -53,13 +56,15 @@ namespace VAT.Interaction
 
                 var grabRotation = Quaternion.FromToRotation(-point.GetNormal(), worldNormal) * grabPoint.rotation;
 
-                return SimpleTransform.Create(worldPoint, grabRotation);
+                var worldTarget = SimpleTransform.Create(worldPoint, grabRotation);
+
+                return hostTransform.InverseTransform(worldTarget);
             }
 
-            return grabPoint;
+            return hostTransform.InverseTransform(grabPoint);
         }
 
-        public override SimpleTransform GetDefaultTargetInWorld(PalmPoint point, HandPoseData pose)
+        public override SimpleTransform CalculateDefaultTargetInHost(PalmPoint point, HandPoseData pose)
         {
             var targetTransform = GetTargetTransform();
 
@@ -71,7 +76,12 @@ namespace VAT.Interaction
 
             var grabRotation = Quaternion.FromToRotation(targetTransform.right, worldNormal) * targetTransform.rotation;
 
-            return SimpleTransform.Create(worldPoint, grabRotation);
+            var worldTarget = SimpleTransform.Create(worldPoint, grabRotation);
+
+            var host = GetHostGameObject().transform;
+            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
+
+            return hostTransform.InverseTransform(worldTarget);
         }
 
         private void OnDrawGizmosSelected()

@@ -28,10 +28,10 @@ namespace VAT.Interaction
 
         SimpleTransform GetTargetInHost(IInteractor interactor);
 
+        SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose);
+
+        SimpleTransform CalculateDefaultTargetInHost(PalmPoint point, HandPoseData pose);
+
         void SetTargetInHost(IInteractor interactor, SimpleTransform target);
-
-        SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose);
-
-        SimpleTransform GetDefaultTargetInWorld(PalmPoint point, HandPoseData pose);
     }
 }

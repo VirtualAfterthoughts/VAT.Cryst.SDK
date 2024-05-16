@@ -83,7 +83,7 @@ namespace VAT.Interaction
             }
 
             var grabberPoint = _interactor.GetPalm();
-            var target = _grip.GetTargetInWorld(grabberPoint, _grip.GetDefaultPose());
+            var target = GrabTargetHelper.GetTargetInWorld(_grip, _interactor);
             var selfTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _grip.GetDefaultPose()));
 
             target = target.Transform(selfTarget.InverseTransform(grabberPoint.GetHostTransform()));

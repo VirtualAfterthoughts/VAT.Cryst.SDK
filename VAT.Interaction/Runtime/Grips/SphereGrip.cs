@@ -26,7 +26,7 @@ namespace VAT.Interaction
             }
         }
 
-        public override SimpleTransform GetTargetInWorld(PalmPoint point, HandPoseData pose)
+        public override SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
             var grabPoint = point.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(point, pose));
@@ -34,10 +34,15 @@ namespace VAT.Interaction
 
             var grabRotation = Quaternion.FromToRotation(-point.GetNormal(), direction) * grabPoint.rotation;
 
-            return SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
+            var worldTarget = SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
+
+            var host = GetHostGameObject().transform;
+            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
+
+            return hostTransform.InverseTransform(worldTarget);
         }
 
-        public override SimpleTransform GetDefaultTargetInWorld(PalmPoint point, HandPoseData pose)
+        public override SimpleTransform CalculateDefaultTargetInHost(PalmPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
             var direction = target.right;
@@ -48,7 +53,12 @@ namespace VAT.Interaction
 
             var grabRotation = target.rotation;
 
-            return SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
+            var worldTarget = SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
+
+            var host = GetHostGameObject().transform;
+            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
+
+            return hostTransform.InverseTransform(worldTarget);
         }
     }
 }

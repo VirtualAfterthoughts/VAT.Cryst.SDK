@@ -91,7 +91,7 @@ namespace VAT.Characters
                 ApplyDrag(_pullingGrip.GetHost().GetRigidbody(), _interactor.GetRigidbody());
 
                 var grabberPoint = _interactor.GetPalm();
-                var worldTarget = _pullingGrip.GetTargetInWorld(grabberPoint, _pullingGrip.GetDefaultPose());
+                var worldTarget = GrabTargetHelper.GetTargetInWorld(_pullingGrip, _interactor);
                 var interactorTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _pullingGrip.GetDefaultPose()));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);
@@ -118,7 +118,7 @@ namespace VAT.Characters
                 var grabPoint = _interactor.GetPalm();
                 var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(grabPoint, grip.GetDefaultPose());
 
-                var targetInWorld = grip.GetTargetInWorld(grabPoint, grip.GetDefaultPose());
+                var targetInWorld = GrabTargetHelper.GetTargetInWorld(_pullingGrip, _interactor);
                 var targetInHost = SimpleTransform.Create(rb.position, rb.rotation, rb.transform.localScale).InverseTransform(targetInWorld);
 
                 var interactorInHost = grip.GetTargetInHost(_interactor);

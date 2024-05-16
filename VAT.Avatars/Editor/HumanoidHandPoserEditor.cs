@@ -228,7 +228,7 @@ namespace VAT.Avatars.Editor
             {
                 hand = _poser.Hand,
             };
-            var worldTarget = grip.GetDefaultTargetInWorld(grabberPoint, _poser.handPoseData);
+            var worldTarget = GrabTargetHelper.CalculateDefaultTargetInWorld(grip, grabberPoint, _poser.handPoseData);
 
             var bone = _poser.Hand.Hand;
 
