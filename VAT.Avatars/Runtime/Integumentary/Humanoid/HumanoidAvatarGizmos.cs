@@ -111,9 +111,8 @@ namespace VAT.Avatars.Integumentary
             Gizmos.DrawWireMesh(physArm.GenerateShoulderBladeMesh(proportions), arm.Scapula.position, arm.Scapula.rotation);
             Gizmos.DrawWireMesh(physArm.GenerateUpperArmMesh(proportions), arm.UpperArm.position, arm.UpperArm.rotation);
             Gizmos.DrawWireMesh(physArm.GenerateElbowMesh(proportions), arm.Elbow.position, arm.Elbow.rotation);
-            Gizmos.DrawWireMesh(physArm.GenerateHandMesh(proportions), arm.Hand.Hand.position, arm.Hand.Hand.rotation);
-            Gizmos.DrawWireMesh(physArm.GenerateKnuckleMesh(proportions), arm.Hand.Hand.position + arm.Hand.Hand.forward * proportions.handProportions.wristEllipsoid.height, arm.Hand.Hand.rotation);
-
+            Gizmos.DrawWireMesh(HumanoidPhysHand.GenerateHandMesh(proportions), arm.Hand.Hand.position, arm.Hand.Hand.rotation);
+            Gizmos.DrawWireMesh(HumanoidPhysHand.GenerateKnuckleMesh(proportions), arm.Hand.Hand.position + arm.Hand.Hand.forward * proportions.handProportions.wristEllipsoid.height, arm.Hand.Hand.rotation);
         }
 
         private void DrawLegGizmos(HumanoidLeg leg, HumanoidPhysLeg physLeg, HumanoidLegProportions proportions) {

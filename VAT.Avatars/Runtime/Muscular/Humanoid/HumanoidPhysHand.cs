@@ -8,6 +8,8 @@ using VAT.Avatars.Constants;
 using VAT.Avatars.Bones;
 using VAT.Input.Data;
 using VAT.Shared.Data;
+using VAT.Avatars.Proportions;
+using Unity.Mathematics;
 
 namespace VAT.Avatars.Muscular
 {
@@ -31,6 +33,9 @@ namespace VAT.Avatars.Muscular
 
         private IHandGroup _hand;
 
+        public Transform fingerTransform;
+        public MeshCollider fingerCollider;
+
         public HumanoidPhysHand()
         {
             Initiate();
@@ -46,6 +51,13 @@ namespace VAT.Avatars.Muscular
             base.Initiate();
 
             _bones[0] = new HumanoidPhysBone($"Hand", null, HumanoidConstants.HandLimits);
+
+            fingerTransform = new GameObject("Finger Collider").transform;
+            fingerTransform.parent = Hand.UnityTransform;
+
+            fingerCollider = fingerTransform.gameObject.AddComponent<MeshCollider>();
+            fingerCollider.convex = true;
+            Hand.InsertCollider(fingerCollider);
         }
 
         public void MatchFingers(IHandGroup hand)
@@ -74,9 +86,41 @@ namespace VAT.Avatars.Muscular
             _relativePalm = new RelativeBone(Hand, hand.Hand, hand.Palm);
         }
 
+        public void WriteProportions(HumanoidArmProportions proportions)
+        {
+            var handMesh = GenerateHandMesh(proportions);
+            var knuckleMesh = GenerateKnuckleMesh(proportions);
+
+            Hand.SetMesh(handMesh);
+
+            fingerTransform.localPosition = math.forward() * proportions.handProportions.wristEllipsoid.height;
+            fingerCollider.sharedMesh = knuckleMesh;
+        }
+
         public override void Solve()
         {
-            throw new System.NotImplementedException();
+            // Solve finger collider
+            float averageCurl = 0f;
+            int fingerCount = 0;
+
+            foreach (var finger in GetBlendPose().fingers)
+            {
+                averageCurl += finger.GetCurl();
+                fingerCount++;
+            }
+
+            if (fingerCount > 0)
+            {
+                averageCurl /= fingerCount;
+            }
+
+            var openScale = new Vector3(1f, 0.4f, 0.85f);
+            var closedScale = new Vector3(1f, 0.4f, 0f);
+
+            var newScale = Vector3.Lerp(openScale, closedScale, averageCurl);
+            var smoothScale = Vector3.Lerp(fingerTransform.localScale, newScale, Time.deltaTime * 12f);
+
+            fingerTransform.localScale = smoothScale;
         }
 
         public SimpleTransform GetPointOnPalm(Vector2 position)
@@ -97,6 +141,54 @@ namespace VAT.Avatars.Muscular
         public void SetBlendPose(HandPoseData data)
         {
             _hand.SetBlendPose(data);
+        }
+
+        public HandPoseData GetBlendPose()
+        {
+            return _hand.GetBlendPose();
+        }
+
+        public static Mesh GenerateHandMesh(HumanoidArmProportions proportions)
+        {
+            // Convert ellipsoids to ellipses
+            var wrist = proportions.handProportions.wristEllipsoid.Convert<Ellipse>();
+            var knuckle = proportions.handProportions.knuckleEllipsoid.Convert<Ellipse>();
+
+            // Create wrist -> knuckle
+            quaternion rotation = Quaternion.AngleAxis(90f, math.right());
+
+            EllipseCylinderMesh cylinder = new()
+            {
+                bottom = wrist,
+                bottomTransform = SimpleTransform.Create(float3.zero, rotation),
+
+                top = knuckle,
+                topTransform = SimpleTransform.Create(math.forward() * proportions.handProportions.wristEllipsoid.height, rotation),
+            };
+
+            // Create mesh
+            return cylinder.CreateDescriptor().CreateMesh();
+        }
+
+        public static Mesh GenerateKnuckleMesh(HumanoidArmProportions proportions)
+        {
+            // Convert ellipsoids to ellipses
+            var knuckle = proportions.handProportions.knuckleEllipsoid.Convert<Ellipse>();
+
+            // Create knuckle -> finger top
+            quaternion rotation = Quaternion.AngleAxis(90f, math.right());
+
+            EllipseCylinderMesh cylinder = new()
+            {
+                bottom = knuckle,
+                bottomTransform = SimpleTransform.Create(float3.zero, rotation),
+
+                top = knuckle,
+                topTransform = SimpleTransform.Create(math.forward() * proportions.handProportions.knuckleEllipsoid.height, rotation),
+            };
+
+            // Create mesh
+            return cylinder.CreateDescriptor().CreateMesh();
         }
     }
 }

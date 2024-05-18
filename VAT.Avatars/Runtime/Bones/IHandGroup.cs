@@ -10,13 +10,13 @@ namespace VAT.Avatars.Bones
 {
     public interface IHandGroup : IBoneGroup
     {
-        public IBone Hand { get; }
+        IBone Hand { get; }
 
-        public IBone Palm { get; }
+        IBone Palm { get; }
 
-        public IFingerGroup[] Fingers { get; }
+        IFingerGroup[] Fingers { get; }
 
-        public IThumbGroup[] Thumbs { get; }
+        IThumbGroup[] Thumbs { get; }
 
         SimpleTransform GetPointOnPalm(Vector2 position);
 
@@ -25,5 +25,7 @@ namespace VAT.Avatars.Bones
         void SetClosedPose(HandPoseData data);
 
         void SetBlendPose(HandPoseData data);
+
+        HandPoseData GetBlendPose();
     }
 }

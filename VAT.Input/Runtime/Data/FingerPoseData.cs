@@ -14,7 +14,7 @@ namespace VAT.Input.Data
 
         public PhalanxPoseData[] phalanges;
 
-        public float GetCurl()
+        public readonly float GetCurl()
         {
             if (phalanges.Length <= 0)
                 return 0f;

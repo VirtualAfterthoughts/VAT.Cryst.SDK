@@ -7,8 +7,8 @@ namespace VAT.Avatars.Bones
 {
     public interface IFingerGroup : IBoneGroup
     {
-        public IBone Proximal { get; }
-        public IBone Middle { get; }
-        public IBone Distal { get; }
+        IBone Proximal { get; }
+        IBone Middle { get; }
+        IBone Distal { get; }
     }
 }

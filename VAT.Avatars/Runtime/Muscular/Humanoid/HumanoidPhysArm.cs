@@ -7,7 +7,6 @@ using static Unity.Mathematics.math;
 
 using VAT.Avatars.Proportions;
 using VAT.Avatars.Constants;
-using VAT.Avatars.Skeletal;
 
 using VAT.Cryst.Interfaces;
 
@@ -96,9 +95,12 @@ namespace VAT.Avatars.Muscular
 
             Elbow.Solve(elbowTarget);
 
+            // Solve hand
             var handTarget = Elbow.TransformBone(_arm.Elbow, _arm.Hand.Hand);
 
             Hand.Hand.Solve(handTarget);
+
+            Hand.Solve();
         }
 
         public void WriteProportions(HumanoidArmProportions proportions)
@@ -107,7 +109,8 @@ namespace VAT.Avatars.Muscular
             Scapula.SetMesh(GenerateShoulderBladeMesh(proportions));
             UpperArm.SetMesh(GenerateUpperArmMesh(proportions));
             Elbow.SetMesh(GenerateElbowMesh(proportions));
-            Hand.Hand.SetMesh(GenerateHandMesh(proportions));
+
+            Hand.WriteProportions(proportions);
         }
 
         public void MatchPose(IHumanArm arm)
@@ -132,7 +135,7 @@ namespace VAT.Avatars.Muscular
             // Create clavicle top to bottom
             float3 offset = right() * (isLeft ? -1f : 1f) * clavicle.radius.x;
 
-            EllipseCylinderMesh cylinder = new EllipseCylinderMesh()
+            EllipseCylinderMesh cylinder = new()
             {
                 bottom = clavicle,
                 bottomTransform = SimpleTransform.Create(offset + down() * proportions.clavicleEllipsoid.height, quaternion.identity),
@@ -151,7 +154,7 @@ namespace VAT.Avatars.Muscular
             var scapula = proportions.shoulderBladeEllipsoid.Convert<Ellipse>();
 
             // Create shoulder blade top to bottom
-            EllipseCylinderMesh cylinder = new EllipseCylinderMesh()
+            EllipseCylinderMesh cylinder = new()
             {
                 bottom = scapula,
                 bottomTransform = SimpleTransform.Create(down() * proportions.shoulderBladeEllipsoid.height, quaternion.identity),
@@ -173,7 +176,7 @@ namespace VAT.Avatars.Muscular
             // Create upperArm -> elbow
             quaternion rotation = Quaternion.AngleAxis(90f, right());
 
-            EllipseCylinderMesh cylinder = new EllipseCylinderMesh()
+            EllipseCylinderMesh cylinder = new()
             {
                 bottom = upperArm,
                 bottomTransform = SimpleTransform.Create(float3.zero, rotation),
@@ -195,56 +198,13 @@ namespace VAT.Avatars.Muscular
             // Create elbow -> wrist
             quaternion rotation = Quaternion.AngleAxis(90f, right());
 
-            EllipseCylinderMesh cylinder = new EllipseCylinderMesh()
+            EllipseCylinderMesh cylinder = new()
             {
                 bottom = elbow,
                 bottomTransform = SimpleTransform.Create(float3.zero, rotation),
 
                 top = wrist,
                 topTransform = SimpleTransform.Create(forward() * proportions.elbowEllipsoid.height, rotation),
-            };
-
-            // Create mesh
-            return cylinder.CreateDescriptor().CreateMesh();
-        }
-
-        public Mesh GenerateHandMesh(HumanoidArmProportions proportions)
-        {
-            // Convert ellipsoids to ellipses
-            var wrist = proportions.handProportions.wristEllipsoid.Convert<Ellipse>();
-            var knuckle = proportions.handProportions.knuckleEllipsoid.Convert<Ellipse>();
-
-            // Create wrist -> knuckle
-            quaternion rotation = Quaternion.AngleAxis(90f, right());
-
-            EllipseCylinderMesh cylinder = new EllipseCylinderMesh()
-            {
-                bottom = wrist,
-                bottomTransform = SimpleTransform.Create(float3.zero, rotation),
-
-                top = knuckle,
-                topTransform = SimpleTransform.Create(forward() * proportions.handProportions.wristEllipsoid.height, rotation),
-            };
-
-            // Create mesh
-            return cylinder.CreateDescriptor().CreateMesh();
-        }
-
-        public Mesh GenerateKnuckleMesh(HumanoidArmProportions proportions)
-        {
-            // Convert ellipsoids to ellipses
-            var knuckle = proportions.handProportions.knuckleEllipsoid.Convert<Ellipse>();
-
-            // Create knuckle -> finger top
-            quaternion rotation = Quaternion.AngleAxis(90f, right());
-
-            EllipseCylinderMesh cylinder = new()
-            {
-                bottom = knuckle,
-                bottomTransform = SimpleTransform.Create(float3.zero, rotation),
-
-                top = knuckle,
-                topTransform = SimpleTransform.Create(forward() * proportions.handProportions.knuckleEllipsoid.height, rotation),
             };
 
             // Create mesh

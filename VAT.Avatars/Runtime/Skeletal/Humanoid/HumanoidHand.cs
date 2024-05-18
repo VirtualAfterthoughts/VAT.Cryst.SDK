@@ -192,8 +192,12 @@ namespace VAT.Avatars.Skeletal
             }
         }
 
+        private HandPoseData _blendPose;
+
         public void SetBlendPose(HandPoseData data)
         {
+            _blendPose = data;
+
             HandPoseRemapper.RemapFingers(data.fingers, _blendFingerPoses);
             HandPoseRemapper.RemapThumbs(data.thumbs, _blendThumbPoses);
 
@@ -206,6 +210,11 @@ namespace VAT.Avatars.Skeletal
             {
                 _thumbs[i].blendPose = _blendThumbPoses[i];
             }
+        }
+
+        public HandPoseData GetBlendPose()
+        {
+            return _blendPose;
         }
 
 #if UNITY_EDITOR
