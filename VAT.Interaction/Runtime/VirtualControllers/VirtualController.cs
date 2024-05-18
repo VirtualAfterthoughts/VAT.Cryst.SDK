@@ -41,6 +41,8 @@ namespace VAT.Interaction
             if (gripPair != null)
             {
                 _gripPairs.Remove(gripPair);
+
+                gripPair.Grip.ClearTargetInHost(interactor);
             }
 
             interactor.UnregisterOverride(this);

@@ -47,9 +47,9 @@ namespace VAT.Interaction
         [Range(0f, 2f)]
         private float _highFriction = 1f;
 
-        private List<IInteractor> _attachedInteractors = new();
-        private Dictionary<IInteractor, InteractorGripState> _interactorStates = new();
-        private Dictionary<IInteractor, IGripJoint> _gripJoints = new();
+        private readonly List<IInteractor> _attachedInteractors = new();
+        private readonly Dictionary<IInteractor, InteractorGripState> _interactorStates = new();
+        private readonly Dictionary<IInteractor, IGripJoint> _gripJoints = new();
 
         private InteractableHost _host = null;
 
@@ -197,7 +197,6 @@ namespace VAT.Interaction
             {
                 OnDetached?.Invoke(interactor);
             }
-
         }
 
         public void ForceDetachInteractors()
@@ -325,6 +324,11 @@ namespace VAT.Interaction
         public void SetTargetInHost(IInteractor interactor, SimpleTransform target)
         {
             _targetsInHost[interactor] = target;
+        }
+
+        public void ClearTargetInHost(IInteractor interactor)
+        {
+            _targetsInHost.Remove(interactor);
         }
 
         public abstract SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose);
