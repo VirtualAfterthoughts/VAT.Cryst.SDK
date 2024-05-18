@@ -84,8 +84,6 @@ namespace VAT.Avatars.Muscular
             _fender.center = _radius * 1.5f * Vector3.up;
         }
 
-        private Vector3 _integral = Vector3.zero;
-
         private Vector3 _stairForce = Vector3.zero;
 
         public override void Solve()
@@ -132,6 +130,9 @@ namespace VAT.Avatars.Muscular
             _targetVelocity = Knee.Transform.TransformDirection(vel) - footVelocity;
 
             StairSolve(ref fenderRadius);
+            SlopeSolve(out var counterVelocity);
+
+            _targetVelocity += counterVelocity;
 
             _fender.radius = Mathf.Lerp(_fender.radius, fenderRadius, Time.deltaTime * 14f);
 
@@ -147,17 +148,35 @@ namespace VAT.Avatars.Muscular
             float g = 1 / (1 + kd * dt + kp * dt * dt);
             float kdg = (kd + kp * dt) * g;
 
-            Vector3 error = (targetAngularVelocity - Foot.Body.AngularVelocity);
-            _integral += error * dt;
-            _integral = Vector3.ClampMagnitude(_integral, 0.5f);
+            Vector3 error = targetAngularVelocity - Foot.Body.AngularVelocity;
 
-            Vector3 pidv = kdg * error + kdg * 2f * _integral;
+            Vector3 pidv = kdg * error;
 
             Quaternion rotInertia2World = Foot.Rigidbody.Rigidbody.inertiaTensorRotation * Foot.Transform.rotation;
             pidv = Quaternion.Inverse(rotInertia2World) * pidv;
             pidv.Scale(Foot.Rigidbody.Rigidbody.inertiaTensor);
             pidv = rotInertia2World * pidv;
             Foot.Body.AddTorque(pidv);
+        }
+
+        private void SlopeSolve(out Vector3 counterVelocity)
+        {
+            counterVelocity = Vector3.zero;
+
+            var worldDown = Physics.gravity.normalized;
+
+            var raycast = Physics.Raycast(_locoBall.transform.position, worldDown, out var hitInfo, _locoBall.radius * 1.1f, ~0, QueryTriggerInteraction.Ignore);
+
+            if (raycast)
+            {
+                var normal = hitInfo.normal;
+                Vector3 gradient = Vector3.Cross(normal, worldDown);
+                Vector3 uphill = Vector3.Cross(normal, gradient);
+
+                var force = uphill * Physics.gravity.magnitude;
+
+                counterVelocity = force * 0.005f;
+            }
         }
 
         private void StairSolve(ref float fenderRadius)
