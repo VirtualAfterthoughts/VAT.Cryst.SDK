@@ -89,7 +89,7 @@ namespace VAT.Avatars.Muscular
         public abstract void Solve(SimpleTransform target);
 
         public void ResetAnchors() {
-            ResetAnchors(Joint.Transform.position);
+            ResetAnchors(Joint.transform.position);
         }
 
         public abstract void ResetAnchors(float3 center);

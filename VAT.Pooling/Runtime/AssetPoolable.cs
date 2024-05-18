@@ -15,7 +15,7 @@ namespace VAT.Pooling
     public delegate void AssetPoolableDelegate(AssetPoolable poolable);
     public delegate void AssetSpawnDelegate(AssetPoolable poolable, ulong id);
 
-    public class AssetPoolable : CachedMonoBehaviour, IDespawnable, IRespawnable
+    public class AssetPoolable : MonoBehaviour, IDespawnable, IRespawnable
     {
         public static ComponentCache<AssetPoolable> Cache { get; private set; } = new ComponentCache<AssetPoolable>();
 
@@ -51,8 +51,8 @@ namespace VAT.Pooling
             IDespawnable.Cache.Add(gameObject, this);
             IRespawnable.Cache.Add(gameObject, this);
 
-            _initialParent = Transform.parent;
-            _spawnTransform = SimpleTransform.Create(Transform.position, Transform.rotation);
+            _initialParent = transform.parent;
+            _spawnTransform = SimpleTransform.Create(transform.position, transform.rotation);
         }
 
         private void OnDestroy()
@@ -81,9 +81,9 @@ namespace VAT.Pooling
 
             OnDespawn();
 
-            Transform.SetPositionAndRotation(_spawnTransform.position, _spawnTransform.rotation);
+            transform.SetPositionAndRotation(_spawnTransform.position, _spawnTransform.rotation);
 
-            GameObject.SetActive(true);
+            gameObject.SetActive(true);
             OnSpawn(_id);
         }
 
@@ -93,7 +93,7 @@ namespace VAT.Pooling
             OnSpawnDelegate?.Invoke(this, id);
             InternalPoolSpawnDelegate?.Invoke(this);
 
-            _spawnTransform = SimpleTransform.Create(Transform.position, Transform.rotation);
+            _spawnTransform = SimpleTransform.Create(transform.position, transform.rotation);
         }
 
 #if UNITY_EDITOR
@@ -124,7 +124,7 @@ namespace VAT.Pooling
             OnDespawnDelegate?.Invoke(this);
             InternalPoolDespawnDelegate?.Invoke(this);
 
-            Transform.EnsureParent(_initialParent);
+            transform.EnsureParent(_initialParent);
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ using VAT.Shared;
 
 namespace VAT.Zones
 {
-    public partial class SceneZone : CachedMonoBehaviour
+    public partial class SceneZone : MonoBehaviour
     {
         private readonly List<CrystEntityTracker> _primaryEntities = new();
         private readonly Dictionary<CrystEntityTracker, int> _secondaryEntities = new();

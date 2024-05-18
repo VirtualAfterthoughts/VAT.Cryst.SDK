@@ -19,7 +19,7 @@ namespace VAT.Zones
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BoxCollider))]
-    public partial class SceneZone : CachedMonoBehaviour
+    public partial class SceneZone : MonoBehaviour
     {
         public static ComponentCache<SceneZone> Cache = new();
 
@@ -41,9 +41,9 @@ namespace VAT.Zones
 
         public SceneZone[] AdjacentZones => _adjacentZones;
 
-        public Vector3 Center => Transform.TransformPoint(_zoneCollider.center);
+        public Vector3 Center => transform.TransformPoint(_zoneCollider.center);
 
-        public Vector3 Size => Vector3.Scale(Transform.lossyScale, _zoneCollider.size);
+        public Vector3 Size => Vector3.Scale(transform.lossyScale, _zoneCollider.size);
 
         private void Awake()
         {
@@ -102,7 +102,7 @@ namespace VAT.Zones
         {
             if (_zoneCollider == null)
             {
-                _zoneCollider = GameObject.AddOrGetComponent<BoxCollider>();
+                _zoneCollider = gameObject.AddOrGetComponent<BoxCollider>();
             }
 
             _zoneCollider.isTrigger = true;

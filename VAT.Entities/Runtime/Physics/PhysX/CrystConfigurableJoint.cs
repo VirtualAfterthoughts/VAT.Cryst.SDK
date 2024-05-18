@@ -51,7 +51,7 @@ namespace VAT.Entities.PhysX
         protected override void OnJointAwake() {
             base.OnJointAwake();
 
-            _body = GameObject.AddOrGetComponent<CrystRigidbody>();
+            _body = gameObject.AddOrGetComponent<CrystRigidbody>();
 
             if (_joint != null) {
                 _hasJoint = true;
@@ -66,7 +66,7 @@ namespace VAT.Entities.PhysX
                 _body.CreateItem();
 
                 // Create the joint and apply settings
-                _joint = GameObject.AddComponent<ConfigurableJoint>();
+                _joint = gameObject.AddComponent<ConfigurableJoint>();
                 _info.Apply(_joint);
 
                 _hasJoint = true;

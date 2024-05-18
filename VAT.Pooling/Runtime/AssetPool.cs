@@ -291,9 +291,9 @@ namespace VAT.Pooling
                 poolable.gameObject.name = $"{_assetName} - [{_lastId}]";
 
                 // Use a null check for rotation, since the default value is a 0, 0, 0, 0 quaternion (not good)
-                poolable.Transform.SetPositionAndRotation(position.GetValueOrDefault(), rotation ?? Quaternion.identity);
+                poolable.transform.SetPositionAndRotation(position.GetValueOrDefault(), rotation ?? Quaternion.identity);
 
-                poolable.Transform.localScale = EvaluateScale(scale);
+                poolable.transform.localScale = EvaluateScale(scale);
 
                 // Move the location of the poolable in the lists
                 MoveToSpawned(poolable);
@@ -302,7 +302,7 @@ namespace VAT.Pooling
                 poolable.OnSpawn((ulong)_lastId);
 
                 // Set the poolable active
-                poolable.Transform.parent = _rootTransform;
+                poolable.transform.parent = _rootTransform;
                 poolable.gameObject.SetActive(true);
             }
 

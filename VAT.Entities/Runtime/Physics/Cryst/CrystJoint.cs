@@ -21,7 +21,7 @@ namespace VAT.Entities
     /// <summary>
     /// The abstraction of a physics joint in Crystalline. When adding through code, invoke <see cref="CreateItem"/>.
     /// </summary>
-    public abstract class CrystJoint : CachedMonoBehaviour, IRecreatable, ICrystJoint, IEntityComponent {
+    public abstract class CrystJoint : MonoBehaviour, IRecreatable, ICrystJoint, IEntityComponent {
         public static ComponentCache<CrystJoint> Cache = new();
 
         [SerializeField]
@@ -41,13 +41,13 @@ namespace VAT.Entities
         public abstract CrystJointSpace JointSpace { get; }
 
         private void Awake() {
-            Cache.Add(GameObject, this);
+            Cache.Add(gameObject, this);
 
             OnJointAwake();
         }
 
         private void OnDestroy() {
-            Cache.Remove(GameObject);
+            Cache.Remove(gameObject);
 
             OnJointDestroy();
         }

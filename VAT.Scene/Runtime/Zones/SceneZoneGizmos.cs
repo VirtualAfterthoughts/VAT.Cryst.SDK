@@ -10,7 +10,7 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Zones
 {
-    public partial class SceneZone : CachedMonoBehaviour
+    public partial class SceneZone : MonoBehaviour
     {
         private ZoneState _lastEditorState = ZoneState.NONE;
         private ZoneState EditorState
@@ -105,7 +105,7 @@ namespace VAT.Zones
             }
 
             using (TempGizmoMatrix.Create()) {
-                Gizmos.matrix = Transform.localToWorldMatrix;
+                Gizmos.matrix = transform.localToWorldMatrix;
                 Gizmos.DrawWireCube(_zoneCollider.center, _zoneCollider.size);
             }
 
