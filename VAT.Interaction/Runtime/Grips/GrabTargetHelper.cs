@@ -34,7 +34,7 @@ namespace VAT.Interaction
         {
             var offset = GetRotationOffset(point, pose);
 
-            var local = point.GetHostTransform().InverseTransform(point.GetPoint(pose.centerOfPressure));
+            var local = point.GetPressureCenterInHost(pose);
 
             local.rotation *= offset;
             return local;

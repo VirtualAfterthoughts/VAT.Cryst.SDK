@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 using VAT.Shared.Data;
@@ -131,8 +132,18 @@ namespace VAT.Interaction
 
                 var oldTargetInRig = payload.TargetInRig.rotation;
                 var result = primaryTarget.Transform(relative).Transform(relativeToGrab);
-                result.rotation = oldTargetInRig;
+                //result.rotation = oldTargetInRig;
                 payload.TargetInRig = result;
+
+                var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(grabberPoint, payload.ActivePair.Grip.GetDefaultPose());
+                var worldTarget = math.mul(payload.Rig.TransformRotation(oldTargetInRig), targetInInteractor.rotation);
+
+                var hostGameObject = payload.ActivePair.Grip.GetHostGameObject().transform;
+                var hostTransform = SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation);
+                var targetInGripHost = payload.TargetInGripHost;
+                targetInGripHost.rotation = hostTransform.InverseTransformRotation(worldTarget);
+
+                payload.TargetInGripHost = targetInGripHost;
             }
         }
     }

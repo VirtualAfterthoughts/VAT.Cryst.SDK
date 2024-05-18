@@ -250,10 +250,11 @@ namespace VAT.Interaction
             if (!IsInteractable() || (_attachedInteractors.Count > 0 && _swapMode == GripSwapMode.SINGLE))
                 return (false, 0f);
 
-            var grabberPoint = interactor.GetPalm();
+            var palm = interactor.GetPalm();
+            var palmHost = palm.GetHostTransform();
 
             var target = GrabTargetHelper.GetTargetInWorld(this, interactor);
-            var grabCenter = grabberPoint.GetProximityCenter();
+            var grabCenter = palmHost.Transform(palm.GetProximityCenterInHost());
 
             float distance = ((Vector3)(target.position - grabCenter.position)).magnitude;
 
@@ -309,14 +310,21 @@ namespace VAT.Interaction
             return _hoverFlags;
         }
 
+        private readonly Dictionary<IInteractor, SimpleTransform> _targetsInHost = new();
+
         public SimpleTransform GetTargetInHost(IInteractor interactor)
         {
+            if (_targetsInHost.TryGetValue(interactor, out SimpleTransform target))
+            {
+                return target;
+            }
+
             return CalculateTargetInHost(interactor.GetPalm(), GetClosedPose(interactor).data);
         }
 
         public void SetTargetInHost(IInteractor interactor, SimpleTransform target)
         {
-            
+            _targetsInHost[interactor] = target;
         }
 
         public abstract SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose);

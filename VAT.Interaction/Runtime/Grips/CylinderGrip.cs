@@ -54,7 +54,8 @@ namespace VAT.Interaction
         public override SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
-            var grabPoint = point.GetDefaultPoint();
+            var palmHost = point.GetHostTransform();
+            var grabPoint = palmHost.Transform(point.GetPressureCenterInHost(pose));
 
             var distance = ((Vector3)grabPoint.position - target.position);
             var relativeDistance = target.InverseTransformDirection(distance);
@@ -66,7 +67,7 @@ namespace VAT.Interaction
             fixedDirection.y = 0f;
             var direction = target.TransformDirection(fixedDirection.normalized);
 
-            var grabRotation = Quaternion.FromToRotation(-point.GetNormal(), direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(palmHost.TransformDirection(-point.GetNormalInHost()), direction) * grabPoint.rotation;
             Vector3 grabUp = grabRotation * Vector3.up;
             Vector3 targetUp = target.up * Mathf.Sign(Vector3.Dot(target.up, grabUp));
             grabRotation = Quaternion.FromToRotation(grabUp, targetUp) * grabRotation;

@@ -29,10 +29,12 @@ namespace VAT.Interaction
         public override SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose)
         {
             var target = GetTargetTransform();
-            var grabPoint = point.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(point, pose));
+            var palmHost = point.GetHostTransform();
+
+            var grabPoint = palmHost.Transform(GrabTargetHelper.GetTargetInInteractor(point, pose));
             var direction = ((Vector3)grabPoint.position - target.position).normalized;
 
-            var grabRotation = Quaternion.FromToRotation(-point.GetNormal(), direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(palmHost.TransformDirection(-point.GetNormalInHost()), direction) * grabPoint.rotation;
 
             var worldTarget = SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
 

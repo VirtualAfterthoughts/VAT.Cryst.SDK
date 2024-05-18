@@ -1,6 +1,7 @@
 using UnityEngine;
 
 using VAT.Avatars.Bones;
+using VAT.Input.Data;
 using VAT.Interaction;
 using VAT.Shared.Data;
 
@@ -11,26 +12,26 @@ namespace VAT.Characters
         public IHandGroup hand;
         public float radius;
 
-        public override SimpleTransform GetDefaultPoint()
+        public override SimpleTransform GetProximityCenterInHost()
         {
-            return GetPoint(Vector2.up);
-        }
-
-        public override SimpleTransform GetProximityCenter()
-        {
-            var grabPoint = GetDefaultPoint();
-            Vector3 direction = Vector3.Lerp(GetNormal(), grabPoint.forward, 0.5f);
+            var grabPoint = GetUpperPalmInHost();
+            Vector3 direction = Vector3.Lerp(GetNormalInHost(), grabPoint.forward, 0.5f);
             return SimpleTransform.Create((Vector3)grabPoint.position + (direction * radius), grabPoint.rotation);
         }
 
-        public override Vector3 GetNormal()
+        public override Vector3 GetNormalInHost()
         {
-            return -hand.Hand.Transform.up;
+            return Vector3.down;
         }
 
-        public override SimpleTransform GetPoint(Vector2 position)
+        public override SimpleTransform GetPalmInHost(Vector2 position)
         {
-            return hand.GetPointOnPalm(position);
+            return GetHostTransform().InverseTransform(hand.GetPointOnPalm(position));
+        }
+
+        public override SimpleTransform GetPressureCenterInHost(HandPoseData pose)
+        {
+            return GetPalmInHost(pose.centerOfPressure);
         }
 
         public override SimpleTransform GetHostTransform()

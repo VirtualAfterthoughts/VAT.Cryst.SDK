@@ -76,6 +76,10 @@ namespace VAT.Props.Ammo
 
         protected override void OnBeginInsert(Socket socket)
         {
+            // Makes the joint less "clippy" when inserting.
+            // Reset immediately after ejecting for performance.
+            Host.GetRigidbody().solverIterations = 256;
+
             socket.Host.AttachGroup(Host.SelfGroup);
 
             var ammoSocket = socket as AmmoSocket;
@@ -148,6 +152,8 @@ namespace VAT.Props.Ammo
 
             Destroy(_insertJoint);
             _insertJoint = null;
+
+            Host.GetRigidbody().solverIterations = Physics.defaultSolverIterations;
         }
 
         protected override void OnCompleteInsert(Socket socket)

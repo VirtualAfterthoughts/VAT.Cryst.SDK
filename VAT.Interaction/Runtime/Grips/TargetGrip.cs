@@ -53,7 +53,9 @@ namespace VAT.Interaction
         public override SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose)
         {
             var pivot = GetPivotInWorld(point, pose);
-            var normalRelative = point.GetDefaultPoint().InverseTransformDirection(point.GetNormal());
+
+            var normalRelative = point.GetPressureCenterInHost(pose).InverseTransformDirection(point.GetNormalInHost());
+
             pivot.position -= pivot.TransformDirection(normalRelative) * GetWorldRadius();
 
             var host = GetHostGameObject().transform;

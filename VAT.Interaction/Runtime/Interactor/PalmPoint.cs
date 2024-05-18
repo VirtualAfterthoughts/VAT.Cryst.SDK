@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Input;
-
+using VAT.Input.Data;
 using VAT.Shared.Data;
 
 namespace VAT.Interaction
@@ -13,7 +13,7 @@ namespace VAT.Interaction
     {
         public float GetThumbDot()
         {
-            return Vector3.Dot(GetDefaultPoint().right, -GetNormal());
+            return Vector3.Dot(GetUpperPalmInHost().right, -GetNormalInHost());
         }
 
         public Handedness GetHandedness()
@@ -21,19 +21,21 @@ namespace VAT.Interaction
             return GetThumbDot() < 0f ? Handedness.LEFT : Handedness.RIGHT;
         }
 
-        public virtual SimpleTransform GetDefaultPoint()
+        public virtual SimpleTransform GetProximityCenterInHost()
         {
-            return GetPoint(Vector2.zero);
+            return GetUpperPalmInHost();
         }
 
-        public virtual SimpleTransform GetProximityCenter()
+        public virtual SimpleTransform GetUpperPalmInHost()
         {
-            return GetDefaultPoint();
+            return GetPalmInHost(Vector2.up);
         }
 
-        public abstract SimpleTransform GetPoint(Vector2 position);
+        public abstract SimpleTransform GetPalmInHost(Vector2 position);
 
-        public abstract Vector3 GetNormal();
+        public abstract SimpleTransform GetPressureCenterInHost(HandPoseData pose);
+
+        public abstract Vector3 GetNormalInHost();
 
         public abstract SimpleTransform GetHostTransform();
     }

@@ -52,12 +52,16 @@ namespace VAT.Interaction
 
             if (gripPair != null)
             {
-                VirtualControllerPayload payload = new(gripPair, rig, targetInRig, _gripPairs);
+                var targetInGripHost = gripPair.Grip.CalculateTargetInHost(gripPair.Interactor.GetPalm(), gripPair.Grip.GetClosedPose(gripPair.Interactor).data);
+
+                VirtualControllerPayload payload = new(gripPair, rig, targetInRig, targetInGripHost, _gripPairs);
 
                 foreach (var controllerOverride in _controllerOverrides)
                 {
                     controllerOverride.OnSolveController(payload);
                 }
+
+                gripPair.Grip.SetTargetInHost(interactor, payload.TargetInGripHost);
 
                 return payload.TargetInRig;
             }

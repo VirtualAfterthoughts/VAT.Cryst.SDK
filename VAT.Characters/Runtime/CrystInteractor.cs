@@ -182,7 +182,7 @@ namespace VAT.Characters
             {
                 var grabberPoint = GetPalm();
                 var target = GrabTargetHelper.GetTargetInWorld(_attachedGrip, this);
-                var grabPoint = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetDefaultPose()));
+                var grabPoint = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetClosedPose(this).data));
                 grabPoint.rotation = target.rotation;
 
                 var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation)));
@@ -224,7 +224,7 @@ namespace VAT.Characters
             {
                 var grabberPoint = GetPalm();
                 var worldTarget = GrabTargetHelper.GetTargetInWorld(_attachedGrip, this);
-                var interactorTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetDefaultPose()));
+                var interactorTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetClosedPose(this).data));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);
 
@@ -357,7 +357,9 @@ namespace VAT.Characters
             if (_attachedGrip != null)
                 return;
 
-            var grabCenter = _grabberPoint.GetProximityCenter();
+            var host = _grabberPoint.GetHostTransform();
+            var grabCenter = host.Transform(_grabberPoint.GetProximityCenterInHost());
+
             var colliders = Physics.OverlapSphere(grabCenter.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
             
             var nearHover = GetInteractableFromColliders(colliders, HoverFlags.NEAR);
@@ -416,7 +418,9 @@ namespace VAT.Characters
             if (_attachedGrip != null)
                 return;
 
-            var grabCenter = _grabberPoint.GetProximityCenter();
+            var host = _grabberPoint.GetHostTransform();
+            var grabCenter = host.Transform(_grabberPoint.GetProximityCenterInHost());
+
             Gizmos.DrawWireSphere(grabCenter.position, grabRadius);
         }
 

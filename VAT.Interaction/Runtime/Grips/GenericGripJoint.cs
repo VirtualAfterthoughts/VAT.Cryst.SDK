@@ -105,7 +105,10 @@ namespace VAT.Interaction
 
         public void LockJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
+            _joint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Limited);
+
+            _joint.lowAngularXLimit = new SoftJointLimit() { limit = -40f };
+            _joint.highAngularXLimit = _joint.angularYLimit = _joint.angularZLimit = new SoftJointLimit() { limit = 40f };
 
             _joint.linearLimit = new SoftJointLimit() { limit = 0.05f };
             _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 500000f, positionDamper = 1000f, maximumForce = 500000f };
