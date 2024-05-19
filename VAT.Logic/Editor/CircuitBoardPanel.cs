@@ -19,6 +19,12 @@ namespace VAT.Logic.Editor
         private ObjectField _nodeField = null;
         private ObjectField _portField = null;
 
+        private VisualElement _wiringElement = null;
+        private VisualElement _createElement = null;
+
+        private Button _wiringMode = null;
+        private Button _createMode = null;
+
         private Button _wireButton = null;
 
         public const float WIRE_THICKNESS = 5f;
@@ -312,9 +318,32 @@ namespace VAT.Logic.Editor
 
             _wireButton.clicked += OnWireClick;
 
+            _createMode = ui.Q<Button>("CreateMode");
+            _createMode.clicked += OnCreateMode;
+
+            _wiringMode = ui.Q<Button>("WiringMode");
+            _wiringMode.clicked += OnWiringMode;
+
+            _createElement = ui.Q<VisualElement>("CreateElement");
+            _wiringElement = ui.Q<VisualElement>("WiringElement");
+
             root.Add(ui);
 
+            OnCreateMode();
+
             return root;
+        }
+
+        private void OnCreateMode()
+        {
+            _createElement.style.display = DisplayStyle.Flex;
+            _wiringElement.style.display = DisplayStyle.None;
+        }
+
+        private void OnWiringMode()
+        {
+            _createElement.style.display = DisplayStyle.None;
+            _wiringElement.style.display = DisplayStyle.Flex;
         }
 
         private void OnWireClick()
