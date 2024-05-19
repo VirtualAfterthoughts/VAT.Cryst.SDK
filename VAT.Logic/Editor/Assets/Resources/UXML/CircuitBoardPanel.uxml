@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <uie:Toolbar style="height: 48px;">
+        <ui:Label text="Circuit Board" display-tooltip-when-elided="true" style="-unity-text-align: middle-center; width: 100%; font-size: 14px; height: 50px;" />
+        <ui:Label display-tooltip-when-elided="true" style="position: absolute; background-image: url(&apos;project://database/Assets/Package/VAT.Logic/Editor/Assets/Icons/circuit-board-icon.png?fileID=2800000&amp;guid=774bce99a6531494c987219d2b64a496&amp;type=3#circuit-board-icon&apos;); -unity-background-scale-mode: scale-to-fit; width: 50px; height: 50px; right: 0;" />
+    </uie:Toolbar>
+    <uie:Toolbar style="justify-content: space-around; margin-top: 10px;">
+        <uie:ToolbarButton text="Create" display-tooltip-when-elided="true" name="CreateMode" style="width: 100%; -unity-text-align: upper-center;" />
+        <uie:ToolbarButton text="Wiring&#10;" display-tooltip-when-elided="true" name="WiringMode" style="width: 100%; -unity-text-align: upper-center;" />
+    </uie:Toolbar>
+    <ui:Toggle label="Show Nodes" value="true" name="NodeToggle" style="margin-top: 10px;" />
+    <ui:Toggle label="Show Ports" value="true" name="PortToggle" style="align-items: center;" />
+    <ui:GroupBox name="WiringGroup" style="background-color: rgb(43, 43, 43); background-image: none;">
+        <uie:ObjectField label="Output Node" type="VAT.Logic.Node, VAT.Logic" name="SelectedNode" />
+        <uie:ObjectField label="Receiver Port" type="VAT.Logic.Port, VAT.Logic" name="SelectedPort" style="justify-content: center;" />
+        <ui:Button text="Wire" display-tooltip-when-elided="true" name="WireButton" style="width: 50%; -unity-text-align: middle-center; translate: 50% 0; margin-top: 5px; margin-bottom: 5px;" />
+    </ui:GroupBox>
+</ui:UXML>

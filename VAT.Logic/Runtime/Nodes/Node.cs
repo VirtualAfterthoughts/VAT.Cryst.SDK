@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+
 using UnityEngine;
 
 namespace VAT.Logic
@@ -10,6 +10,36 @@ namespace VAT.Logic
         public virtual List<Port> Receivers { get; } = null;
 
         public virtual List<Port> Outputs { get; } = null;
+
+        public bool CanReceive()
+        {
+            return Receivers != null;
+        }
+
+        public bool HasReceiver(Port port)
+        {
+            return CanReceive() && Receivers.Contains(port);
+        }
+
+        public bool CanOutput()
+        {
+            return Outputs != null;
+        }
+
+        public bool HasOutput(Port port)
+        {
+            return CanOutput() && Outputs.Contains(port);
+        }
+
+        public void AddOutput(Port port)
+        {
+            Outputs.Add(port);
+        }
+
+        public void RemoveOutput(Port port)
+        {
+            Outputs.Remove(port);
+        }
 
         public virtual Signal GetOutputSignal()
         {
@@ -35,53 +65,5 @@ namespace VAT.Logic
                 output.ReceiveSignal(signal);
             }
         }
-
-#if UNITY_EDITOR
-        public void OnDrawGizmos()
-        {
-            OnDrawOutputs();
-            OnDrawReceivers();
-        }
-        
-        private void OnDrawOutputs()
-        {
-            if (Outputs == null)
-            {
-                return;
-            }
-
-            Gizmos.color = Color.yellow;
-
-            foreach (var output in Outputs)
-            {
-                if (output == null)
-                {
-                    continue;
-                }
-
-                Gizmos.DrawLine(transform.position, output.transform.position);
-            }
-        }
-
-        private void OnDrawReceivers()
-        {
-            if (Receivers == null)
-            {
-                return;
-            }
-
-            Gizmos.color = Color.red;
-
-            foreach (var receiver in Receivers)
-            {
-                if (receiver == null)
-                {
-                    continue;
-                }
-
-                Gizmos.DrawLine(transform.position, receiver.transform.position);
-            }
-        }
-#endif
     }
 }
