@@ -4,8 +4,8 @@
         <ui:Label display-tooltip-when-elided="true" style="position: absolute; background-image: url(&apos;project://database/Assets/Package/VAT.Logic/Editor/Assets/Icons/circuit-board-icon.png?fileID=2800000&amp;guid=774bce99a6531494c987219d2b64a496&amp;type=3#circuit-board-icon&apos;); -unity-background-scale-mode: scale-to-fit; width: 50px; height: 50px; right: 0;" />
     </uie:Toolbar>
     <uie:Toolbar style="justify-content: space-around; margin-top: 10px;">
-        <uie:ToolbarButton text="Create" display-tooltip-when-elided="true" name="CreateMode" style="width: 100%; -unity-text-align: upper-center;" />
-        <uie:ToolbarButton text="Wiring&#10;" display-tooltip-when-elided="true" name="WiringMode" style="width: 100%; -unity-text-align: upper-center;" />
+        <uie:ToolbarButton text="Create" display-tooltip-when-elided="true" name="CreateMode" style="width: 100%; -unity-text-align: upper-center; padding-left: 0; padding-right: 0;" />
+        <uie:ToolbarButton text="Wiring&#10;" display-tooltip-when-elided="true" name="WiringMode" style="width: 100%; -unity-text-align: upper-center; padding-left: 0; padding-right: 0;" />
     </uie:Toolbar>
     <ui:Toggle label="Show Nodes" value="true" name="NodeToggle" style="margin-top: 10px;" />
     <ui:Toggle label="Show Ports" value="true" name="PortToggle" style="align-items: center;" />

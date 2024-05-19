@@ -144,7 +144,7 @@ namespace VAT.Logic.Editor
 
             bool wireButtonActive = node && port;
 
-            _wireButton.visible = wireButtonActive;
+            _wireButton.SetEnabled(wireButtonActive);
 
             if (wireButtonActive && node.Outputs.Contains(port as Port))
             {
