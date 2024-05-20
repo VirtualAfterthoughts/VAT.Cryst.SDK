@@ -4,24 +4,26 @@
         <ui:Label display-tooltip-when-elided="true" style="position: absolute; background-image: url(&apos;project://database/Assets/Package/VAT.Logic/Editor/Assets/Icons/circuit-board-icon.png?fileID=2800000&amp;guid=774bce99a6531494c987219d2b64a496&amp;type=3#circuit-board-icon&apos;); -unity-background-scale-mode: scale-to-fit; width: 50px; height: 50px; right: 0;" />
     </uie:Toolbar>
     <uie:Toolbar style="justify-content: space-around; margin-top: 10px;">
-        <uie:ToolbarButton text="Create" display-tooltip-when-elided="true" name="CreateMode" style="width: 100%; -unity-text-align: upper-center; padding-left: 0; padding-right: 0;" />
-        <uie:ToolbarButton text="Wiring&#10;" display-tooltip-when-elided="true" name="WiringMode" style="width: 100%; -unity-text-align: upper-center; padding-left: 0; padding-right: 0;" />
+        <uie:ToolbarButton text="Create" display-tooltip-when-elided="true" name="CreateMode" style="width: 100%; -unity-text-align: upper-center; padding-left: 0; padding-right: 0; border-top-width: 0; border-bottom-width: 0; left: 0; border-left-width: 0; border-right-width: 0;" />
+        <uie:ToolbarButton text="Wiring&#10;" display-tooltip-when-elided="true" name="WiringMode" style="width: 100%; -unity-text-align: upper-center; padding-left: 0; padding-right: 0; border-top-width: 0; border-bottom-width: 0; left: 0; border-left-width: 0; border-right-width: 0;" />
     </uie:Toolbar>
     <ui:Toggle label="Show Nodes" value="true" name="NodeToggle" style="margin-top: 10px;" />
     <ui:Toggle label="Show Ports" value="true" name="PortToggle" style="align-items: center;" />
-    <ui:VisualElement name="CreateElement">
-        <ui:GroupBox name="CreateGroup" style="background-color: rgb(43, 43, 43);">
+    <ui:VisualElement name="CreateElement" picking-mode="Ignore">
+        <ui:GroupBox name="CreateGroup" picking-mode="Ignore" style="background-color: rgb(43, 43, 43);">
             <uie:Toolbar style="height: auto;">
                 <ui:Button display-tooltip-when-elided="true" name="NewNode" tooltip="Create New Node" style="width: 50px; height: 50px; background-image: url(&apos;project://database/Assets/Package/VAT.Logic/Editor/Assets/Icons/node-icon.png?fileID=2800000&amp;guid=a0b662be09c32a64fa1fd88f414821b4&amp;type=3#node-icon&apos;); margin-top: 5px; margin-bottom: 5px; margin-left: 5px; margin-right: 5px;" />
                 <ui:Button display-tooltip-when-elided="true" name="NewPort" tooltip="Create New Port" style="width: 50px; height: 50px; background-image: url(&apos;project://database/Assets/Package/VAT.Logic/Editor/Assets/Icons/port-icon.png?fileID=2800000&amp;guid=f5d4ceb2a489daa428342208a51e394c&amp;type=3#port-icon&apos;); margin-top: 5px; margin-bottom: 5px; margin-left: 5px; margin-right: 5px;" />
             </uie:Toolbar>
         </ui:GroupBox>
     </ui:VisualElement>
-    <ui:VisualElement name="WiringElement">
-        <ui:GroupBox name="WiringGroup" style="background-color: rgb(43, 43, 43); background-image: none;">
-            <uie:ObjectField label="Output Node" type="VAT.Logic.Node, VAT.Logic" name="SelectedNode" tooltip="The node that will output to the selected port." />
-            <uie:ObjectField label="Receiver Port" type="VAT.Logic.Port, VAT.Logic" name="SelectedPort" tooltip="The port that will receive signal from the selected node." style="justify-content: center;" />
-            <ui:Button text="Wire" display-tooltip-when-elided="true" name="WireButton" style="width: 50%; -unity-text-align: middle-center; translate: 50% 0; margin-top: 5px; margin-bottom: 5px;" />
+    <ui:VisualElement name="WiringElement" picking-mode="Ignore">
+        <ui:GroupBox name="WiringGroup" picking-mode="Ignore" style="background-color: rgb(43, 43, 43); background-image: none;">
+            <uie:ObjectField label="Node" type="VAT.Logic.Node, VAT.Logic" name="SelectedNode" tooltip="The node that will output to the selected port." />
+            <uie:ObjectField label="Port" type="VAT.Logic.Port, VAT.Logic" name="SelectedPort" tooltip="The port that will receive signal from the selected node." style="justify-content: center;" />
+            <ui:Button text="Output Node to Port" display-tooltip-when-elided="true" name="WireOutputButton" style="width: 50%; -unity-text-align: middle-center; translate: 50% 0; margin-top: 5px; margin-bottom: 5px;" />
+            <ui:Button text="Receive Port in Node" display-tooltip-when-elided="true" name="WireInputButton" style="width: 50%; -unity-text-align: middle-center; translate: 50% 0; margin-top: 5px; margin-bottom: 5px;" />
+            <ui:Button text="Disconnect" display-tooltip-when-elided="true" name="WireDisconnectButton" style="width: 50%; -unity-text-align: middle-center; translate: 50% 0; margin-top: 5px; margin-bottom: 5px;" />
         </ui:GroupBox>
     </ui:VisualElement>
 </ui:UXML>

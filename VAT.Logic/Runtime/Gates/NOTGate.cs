@@ -8,13 +8,22 @@ namespace VAT.Logic
     public class NOTGate : Gate
     {
         [SerializeField]
-        private Port _receiver;
+        private List<Port> _receivers = new();
 
-        public override List<Port> Receivers => new() { _receiver };
+        public override List<Port> Receivers => _receivers;
 
         public override Signal GetOutputSignal()
         {
-            float value = 1f - Mathf.Abs(_receiver.CurrentSignal.value);
+            float averageValue = 0f;
+            
+            foreach (var receiver in Receivers)
+            {
+                averageValue += receiver.CurrentSignal.value;
+            }
+
+            averageValue /= Receivers.Count;
+
+            float value = 1f - Mathf.Abs(averageValue);
 
             return new Signal()
             {

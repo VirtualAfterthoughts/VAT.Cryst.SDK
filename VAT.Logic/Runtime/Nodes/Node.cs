@@ -21,6 +21,17 @@ namespace VAT.Logic
             return CanReceive() && Receivers.Contains(port);
         }
 
+        public void AddReceiver(Port port)
+        {
+            Receivers.Add(port);
+        }
+
+        public void RemoveReceiver(Port port)
+        {
+            Receivers.Remove(port);
+        }
+
+
         public bool CanOutput()
         {
             return Outputs != null;

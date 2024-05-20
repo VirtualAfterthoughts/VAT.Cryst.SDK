@@ -25,7 +25,9 @@ namespace VAT.Logic.Editor
         private Button _wiringMode = null;
         private Button _createMode = null;
 
-        private Button _wireButton = null;
+        private Button _wireOutputButton = null;
+        private Button _wireInputButton = null;
+        private Button _wireDisconnectButton = null;
 
         public const float WIRE_THICKNESS = 5f;
 
@@ -148,18 +150,21 @@ namespace VAT.Logic.Editor
 
             Handles.color = Color.white;
 
-            bool wireButtonActive = node && port;
+            bool hasBoth = node && port;
+            bool hasPort = false;
 
-            _wireButton.SetEnabled(wireButtonActive);
+            if (hasBoth)
+            {
+                hasPort = node.HasReceiver(port) || node.HasOutput(port);
+            }
 
-            if (wireButtonActive && node.Outputs.Contains(port as Port))
-            {
-                _wireButton.text = "Unwire";
-            }
-            else
-            {
-                _wireButton.text = "Wire";
-            }
+            bool outputActive = hasBoth && node.CanOutput() && !hasPort;
+            bool inputActive = hasBoth && node.CanReceive() && !hasPort;
+            bool disconnectActive = hasPort;
+
+            _wireOutputButton.style.display = outputActive ? DisplayStyle.Flex : DisplayStyle.None;
+            _wireInputButton.style.display = inputActive ? DisplayStyle.Flex : DisplayStyle.None;
+            _wireDisconnectButton.style.display = disconnectActive ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         private void SelectNode(Node node)
@@ -179,7 +184,6 @@ namespace VAT.Logic.Editor
             var style = GetNodeStyle();
 
             var selectedNode = GetSelectedNode();
-            var selectedPort = GetSelectedPort();
 
             foreach (var node in nodes)
             {
@@ -208,11 +212,6 @@ namespace VAT.Logic.Editor
                 }
 
                 if (selectedNode != null && selectedNode != node)
-                {
-                    continue;
-                }
-
-                if (selectedPort != null && node.HasReceiver(selectedPort))
                 {
                     continue;
                 }
@@ -262,18 +261,11 @@ namespace VAT.Logic.Editor
 
             var style = GetPortStyle();
 
-            var node = _nodeField.value as Node;
-
             var selectedPort = GetSelectedPort();
 
             foreach (var port in ports)
             {
                 if (selectedPort != null && port != selectedPort)
-                {
-                    continue;
-                }
-
-                if (node && node.Receivers != null && node.Receivers.Contains(port))
                 {
                     continue;
                 }
@@ -314,9 +306,13 @@ namespace VAT.Logic.Editor
             _nodeField = ui.Q<ObjectField>("SelectedNode");
             _portField = ui.Q<ObjectField>("SelectedPort");
 
-            _wireButton = ui.Q<Button>("WireButton");
+            _wireOutputButton = ui.Q<Button>("WireOutputButton");
+            _wireInputButton = ui.Q<Button>("WireInputButton");
+            _wireDisconnectButton = ui.Q<Button>("WireDisconnectButton");
 
-            _wireButton.clicked += OnWireClick;
+            _wireOutputButton.clicked += OnWireOutputClick;
+            _wireInputButton.clicked += OnWireInputClick;
+            _wireDisconnectButton.clicked += OnWireDisconnectClick;
 
             _createMode = ui.Q<Button>("CreateMode");
             _createMode.clicked += OnCreateMode;
@@ -334,19 +330,27 @@ namespace VAT.Logic.Editor
             return root;
         }
 
+        private static readonly Color _selectedColor = new(0.27f, 0.37f, 0.5f);
+
         private void OnCreateMode()
         {
             _createElement.style.display = DisplayStyle.Flex;
             _wiringElement.style.display = DisplayStyle.None;
+
+            _createMode.style.backgroundColor = _selectedColor;
+            _wiringMode.style.backgroundColor = new StyleColor(StyleKeyword.Initial);
         }
 
         private void OnWiringMode()
         {
             _createElement.style.display = DisplayStyle.None;
             _wiringElement.style.display = DisplayStyle.Flex;
+
+            _wiringMode.style.backgroundColor = _selectedColor;
+            _createMode.style.backgroundColor = new StyleColor(StyleKeyword.Initial);
         }
 
-        private void OnWireClick()
+        private void OnWireOutputClick()
         {
             var node = GetSelectedNode();
             var port = GetSelectedPort();
@@ -360,9 +364,42 @@ namespace VAT.Logic.Editor
                 SelectNode(null);
                 SelectPort(null);
             }
-            else if (node.HasOutput(port))
+        }
+
+        private void OnWireInputClick()
+        {
+            var node = GetSelectedNode();
+            var port = GetSelectedPort();
+
+
+            if (node.CanReceive() && !node.HasReceiver(port))
+            {
+                node.AddReceiver(port);
+
+                EditorUtility.SetDirty(node);
+
+                SelectNode(null);
+                SelectPort(null);
+            }
+        }
+
+        private void OnWireDisconnectClick()
+        {
+            var node = GetSelectedNode();
+            var port = GetSelectedPort();
+
+            if (node.HasOutput(port))
             {
                 node.RemoveOutput(port);
+
+                EditorUtility.SetDirty(node);
+
+                SelectNode(null);
+                SelectPort(null);
+            }
+            else if (node.HasReceiver(port))
+            {
+                node.RemoveReceiver(port);
 
                 EditorUtility.SetDirty(node);
 
