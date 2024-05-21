@@ -13,7 +13,8 @@ namespace VAT.Logic
         [Range(-1f, 1f)]
         private float _minimumSignal = 1f;
 
-        public GameObject toToggle;
+        [SerializeField]
+        private GameObject _targetObject = null;
 
         public override List<Port> Receivers => new()
         {
@@ -26,7 +27,7 @@ namespace VAT.Logic
         {
             bool active = _receiver.CurrentSignal.value >= _minimumSignal;
 
-            toToggle.SetActive(active);
+            _targetObject.SetActive(active);
         }
     }
 }

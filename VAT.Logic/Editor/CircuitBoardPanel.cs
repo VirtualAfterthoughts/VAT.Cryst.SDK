@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.Overlays;
+using UnityEditor.SceneManagement;
 using UnityEditor.UIElements;
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace VAT.Logic.Editor
 {
-    [Overlay(typeof(SceneView), "Circuit Board", true)]
+    [Overlay(typeof(SceneView), "Circuit Board")]
     public class CircuitBoardPanel : Overlay
     {
         private Toggle _nodeToggle = null;
@@ -29,9 +32,12 @@ namespace VAT.Logic.Editor
         private Button _wireInputButton = null;
         private Button _wireDisconnectButton = null;
 
-        public const float WIRE_THICKNESS = 5f;
+        private Button _newNodeButton = null;
+        private Label _newPortLabel = null;
 
-        public const float ICON_SCALE = 0.875f;
+        private bool _isCreateMenu = false;
+
+        public const float WIRE_THICKNESS = 5f;
 
         public override void OnCreated()
         {
@@ -57,7 +63,6 @@ namespace VAT.Logic.Editor
             };
 
             style.normal.textColor = Color.cyan;
-            style.fontSize = (int)(style.fontSize * ICON_SCALE);
 
             return style;
         }
@@ -70,18 +75,27 @@ namespace VAT.Logic.Editor
             };
 
             style.normal.textColor = Color.yellow;
-            style.fontSize = (int)(style.fontSize * ICON_SCALE);
 
             return style;
         }
 
         public Node GetSelectedNode()
         {
+            if (_isCreateMenu)
+            {
+                return null;
+            }
+
             return _nodeField.value as Node;
         }
 
         public Port GetSelectedPort()
         {
+            if (_isCreateMenu)
+            {
+                return null;
+            }
+
             return _portField.value as Port;
         }
 
@@ -97,7 +111,7 @@ namespace VAT.Logic.Editor
 
             bool hasSingle = !(node && port) && (node || port);
 
-            if (hasSingle)
+            if (hasSingle && !_isCreateMenu)
             {
                 SceneView.RepaintAll();
             }
@@ -109,7 +123,12 @@ namespace VAT.Logic.Editor
             {
                 return;
             }
-            
+
+            if (PrefabStageUtility.GetCurrentPrefabStage() != null)
+            {
+                return;
+            }
+
             if (_nodeToggle.value)
             {
                 DrawNodes(sceneView);
@@ -120,7 +139,10 @@ namespace VAT.Logic.Editor
                 DrawPorts(sceneView);
             }
 
-            DrawWiring();
+            if (!_isCreateMenu)
+            {
+                DrawWiring();
+            }
         }
 
         private void DrawWiring()
@@ -170,11 +192,15 @@ namespace VAT.Logic.Editor
         private void SelectNode(Node node)
         {
             _nodeField.value = node;
+
+            Selection.activeObject = node;
         }
 
         private void SelectPort(Port port)
         {
             _portField.value = port;
+
+            Selection.activeObject = port;
         }
 
         private void DrawNodes(SceneView sceneView)
@@ -205,6 +231,11 @@ namespace VAT.Logic.Editor
 
                     foreach (var receiver in node.Receivers)
                     {
+                        if (receiver == null)
+                        { 
+                            continue;
+                        }
+
                         Handles.DrawLine(node.transform.position, receiver.transform.position, WIRE_THICKNESS);
                     }
 
@@ -224,7 +255,7 @@ namespace VAT.Logic.Editor
 
                 if (button)
                 {
-                    if (selectedNode)
+                    if (selectedNode == node)
                     {
                         SelectNode(null);
                     }
@@ -244,7 +275,6 @@ namespace VAT.Logic.Editor
                 Handles.BeginGUI();
 
                 var rect = HandleUtility.WorldPointToSizedRect(position, content, style);
-                rect.size *= ICON_SCALE;
 
                 bool button = GUI.Button(rect, content, style);
                 Handles.EndGUI();
@@ -323,6 +353,38 @@ namespace VAT.Logic.Editor
             _createElement = ui.Q<VisualElement>("CreateElement");
             _wiringElement = ui.Q<VisualElement>("WiringElement");
 
+            _newNodeButton = ui.Q<Button>("NewNode");
+            _newPortLabel = ui.Q<Label>("NewPortLabel");
+
+            _newPortLabel.RegisterCallback<MouseDownEvent>((e) =>
+            {
+                DragAndDrop.PrepareStartDrag();
+
+                var dragPrefab = Resources.Load<GameObject>("Templates/Port (Template)");
+
+                DragAndDrop.StartDrag("Drag Port");
+
+                DragAndDrop.objectReferences = new Object[] { dragPrefab };
+            });
+
+            _newPortLabel.RegisterCallback<DragUpdatedEvent>((e) =>
+            {
+                DragAndDrop.visualMode = DragAndDropVisualMode.Move;
+            });
+
+            Selection.selectionChanged += () =>
+            {
+                var selected = Selection.activeGameObject;
+
+                if (selected != null && selected.name.StartsWith("Port (Template)") && selected.GetComponent<Port>())
+                {
+                    selected.name = "Port";
+                    PrefabUtility.UnpackPrefabInstance(selected, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+
+                    EditorUtility.SetDirty(selected);
+                }
+            };
+
             root.Add(ui);
 
             OnCreateMode();
@@ -339,6 +401,8 @@ namespace VAT.Logic.Editor
 
             _createMode.style.backgroundColor = _selectedColor;
             _wiringMode.style.backgroundColor = new StyleColor(StyleKeyword.Initial);
+
+            _isCreateMenu = true;
         }
 
         private void OnWiringMode()
@@ -348,6 +412,8 @@ namespace VAT.Logic.Editor
 
             _wiringMode.style.backgroundColor = _selectedColor;
             _createMode.style.backgroundColor = new StyleColor(StyleKeyword.Initial);
+
+            _isCreateMenu = false;
         }
 
         private void OnWireOutputClick()

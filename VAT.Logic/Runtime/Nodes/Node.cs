@@ -59,8 +59,12 @@ namespace VAT.Logic
 
         private void Update()
         {
+            OnNodeUpdate();
+
             ProcessOutputs();
         }
+
+        protected virtual void OnNodeUpdate() { }
 
         private void ProcessOutputs()
         {
