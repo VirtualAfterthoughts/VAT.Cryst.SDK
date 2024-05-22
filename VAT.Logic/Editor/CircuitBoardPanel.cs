@@ -356,6 +356,11 @@ namespace VAT.Logic.Editor
             _newNodeButton = ui.Q<Button>("NewNode");
             _newPortLabel = ui.Q<Label>("NewPortLabel");
 
+            _newNodeButton.clicked += () =>
+            {
+                NodeCreatorPanel.Instance.displayed = !NodeCreatorPanel.Instance.displayed;
+            };
+
             _newPortLabel.RegisterCallback<MouseDownEvent>((e) =>
             {
                 DragAndDrop.PrepareStartDrag();
