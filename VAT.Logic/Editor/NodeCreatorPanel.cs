@@ -202,7 +202,7 @@ namespace VAT.Logic.Editor
 
         private GameObject GetNodePrefab(Type type)
         {
-            string name = $"{type.Name} (Template)";
+            string name = $"{ObjectNames.NicifyVariableName(type.Name)} (Template)";
 
             var folder = "Editor/Templates";
             var path = CrystAssetManager.GetCrystRelativePath($"{folder}/{name}.prefab");
