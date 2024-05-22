@@ -15,8 +15,14 @@ using VAT.Cryst.Game;
 namespace VAT.Logic.Editor
 {
     [Overlay(typeof(SceneView), "Circuit Board")]
+    [Icon(CIRCUIT_BOARD_ICON_PATH)]
     public class CircuitBoardPanel : Overlay
     {
+        private const string ICON_FOLDER = CrystAssetManager.PROJECT_RELATIVE_FOLDER + "/Editor/Icons";
+        private const string CIRCUIT_BOARD_ICON_PATH = ICON_FOLDER + "/circuit-board-icon.png";
+
+        private VisualElement _panelElement = null;
+
         private Toggle _nodeToggle = null;
         private Toggle _portToggle = null;
 
@@ -46,6 +52,28 @@ namespace VAT.Logic.Editor
 
             SceneView.duringSceneGui += OnSceneGUI;
             EditorApplication.update += OnEditorUpdate;
+
+            ValidateIcon();
+        }
+
+        private void ValidateIcon()
+        {
+            CrystAssetManager.EnsureCrystFolderExists(ICON_FOLDER);
+
+            if (AssetDatabase.LoadAssetAtPath<Texture2D>(CIRCUIT_BOARD_ICON_PATH))
+            {
+                return;
+            }
+
+            var icon = Resources.Load<Texture2D>("Icons/circuit-board-icon");
+
+            if (icon == null)
+            {
+                Debug.LogWarning("Circuit Board Panel tried copying its icon to a project path, but the icon was missing!");
+                return;
+            }
+
+            AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(icon), CIRCUIT_BOARD_ICON_PATH);
         }
 
         public override void OnWillBeDestroyed()
@@ -107,6 +135,11 @@ namespace VAT.Logic.Editor
                 return;
             }
 
+            if (_panelElement == null)
+            {
+                return;
+            }
+
             var node = GetSelectedNode();
             var port = GetSelectedPort();
 
@@ -121,6 +154,11 @@ namespace VAT.Logic.Editor
         private void OnSceneGUI(SceneView sceneView)
         {
             if (!displayed)
+            {
+                return;
+            }
+
+            if (_panelElement == null)
             {
                 return;
             }
@@ -330,6 +368,8 @@ namespace VAT.Logic.Editor
 
             var panelAsset = Resources.Load<VisualTreeAsset>("UXML/CircuitBoardPanel");
             VisualElement ui = panelAsset.Instantiate();
+
+            _panelElement = ui;
 
             _nodeToggle = ui.Q<Toggle>("NodeToggle");
             _portToggle = ui.Q<Toggle>("PortToggle");
