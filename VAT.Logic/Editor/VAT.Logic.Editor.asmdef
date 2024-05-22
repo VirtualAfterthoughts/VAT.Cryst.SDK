@@ -2,7 +2,8 @@
     "name": "VAT.Logic.Editor",
     "rootNamespace": "VAT.Logic.Editor",
     "references": [
-        "GUID:26bd2be87265d3d45b8b47e2cc606d88"
+        "GUID:26bd2be87265d3d45b8b47e2cc606d88",
+        "GUID:da0c0cee52ead1942830bb1939fcf23c"
     ],
     "includePlatforms": [
         "Editor"

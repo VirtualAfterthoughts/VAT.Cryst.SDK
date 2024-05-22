@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -5,12 +6,16 @@ using UnityEditor;
 using UnityEditor.Overlays;
 using UnityEditor.UIElements;
 
-using UnityEngine;
 using UnityEngine.UIElements;
+
+using VAT.Cryst.Game;
 
 namespace VAT.Logic.Editor
 {
-    [Overlay(typeof(SceneView), "Node Creator")]
+    using UnityEngine;
+    using static Codice.Client.BaseCommands.Import.Commit;
+
+    [Overlay(typeof(SceneView), null)]
     public class NodeCreatorPanel : Overlay
     {
         public static NodeCreatorPanel Instance { get; private set; }
@@ -52,7 +57,32 @@ namespace VAT.Logic.Editor
 
             PopulateScrollView(_scrollView);
 
+            Selection.selectionChanged += OnSelectionChanged;
+
             return root;
+        }
+
+        private void OnSelectionChanged()
+        {
+            var activeObject = Selection.activeGameObject;
+
+            if (activeObject == null)
+            {
+                return;
+            }
+
+            if (!activeObject.scene.IsValid())
+            {
+                return;
+            }
+
+            if (PrefabUtility.IsOutermostPrefabInstanceRoot(activeObject) && activeObject.GetComponent<Node>() && activeObject.name.Contains("Template"))
+            {
+                activeObject.name = activeObject.name.Replace("(Template)", string.Empty);
+                PrefabUtility.UnpackPrefabInstance(activeObject, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+
+                EditorUtility.SetDirty(activeObject);
+            }
         }
 
         private void ApplySearchQuery(string query)
@@ -149,9 +179,56 @@ namespace VAT.Logic.Editor
 
             label.tooltip = name;
 
+            label.RegisterCallback<MouseDownEvent>((e) =>
+            {
+                DragAndDrop.PrepareStartDrag();
+
+                var dragPrefab = GetNodePrefab(nodeScript.GetClass());
+
+                DragAndDrop.StartDrag("Drag Node");
+
+                DragAndDrop.objectReferences = new Object[] { dragPrefab };
+            });
+
+            label.RegisterCallback<DragUpdatedEvent>((e) =>
+            {
+                DragAndDrop.visualMode = DragAndDropVisualMode.Move;
+            });
+
             backgroundLabel.Add(label);
 
             return backgroundLabel;
+        }
+
+        private GameObject GetNodePrefab(Type type)
+        {
+            string name = $"{type.Name} (Template)";
+
+            var folder = "Editor/Templates";
+            var path = CrystAssetManager.GetCrystRelativePath($"{folder}/{name}.prefab");
+
+            CrystAssetManager.EnsureCrystFolderExists(CrystAssetManager.GetCrystRelativePath(folder));
+            
+            var loadedGameObject = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (loadedGameObject != null)
+            {
+                return loadedGameObject;
+            }
+
+            loadedGameObject = CreateNodePrefab(type, name, path);
+            return loadedGameObject;
+
+        }
+
+        private GameObject CreateNodePrefab(Type type, string name, string path)
+        {
+            GameObject instance = new(name);
+            instance.AddComponent(type);
+
+            var prefab = PrefabUtility.SaveAsPrefabAsset(instance, path);
+            GameObject.DestroyImmediate(instance);
+
+            return prefab;
         }
     }
 }

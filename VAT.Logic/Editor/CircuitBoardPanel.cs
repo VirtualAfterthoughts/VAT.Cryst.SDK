@@ -10,6 +10,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using VAT.Cryst.Game;
 
 namespace VAT.Logic.Editor
 {
@@ -365,7 +366,7 @@ namespace VAT.Logic.Editor
             {
                 DragAndDrop.PrepareStartDrag();
 
-                var dragPrefab = Resources.Load<GameObject>("Templates/Port (Template)");
+                var dragPrefab = GetPortPrefab();
 
                 DragAndDrop.StartDrag("Drag Port");
 
@@ -381,7 +382,7 @@ namespace VAT.Logic.Editor
             {
                 var selected = Selection.activeGameObject;
 
-                if (selected != null && selected.name.StartsWith("Port (Template)") && selected.GetComponent<Port>())
+                if (selected != null && PrefabUtility.IsOutermostPrefabInstanceRoot(selected) && selected.name.StartsWith("Port (Template)") && selected.GetComponent<Port>())
                 {
                     selected.name = "Port";
                     PrefabUtility.UnpackPrefabInstance(selected, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
@@ -477,6 +478,37 @@ namespace VAT.Logic.Editor
                 SelectNode(null);
                 SelectPort(null);
             }
+        }
+
+        private GameObject GetPortPrefab()
+        {
+            string name = $"Port (Template)";
+
+            var folder = "Editor/Templates";
+            var path = CrystAssetManager.GetCrystRelativePath($"{folder}/{name}.prefab");
+
+            CrystAssetManager.EnsureCrystFolderExists(CrystAssetManager.GetCrystRelativePath(folder));
+
+            var loadedGameObject = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (loadedGameObject != null)
+            {
+                return loadedGameObject;
+            }
+
+            loadedGameObject = CreatePortPrefab(name, path);
+            return loadedGameObject;
+
+        }
+
+        private GameObject CreatePortPrefab(string name, string path)
+        {
+            GameObject instance = new(name);
+            instance.AddComponent<Port>();
+
+            var prefab = PrefabUtility.SaveAsPrefabAsset(instance, path);
+            GameObject.DestroyImmediate(instance);
+
+            return prefab;
         }
     }
 }
