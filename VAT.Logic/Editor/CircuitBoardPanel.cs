@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEditor.Overlays;
 using UnityEditor.SceneManagement;
 using UnityEditor.UIElements;
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+
 using VAT.Cryst.Game;
 
 namespace VAT.Logic.Editor
@@ -232,14 +231,20 @@ namespace VAT.Logic.Editor
         {
             _nodeField.value = node;
 
-            Selection.activeObject = node;
+            if (_isCreateMenu)
+            {
+                Selection.activeObject = node;
+            }
         }
 
         private void SelectPort(Port port)
         {
             _portField.value = port;
 
-            Selection.activeObject = port;
+            if (_isCreateMenu)
+            {
+                Selection.activeObject = port;
+            }
         }
 
         private void DrawNodes(SceneView sceneView)
@@ -449,6 +454,8 @@ namespace VAT.Logic.Editor
             _wiringMode.style.backgroundColor = new StyleColor(StyleKeyword.Initial);
 
             _isCreateMenu = true;
+
+            OnSwitchMode();
         }
 
         private void OnWiringMode()
@@ -460,6 +467,14 @@ namespace VAT.Logic.Editor
             _createMode.style.backgroundColor = new StyleColor(StyleKeyword.Initial);
 
             _isCreateMenu = false;
+
+            OnSwitchMode();
+        }
+
+        private void OnSwitchMode()
+        {
+            SelectNode(null);
+            SelectPort(null);
         }
 
         private void OnWireOutputClick()

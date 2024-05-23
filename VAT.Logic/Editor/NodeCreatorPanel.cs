@@ -13,7 +13,6 @@ using VAT.Cryst.Game;
 namespace VAT.Logic.Editor
 {
     using UnityEngine;
-    using static Codice.Client.BaseCommands.Import.Commit;
 
     [Overlay(typeof(SceneView), null)]
     public class NodeCreatorPanel : Overlay
@@ -28,6 +27,20 @@ namespace VAT.Logic.Editor
             base.OnCreated();
 
             Instance = this;
+
+            displayedChanged += OnDisplayChanged;
+        }
+
+        private void OnDisplayChanged(bool value)
+        {
+            if (value)
+            {
+                displayName = "Node Creator";
+            }
+            else
+            {
+                displayName = null;
+            }
         }
 
         public override void OnWillBeDestroyed()
