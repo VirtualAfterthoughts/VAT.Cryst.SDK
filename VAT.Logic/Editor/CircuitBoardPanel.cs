@@ -129,7 +129,7 @@ namespace VAT.Logic.Editor
 
         private void OnEditorUpdate()
         {
-            if (!displayed)
+            if (!ShouldShow())
             {
                 return;
             }
@@ -152,7 +152,7 @@ namespace VAT.Logic.Editor
 
         private void OnSceneGUI(SceneView sceneView)
         {
-            if (!displayed)
+            if (!ShouldShow())
             {
                 return;
             }
@@ -365,6 +365,11 @@ namespace VAT.Logic.Editor
                     break;
                 }
             }
+        }
+
+        private bool ShouldShow()
+        {
+            return displayed;
         }
 
         public override VisualElement CreatePanelContent()
