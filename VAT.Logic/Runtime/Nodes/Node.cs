@@ -31,7 +31,6 @@ namespace VAT.Logic
             Receivers.Remove(port);
         }
 
-
         public bool CanOutput()
         {
             return Outputs != null;
@@ -52,9 +51,27 @@ namespace VAT.Logic
             Outputs.Remove(port);
         }
 
-        public virtual Signal GetOutputSignal()
+        public virtual Signal GetSignal()
         {
             return Signal.Identity;
+        }
+
+        private void OnEnable()
+        {
+            ValidatePorts();
+        }
+
+        private void ValidatePorts()
+        {
+            if (CanReceive())
+            {
+                Receivers.RemoveAll((p) => p == null);
+            }
+
+            if (CanOutput())
+            {
+                Outputs.RemoveAll((p) => p == null);
+            }
         }
 
         private void Update()
@@ -73,7 +90,7 @@ namespace VAT.Logic
                 return;
             }
 
-            var signal = GetOutputSignal();
+            var signal = GetSignal();
 
             foreach (var output in Outputs)
             {

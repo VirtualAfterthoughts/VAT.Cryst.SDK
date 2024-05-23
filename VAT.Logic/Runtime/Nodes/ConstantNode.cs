@@ -18,7 +18,7 @@ namespace VAT.Logic
 
         public override List<Port> Outputs => _outputs;
 
-        public override Signal GetOutputSignal()
+        public override Signal GetSignal()
         {
             return new Signal()
             {

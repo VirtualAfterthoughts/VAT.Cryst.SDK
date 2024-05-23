@@ -12,7 +12,7 @@ namespace VAT.Logic
 
         public override List<Port> Receivers => _receivers;
 
-        public override Signal GetOutputSignal()
+        public override Signal GetSignal()
         {
             float minimum = 0f;
             bool hasInput = false;

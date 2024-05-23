@@ -33,7 +33,7 @@ namespace VAT.Logic
             _value = Mathf.Sin(time * _frequency + _phase) * _amplitude;
         }
 
-        public override Signal GetOutputSignal()
+        public override Signal GetSignal()
         {
             return new Signal()
             {
