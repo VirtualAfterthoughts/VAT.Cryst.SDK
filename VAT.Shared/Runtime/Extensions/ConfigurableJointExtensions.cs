@@ -9,63 +9,7 @@ using VAT.Shared.Data;
 namespace VAT.Shared.Extensions {
     using Unity.Mathematics;
 
-    public enum JointDriveType {
-        XDRIVE = 1 << 0,
-        YDRIVE = 1 << 1,
-        ZDRIVE = 1 << 2,
-        ANGULARXDRIVE = 1 << 3,
-        ANGULARYZDRIVE = 1 << 4,
-        SLERPDRIVE = 1 << 5, 
-    }
-
     public static partial class ConfigurableJointExtensions {
-        /// <summary>
-        /// Returns the joint drive from this Configurable Joint.
-        /// </summary>
-        /// <param name="joint">The joint.</param>
-        /// <param name="type">The drive type.</param>
-        /// <returns></returns>
-        public static JointDrive GetJointDrive(this ConfigurableJoint joint, in JointDriveType type) {
-            return type switch {
-                JointDriveType.XDRIVE => joint.xDrive,
-                JointDriveType.YDRIVE => joint.yDrive,
-                JointDriveType.ZDRIVE => joint.zDrive,
-                JointDriveType.ANGULARXDRIVE => joint.angularXDrive,
-                JointDriveType.ANGULARYZDRIVE => joint.angularYZDrive,
-                JointDriveType.SLERPDRIVE => joint.slerpDrive,
-                _ => joint.xDrive,
-            };
-        }
-
-        /// <summary>
-        /// Sets the ConfigurableJoint's drive to the desired drive.
-        /// </summary>
-        /// <param name="joint">The joint.</param>
-        /// <param name="drive">The new drive.</param>
-        /// <param name="type">The drive type.</param>
-        public static void SetJointDrive(this ConfigurableJoint joint, in JointDrive drive, in JointDriveType type) {
-            switch (type) {
-                case JointDriveType.XDRIVE:
-                    joint.xDrive = drive;
-                    break;
-                case JointDriveType.YDRIVE:
-                    joint.yDrive = drive;
-                    break;
-                case JointDriveType.ZDRIVE:
-                    joint.zDrive = drive;
-                    break;
-                case JointDriveType.ANGULARXDRIVE:
-                    joint.angularXDrive = drive;
-                    break;
-                case JointDriveType.ANGULARYZDRIVE:
-                    joint.angularYZDrive = drive;
-                    break;
-                case JointDriveType.SLERPDRIVE:
-                    joint.slerpDrive = drive;
-                    break;
-            }
-        }
-
         /// <summary>
         /// Refreshes the joint so that the current rotation and (if autoConfigureConnectedAnchor is enabled) position are the defaults.
         /// </summary>
