@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using Unity.Mathematics;
 using UnityEngine;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
@@ -50,6 +50,8 @@ namespace VAT.Interaction
             joint.anchor = grip.GetPivotInInteractor(interactor.GetPalm(), grip.GetClosedPose(interactor).data).position;
             joint.SetWorldConnectedAnchor(grip.GetPivotInWorld(interactor.GetPalm(), grip.GetClosedPose(interactor).data).position);
 
+            joint.swapBodies = true;
+
             _joint = joint;
 
             _jointSpace = new ConfigurableJointSpace(joint);
@@ -88,7 +90,10 @@ namespace VAT.Interaction
 
             target = target.Transform(selfTarget.InverseTransform(grabberPoint.GetHostTransform()));
 
+            var lastTargetRotation = _joint.targetRotation;
             _jointSpace.SetTargetRotationWorld(target.rotation);
+
+            _joint.targetAngularVelocity = PhysicsExtensions.GetAngularVelocity(lastTargetRotation, _joint.targetRotation);
         }
 
         public void FreeJoints()

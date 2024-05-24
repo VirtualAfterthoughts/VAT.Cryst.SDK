@@ -152,13 +152,6 @@ namespace VAT.Interaction
         {
             Quaternion targetRot = _jointSpace.GetTargetRotationWorld(target.rotation);
 
-            targetRot.ToAngleAxis(out var angle, out var axis);
-
-            axis.y = 0f;
-            axis.z = 0f;
-
-            targetRot = Quaternion.AngleAxis(angle, axis);
-
             return targetRot;
         }
 
@@ -168,7 +161,11 @@ namespace VAT.Interaction
 
             var targetRot = GetTargetRotation(target);
 
+            var lastTargetRot = _joint.targetRotation;
             _joint.targetRotation = Quaternion.RotateTowards(targetRot, _joint.targetRotation, 10f * friction);
+
+            var targetAngularVelocity = PhysicsExtensions.GetAngularVelocity(lastTargetRot, _joint.targetRotation);
+            _joint.targetAngularVelocity = targetAngularVelocity;
 
             var targetPos = GetTargetPosition(target);
 
