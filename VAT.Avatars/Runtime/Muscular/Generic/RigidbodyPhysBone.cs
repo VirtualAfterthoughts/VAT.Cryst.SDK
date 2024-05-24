@@ -39,7 +39,6 @@ namespace VAT.Avatars.Muscular
             _rigidbody = _configurableJoint.Rigidbody;
             _rigidbody.CreateItem();
             _rigidbody.Rigidbody.solverIterations = 48;
-            _rigidbody.Rigidbody.solverVelocityIterations = 24;
             _rigidbody.Rigidbody.maxAngularVelocity = 90f;
 
             _limits = limits;

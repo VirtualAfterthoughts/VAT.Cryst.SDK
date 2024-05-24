@@ -38,6 +38,9 @@ namespace VAT.Interaction
             rb.transform.rotation = grabPointRotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
 
             var joint = rb.gameObject.AddComponent<ConfigurableJoint>();
+            joint.rotationDriveMode = RotationDriveMode.Slerp;
+
+            joint.angularXLimitSpring = joint.angularYZLimitSpring = new SoftJointLimitSpring() { spring = 5000000f, damper = 1000000f };
 
             var host = grip.GetHost();
 
@@ -45,6 +48,8 @@ namespace VAT.Interaction
             {
                 joint.connectedBody = host.GetRigidbody();
             }
+
+            joint.enableCollision = true;
 
             joint.autoConfigureConnectedAnchor = false;
             joint.anchor = grip.GetPivotInInteractor(interactor.GetPalm(), grip.GetClosedPose(interactor).data).position;
@@ -99,7 +104,6 @@ namespace VAT.Interaction
         public void FreeJoints()
         {
             _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
-            _joint.rotationDriveMode = RotationDriveMode.Slerp;
 
             _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 5f, positionDamper = 0f, maximumForce = float.MaxValue };
 
