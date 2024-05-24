@@ -119,10 +119,10 @@ namespace VAT.Interaction
                 var primaryHand = _primaryGrip.GetFirstInteractor();
                 var primaryTransform = primaryHand.GetRigidbody().transform;
 
-                var grabberPoint = payload.ActivePair.Interactor.GetPalm();
+                var palm = payload.ActivePair.Interactor.GetPalm();
 
                 var secondaryTransform = payload.ActivePair.Interactor.GetRigidbody().transform;
-                var secondaryGrabTransform = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, payload.ActivePair.Grip.GetDefaultPose()));
+                var secondaryGrabTransform = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, payload.ActivePair.Grip.GetDefaultPose()));
                 var grabTarget = GrabTargetHelper.GetTargetInWorld(payload.ActivePair.Grip, payload.ActivePair.Interactor);
                 var relativeToGrab = secondaryGrabTransform.InverseTransform(SimpleTransform.Create(secondaryTransform.position, secondaryTransform.rotation));
 
@@ -134,7 +134,7 @@ namespace VAT.Interaction
                 var result = primaryTarget.Transform(relative).Transform(relativeToGrab);
                 payload.TargetInRig = result;
 
-                var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(grabberPoint, payload.ActivePair.Grip.GetDefaultPose());
+                var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(palm, payload.ActivePair.Grip.GetDefaultPose());
                 var worldTarget = math.mul(payload.Rig.TransformRotation(oldTargetInRig), targetInInteractor.rotation);
 
                 var hostGameObject = payload.ActivePair.Grip.GetHostGameObject().transform;

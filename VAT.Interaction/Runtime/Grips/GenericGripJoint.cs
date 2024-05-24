@@ -25,8 +25,8 @@ namespace VAT.Interaction
 
             var rb = interactor.GetRigidbody();
 
-            var grabberPoint = interactor.GetPalm();
-            var grabPoint = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, grip.GetDefaultPose()));
+            var palm = interactor.GetPalm();
+            var grabPoint = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, grip.GetDefaultPose()));
 
             var target = grip.GetTargetInHost(interactor);
             var hostTransform = grip.GetHostGameObject().transform;
@@ -89,11 +89,11 @@ namespace VAT.Interaction
                 };
             }
 
-            var grabberPoint = _interactor.GetPalm();
+            var palm = _interactor.GetPalm();
             var target = GrabTargetHelper.GetTargetInWorld(_grip, _interactor);
-            var selfTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _grip.GetDefaultPose()));
+            var selfTarget = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, _grip.GetDefaultPose()));
 
-            target = target.Transform(selfTarget.InverseTransform(grabberPoint.GetHostTransform()));
+            target = target.Transform(selfTarget.InverseTransform(palm.GetHostTransform()));
 
             var lastTargetRotation = _joint.targetRotation;
             _jointSpace.SetTargetRotationWorld(target.rotation);

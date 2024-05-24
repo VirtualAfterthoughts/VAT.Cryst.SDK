@@ -52,7 +52,7 @@ namespace VAT.Characters
 
         private bool _isInteractionLocked = false;
 
-        private AvatarGrabberPoint _grabberPoint;
+        private AvatarGrabberPoint _palm;
 
         private InteractableHostGroup _armGroup;
 
@@ -67,7 +67,7 @@ namespace VAT.Characters
 
         private void Start()
         {
-            _grabberPoint = new AvatarGrabberPoint
+            _palm = new AvatarGrabberPoint
             {
                 hand = arm.PhysArm.Hand,
                 radius = grabRadius,
@@ -180,9 +180,9 @@ namespace VAT.Characters
         {
             if (_isSnatching)
             {
-                var grabberPoint = GetPalm();
+                var palm = GetPalm();
                 var target = GrabTargetHelper.GetTargetInWorld(_attachedGrip, this);
-                var grabPoint = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetClosedPose(this).data));
+                var grabPoint = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, _attachedGrip.GetClosedPose(this).data));
                 grabPoint.rotation = target.rotation;
 
                 var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation)));
@@ -222,9 +222,9 @@ namespace VAT.Characters
 
             if (_isSnatching)
             {
-                var grabberPoint = GetPalm();
+                var palm = GetPalm();
                 var worldTarget = GrabTargetHelper.GetTargetInWorld(_attachedGrip, this);
-                var interactorTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _attachedGrip.GetClosedPose(this).data));
+                var interactorTarget = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, _attachedGrip.GetClosedPose(this).data));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);
 
@@ -357,8 +357,8 @@ namespace VAT.Characters
             if (_attachedGrip != null)
                 return;
 
-            var host = _grabberPoint.GetHostTransform();
-            var grabCenter = host.Transform(_grabberPoint.GetProximityCenterInHost());
+            var host = _palm.GetHostTransform();
+            var grabCenter = host.Transform(_palm.GetProximityCenterInHost());
 
             var colliders = Physics.OverlapSphere(grabCenter.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
             
@@ -418,8 +418,8 @@ namespace VAT.Characters
             if (_attachedGrip != null)
                 return;
 
-            var host = _grabberPoint.GetHostTransform();
-            var grabCenter = host.Transform(_grabberPoint.GetProximityCenterInHost());
+            var host = _palm.GetHostTransform();
+            var grabCenter = host.Transform(_palm.GetProximityCenterInHost());
 
             Gizmos.DrawWireSphere(grabCenter.position, grabRadius);
         }
@@ -466,7 +466,7 @@ namespace VAT.Characters
 
         public PalmPoint GetPalm()
         {
-            return _grabberPoint;
+            return _palm;
         }
 
         private readonly List<IInteractorModule> _modules = new();

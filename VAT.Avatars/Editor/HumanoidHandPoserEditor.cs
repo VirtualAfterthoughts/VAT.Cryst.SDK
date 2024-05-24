@@ -224,15 +224,15 @@ namespace VAT.Avatars.Editor
 
             Handles.color = Color.green;
 
-            var grabberPoint = new AvatarGrabberPoint()
+            var palm = new AvatarGrabberPoint()
             {
                 hand = _poser.Hand,
             };
-            var worldTarget = GrabTargetHelper.CalculateDefaultTargetInWorld(grip, grabberPoint, _poser.handPoseData);
+            var worldTarget = GrabTargetHelper.CalculateDefaultTargetInWorld(grip, palm, _poser.handPoseData);
 
             var bone = _poser.Hand.Hand;
 
-            float dot = grabberPoint.GetThumbDot();
+            float dot = palm.GetThumbDot();
 
             if (_selectedBone == bone && Tools.current == Tool.None)
             {

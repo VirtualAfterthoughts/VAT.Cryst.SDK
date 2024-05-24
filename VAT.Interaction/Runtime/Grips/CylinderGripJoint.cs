@@ -40,8 +40,8 @@ namespace VAT.Interaction
 
             var rb = interactor.GetRigidbody();
 
-            var grabberPoint = interactor.GetPalm();
-            var grabPoint = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, grip.GetDefaultPose()));
+            var palm = interactor.GetPalm();
+            var grabPoint = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, grip.GetDefaultPose()));
 
             float dot = Vector3.Dot(grabPoint.up, _center.up);
 
@@ -70,7 +70,7 @@ namespace VAT.Interaction
 
             _joint = joint;
 
-            grabPoint = grabberPoint.GetHostTransform().Transform(grip.GetPivotInInteractor(grabberPoint, grip.GetClosedPose(interactor).data));
+            grabPoint = palm.GetHostTransform().Transform(grip.GetPivotInInteractor(palm, grip.GetClosedPose(interactor).data));
 
             joint.SetWorldAnchor((Vector3)grabPoint.position);
             joint.SetWorldConnectedAnchor(_center.position);
@@ -130,11 +130,13 @@ namespace VAT.Interaction
 
         private SimpleTransform GetGripTarget()
         {
-            var grabberPoint = _interactor.GetPalm();
-            var target = GrabTargetHelper.GetTargetInWorld(_grip, _interactor);
-            var selfTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _grip.GetDefaultPose()));
+            var palm = _interactor.GetPalm();
+            var interactorHost = palm.GetHostTransform();
 
-            target = target.Transform(selfTarget.InverseTransform(grabberPoint.GetHostTransform()));
+            var target = GrabTargetHelper.GetTargetInWorld(_grip, _interactor);
+            var selfTarget = interactorHost.Transform(GrabTargetHelper.GetTargetInInteractor(palm, _grip.GetClosedPose(_interactor).data));
+
+            target = target.Transform(selfTarget.InverseTransform(interactorHost));
             return target;
         }
 

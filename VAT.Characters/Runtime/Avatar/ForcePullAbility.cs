@@ -90,9 +90,9 @@ namespace VAT.Characters
             {
                 ApplyDrag(_pullingGrip.GetHost().GetRigidbody(), _interactor.GetRigidbody());
 
-                var grabberPoint = _interactor.GetPalm();
+                var palm = _interactor.GetPalm();
                 var worldTarget = GrabTargetHelper.GetTargetInWorld(_pullingGrip, _interactor);
-                var interactorTarget = grabberPoint.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(grabberPoint, _pullingGrip.GetDefaultPose()));
+                var interactorTarget = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, _pullingGrip.GetDefaultPose()));
 
                 float distance = math.length(worldTarget.position - interactorTarget.position);
 
