@@ -132,7 +132,6 @@ namespace VAT.Interaction
 
                 var oldTargetInRig = payload.TargetInRig.rotation;
                 var result = primaryTarget.Transform(relative).Transform(relativeToGrab);
-                //result.rotation = oldTargetInRig;
                 payload.TargetInRig = result;
 
                 var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(grabberPoint, payload.ActivePair.Grip.GetDefaultPose());
