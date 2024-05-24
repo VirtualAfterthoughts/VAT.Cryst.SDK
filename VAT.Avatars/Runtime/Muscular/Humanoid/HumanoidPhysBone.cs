@@ -4,9 +4,7 @@ using Unity.Mathematics;
 
 using UnityEngine;
 
-using VAT.Avatars.Skeletal;
 using VAT.Entities;
-using VAT.Entities.PhysX;
 
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
@@ -16,9 +14,6 @@ namespace VAT.Avatars.Muscular
     public sealed class HumanoidPhysBone : RigidbodyPhysBone {
         private MeshCollider _meshCollider = null;
         private Mesh _mesh = null;
-
-        public float spring = 500f;
-        public float damper = 10f;
 
         public HumanoidPhysBone(string name) : base(name) { }
 
@@ -51,7 +46,6 @@ namespace VAT.Avatars.Muscular
             _meshCollider.convex = true;
             _meshCollider.cookingOptions = (MeshColliderCookingOptions)~0;
             _meshCollider.sharedMesh = mesh;
-            _meshCollider.contactOffset *= 4f;
 
             InsertCollider(_meshCollider);
         }
@@ -114,14 +108,6 @@ namespace VAT.Avatars.Muscular
                     damper = 1e+06f,
                 };
                 _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
-
-                _configurableJoint.ConfigurableJoint.projectionMode = JointProjectionMode.PositionAndRotation;
-                _configurableJoint.ConfigurableJoint.projectionDistance = 0.001f;
-                _configurableJoint.ConfigurableJoint.projectionAngle = 20f;
-                // _configurableJoint.ConfigurableJoint.SetAngularLimits(_limits);
-                // _configurableJoint.ConfigurableJoint.angularXMotion = _limits.IsFree(Axis.X) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
-                // _configurableJoint.ConfigurableJoint.angularYMotion = _limits.IsFree(Axis.Y) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
-                // _configurableJoint.ConfigurableJoint.angularZMotion = _limits.IsFree(Axis.Z) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
             }
             else {
                 Joint.ConnectedBody = null;
