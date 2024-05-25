@@ -30,7 +30,7 @@ namespace VAT.Characters
         public AvatarArm arm;
         public HandPoseData openPose;
         public HandPoseData closedPose;
-        public PhysLimb limb = null;
+        public InteractableLimb limb = null;
 
         public AudioClip[] grabSounds = new AudioClip[0];
 
@@ -264,7 +264,7 @@ namespace VAT.Characters
             _attachedGrip = grip;
             _isSnatching = true;
 
-            grip.GetHost()?.AttachGroup(limb.LimbGroup);
+            grip.GetHost()?.AttachGroup(limb.LimbGroup, HostLink.LinkType.EXTERNAL);
 
             ResetHover();
         }
@@ -506,7 +506,7 @@ namespace VAT.Characters
             arm.DataArm.Hand.SetOpenPose(pose);
         }
 
-        public PhysLimb GetLimb()
+        public InteractableLimb GetLimb()
         {
             return limb;
         }

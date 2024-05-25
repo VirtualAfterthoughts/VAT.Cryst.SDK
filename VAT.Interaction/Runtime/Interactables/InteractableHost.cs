@@ -44,9 +44,9 @@ namespace VAT.Interaction
             _links.Remove(link);
         }
 
-        public void AttachGroup(InteractableHostGroup group)
+        public void AttachGroup(InteractableHostGroup group, HostLink.LinkType type = HostLink.LinkType.INTERNAL)
         {
-            var link = new HostLink() { host = this, linkedGroup = group };
+            var link = new HostLink() { host = this, linkedGroup = group, linkType = type };
             link.Attach();
         }
 

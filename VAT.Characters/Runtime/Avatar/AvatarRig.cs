@@ -43,11 +43,11 @@ namespace VAT.Characters
 
         private AvatarSounds _avatarSounds = null;
 
-        private PhysBody _physBody = null;
+        private InteractableSpine _physBody = null;
 
         public override void OnRigEnable()
         {
-            _physBody = gameObject.AddComponent<PhysBody>();
+            _physBody = gameObject.AddComponent<InteractableSpine>();
 
             _constantAbilities = new List<IAvatarAbility>
             {
@@ -168,7 +168,7 @@ namespace VAT.Characters
             int index = 0;
             _interactors = new IInteractor[arms.Length];
 
-            List<PhysLimb> limbs = new();
+            List<InteractableLimb> limbs = new();
 
             foreach (var arm in arms)
             {
@@ -196,7 +196,7 @@ namespace VAT.Characters
 
                 hosts.Add(((PhysBone)arm.PhysArm.Hand.Hand).UnityGameObject.AddComponent<InteractableHost>());
 
-                var limb = ((PhysBone)arm.PhysArm.UpperArm).UnityGameObject.AddComponent<PhysLimb>();
+                var limb = ((PhysBone)arm.PhysArm.UpperArm).UnityGameObject.AddComponent<InteractableLimb>();
 
                 limb.LimbHosts = hosts.ToArray();
 

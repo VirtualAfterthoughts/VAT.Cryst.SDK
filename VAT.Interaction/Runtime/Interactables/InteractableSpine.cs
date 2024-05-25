@@ -5,17 +5,17 @@ using UnityEngine;
 
 namespace VAT.Interaction
 {
-    public class PhysBody : MonoBehaviour
+    public class InteractableSpine : MonoBehaviour
     {
         [SerializeField]
-        private InteractableHost[] _bodyHosts = new InteractableHost[0];
+        private InteractableHost[] _spineHosts = new InteractableHost[0];
 
         [SerializeField]
-        private PhysLimb[] _limbs = new PhysLimb[0];
+        private InteractableLimb[] _limbs = new InteractableLimb[0];
 
-        public InteractableHost[] BodyHosts { get { return _bodyHosts; } set { _bodyHosts = value; } }
+        public InteractableHost[] SpineHosts { get { return _spineHosts; } set { _spineHosts = value; } }
 
-        public PhysLimb[] Limbs 
+        public InteractableLimb[] Limbs 
         {
             get 
             {
@@ -36,7 +36,7 @@ namespace VAT.Interaction
             AttachLimbs(_limbs);
         }
 
-        private void AttachLimbs(PhysLimb[] limbs)
+        private void AttachLimbs(InteractableLimb[] limbs)
         {
             foreach (var limb in limbs)
             {
@@ -49,7 +49,7 @@ namespace VAT.Interaction
             }
         }
 
-        private void DetachLimbs(PhysLimb[] limbs)
+        private void DetachLimbs(InteractableLimb[] limbs)
         {
             foreach (var limb in limbs)
             {

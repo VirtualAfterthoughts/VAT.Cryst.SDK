@@ -7,8 +7,15 @@ namespace VAT.Interaction
 {
     public class HostLink
     {
+        public enum LinkType
+        {
+            INTERNAL = 0,
+            EXTERNAL = 1,
+        }
+
         public InteractableHost host;
         public InteractableHostGroup linkedGroup;
+        public LinkType linkType = LinkType.INTERNAL;
 
         public void Attach()
         {
@@ -40,6 +47,11 @@ namespace VAT.Interaction
 
             foreach (var link in host.Links)
             {
+                if (link.linkType == linkType)
+                {
+                    continue;
+                }
+
                 link.host.SelfGroup.IgnoreCollision(linkedGroup, ignore);
 
                 link.linkedGroup.IgnoreCollision(linkedGroup, ignore);
@@ -48,6 +60,11 @@ namespace VAT.Interaction
                 {
                     foreach (var otherLink in host.Links)
                     {
+                        if (otherLink.linkType == link.linkType)
+                        {
+                            continue;
+                        }
+
                         link.host.SelfGroup.IgnoreCollision(otherLink.host.SelfGroup, ignore);
                         link.host.SelfGroup.IgnoreCollision(otherLink.linkedGroup, ignore);
 
