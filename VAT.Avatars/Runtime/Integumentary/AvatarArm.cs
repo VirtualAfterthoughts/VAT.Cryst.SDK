@@ -1,11 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using UnityEngine;
-
-using VAT.Avatars.Muscular;
 using VAT.Avatars.Bones;
-using VAT.Avatars.Skeletal;
 
 using VAT.Input;
 using VAT.Shared.Data;

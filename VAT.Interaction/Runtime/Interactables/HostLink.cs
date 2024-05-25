@@ -46,7 +46,7 @@ namespace VAT.Interaction
 
                 foreach (var host in linkedGroup.hosts)
                 {
-                    foreach (var otherLink in  host.Links)
+                    foreach (var otherLink in host.Links)
                     {
                         link.host.SelfGroup.IgnoreCollision(otherLink.host.SelfGroup, ignore);
                         link.host.SelfGroup.IgnoreCollision(otherLink.linkedGroup, ignore);

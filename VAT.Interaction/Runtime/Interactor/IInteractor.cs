@@ -13,6 +13,8 @@ namespace VAT.Interaction
 
     public interface IInteractor
     {
+        PhysLimb GetLimb();
+
         bool IsInteractionLocked();
 
         void LockInteraction();

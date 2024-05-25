@@ -23,7 +23,6 @@ namespace VAT.Characters
 {
     public class CrystInteractor : MonoBehaviour, IInteractor, IAvatarTrackingOverride, IInteractorHoverModule, IInteractorFarHoverModule
     {
-        public List<InteractableHost> hosts = new();
         public CrystRigidbody rb;
         public Handedness handedness;
         public IInputController controller;
@@ -31,6 +30,7 @@ namespace VAT.Characters
         public AvatarArm arm;
         public HandPoseData openPose;
         public HandPoseData closedPose;
+        public PhysLimb limb = null;
 
         public AudioClip[] grabSounds = new AudioClip[0];
 
@@ -53,8 +53,6 @@ namespace VAT.Characters
         private bool _isInteractionLocked = false;
 
         private AvatarGrabberPoint _palm;
-
-        private InteractableHostGroup _armGroup;
 
         private void Awake()
         {
@@ -81,8 +79,6 @@ namespace VAT.Characters
 
             var actions = hand.GetInputController().GetActions();
             actions.GrabAction.OnStateChanged += OnGrabStateChange;
-
-            _armGroup = new InteractableHostGroup(hosts);
         }
 
         private void OnDisable()
@@ -268,7 +264,7 @@ namespace VAT.Characters
             _attachedGrip = grip;
             _isSnatching = true;
 
-            grip.GetHost()?.AttachGroup(_armGroup);
+            grip.GetHost()?.AttachGroup(limb.LimbGroup);
 
             ResetHover();
         }
@@ -333,7 +329,7 @@ namespace VAT.Characters
         {
             grip.OnDetachConfirm(this);
 
-            grip.GetHost()?.DetachGroup(_armGroup);
+            grip.GetHost()?.DetachGroup(limb.LimbGroup);
 
             _attachedGrip = null;
             _isSnatching = false;
@@ -508,6 +504,11 @@ namespace VAT.Characters
         public void SetOpenPose(HandPoseData pose)
         {
             arm.DataArm.Hand.SetOpenPose(pose);
+        }
+
+        public PhysLimb GetLimb()
+        {
+            return limb;
         }
     }
 }
