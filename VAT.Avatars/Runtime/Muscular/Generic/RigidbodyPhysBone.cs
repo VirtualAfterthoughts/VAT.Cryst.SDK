@@ -104,8 +104,7 @@ namespace VAT.Avatars.Muscular
             Rigidbody rigidbody = ConfigurableJoint.Rigidbody;
             rigidbody.mass = kg;
 
-            rigidbody.inertiaTensor = 0.1f * kg * Vector3.one;
-            rigidbody.inertiaTensorRotation = Quaternion.identity;
+            rigidbody.inertiaTensor = 0.1f * kg * rigidbody.inertiaTensor.normalized;
 
             rigidbody.ResetCenterOfMass();
         }
