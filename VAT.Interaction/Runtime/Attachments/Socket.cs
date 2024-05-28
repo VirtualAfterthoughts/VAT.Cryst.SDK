@@ -11,6 +11,9 @@ namespace VAT.Interaction.Attachments
         [SerializeField]
         private InteractableHost _interactableHost = null;
 
+        [SerializeField]
+        private SlotShapeReference _slotShape = new();
+
         private readonly List<Plug> _registeredPlugs = new();
         private readonly List<Plug> _lockedPlugs = new();
 
@@ -25,6 +28,8 @@ namespace VAT.Interaction.Attachments
                 _interactableHost = value;
             }
         }
+
+        public SlotShapeReference SlotShape => _slotShape;
 
         public List<Plug> RegisteredPlugs => _registeredPlugs;
 
@@ -55,6 +60,24 @@ namespace VAT.Interaction.Attachments
         public bool HasPlug(Plug plug)
         {
             return RegisteredPlugs.Contains(plug);
+        }
+
+        public bool CanInsert(Plug plug)
+        {
+            if (IsLocked)
+            {
+                return false;
+            }
+
+            SlotShape.TryGetShard(out var socketShape);
+            plug.SlotShape.TryGetShard(out var plugShape);
+
+            if (socketShape == null || plugShape == null)
+            {
+                return false;
+            }
+
+            return socketShape.MatchesShape(plugShape);
         }
 
         public void RegisterPlug(Plug plug)

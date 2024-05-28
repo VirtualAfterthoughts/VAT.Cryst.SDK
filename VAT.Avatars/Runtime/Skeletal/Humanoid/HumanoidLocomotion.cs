@@ -305,7 +305,9 @@ namespace VAT.Avatars.Skeletal
 
             _result.position = ClampPosition(_result.position);
 
-            _stepSpeed = Mathf.Lerp(0.5f, 1.8f, CalculateVelocityLerp(_velocity)) * _legMultiplier;
+            float lerpedSpeed = Mathf.Lerp(0.5f, 1.8f, CalculateVelocityLerp(_velocity));
+            float scaledSpeed = Mathf.Max(0.7f, lerpedSpeed) * _legMultiplier;
+            _stepSpeed = Mathf.Lerp(_stepSpeed, scaledSpeed, Time.deltaTime * 24f);
 
             _maxStepDistance = 0.3f;
         }

@@ -18,7 +18,12 @@ namespace VAT.Interaction.Attachments
         [SerializeField]
         private InteractableHost _host = null;
 
+        [SerializeField]
+        private SlotShapeReference _slotShape = new();
+
         public InteractableHost Host { get { return _host; } set { _host = value; } }
+
+        public SlotShapeReference SlotShape => _slotShape;
 
         private Socket _insertedSocket = null;
         private bool _isLocked = false;

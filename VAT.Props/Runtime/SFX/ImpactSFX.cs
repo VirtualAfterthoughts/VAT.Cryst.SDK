@@ -3,12 +3,11 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Entities;
 using VAT.Entities.PhysX;
 using VAT.Packaging;
-using VAT.Props;
+using VAT.Audio;
 
-namespace VAT.Audio
+namespace VAT.Props
 {
     public class ImpactSFX : MonoBehaviour
     {

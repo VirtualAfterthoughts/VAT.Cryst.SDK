@@ -79,8 +79,9 @@ namespace VAT.Avatars.Muscular
 
             _subGroups[0] = new HumanoidPhysHand(this);
 
-            Elbow.ConfigurableJoint.ConfigurableJoint.axis = Vector3.down * (isLeft ? -1f : 1f);
-            Elbow.ConfigurableJoint.ConfigurableJoint.secondaryAxis = Vector3.forward;
+            var elbowJoint = Elbow.ConfigurableJoint.ConfigurableJoint;
+            elbowJoint.angularXMotion = elbowJoint.angularYMotion = elbowJoint.angularZMotion = ConfigurableJointMotion.Limited;
+            elbowJoint.highAngularXLimit = new SoftJointLimit() { limit = 160f };
         }
 
         public override void Solve()

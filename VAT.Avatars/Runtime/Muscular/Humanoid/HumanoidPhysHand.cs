@@ -99,11 +99,18 @@ namespace VAT.Avatars.Muscular
 
         public override void Solve()
         {
+            var blendPose = GetBlendPose();
+
+            if (blendPose.fingers == null)
+            {
+                return;
+            }
+
             // Solve finger collider
             float averageCurl = 0f;
             int fingerCount = 0;
 
-            foreach (var finger in GetBlendPose().fingers)
+            foreach (var finger in blendPose.fingers)
             {
                 averageCurl += finger.GetCurl();
                 fingerCount++;

@@ -40,7 +40,7 @@ namespace VAT.Interaction
             var joint = rb.gameObject.AddComponent<ConfigurableJoint>();
             joint.rotationDriveMode = RotationDriveMode.Slerp;
 
-            joint.angularXLimitSpring = joint.angularYZLimitSpring = new SoftJointLimitSpring() { spring = 5000000f, damper = 1000000f };
+            joint.angularXLimitSpring = joint.angularYZLimitSpring = new SoftJointLimitSpring() { spring = 5000000f, damper = 100000f };
 
             var host = grip.GetHost();
 

@@ -15,7 +15,7 @@ namespace VAT.Props.Ammo
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!IsInserted && other.TryGetComponent<AmmoSocket>(out var socket) && !socket.IsLocked)
+            if (!IsInserted && other.TryGetComponent<AmmoSocket>(out var socket) && socket.CanInsert(this))
             {
                 ConfirmInsert(socket);
             }
