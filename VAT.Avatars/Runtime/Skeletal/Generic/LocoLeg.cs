@@ -8,6 +8,7 @@ using UnityEngine;
 namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
+    using VAT.Cryst.Math;
     using VAT.Shared.Data;
     using VAT.Shared.Extensions;
 
@@ -78,7 +79,7 @@ namespace VAT.Avatars.Skeletal
 
                 if (input.GetJump())
                 {
-                    _jumpPull = Mathf.Lerp(_jumpPull, 0.4f, Time.deltaTime * 8f);
+                    _jumpPull = Mathf.Lerp(_jumpPull, 0.4f, Smoothing.CalculateInterpolation(0.0008, Time.deltaTime));
 
                     _jumpMultiplier = 1f;
                     _timeSinceJump = 0f;
@@ -102,16 +103,16 @@ namespace VAT.Avatars.Skeletal
                     {
                         _jumpMultiplier = 1f;
                         _spineDebtMultiplier = 1f;
-                        _jumpPull = Mathf.Lerp(_jumpPull, 0f, Time.deltaTime * 6f);
+                        _jumpPull = Mathf.Lerp(_jumpPull, 0f, Smoothing.CalculateInterpolation(0.001, Time.deltaTime));
                     }
 
                     if (_timeSinceJump > 0.15f * timerScalar && _timeSinceJump < 1f * timerScalar)
                     {
-                        _footShrink = Mathf.Lerp(_footShrink, 0.3f, Time.deltaTime * 24f);
+                        _footShrink = Mathf.Lerp(_footShrink, 0.3f, Smoothing.CalculateInterpolation(0.0001, Time.deltaTime));
                     }
                     else
                     {
-                        _footShrink = Mathf.Lerp(_footShrink, 0f, Time.deltaTime * 24f);
+                        _footShrink = Mathf.Lerp(_footShrink, 0f, Smoothing.CalculateInterpolation(0.0001, Time.deltaTime));
                     }
 
                     _timeSinceJump += Time.deltaTime;

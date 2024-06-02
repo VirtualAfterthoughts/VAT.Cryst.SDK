@@ -171,13 +171,15 @@ namespace VAT.UI
 
         private void LerpPositions()
         {
-            start.position = Vector3.Slerp(relativeParent.TransformPoint(_lastStartPos), _startPos, Time.deltaTime * 32f);
+            float deltaTime = Time.deltaTime;
+
+            start.position = Vector3.Slerp(relativeParent.TransformPoint(_lastStartPos), _startPos, deltaTime * 32f);
             _lastStartPos = relativeParent.InverseTransformPoint(start.position);
 
-            middle.position = Vector3.Slerp(relativeParent.TransformPoint(_lastMidPos), _middlePos, Time.deltaTime * 14f);
+            middle.position = Vector3.Slerp(relativeParent.TransformPoint(_lastMidPos), _middlePos, deltaTime * 14f);
             _lastMidPos = relativeParent.InverseTransformPoint(middle.position);
 
-            end.position = Vector3.Slerp(relativeParent.TransformPoint(_lastEndPos), _endPos, Time.deltaTime * 6f);
+            end.position = Vector3.Slerp(relativeParent.TransformPoint(_lastEndPos), _endPos, deltaTime * 6f);
             _lastEndPos = relativeParent.InverseTransformPoint(end.position);
 
             if (_currentPlane != null) 

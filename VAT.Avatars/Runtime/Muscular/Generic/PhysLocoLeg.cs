@@ -6,6 +6,7 @@ using VAT.Avatars.Bones;
 using VAT.Avatars.Skeletal;
 
 using VAT.Cryst.Interfaces;
+using VAT.Cryst.Math;
 using VAT.Entities;
 using VAT.Input.Data;
 using VAT.Shared.Data;
@@ -134,7 +135,8 @@ namespace VAT.Avatars.Muscular
 
             _targetVelocity += counterVelocity;
 
-            _fender.radius = Mathf.Lerp(_fender.radius, fenderRadius, Time.deltaTime * 14f);
+            float lerp = Smoothing.CalculateInterpolation(0.00001, Time.deltaTime);
+            _fender.radius = Mathf.Lerp(_fender.radius, fenderRadius, lerp);
 
             // Ball torque
             float radius = _locoBall.radius;

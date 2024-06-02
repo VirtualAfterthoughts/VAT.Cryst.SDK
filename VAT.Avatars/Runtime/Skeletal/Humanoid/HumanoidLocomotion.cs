@@ -16,6 +16,7 @@ namespace VAT.Avatars.Skeletal
     using System;
 
     using Unity.Mathematics;
+    using VAT.Cryst.Math;
 
     public sealed class HumanoidLocomotion {
         private DataBone _feetCenter;
@@ -282,7 +283,7 @@ namespace VAT.Avatars.Skeletal
                 newNormal = originalUp;
             }
 
-            _groundNormal = Vector3.Slerp(_groundNormal, newNormal, Time.deltaTime * 24f);
+            _groundNormal = Vector3.Slerp(_groundNormal, newNormal, Smoothing.CalculateInterpolation(0.0005, Time.deltaTime));
 
             // Zero velocity height relative to ground
             velocity -= _groundVelocity;

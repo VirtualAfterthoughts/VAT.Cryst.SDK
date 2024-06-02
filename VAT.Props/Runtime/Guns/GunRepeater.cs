@@ -1,0 +1,95 @@
+using System.Collections;
+using System.Collections.Generic;
+
+using UnityEngine;
+
+namespace VAT.Props
+{
+    public class GunRepeater : MonoBehaviour
+    {
+        [Header("References")]
+        [SerializeField]
+        private GunBolt _bolt = null;
+
+        [SerializeField]
+        private GunHammer _hammer = null;
+
+        [SerializeField]
+        private GunBarrel _barrel = null;
+
+        [Header("Specifications")]
+        [SerializeField]
+        [Min(0f)]
+        private float _roundsPerMinute = 800f;
+
+        [SerializeField]
+        private bool _isAutomatic = false;
+
+        [SerializeField]
+        [Min(0)]
+        private int _maxBurst = 0;
+
+        private float SecondsPerRound => 60f / _roundsPerMinute;
+
+        private bool _isCycling = false;
+        private float _cycleTime = 0f;
+
+        private void OnEnable()
+        {
+            _bolt.OnStateChanged += OnStateChanged;
+            _barrel.OnFire += OnFire;
+        }
+
+        private void OnDisable()
+        {
+            _bolt.OnStateChanged -= OnStateChanged;
+            _barrel.OnFire -= OnFire;
+        }
+
+        private void OnFire()
+        {
+            _isCycling = true;
+            _cycleTime = 0f;
+        }
+
+        private void OnStateChanged(BoltState previous, BoltState current)
+        {
+            if (current == BoltState.CLOSED)
+            {
+                _hammer.Cock();
+
+                if (_isAutomatic)
+                {
+                    _hammer.Release();
+                }
+            }
+        }
+
+        private void Update()
+        {
+            float percent = _cycleTime / SecondsPerRound;
+            if (percent >= 0.5f)
+            {
+                percent = 1f - percent;
+            }
+
+            percent *= 2f;
+
+            if (!_bolt.IsLocked)
+            {
+                _bolt.UpdateBolt(percent);
+            }
+
+            if (_isCycling)
+            {
+                _cycleTime += Time.deltaTime;
+
+                if (_cycleTime > SecondsPerRound)
+                {
+                    _isCycling = false;
+                    _cycleTime = 0f;
+                }
+            }
+        }
+    }
+}

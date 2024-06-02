@@ -18,6 +18,7 @@ using VAT.Input.Data;
 
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
+using VAT.Cryst.Math;
 
 namespace VAT.Characters
 {
@@ -183,12 +184,12 @@ namespace VAT.Characters
 
                 var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation)));
                 lastTar = rig.InverseTransform(self);
-                _lerp = Mathf.Lerp(_lerp, 1f, Time.deltaTime * 12f);
+                _lerp = Mathf.Lerp(_lerp, 1f, Smoothing.CalculateInterpolation(0.0001, Time.deltaTime));
                 return (self, _lerp);
             }
             else
             {
-                _lerp = Mathf.Lerp(_lerp, _pinAmount, Time.deltaTime * 32f);
+                _lerp = Mathf.Lerp(_lerp, _pinAmount, Smoothing.CalculateInterpolation(0.000001, Time.deltaTime));
                 return (rig.Transform(lastTar), _lerp);
             }
         }

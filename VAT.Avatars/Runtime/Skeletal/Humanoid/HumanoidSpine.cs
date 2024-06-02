@@ -10,6 +10,7 @@ using VAT.Avatars.Nervous;
 using VAT.Shared.Data;
 using VAT.Avatars.Bones;
 using VAT.Input.Data;
+using VAT.Cryst.Math;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -121,7 +122,7 @@ namespace VAT.Avatars.Skeletal
             HipSink();
 
             quaternion chestRotation = _neck.chestRotation;
-            chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Time.deltaTime * 14f);
+            chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Smoothing.CalculateInterpolation(0.001, Time.deltaTime));
             lastChestRotation = root.InverseTransformRotation(chestRotation);
 
             T1Vertebra.rotation = chestRotation;

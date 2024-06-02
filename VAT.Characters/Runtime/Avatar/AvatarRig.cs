@@ -20,6 +20,7 @@ namespace VAT.Characters
     using VAT.Audio;
     using VAT.Packaging;
     using VAT.Avatars.Sounds;
+    using VAT.Cryst.Math;
 
     [RequireRig(typeof(IBehaviourRig))]
     public class AvatarRig : CrystRig, IAvatarRig
@@ -323,7 +324,7 @@ namespace VAT.Characters
             var skeleton = _activeAvatar.GetSkeleton();
 
             var root = behaviourRig.GetRoot();
-            root.rotation = Quaternion.Slerp(root.rotation, skeleton.GetPhysics().GetRoot().Transform.rotation, Time.deltaTime * 12f);
+            root.rotation = Quaternion.Slerp(root.rotation, skeleton.GetPhysics().GetRoot().Transform.rotation, Smoothing.CalculateInterpolation(0.00005, Time.deltaTime));
 
             // Position
             TryGetHead(out var thisHead);

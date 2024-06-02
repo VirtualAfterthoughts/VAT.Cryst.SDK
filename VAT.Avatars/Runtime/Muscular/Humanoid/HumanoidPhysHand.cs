@@ -10,6 +10,7 @@ using VAT.Input.Data;
 using VAT.Shared.Data;
 using VAT.Avatars.Proportions;
 using Unity.Mathematics;
+using VAT.Cryst.Math;
 
 namespace VAT.Avatars.Muscular
 {
@@ -125,7 +126,7 @@ namespace VAT.Avatars.Muscular
             var closedScale = new Vector3(1f, 0.4f, 0f);
 
             var newScale = Vector3.Lerp(openScale, closedScale, averageCurl);
-            var smoothScale = Vector3.Lerp(fingerTransform.localScale, newScale, Time.deltaTime * 12f);
+            var smoothScale = Vector3.Lerp(fingerTransform.localScale, newScale, Smoothing.CalculateInterpolation(0.001, Time.deltaTime));
 
             fingerTransform.localScale = smoothScale;
         }

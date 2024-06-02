@@ -40,7 +40,7 @@ namespace VAT.Interaction
             var joint = rb.gameObject.AddComponent<ConfigurableJoint>();
             joint.rotationDriveMode = RotationDriveMode.Slerp;
 
-            joint.angularXLimitSpring = joint.angularYZLimitSpring = new SoftJointLimitSpring() { spring = 5000000f, damper = 100000f };
+            joint.angularXLimitSpring = joint.angularYZLimitSpring = new SoftJointLimitSpring() { spring = 5000000f, damper = 10000f };
 
             var host = grip.GetHost();
 
@@ -79,7 +79,7 @@ namespace VAT.Interaction
             }
             else
             {
-                float force = Mathf.LerpUnclamped(0f, 9000f, friction);
+                float force = Mathf.LerpUnclamped(0f, 1000f, friction);
 
                 _joint.slerpDrive = new JointDrive()
                 {
@@ -99,6 +99,30 @@ namespace VAT.Interaction
             _jointSpace.SetTargetRotationWorld(target.rotation);
 
             _joint.targetAngularVelocity = PhysicsExtensions.GetAngularVelocity(lastTargetRotation, _joint.targetRotation);
+
+            UpdateAnchors();
+        }
+
+        private void UpdateAnchors()
+        {
+            _joint.swapBodies = false;
+
+            var palm = _interactor.GetPalm();
+            var pose = _grip.GetClosedPose(_interactor).data;
+            var palmPoint = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, pose));
+
+            var pivotInWorld = _grip.GetPivotInWorld(palm, pose);
+
+            Quaternion grabPointRotation = pivotInWorld.rotation;
+            var initialRotation = _joint.transform.rotation;
+            _joint.transform.rotation = grabPointRotation * (palmPoint.InverseTransformRotation(_joint.transform.rotation));
+
+            _joint.anchor = _grip.GetPivotInInteractor(palm, pose).position;
+            _joint.SetWorldConnectedAnchor(pivotInWorld.position);
+
+            _joint.swapBodies = true;
+
+            _joint.transform.rotation = initialRotation;
         }
 
         public void FreeJoints()

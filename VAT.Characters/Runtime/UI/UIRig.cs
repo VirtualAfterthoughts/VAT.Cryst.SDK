@@ -10,6 +10,7 @@ using VAT.Interaction;
 namespace VAT.Characters
 {
     using VAT.Avatars.Integumentary;
+    using VAT.Cryst.Math;
 
     public class UIRig : CrystRig
     {
@@ -154,13 +155,15 @@ namespace VAT.Characters
 
             _wasPressingButton = pressingSecondary;
 
+            float slerp = Smoothing.CalculateInterpolation(0.0005, Time.deltaTime);
+
             if (_isShown)
             {
-                uiCanvas.transform.localScale = Vector3.Slerp(uiCanvas.transform.localScale, Vector3.one, Time.deltaTime * 24f);
+                uiCanvas.transform.localScale = Vector3.Slerp(uiCanvas.transform.localScale, Vector3.one, slerp);
             }
             else
             {
-                uiCanvas.transform.localScale = Vector3.Slerp(uiCanvas.transform.localScale, Vector3.zero, Time.deltaTime * 24f);
+                uiCanvas.transform.localScale = Vector3.Slerp(uiCanvas.transform.localScale, Vector3.zero, slerp);
             }
         }
 

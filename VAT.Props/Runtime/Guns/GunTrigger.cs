@@ -15,9 +15,14 @@ namespace VAT.Props
         [SerializeField]
         private Grip[] _triggerGrips = new Grip[0];
 
+        [SerializeField]
+        private GunHammer _hammer = null;
+
         private IInteractor _triggerInteractor = null;
 
         private const float ACTUATION_THRESHOLD = 0.8f;
+
+        private bool _isActuated = false;
 
         private void OnEnable()
         {
@@ -63,7 +68,16 @@ namespace VAT.Props
             var trigger = _triggerInteractor.GetInputHand().GetInputController().GetTrigger();
             var axis = trigger?.GetAxis();
 
-            _gun.SetActuation(axis > ACTUATION_THRESHOLD);
+            bool actuated = axis > ACTUATION_THRESHOLD;
+            if (actuated != _isActuated)
+            {
+                _isActuated = actuated;
+                
+                if (actuated)
+                {
+                    _hammer.Release();
+                }
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ using VAT.Avatars.Proportions;
 using VAT.Avatars.Bones;
 using VAT.Shared.Data;
 using VAT.Input.Data;
+using VAT.Cryst.Math;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -133,7 +134,7 @@ namespace VAT.Avatars.Skeletal
             float curl01 = Mathf.Lerp(openPose.phalanges[0].curl, closedPose.phalanges[0].curl, blendPose.phalanges[0].curl);
             float curl02 = Mathf.Lerp(openPose.phalanges[1].curl, closedPose.phalanges[1].curl, blendPose.phalanges[1].curl);
 
-            float lerp = Time.deltaTime * 20f;
+            float lerp = Smoothing.CalculateInterpolation(0.000005, Time.deltaTime);
 
             stretched = Mathf.Lerp(_lastStretched, stretched, lerp);
             spread = Mathf.Lerp(_lastSpread, spread, lerp);
