@@ -155,7 +155,7 @@ namespace VAT.Characters
 
             _wasPressingButton = pressingSecondary;
 
-            float slerp = Smoothing.CalculateInterpolation(0.0005, Time.deltaTime);
+            float slerp = Smoothing.CalculateDecay(24f, Time.deltaTime);
 
             if (_isShown)
             {

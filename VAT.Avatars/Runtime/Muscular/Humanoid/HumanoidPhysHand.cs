@@ -37,6 +37,8 @@ namespace VAT.Avatars.Muscular
         public Transform fingerTransform;
         public MeshCollider fingerCollider;
 
+        private Vector3 _fingerLocalPosition = Vector3.zero;
+
         public HumanoidPhysHand()
         {
             Initiate();
@@ -94,7 +96,7 @@ namespace VAT.Avatars.Muscular
 
             Hand.SetMesh(handMesh);
 
-            fingerTransform.localPosition = math.forward() * proportions.handProportions.wristEllipsoid.height;
+            _fingerLocalPosition = math.forward() * proportions.handProportions.wristEllipsoid.height;
             fingerCollider.sharedMesh = knuckleMesh;
         }
 
@@ -122,13 +124,13 @@ namespace VAT.Avatars.Muscular
                 averageCurl /= fingerCount;
             }
 
-            var openScale = new Vector3(1f, 0.4f, 0.85f);
-            var closedScale = new Vector3(1f, 0.4f, 0f);
+            var openPosition = _fingerLocalPosition;
+            var closedPosition = Vector3.zero;
 
-            var newScale = Vector3.Lerp(openScale, closedScale, averageCurl);
-            var smoothScale = Vector3.Lerp(fingerTransform.localScale, newScale, Smoothing.CalculateInterpolation(0.001, Time.deltaTime));
+            var newPosition = Vector3.Lerp(openPosition, closedPosition, averageCurl);
+            var smoothPosition = Vector3.Lerp(fingerTransform.localPosition, newPosition, Smoothing.CalculateDecay(12f, Time.deltaTime));
 
-            fingerTransform.localScale = smoothScale;
+            fingerTransform.localPosition = smoothPosition;
         }
 
         public SimpleTransform GetPointOnPalm(Vector2 position)

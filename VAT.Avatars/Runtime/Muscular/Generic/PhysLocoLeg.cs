@@ -135,7 +135,7 @@ namespace VAT.Avatars.Muscular
 
             _targetVelocity += counterVelocity;
 
-            float lerp = Smoothing.CalculateInterpolation(0.00001, Time.deltaTime);
+            float lerp = Smoothing.CalculateDecay(32f, Time.deltaTime);
             _fender.radius = Mathf.Lerp(_fender.radius, fenderRadius, lerp);
 
             // Ball torque

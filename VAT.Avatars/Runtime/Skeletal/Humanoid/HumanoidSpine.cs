@@ -122,7 +122,7 @@ namespace VAT.Avatars.Skeletal
             HipSink();
 
             quaternion chestRotation = _neck.chestRotation;
-            chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Smoothing.CalculateInterpolation(0.001, Time.deltaTime));
+            chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Smoothing.CalculateDecay(12f, Time.deltaTime));
             lastChestRotation = root.InverseTransformRotation(chestRotation);
 
             T1Vertebra.rotation = chestRotation;

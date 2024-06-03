@@ -261,7 +261,7 @@ namespace VAT.Avatars.Skeletal
             Clavicle.rotation = (Quaternion.AngleAxis(25f * mult, -Clavicle.up)) * Clavicle.rotation;
 
             // Smoothing
-            Clavicle.localRotation = Quaternion.Slerp(lastClavicleRot, Clavicle.localRotation, Smoothing.CalculateInterpolation(0.0005, Time.deltaTime));
+            Clavicle.localRotation = Quaternion.Slerp(lastClavicleRot, Clavicle.localRotation, Smoothing.CalculateDecay(24f, Time.deltaTime));
         }
 
         private void ScapulaSolve() {
@@ -367,7 +367,7 @@ namespace VAT.Avatars.Skeletal
             limitAngle += Mathf.Clamp(flexion * handednessMult, -70f, 70f);
             limitAngle += Mathf.Clamp(-Mathf.Abs(deviation) * handednessMult, -70f, 70f);
 
-            _smoothWristLimit = Mathf.Lerp(_smoothWristLimit, limitAngle, Smoothing.CalculateInterpolation(0.000005, Time.deltaTime));
+            _smoothWristLimit = Mathf.Lerp(_smoothWristLimit, limitAngle, Smoothing.CalculateDecay(32f, Time.deltaTime));
 
             UpperArm.rotation = Quaternion.AngleAxis(_smoothWristLimit, _armVector) * UpperArm.rotation;
 
@@ -418,7 +418,7 @@ namespace VAT.Avatars.Skeletal
             // Smooth the output
             _twistRelax = ElbowRelaxCurve.Evaluate((newTwist - 45f * mult) * mult) * mult;
 
-            _twistSmooth = Mathf.Lerp(_twistSmooth, _twistRelax, Smoothing.CalculateInterpolation(0.000001, Time.deltaTime));
+            _twistSmooth = Mathf.Lerp(_twistSmooth, _twistRelax, Smoothing.CalculateDecay(32f, Time.deltaTime));
             UpperArm.rotation = Quaternion.AngleAxis(_twistSmooth, _armVector) * UpperArm.rotation;
 
             WristSolve();
@@ -437,7 +437,7 @@ namespace VAT.Avatars.Skeletal
                 time = ElbowLimitCurve.Evaluate(time);
                 time *= 1f - Mathf.Clamp01((num - 50f) / 20f);
 
-                _limitSmooth = Mathf.Lerp(_limitSmooth, time, Smoothing.CalculateInterpolation(0.0001, Time.deltaTime));
+                _limitSmooth = Mathf.Lerp(_limitSmooth, time, Smoothing.CalculateDecay(24f, Time.deltaTime));
                 UpperArm.rotation = Quaternion.AngleAxis(_limitSmooth * 0.5f, _armVector * mult) * UpperArm.rotation;
 
                 WristSolve();

@@ -283,7 +283,7 @@ namespace VAT.Avatars.Skeletal
                 newNormal = originalUp;
             }
 
-            _groundNormal = Vector3.Slerp(_groundNormal, newNormal, Smoothing.CalculateInterpolation(0.0005, Time.deltaTime));
+            _groundNormal = Vector3.Slerp(_groundNormal, newNormal, Smoothing.CalculateDecay(18f, Time.deltaTime));
 
             // Zero velocity height relative to ground
             velocity -= _groundVelocity;

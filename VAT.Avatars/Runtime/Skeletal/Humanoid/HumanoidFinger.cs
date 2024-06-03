@@ -8,6 +8,8 @@ using VAT.Avatars.Proportions;
 using VAT.Avatars.Bones;
 using VAT.Shared.Data;
 using VAT.Input.Data;
+using VAT.Shared.Extensions;
+using UnityEngine.UIElements;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -43,7 +45,12 @@ namespace VAT.Avatars.Skeletal
 
         public quaternion defaultRotation = quaternion.identity;
 
+        public SimpleTransform target = SimpleTransform.Default;
+
         public bool isLeft;
+
+        public SimpleTransform offsetHand = SimpleTransform.Default;
+        public bool shouldOffset = false;
 
         public override void Initiate()
         {
@@ -167,11 +174,54 @@ namespace VAT.Avatars.Skeletal
 
             // Curl 03
             Distal.localRotation = Quaternion.AngleAxis(GetCurlAngle(curl03), Vector3.right);
+
+            target = MetaCarpal.Parent.Transform.InverseTransform(Distal.Transform);
         }
 
         public override void Solve()
         {
             CalculateIKTargets();
+
+            // Get solved rotations
+            var solvedProximal = Proximal.localRotation;
+            var solvedMiddle = Middle.localRotation;
+            var solvedDistal = Distal.localRotation;
+
+            // Solve trig ik
+            var parent = MetaCarpal.Parent.Transform;
+
+            if (shouldOffset)
+            {
+                parent = parent.Transform(offsetHand);
+            }
+
+            var target = parent.Transform(this.target);
+
+            Vector3 vector = target.position - Proximal.position;
+
+            float a = vector.magnitude;
+            float b = _proportions.proximalEllipsoid.height;
+            float c = _proportions.middleEllipsoid.height;
+
+            float A = Mathf.Acos(((Mathf.Pow(a, 2f) + Mathf.Pow(b, 2f) - Mathf.Pow(c, 2f)) / (2f * a * b)).SinClamp());
+            float B = Mathf.Acos(((Mathf.Pow(b, 2f) + Mathf.Pow(c, 2f) - Mathf.Pow(a, 2f)) / (2f * b * c)).SinClamp());
+
+            Proximal.rotation = Quaternion.LookRotation(vector, Quaternion.AngleAxis(-90f, Proximal.right) * vector);
+            Proximal.rotation = Quaternion.AngleAxis(A * Mathf.Rad2Deg, -Proximal.right) * Proximal.rotation;
+
+            Middle.rotation = Quaternion.AngleAxis(180f - B * Mathf.Rad2Deg, Proximal.right) * Proximal.rotation;
+
+            // Reach
+            var rightOffset = Quaternion.FromToRotation(target.right, Middle.right);
+            var targetTip = target.position + target.forward * _distalLength;
+
+            Distal.rotation = rightOffset * Quaternion.LookRotation(math.normalize(targetTip - Distal.position), target.up);
+
+            // Blend for open pose (REPLACE IN FUTURE)
+            float blendCurl = 1f - blendPose.phalanges[0].curl;
+            Proximal.localRotation = Quaternion.Lerp(Proximal.localRotation, solvedProximal, blendCurl);
+            Middle.localRotation = Quaternion.Lerp(Middle.localRotation, solvedMiddle, blendCurl);
+            Distal.localRotation = Quaternion.Lerp(Distal.localRotation, solvedDistal, blendCurl);
         }
     }
 }

@@ -324,7 +324,7 @@ namespace VAT.Characters
             var skeleton = _activeAvatar.GetSkeleton();
 
             var root = behaviourRig.GetRoot();
-            root.rotation = Quaternion.Slerp(root.rotation, skeleton.GetPhysics().GetRoot().Transform.rotation, Smoothing.CalculateInterpolation(0.00005, Time.deltaTime));
+            root.rotation = Quaternion.Slerp(root.rotation, skeleton.GetPhysics().GetRoot().Transform.rotation, Smoothing.CalculateDecay(24f, Time.deltaTime));
 
             // Position
             TryGetHead(out var thisHead);

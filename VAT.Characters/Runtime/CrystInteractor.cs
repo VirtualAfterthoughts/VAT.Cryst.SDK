@@ -19,6 +19,7 @@ using VAT.Input.Data;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 using VAT.Cryst.Math;
+using VAT.Avatars.Skeletal;
 
 namespace VAT.Characters
 {
@@ -184,12 +185,12 @@ namespace VAT.Characters
 
                 var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation)));
                 lastTar = rig.InverseTransform(self);
-                _lerp = Mathf.Lerp(_lerp, 1f, Smoothing.CalculateInterpolation(0.0001, Time.deltaTime));
+                _lerp = Mathf.Lerp(_lerp, 1f, Smoothing.CalculateDecay(12f, Time.deltaTime));
                 return (self, _lerp);
             }
             else
             {
-                _lerp = Mathf.Lerp(_lerp, _pinAmount, Smoothing.CalculateInterpolation(0.000001, Time.deltaTime));
+                _lerp = Mathf.Lerp(_lerp, _pinAmount, Smoothing.CalculateDecay(12f, Time.deltaTime));
                 return (rig.Transform(lastTar), _lerp);
             }
         }
@@ -200,6 +201,24 @@ namespace VAT.Characters
             var controller = hand.GetInputController();
             var blendPose = controller.GetHandPose();
             arm.DataArm.Hand.SetBlendPose(blendPose);
+
+            if (_attachedGrip != null && !_isSnatching)
+            {
+                var palm = GetPalm();
+                var handPose = _attachedGrip.GetClosedPose(this).data;
+
+                var hostTransform = palm.GetHostTransform();
+                var targetInHand = GrabTargetHelper.GetTargetInInteractor(palm, handPose);
+                var targetInWorld = GrabTargetHelper.GetTargetInWorld(_attachedGrip, this);
+
+                var interactorInWorld = targetInWorld.Transform(hostTransform.Transform(targetInHand).InverseTransform(hostTransform));
+
+                ((HumanoidHand)arm.DataArm.Hand).SetOffsetHand(hostTransform.InverseTransform(interactorInWorld));
+            }
+            else
+            {
+                ((HumanoidHand)arm.DataArm.Hand).SetOffsetHand(SimpleTransform.Default);
+            }
 
             var actions = controller.GetActions();
 

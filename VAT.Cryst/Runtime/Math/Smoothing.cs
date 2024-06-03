@@ -5,13 +5,16 @@ using UnityEngine;
 
 namespace VAT.Cryst.Math
 {
-    using System;
-
     public static class Smoothing
     {
-        public static float CalculateInterpolation(double smoothing, double deltaTime)
+        public static float CalculateSmoothing(float smoothing, float deltaTime)
         {
-            return (float)(1f - Math.Pow(smoothing, deltaTime));
+            return 1f - Mathf.Pow(smoothing, deltaTime);
+        }
+
+        public static float CalculateDecay(float decay, float deltaTime)
+        {
+            return 1f - Mathf.Exp(-decay * deltaTime);
         }
     }
 }

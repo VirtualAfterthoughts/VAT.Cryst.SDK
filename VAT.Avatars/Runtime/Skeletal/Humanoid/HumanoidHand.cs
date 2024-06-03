@@ -217,6 +217,15 @@ namespace VAT.Avatars.Skeletal
             return _blendPose;
         }
 
+        public void SetOffsetHand(SimpleTransform hand)
+        {
+            foreach (var finger in Fingers)
+            {
+                finger.offsetHand = hand;
+                finger.shouldOffset = true;
+            }
+        }
+
 #if UNITY_EDITOR
         public override void DrawGizmos()
         {
