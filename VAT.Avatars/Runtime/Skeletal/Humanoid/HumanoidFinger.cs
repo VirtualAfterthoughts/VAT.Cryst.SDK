@@ -183,12 +183,13 @@ namespace VAT.Avatars.Skeletal
             CalculateIKTargets();
 
             // Get solved rotations
-            var solvedProximal = Proximal.localRotation;
+            var solvedWorldProximal = Proximal.rotation;
             var solvedMiddle = Middle.localRotation;
             var solvedDistal = Distal.localRotation;
 
             // Solve trig ik
             var parent = MetaCarpal.Parent.Transform;
+            var realParent = parent;
 
             if (shouldOffset)
             {
@@ -219,7 +220,12 @@ namespace VAT.Avatars.Skeletal
 
             // Blend for open pose (REPLACE IN FUTURE)
             float blendCurl = 1f - blendPose.phalanges[0].curl;
-            Proximal.localRotation = Quaternion.Lerp(Proximal.localRotation, solvedProximal, blendCurl);
+
+            var gripOffset = parent.rotation * Quaternion.Inverse(realParent.rotation);
+            gripOffset.ToAngleAxis(out var gripAngle, out var gripAxis);
+            gripOffset = Quaternion.AngleAxis(gripAngle * 0.8f, gripAxis);
+
+            Proximal.rotation = Quaternion.Lerp(Proximal.rotation, gripOffset * solvedWorldProximal, blendCurl);
             Middle.localRotation = Quaternion.Lerp(Middle.localRotation, solvedMiddle, blendCurl);
             Distal.localRotation = Quaternion.Lerp(Distal.localRotation, solvedDistal, blendCurl);
         }
