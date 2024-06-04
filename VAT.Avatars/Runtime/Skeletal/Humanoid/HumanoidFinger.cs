@@ -222,6 +222,16 @@ namespace VAT.Avatars.Skeletal
             float blendCurl = 1f - blendPose.phalanges[0].curl;
 
             var gripOffset = parent.rotation * Quaternion.Inverse(realParent.rotation);
+
+            // If quaternion angle is > 180 degrees (w is negative) convert to shortened angle
+            if (gripOffset.w < 0)
+            {
+                gripOffset.x = -gripOffset.x;
+                gripOffset.y = -gripOffset.y;
+                gripOffset.z = -gripOffset.z;
+                gripOffset.w = -gripOffset.w;
+            }
+
             gripOffset.ToAngleAxis(out var gripAngle, out var gripAxis);
             gripOffset = Quaternion.AngleAxis(gripAngle * 0.8f, gripAxis);
 
