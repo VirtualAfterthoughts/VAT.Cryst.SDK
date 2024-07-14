@@ -87,6 +87,8 @@ namespace VAT.Avatars.Muscular
 
         private Vector3 _stairForce = Vector3.zero;
 
+        private Quaternion _lastKneeInPelvis = Quaternion.identity;
+
         public override void Solve()
         {
             float shrinkMult = (1f - _leg._footShrink);
@@ -95,6 +97,18 @@ namespace VAT.Avatars.Muscular
             float fenderRadius = _radius * 1.25f * shrinkMult;
 
             var kneeTarget = Knee.Parent.TransformBone(_leg.Knee.Parent, _leg.Knee);
+
+            var angleVelocity = _leg.velocity;
+            angleVelocity.y = 0f;
+            var velocityAxis = -Vector3.Cross(angleVelocity.normalized, kneeTarget.up);
+            kneeTarget.rotation = Quaternion.AngleAxis(20f * Mathf.Clamp01(math.length(angleVelocity) / 4f), velocityAxis) * kneeTarget.rotation;
+
+            var kneeInPelvis = Knee.Parent.Transform.InverseTransformRotation(kneeTarget.rotation);
+            kneeInPelvis = Quaternion.Slerp(_lastKneeInPelvis, kneeInPelvis, Smoothing.CalculateDecay(12f, Time.deltaTime));
+            _lastKneeInPelvis = kneeInPelvis;
+
+            kneeTarget.rotation = Knee.Parent.Transform.TransformRotation(kneeInPelvis);
+
             Knee.Solve(kneeTarget);
 
             Knee.SetConnectedAnchor(kneeTarget.position);

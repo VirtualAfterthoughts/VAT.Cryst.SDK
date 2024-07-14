@@ -107,6 +107,7 @@ namespace VAT.Avatars.Skeletal
             _targetRoot = targetRoot;
         }
 
+        private Quaternion _lastSacrumRotation = Quaternion.identity;
         private Quaternion _sacrumRotation = Quaternion.identity;
 
         public override void Solve()
@@ -118,8 +119,6 @@ namespace VAT.Avatars.Skeletal
             TargetRoot.Transform = _targetRoot;
 
             root.position += _floorOffset;
-
-            HipSink();
 
             quaternion chestRotation = _neck.chestRotation;
             chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Smoothing.CalculateDecay(12f, Time.deltaTime));
@@ -148,6 +147,9 @@ namespace VAT.Avatars.Skeletal
             var initialSacrum = SimpleTransform.Create(Sacrum.position, _sacrumRotation);
 
             SacrumPull();
+
+            _sacrumRotation = Quaternion.Slerp(_lastSacrumRotation, _sacrumRotation, Smoothing.CalculateDecay(6f, Time.deltaTime));
+            _lastSacrumRotation = _sacrumRotation;
 
             T7Vertebra.rotation = Quaternion.Lerp(T1Vertebra.rotation, _sacrumRotation, 0.3f);
             L1Vertebra.rotation = Quaternion.Lerp(T1Vertebra.rotation, _sacrumRotation, 0.5f);
@@ -187,17 +189,6 @@ namespace VAT.Avatars.Skeletal
             float yDot = Vector3.Dot(yPlane, forward);
 
             return Mathf.Clamp(yDot, -1f, 1f);
-        }
-
-        private void HipSink()
-        {
-            float supportedWeight = (_locomotion.Locomotors[0].WeightSupport + _locomotion.Locomotors[1].WeightSupport) / 2f;
-
-            float sinkValue = Mathf.Clamp01(1f - supportedWeight) * 1.5f;
-
-            float neckHeight = -_neckProportions.lowerNeckEllipsoid.height;
-
-            T1Vertebra.localPosition = new(0f, neckHeight + (sinkValue * neckHeight), _spineProportions.upperChestOffsetZ);
         }
     }
 }
