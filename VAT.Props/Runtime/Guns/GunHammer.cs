@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using VAT.Interaction;
+
 namespace VAT.Props
 {
     public enum HammerState
@@ -12,7 +14,7 @@ namespace VAT.Props
         COCKED = 2,
     }
 
-    public class GunHammer : MonoBehaviour
+    public class GunHammer : Actuatable
     {
         [SerializeField]
         private GunBarrel _barrel = null;
@@ -20,6 +22,14 @@ namespace VAT.Props
         private HammerState _state = HammerState.RELEASED;
 
         public HammerState State => _state;
+
+        protected override void OnActuated(bool isActuated)
+        {
+            if (isActuated)
+            {
+                Release();
+            }
+        }
 
         public void Cock()
         {

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 namespace VAT.Props
@@ -58,7 +55,7 @@ namespace VAT.Props
             {
                 _hammer.Cock();
 
-                if (_isAutomatic)
+                if (_isAutomatic && _hammer.IsActuated)
                 {
                     _hammer.Release();
                 }

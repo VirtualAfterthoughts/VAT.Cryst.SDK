@@ -1,0 +1,19 @@
+{
+    "name": "VAT.Props.Editor",
+    "rootNamespace": "VAT.Props.Editor",
+    "references": [
+        "GUID:0827a891364b52b408353aec534f0911",
+        "GUID:b163d2aa2d9873e409cded2b58107799"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
