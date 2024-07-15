@@ -46,6 +46,8 @@ namespace VAT.Avatars.Skeletal
 
         public float3 feetCenterInRoot;
 
+        public Vector3 legVelocity;
+
         public override void Initiate() {
             base.Initiate();
         }
@@ -114,6 +116,12 @@ namespace VAT.Avatars.Skeletal
             var offsetRotation = Quaternion.FromToRotation(math.mul(chestRotation, math.up()), math.normalize(Skull.position - feetCenter)) * chestRotation;
             float lerp = (1f - cervicalHeight) - (skullChestAngle / 90f);
             chestRotation = Quaternion.Lerp(chestRotation, offsetRotation, lerp);
+
+            // Velocity drag
+            var angleVelocity = legVelocity;
+            angleVelocity.y = 0f;
+            var velocityAxis = -Vector3.Cross(angleVelocity.normalized, math.mul(chestRotation, math.up()));
+            chestRotation = Quaternion.AngleAxis(10f * Mathf.Clamp01(math.length(angleVelocity) / 4f), velocityAxis) * chestRotation;
 
             rawChestRotation = chestRotation;
 

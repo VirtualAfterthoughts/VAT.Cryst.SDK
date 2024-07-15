@@ -124,11 +124,6 @@ namespace VAT.Avatars.Skeletal
 
             quaternion chestRotation = _neck.chestRotation;
 
-            var angleVelocity = legVelocity;
-            angleVelocity.y = 0f;
-            var velocityAxis = -Vector3.Cross(angleVelocity.normalized, math.mul(chestRotation, math.up()));
-            chestRotation = Quaternion.AngleAxis(10f * Mathf.Clamp01(math.length(angleVelocity) / 4f), velocityAxis) * chestRotation;
-
             chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Smoothing.CalculateDecay(12f, Time.deltaTime));
             lastChestRotation = root.InverseTransformRotation(chestRotation);
 
@@ -167,6 +162,7 @@ namespace VAT.Avatars.Skeletal
             _locomotion.Solve(root, initialSacrum);
 
             _neck.feetCenterInRoot = root.InverseTransformPoint(_locomotion.GetLocomotorCenter());
+            _neck.legVelocity = legVelocity;
         }
         public override void Attach(DataBoneGroup group) {
             base.Attach(group);
