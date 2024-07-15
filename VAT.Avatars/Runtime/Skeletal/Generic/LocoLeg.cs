@@ -133,11 +133,11 @@ namespace VAT.Avatars.Skeletal
             var angleVelocity = movementVelocity;
             angleVelocity.y = 0f;
 
-            angleVelocity = Vector3.Lerp(_lastAngleVelocity, angleVelocity, Smoothing.CalculateDecay(12f, Time.deltaTime));
+            angleVelocity = Vector3.Lerp(_lastAngleVelocity, angleVelocity, Smoothing.CalculateDecay(6f, Time.deltaTime));
             _lastAngleVelocity = angleVelocity;
 
             var velocityAxis = -Vector3.Cross(angleVelocity.normalized, Knee.up);
-            Knee.rotation = Quaternion.AngleAxis(20f * Mathf.Clamp01(math.length(angleVelocity) / 4f), velocityAxis) * Knee.rotation;
+            Knee.rotation = Quaternion.AngleAxis(15f * Mathf.Clamp01(math.length(angleVelocity) / 4f), velocityAxis) * Knee.rotation;
         }
 
 #if UNITY_EDITOR
