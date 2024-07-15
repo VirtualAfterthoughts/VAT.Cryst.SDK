@@ -64,17 +64,11 @@ namespace VAT.Characters
             return _inputActions.Gameplay.Jump.ReadValue<float>() > 0.5f;
         }
 
-        private Vector3 _lastMovement = Vector3.zero;
-        private Vector3 _movementVelocity = Vector3.zero;
-
         protected override Vector3 OnProcessMovement()
         {
             var movementAxis = _inputActions.Gameplay.Movement.ReadValue<Vector2>();
             var flattenedHead = Quaternion.LookRotation(neckPivot.forward.FlattenNeck(neckPivot.up, transform.up), transform.up);
             var movement = flattenedHead * new Vector3(movementAxis.x, 0f, movementAxis.y);
-
-            movement = Vector3.SmoothDamp(_lastMovement, movement, ref _movementVelocity, 0.07f, 6f);
-            _lastMovement = movement;
 
             return movement;
         }

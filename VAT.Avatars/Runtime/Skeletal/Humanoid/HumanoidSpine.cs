@@ -110,6 +110,8 @@ namespace VAT.Avatars.Skeletal
         private Quaternion _lastSacrumRotation = Quaternion.identity;
         private Quaternion _sacrumRotation = Quaternion.identity;
 
+        public Vector3 legVelocity;
+
         public override void Solve()
         {
             SimpleTransform root = _avatarPayload.GetRoot();
@@ -121,6 +123,12 @@ namespace VAT.Avatars.Skeletal
             root.position += _floorOffset;
 
             quaternion chestRotation = _neck.chestRotation;
+
+            var angleVelocity = legVelocity;
+            angleVelocity.y = 0f;
+            var velocityAxis = -Vector3.Cross(angleVelocity.normalized, math.mul(chestRotation, math.up()));
+            chestRotation = Quaternion.AngleAxis(10f * Mathf.Clamp01(math.length(angleVelocity) / 4f), velocityAxis) * chestRotation;
+
             chestRotation = Quaternion.Slerp(root.TransformRotation(lastChestRotation), chestRotation, Smoothing.CalculateDecay(12f, Time.deltaTime));
             lastChestRotation = root.InverseTransformRotation(chestRotation);
 

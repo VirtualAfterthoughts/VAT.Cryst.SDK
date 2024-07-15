@@ -130,6 +130,7 @@ namespace VAT.Avatars.Skeletal
             Neck.Solve();
 
             Spine.WriteTarget(start);
+            Spine.legVelocity = LocoLeg.velocity;
 
             Spine.Solve();
 
