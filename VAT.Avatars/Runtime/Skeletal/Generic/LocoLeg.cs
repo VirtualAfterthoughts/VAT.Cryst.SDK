@@ -25,6 +25,7 @@ namespace VAT.Avatars.Skeletal
         public Vector3 velocity;
 
         private Vector3 _lastAngleVelocity;
+        private float _lastVelocityDrag;
 
         private Vector3 _trackedDebt;
 
@@ -131,12 +132,15 @@ namespace VAT.Avatars.Skeletal
             var angleVelocity = movementVelocity;
             angleVelocity.y = 0f;
 
-            angleVelocity = Vector3.Lerp(_lastAngleVelocity, angleVelocity, Smoothing.CalculateDecay(6f, Time.deltaTime));
+            angleVelocity = Vector3.Lerp(_lastAngleVelocity, angleVelocity, Smoothing.CalculateDecay(12f, Time.deltaTime));
             _lastAngleVelocity = angleVelocity;
 
             var velocityAxis = -Vector3.Cross(angleVelocity.normalized, Knee.up);
 
             float velocityDrag = Mathf.Clamp01(math.length(angleVelocity) / 4f);
+
+            velocityDrag = Mathf.Lerp(_lastVelocityDrag, velocityDrag, Smoothing.CalculateDecay(12f, Time.deltaTime));
+            _lastVelocityDrag = velocityDrag;
 
             Knee.rotation = Quaternion.AngleAxis(10f * velocityDrag, velocityAxis) * Knee.rotation;
 
