@@ -87,8 +87,6 @@ namespace VAT.Avatars.Muscular
 
         private Vector3 _stairForce = Vector3.zero;
 
-        private Vector3 _lastAngleVelocity = Vector3.zero;
-
         public override void Solve()
         {
             float shrinkMult = (1f - _leg._footShrink);
@@ -97,15 +95,6 @@ namespace VAT.Avatars.Muscular
             float fenderRadius = _radius * 1.25f * shrinkMult;
 
             var kneeTarget = Knee.Parent.TransformBone(_leg.Knee.Parent, _leg.Knee);
-
-            var angleVelocity = _leg.velocity;
-            angleVelocity.y = 0f;
-
-            angleVelocity = Vector3.Lerp(_lastAngleVelocity, angleVelocity, Smoothing.CalculateDecay(6f, Time.deltaTime));
-            _lastAngleVelocity = angleVelocity;
-
-            var velocityAxis = -Vector3.Cross(angleVelocity.normalized, kneeTarget.up);
-            kneeTarget.rotation = Quaternion.AngleAxis(20f * Mathf.Clamp01(math.length(angleVelocity) / 4f), velocityAxis) * kneeTarget.rotation;
 
             Knee.Solve(kneeTarget);
 

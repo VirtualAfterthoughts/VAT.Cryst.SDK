@@ -24,6 +24,8 @@ namespace VAT.Avatars.Skeletal
 
         public Vector3 velocity;
 
+        private Vector3 _lastAngleVelocity;
+
         private Vector3 _trackedDebt;
 
         private Vector3 _localHead;
@@ -73,9 +75,11 @@ namespace VAT.Avatars.Skeletal
             float distanceToFloor = root.InverseTransformPoint(Knee.position).y;
             float extension = 0f;
 
+            var movementVelocity = Vector3.zero;
+
             if (_avatarPayload.TryGetInput(out var input)) {
-                var movement = input.GetMovement();
-                velocity += movement * 4f;
+                movementVelocity = input.GetMovement() * 4f;
+                velocity += movementVelocity;
 
                 if (input.GetJump())
                 {
@@ -124,6 +128,16 @@ namespace VAT.Avatars.Skeletal
             }
 
             Foot.localPosition = down() * Mathf.Clamp(distanceToFloor, 0f, _length * 1.1f + extension);
+
+            // Solve velocity drag
+            var angleVelocity = movementVelocity;
+            angleVelocity.y = 0f;
+
+            angleVelocity = Vector3.Lerp(_lastAngleVelocity, angleVelocity, Smoothing.CalculateDecay(12f, Time.deltaTime));
+            _lastAngleVelocity = angleVelocity;
+
+            var velocityAxis = -Vector3.Cross(angleVelocity.normalized, Knee.up);
+            Knee.rotation = Quaternion.AngleAxis(20f * Mathf.Clamp01(math.length(angleVelocity) / 4f), velocityAxis) * Knee.rotation;
         }
 
 #if UNITY_EDITOR
