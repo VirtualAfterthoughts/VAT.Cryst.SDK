@@ -127,8 +127,6 @@ namespace VAT.Avatars.Skeletal
                 extension = Mathf.Abs(offset);
             }
 
-            Foot.localPosition = down() * Mathf.Clamp(distanceToFloor, 0f, _length * 1.1f + extension);
-
             // Solve velocity drag
             var angleVelocity = movementVelocity;
             angleVelocity.y = 0f;
@@ -137,7 +135,16 @@ namespace VAT.Avatars.Skeletal
             _lastAngleVelocity = angleVelocity;
 
             var velocityAxis = -Vector3.Cross(angleVelocity.normalized, Knee.up);
-            Knee.rotation = Quaternion.AngleAxis(15f * Mathf.Clamp01(math.length(angleVelocity) / 4f), velocityAxis) * Knee.rotation;
+
+            float velocityDrag = Mathf.Clamp01(math.length(angleVelocity) / 4f);
+
+            Knee.rotation = Quaternion.AngleAxis(10f * velocityDrag, velocityAxis) * Knee.rotation;
+
+            // Drop spine when running
+            distanceToFloor *= Mathf.Lerp(1f, 0.9f, velocityDrag);
+
+            // Apply leg extension
+            Foot.localPosition = down() * Mathf.Clamp(distanceToFloor, 0f, _length * 1.1f + extension);
         }
 
 #if UNITY_EDITOR
