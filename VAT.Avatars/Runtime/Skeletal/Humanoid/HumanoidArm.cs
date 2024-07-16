@@ -353,29 +353,25 @@ namespace VAT.Avatars.Skeletal
             Hand.Hand.rotation = _target.rotation;
         }
 
-        private float _smoothWristLimit = 0f;
+        private float _smoothAngle = 0f;
 
         private void WristLimit()
         {
             Quaternion unlimitedRotation = Hand.Hand.rotation;
-            LimitRotationInWrist(unlimitedRotation, out var flexion, out var deviation);
+            var limitedRotation = LimitRotationInWrist(unlimitedRotation);
 
             // Rotate elbow to allow for limits
-            float limitAngle = 0f;
-            float handednessMult = (isLeft ? 1f : -1f);
+            var angle = Quaternion.Angle(limitedRotation, unlimitedRotation) * Mathf.Sign(Vector3.SignedAngle(limitedRotation * Vector3.forward, unlimitedRotation * Vector3.forward, _armVector));
 
-            limitAngle += Mathf.Clamp(flexion * handednessMult, -70f, 70f);
-            limitAngle += Mathf.Clamp(-Mathf.Abs(deviation) * handednessMult, -70f, 70f);
+            _smoothAngle = Mathf.Lerp(_smoothAngle, angle, Smoothing.CalculateDecay(32f, Time.deltaTime));
 
-            _smoothWristLimit = Mathf.Lerp(_smoothWristLimit, limitAngle, Smoothing.CalculateDecay(32f, Time.deltaTime));
-
-            UpperArm.rotation = Quaternion.AngleAxis(_smoothWristLimit, _armVector) * UpperArm.rotation;
+            UpperArm.rotation = Quaternion.AngleAxis(_smoothAngle, _armVector) * UpperArm.rotation;
 
             // Update wrist, ignore limits on hand for best control
             WristSolve();
         }
 
-        private Quaternion LimitRotationInWrist(Quaternion hand, out float flexionOffset, out float deviationOffset)
+        private Quaternion LimitRotationInWrist(Quaternion hand)
         {
             Quaternion unlimitedRotation = hand;
             Quaternion limitedRotation = unlimitedRotation;
@@ -386,7 +382,7 @@ namespace VAT.Avatars.Skeletal
 
             float clampedFlexion = Mathf.Clamp(flexionAngle, -90f, 90f);
 
-            flexionOffset = clampedFlexion - flexionAngle;
+            var flexionOffset = clampedFlexion - flexionAngle;
 
             limitedRotation = Quaternion.AngleAxis(flexionOffset, Wrist.right) * limitedRotation;
 
@@ -396,9 +392,21 @@ namespace VAT.Avatars.Skeletal
 
             float clampedDeviation = Mathf.Clamp(deviationAngle, -70f, 70f);
 
-            deviationOffset = clampedDeviation - deviationAngle;
+            var deviationOffset = clampedDeviation - deviationAngle;
 
             limitedRotation = Quaternion.AngleAxis(deviationOffset, Wrist.up) * limitedRotation;
+
+            // Pronation
+            var offsetElbow = Quaternion.AngleAxis(60f * (Handedness == Handedness.LEFT ? 1f : -1f), Elbow.forward) * Elbow.up;
+
+            var pronationRotation = Quaternion.FromToRotation(unlimitedRotation * Vector3.forward, Wrist.forward) * unlimitedRotation;
+            float pronationAngle = Vector3.SignedAngle(offsetElbow, pronationRotation * Vector3.up, Wrist.forward);
+
+            float clampedPronation = Mathf.Clamp(pronationAngle, -30f, 150f);
+
+            var pronationOffset = clampedPronation - pronationAngle;
+
+            limitedRotation = Quaternion.AngleAxis(pronationOffset, Wrist.forward) * limitedRotation;
 
             return limitedRotation;
         }
