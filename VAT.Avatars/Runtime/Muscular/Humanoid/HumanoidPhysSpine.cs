@@ -95,17 +95,20 @@ namespace VAT.Avatars.Muscular
             var l1Target = Sacrum.TransformBone(_spine.Sacrum, _spine.L1Vertebra);
             L1Vertebra.Solve(l1Target);
 
-            L1Vertebra.SetConnectedAnchor(l1Target.position);
+            L1Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
+            L1Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _spine.L1Vertebra.Transform.InverseTransformPoint(_spine.Sacrum.Transform.position);
 
             var t7Target = L1Vertebra.TransformBone(_spine.L1Vertebra, _spine.T7Vertebra);
             T7Vertebra.Solve(t7Target);
 
-            T7Vertebra.SetConnectedAnchor(t7Target.position);
+            T7Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
+            T7Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _spine.T7Vertebra.Transform.InverseTransformPoint(_spine.L1Vertebra.Transform.position);
 
             var t1Target = T7Vertebra.TransformBone(_spine.T7Vertebra, _spine.T1Vertebra);
             T1Vertebra.Solve(t1Target);
 
-            T1Vertebra.SetConnectedAnchor(t1Target.position);
+            T1Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
+            T1Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _spine.T1Vertebra.Transform.InverseTransformPoint(_spine.T7Vertebra.Transform.position);
         }
 
         public Mesh GenerateUpperChestMesh(HumanoidSpineProportions proportions, HumanoidNeckProportions neck)

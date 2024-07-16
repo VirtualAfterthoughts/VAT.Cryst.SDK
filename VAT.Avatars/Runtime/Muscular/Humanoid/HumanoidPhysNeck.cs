@@ -72,17 +72,20 @@ namespace VAT.Avatars.Muscular
             var c4VertebraTarget = C4Vertebra.Parent.TransformBone(_neck.C4Vertebra.GetChild(0), _neck.C4Vertebra);
             C4Vertebra.Solve(c4VertebraTarget);
 
-            C4Vertebra.SetConnectedAnchor(c4VertebraTarget.position);
+            C4Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
+            C4Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _neck.C4Vertebra.Transform.InverseTransformPoint(_neck.C4Vertebra.GetChild(0).Transform.position);
 
             var c1VertebraTarget = C4Vertebra.TransformBone(_neck.C4Vertebra, _neck.C1Vertebra);
             C1Vertebra.Solve(c1VertebraTarget);
 
-            C1Vertebra.SetConnectedAnchor(c1VertebraTarget.position);
+            C1Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
+            C1Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _neck.C1Vertebra.Transform.InverseTransformPoint(_neck.C4Vertebra.Transform.position);
 
             var skullTarget = C1Vertebra.TransformBone(_neck.C1Vertebra, _neck.Skull);
             Skull.Solve(skullTarget);
 
-            Skull.SetConnectedAnchor(skullTarget.position);
+            Skull.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
+            Skull.ConfigurableJoint.ConfigurableJoint.anchor = _neck.Skull.Transform.InverseTransformPoint(_neck.C1Vertebra.Transform.position);
         }
 
         public Mesh GenerateSkullMesh(HumanoidNeckProportions proportions) {
