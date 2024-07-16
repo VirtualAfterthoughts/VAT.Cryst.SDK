@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 using VAT.Avatars.Proportions;
-using VAT.Avatars.Constants;
-using VAT.Avatars.Skeletal;
 
 using VAT.Cryst.Interfaces;
 
@@ -78,6 +73,11 @@ namespace VAT.Avatars.Muscular
             _bones[0] = new HumanoidPhysBone($"{prefix} Hip", null, JointAngularLimits.Free);
             _bones[1] = new HumanoidPhysBone($"{prefix} Knee", Hip, JointAngularLimits.Free);
             _bones[2] = new HumanoidPhysBone($"{prefix} Ankle", Knee, JointAngularLimits.Free);
+
+            // Joint limits
+            var kneeJoint = Knee.ConfigurableJoint.ConfigurableJoint;
+            kneeJoint.angularXMotion = kneeJoint.angularYMotion = kneeJoint.angularZMotion = ConfigurableJointMotion.Limited;
+            kneeJoint.lowAngularXLimit = new SoftJointLimit() { limit = -130f };
         }
 
         public override void Solve()
@@ -101,6 +101,14 @@ namespace VAT.Avatars.Muscular
         public override void Attach(PhysBoneGroup group)
         {
             FirstBone.Parent = group.FirstBone;
+
+            // Joint limits
+            var hipJoint = Hip.ConfigurableJoint.ConfigurableJoint;
+            hipJoint.angularXMotion = hipJoint.angularYMotion = hipJoint.angularZMotion = ConfigurableJointMotion.Limited;
+            hipJoint.lowAngularXLimit = new SoftJointLimit() { limit = -70f };
+            hipJoint.highAngularXLimit = new SoftJointLimit() { limit = 160f };
+            hipJoint.angularZLimit = new SoftJointLimit() { limit = 90f };
+            hipJoint.angularYLimit = new SoftJointLimit() { limit = 60f };
         }
 
         public void WriteProportions(HumanoidLegProportions proportions)
@@ -123,8 +131,6 @@ namespace VAT.Avatars.Muscular
             Ankle.MatchBone(leg.Ankle);
 
             Hip.ConfigurableJoint.ConfigurableJoint.connectedMassScale = 0f;
-            Knee.ConfigurableJoint.ConfigurableJoint.connectedMassScale = 0f;
-            Ankle.ConfigurableJoint.ConfigurableJoint.connectedMassScale = 0f;
 
             _relativeToe = new RelativeBone(Ankle, leg.Ankle, leg.Toe);
         }

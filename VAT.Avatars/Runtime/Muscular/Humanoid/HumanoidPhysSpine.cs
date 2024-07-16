@@ -62,6 +62,22 @@ namespace VAT.Avatars.Muscular
 
             Sacrum.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Free, ConfigurableJointMotion.Free);
             Root.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
+
+            // Joint limits
+            var l1Joint = L1Vertebra.ConfigurableJoint.ConfigurableJoint;
+            l1Joint.angularXMotion = l1Joint.angularYMotion = l1Joint.angularZMotion = ConfigurableJointMotion.Limited;
+            l1Joint.angularZLimit = l1Joint.angularYLimit = l1Joint.highAngularXLimit = new SoftJointLimit() { limit = 20f };
+            l1Joint.lowAngularXLimit = new SoftJointLimit() { limit = -20f };
+
+            var t7Joint = T7Vertebra.ConfigurableJoint.ConfigurableJoint;
+            t7Joint.angularXMotion = t7Joint.angularYMotion = t7Joint.angularZMotion = ConfigurableJointMotion.Limited;
+            t7Joint.angularZLimit = t7Joint.angularYLimit = t7Joint.highAngularXLimit = new SoftJointLimit() { limit = 20f };
+            t7Joint.lowAngularXLimit = new SoftJointLimit() { limit = -20f };
+
+            var t1Joint = T1Vertebra.ConfigurableJoint.ConfigurableJoint;
+            t1Joint.angularXMotion = t1Joint.angularYMotion = t1Joint.angularZMotion = ConfigurableJointMotion.Limited;
+            t1Joint.angularZLimit = t1Joint.angularYLimit = t1Joint.highAngularXLimit = new SoftJointLimit() { limit = 20f };
+            t1Joint.lowAngularXLimit = new SoftJointLimit() { limit = -20f };
         }
 
         public void WriteProportions(HumanoidSpineProportions proportions, HumanoidNeckProportions neck)
