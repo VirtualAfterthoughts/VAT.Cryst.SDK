@@ -135,14 +135,10 @@ namespace VAT.Avatars.Skeletal
             angleVelocity = Vector3.Lerp(_lastAngleVelocity, angleVelocity, Smoothing.CalculateDecay(12f, Time.deltaTime));
             _lastAngleVelocity = angleVelocity;
 
-            var velocityAxis = -Vector3.Cross(angleVelocity.normalized, Knee.up);
-
             float velocityDrag = Mathf.Clamp01(math.length(angleVelocity) / 4f);
 
             velocityDrag = Mathf.Lerp(_lastVelocityDrag, velocityDrag, Smoothing.CalculateDecay(12f, Time.deltaTime));
             _lastVelocityDrag = velocityDrag;
-
-            Knee.rotation = Quaternion.AngleAxis(10f * velocityDrag, velocityAxis) * Knee.rotation;
 
             // Drop spine when running
             distanceToFloor *= Mathf.Lerp(1f, 0.9f, velocityDrag);

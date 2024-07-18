@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+
 using System;
 
 using UnityEngine;
@@ -41,6 +42,20 @@ namespace VAT.Packaging
 #if UNITY_EDITOR
         public override Type EditorShardType => typeof(T);
 #endif
+
+        [JsonIgnore]
+        public T Shard
+        {
+            get
+            {
+                if (!TryGetShard(out var shard))
+                {
+                    return default;
+                }
+
+                return shard;
+            }
+        }
 
         public bool TryGetShard(out T shard)
         {

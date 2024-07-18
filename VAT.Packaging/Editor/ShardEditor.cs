@@ -37,6 +37,8 @@ namespace VAT.Packaging.Editor
             // Draw data
             GUILayout.FlexibleSpace();
 
+            EditorGUILayout.LabelField(string.Empty, GUI.skin.horizontalSlider);
+
             shard.OnEditorInspectorGUI(serializedObject);
 
             GUILayout.FlexibleSpace();
