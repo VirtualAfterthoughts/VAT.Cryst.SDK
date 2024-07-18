@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 using VAT.Shared.Extensions;
@@ -15,7 +12,7 @@ using UnityEditor;
 
 namespace VAT.Pooling
 {
-    public sealed class SpawnablePlacer : MonoBehaviour, ITriggerable
+    public sealed class Spawner : MonoBehaviour, ITriggerable
     {
         [SerializeField]
         [Tooltip("The spawnable to place.")]
@@ -81,15 +78,15 @@ namespace VAT.Pooling
 
             if (_spawnable.shardReference.TryGetShard(out var shard))
             {
-                this.name = $"Spawnable Placer ({shard.ShardInfo.Title})";
+                this.name = $"Spawner ({shard.ShardInfo.Title})";
             }
             else if (address != Address.EMPTY)
             {
-                this.name = $"Spawnable Placer ({address})";
+                this.name = $"Spawner ({address})";
             }
             else
             {
-                this.name = "Spawnable Placer (Unknown)";
+                this.name = "Spawner (Unknown)";
             }
         }
 
@@ -126,10 +123,10 @@ namespace VAT.Pooling
             }
         }
 
-        [MenuItem("GameObject/Crystalline/Pooling/Spawnable Placer")]
+        [MenuItem("GameObject/Crystalline/Pooling/Spawner")]
         private static void MenuCreateItem(MenuCommand menuCommand)
         {
-            GameObject go = new("Spawnable Placer", typeof(SpawnablePlacer));
+            GameObject go = new("Spawner", typeof(Spawner));
             go.transform.localScale = Vector3.one;
 
             if (menuCommand.context == null && SceneView.GetAllSceneCameras().Length > 0)
@@ -144,7 +141,7 @@ namespace VAT.Pooling
 
             Selection.activeObject = go;
 
-            Undo.RegisterCreatedObjectUndo(go, "Create Spawnable Placer");
+            Undo.RegisterCreatedObjectUndo(go, "Create Spawner");
         }
 #endif
     }
