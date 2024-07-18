@@ -10,17 +10,17 @@ namespace VAT.Props
     public class Magazine : MonoBehaviour
     {
         [SerializeField]
-        private MagazineDataReference _dataReference;
+        private MagazineDataReference _data;
 
-        public MagazineDataReference DataReference
+        public MagazineDataReference Data
         {
             get
             {
-                return _dataReference;
+                return _data;
             }
             set
             {
-                _dataReference = value;
+                _data = value;
             }
         }
 
@@ -31,9 +31,7 @@ namespace VAT.Props
 
         public void Refill()
         {
-            DataReference.TryGetShard(out var data);
-            
-            foreach (var cart in data.Inventory.cartridges)
+            foreach (var cart in Data.Shard.Inventory.cartridges)
             {
                 var spawnable = new Spawnable(cart.Shard.Spawnable);
 
