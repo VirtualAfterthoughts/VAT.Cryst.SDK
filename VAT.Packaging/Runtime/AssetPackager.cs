@@ -96,26 +96,15 @@ namespace VAT.Packaging
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
-                string crystalsPath = CrystAssetManager.GetCrystRelativePath(CRYST_CRYSTALS_FOLDER);
-                if (AssetDatabase.IsValidFolder(crystalsPath))
+                var crystals = AssetDatabase.FindAssets("t:crystal");
+
+                foreach (var guid in crystals)
                 {
-                    string[] folders = Directory.GetDirectories(CrystAssetManager.GetCrystPath(CRYST_CRYSTALS_FOLDER));
+                    var crystal = AssetDatabase.LoadAssetAtPath<Crystal>(AssetDatabase.GUIDToAssetPath(guid));
 
-                    foreach (var folder in folders)
+                    if (crystal != null)
                     {
-                        string[] files = Directory.GetFiles(folder);
-
-                        foreach (var file in files)
-                        {
-                            if (!file.EndsWith(".asset"))
-                                continue;
-
-                            string final = file.Replace(CrystAssetManager.GetProjectPath(), "");
-
-                            var crystal = AssetDatabase.LoadAssetAtPath<Crystal>(final);
-                            if (crystal != null)
-                                LoadCrystal(crystal);
-                        }
+                        LoadCrystal(crystal);
                     }
                 }
 
