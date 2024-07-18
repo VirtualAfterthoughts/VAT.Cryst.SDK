@@ -165,7 +165,7 @@ namespace VAT.Packaging.Editor
             shard.AddressType = _shardDisplayName;
 
             var path = Path.GetDirectoryName(AssetDatabase.GetAssetPath(_crystal));
-            var fileName = $"{path}/_{_title}";
+            var fileName = $"{path}/{_title}";
             var fileExtension = ".asset";
 
             var filePath = $"{fileName}{fileExtension}";

@@ -84,7 +84,7 @@ namespace VAT.Packaging.Editor
                 AssetDatabase.CreateFolder(crystalFolderPath, crystal.Address);
             }
 
-            var filePath = $"{addressPath}/{_title}.asset";
+            var filePath = $"{addressPath}/_{_title}.asset";
 
             if (AssetDatabase.LoadAllAssetsAtPath(filePath).Length > 0)
             {
