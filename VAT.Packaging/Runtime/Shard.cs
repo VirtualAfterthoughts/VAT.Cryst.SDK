@@ -55,7 +55,7 @@ namespace VAT.Packaging
             OnPack(packer, json);
         }
 
-        protected abstract void OnPack(JSONPacker packer, JObject json);
+        protected virtual void OnPack(JSONPacker packer, JObject json) { }
 
         public void Unpack(JSONUnpacker unpacker, JToken token)
         {
@@ -94,7 +94,7 @@ namespace VAT.Packaging
             OnUnpack(unpacker, json);
         }
 
-        protected abstract void OnUnpack(JSONUnpacker unpacker, JObject json);
+        protected virtual void OnUnpack(JSONUnpacker unpacker, JObject json) { }
 
         public override void BuildAddress()
         {

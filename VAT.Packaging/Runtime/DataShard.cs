@@ -31,7 +31,7 @@ namespace VAT.Packaging
         public override ICrystal MainCrystal { get => Crystal; set => Crystal = value as Crystal; }
 
 #if UNITY_EDITOR
-        public abstract void OnEditorInspectorGUI(SerializedObject serializedObject);
+        public virtual void OnEditorInspectorGUI(SerializedObject serializedObject) { }
 
         protected void ValidateCrystal()
         {
