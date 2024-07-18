@@ -32,7 +32,7 @@ namespace VAT.Pooling
 
         private void Awake()
         {
-            AssetSpawner.Register(_spawnable);
+            GlobalSpawner.Register(_spawnable);
 
             if (!_manualSpawning)
                 Trigger();
@@ -51,7 +51,7 @@ namespace VAT.Pooling
 #endif
 
             Vector3? scale = _useScale ? transform.lossyScale : null;
-            var info = new AssetSpawner.SpawnRequestInfo()
+            var info = new GlobalSpawner.SpawnRequestInfo()
             {
                 position = transform.position,
                 rotation = transform.rotation,
@@ -60,10 +60,10 @@ namespace VAT.Pooling
                 spawnCallback = OnPlace,
             };
 
-            AssetSpawner.Spawn(info);
+            GlobalSpawner.Spawn(info);
         }
 
-        private void OnPlace(AssetSpawner.SpawnCallbackInfo info)
+        private void OnPlace(GlobalSpawner.SpawnCallbackInfo info)
         {
             placeEvent.Invoke(info.assetPoolable.gameObject, this);
         }

@@ -44,9 +44,9 @@ namespace VAT.Audio
                 rules = new SpawnRules(32, SpawnMode.REUSE_OLDEST),
             };
 
-            AssetSpawner.Register(spawnable);
+            GlobalSpawner.Register(spawnable);
 
-            var request = new AssetSpawner.SpawnRequestInfo()
+            var request = new GlobalSpawner.SpawnRequestInfo()
             {
                 position = info.position,
                 spawnable = spawnable,
@@ -56,7 +56,7 @@ namespace VAT.Audio
                 }
             };
 
-            AssetSpawner.Spawn(request);
+            GlobalSpawner.Spawn(request);
         }
 
         private static void OnSpawn(AssetPoolable poolable, AudioRequestInfo info)

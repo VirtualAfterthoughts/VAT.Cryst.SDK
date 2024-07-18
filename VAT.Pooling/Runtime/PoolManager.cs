@@ -10,7 +10,7 @@ namespace VAT.Pooling
 {
     /// <summary>
     /// <para>Manager for all currently existing Asset Pools.</para>
-    /// <para>For spawning assets, see <see cref="AssetSpawner"/>.</para>
+    /// <para>For spawning assets, see <see cref="GlobalSpawner"/>.</para>
     /// </summary>
     public class PoolManager
     {

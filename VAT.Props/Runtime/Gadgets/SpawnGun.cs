@@ -152,9 +152,9 @@ namespace VAT.Interaction
             {
                 var spawnable = new Spawnable(_selectedSpawnable);
 
-                AssetSpawner.Register(spawnable);
+                GlobalSpawner.Register(spawnable);
 
-                AssetSpawner.Spawn(new AssetSpawner.SpawnRequestInfo()
+                GlobalSpawner.Spawn(new GlobalSpawner.SpawnRequestInfo()
                 {
                     spawnable = spawnable,
                     position = point,

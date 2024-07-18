@@ -1,17 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 using UnityEngine;
-
-using VAT.Packaging;
 
 namespace VAT.Pooling
 {
     /// <summary>
     /// Utility class for spawning assets based on their asset address.
     /// </summary>
-    public static class AssetSpawner
+    public static class GlobalSpawner
     {
         public struct SpawnRequestInfo
         {

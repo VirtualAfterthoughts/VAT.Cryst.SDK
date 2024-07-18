@@ -37,9 +37,9 @@ namespace VAT.Pooling
             {
                 var item = lootTable.GetLootItem();
 
-                AssetSpawner.Register(item.spawnable);
+                GlobalSpawner.Register(item.spawnable);
 
-                var info = new AssetSpawner.SpawnRequestInfo()
+                var info = new GlobalSpawner.SpawnRequestInfo()
                 {
                     position = transform.position,
                     rotation = transform.rotation,
@@ -47,7 +47,7 @@ namespace VAT.Pooling
                     spawnable = item.spawnable,
                 };
 
-                AssetSpawner.Spawn(info);
+                GlobalSpawner.Spawn(info);
             }
         }
     }

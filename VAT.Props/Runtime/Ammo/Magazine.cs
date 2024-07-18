@@ -37,9 +37,9 @@ namespace VAT.Props
             {
                 var spawnable = new Spawnable(cart.Shard.Spawnable);
 
-                AssetSpawner.Register(spawnable);
+                GlobalSpawner.Register(spawnable);
 
-                AssetSpawner.Spawn(new AssetSpawner.SpawnRequestInfo()
+                GlobalSpawner.Spawn(new GlobalSpawner.SpawnRequestInfo()
                 {
                     spawnable = spawnable,
                     spawnCallback = OnCartridgeSpawn,
@@ -47,7 +47,7 @@ namespace VAT.Props
             }
         }
 
-        private void OnCartridgeSpawn(AssetSpawner.SpawnCallbackInfo info)
+        private void OnCartridgeSpawn(GlobalSpawner.SpawnCallbackInfo info)
         {
             var cart = info.assetPoolable.transform;
 
