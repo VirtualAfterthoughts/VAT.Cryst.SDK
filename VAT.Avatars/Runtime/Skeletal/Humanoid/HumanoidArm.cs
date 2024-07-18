@@ -396,18 +396,6 @@ namespace VAT.Avatars.Skeletal
 
             limitedRotation = Quaternion.AngleAxis(deviationOffset, Wrist.up) * limitedRotation;
 
-            // Pronation
-            var offsetElbow = Quaternion.AngleAxis(60f * (Handedness == Handedness.LEFT ? 1f : -1f), Elbow.forward) * Elbow.up;
-
-            var pronationRotation = Quaternion.FromToRotation(unlimitedRotation * Vector3.forward, Wrist.forward) * unlimitedRotation;
-            float pronationAngle = Vector3.SignedAngle(offsetElbow, pronationRotation * Vector3.up, Wrist.forward);
-
-            float clampedPronation = Mathf.Clamp(pronationAngle, -30f, 150f);
-
-            var pronationOffset = clampedPronation - pronationAngle;
-
-            limitedRotation = Quaternion.AngleAxis(pronationOffset, Wrist.forward) * limitedRotation;
-
             return limitedRotation;
         }
 
