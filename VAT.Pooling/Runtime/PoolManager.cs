@@ -76,7 +76,7 @@ namespace VAT.Pooling
             {
                 GameObject root = new($"Pool - {content.Info.Title}");
                 var pool = new AssetPool(content, root.transform);
-                _pools.Add(address, pool);
+                _pools.Add(address.ID, pool);
                 return (true, pool);
             }
 
@@ -86,9 +86,9 @@ namespace VAT.Pooling
         public (bool exists, AssetPool pool) FetchPool(Address address)
         {
             // If the pool already exists, we can just grab it from the dict
-            if (_pools.ContainsKey(address))
+            if (_pools.ContainsKey(address.ID))
             {
-                var pool = _pools[address];
+                var pool = _pools[address.ID];
                 return (true, pool);
             }
 

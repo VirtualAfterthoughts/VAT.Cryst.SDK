@@ -16,7 +16,7 @@ namespace VAT.Packaging
     public class ShardReference : IShardReference
     {
         [SerializeField]
-        protected Address _address = Address.EMPTY;
+        protected Address _address = new(Address.EMPTY);
 
         [JsonProperty("address")]
         public Address Address { get { return _address; } set { _address = value; } }

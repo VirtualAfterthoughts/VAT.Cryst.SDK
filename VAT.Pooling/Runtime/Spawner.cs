@@ -80,7 +80,7 @@ namespace VAT.Pooling
             {
                 this.name = $"Spawner ({shard.ShardInfo.Title})";
             }
-            else if (address != Address.EMPTY)
+            else if (address.ID != Address.EMPTY)
             {
                 this.name = $"Spawner ({address})";
             }

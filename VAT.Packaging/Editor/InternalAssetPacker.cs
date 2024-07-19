@@ -52,7 +52,7 @@ namespace VAT.Packaging.Editor
 
                 var entry = textAsset.SetAddressable(group);
 
-                entry.SetAddress(crystal.Address);
+                entry.SetAddress(crystal.Address.ID);
                 entry.SetLabel(AssetPackager.INTERNAL_CRYSTALS_LABEL, true);
             }
 

@@ -31,7 +31,7 @@ namespace VAT.Packaging.Editor
 
             // Locked information
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField("Address", crystal.Address);
+            EditorGUILayout.TextField("Address", crystal.Address.ID);
             EditorGUI.EndDisabledGroup();
 
             // Basic information that can be updated

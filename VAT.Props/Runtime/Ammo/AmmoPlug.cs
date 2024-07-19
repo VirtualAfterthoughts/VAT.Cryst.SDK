@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
-using VAT.Interaction;
+
 using VAT.Interaction.Attachments;
 using VAT.Shared.Data;
 

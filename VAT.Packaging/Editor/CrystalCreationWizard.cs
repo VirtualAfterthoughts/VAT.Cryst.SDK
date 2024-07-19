@@ -52,7 +52,7 @@ namespace VAT.Packaging.Editor
             // Spacing
             GUILayout.Space(5);
 
-            if (AssetPackager.Instance.HasCrystal(checkAddress))
+            if (AssetPackager.Instance.HasCrystal(new(checkAddress)))
             {
                 EditorGUILayout.HelpBox("There's already a crystal at that address!", MessageType.Error);
             }
@@ -72,7 +72,7 @@ namespace VAT.Packaging.Editor
                 Author = _author
             };
 
-            crystal.Address = Address.BuildAddress(_author, "Crystal", _title);
+            crystal.Address = new(Address.BuildAddress(_author, "Crystal", _title));
 
             var crystalFolderPath = CrystAssetManager.GetCrystRelativePath(AssetPackager.CRYST_CRYSTALS_FOLDER);
 
@@ -81,7 +81,7 @@ namespace VAT.Packaging.Editor
             var addressPath = $"{crystalFolderPath}/{crystal.Address}";
             if (!AssetDatabase.IsValidFolder(addressPath))
             {
-                AssetDatabase.CreateFolder(crystalFolderPath, crystal.Address);
+                AssetDatabase.CreateFolder(crystalFolderPath, crystal.Address.ID);
             }
 
             var filePath = $"{addressPath}/_{_title}.asset";

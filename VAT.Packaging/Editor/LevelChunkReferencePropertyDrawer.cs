@@ -20,7 +20,7 @@ namespace VAT.Packaging.Editor
 
         private bool OnDrawChunk(Rect position, SerializedProperty contentIdProperty, SerializedProperty chunkNameProperty)
         {
-            if (AssetPackager.IsReady && AssetPackager.Instance.TryGetShard<StaticLevelShard>(contentIdProperty.stringValue, out var content))
+            if (AssetPackager.IsReady && AssetPackager.Instance.TryGetShard<StaticLevelShard>(new(contentIdProperty.stringValue), out var content))
             {
                 if (content.Chunks.Count > 0)
                 {

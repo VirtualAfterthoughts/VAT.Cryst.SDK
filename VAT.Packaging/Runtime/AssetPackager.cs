@@ -221,6 +221,18 @@ namespace VAT.Packaging
 
         public void LoadShard(IShard shard)
         {
+            if (shard == null)
+            {
+                Debug.LogError("Tried loading a null shard!");
+                return;
+            }
+
+            if (shard.Address == null)
+            {
+                Debug.LogError("Tried loading a shard, but its address was null!");
+                return;
+            }
+
             if (_loadedShards.ContainsKey(shard.Address))
             {
                 Debug.LogError($"Tried loading shard {shard.Info.Title} with an already loaded address!");

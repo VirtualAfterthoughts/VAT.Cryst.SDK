@@ -28,7 +28,7 @@ namespace VAT.Packaging.Editor
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.ObjectField("Crystal", shard.Crystal, typeof(Crystal), true);
 
-            EditorGUILayout.TextField("Address", shard.Address);
+            EditorGUILayout.TextField("Address", shard.Address.ID);
             EditorGUI.EndDisabledGroup();
 
             // Basic information that can be updated
@@ -74,7 +74,7 @@ namespace VAT.Packaging.Editor
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.ObjectField("Crystal", shard.StaticCrystal, typeof(Crystal), true);
 
-            EditorGUILayout.TextField("Address", shard.Address);
+            EditorGUILayout.TextField("Address", shard.Address.ID);
             EditorGUI.EndDisabledGroup();
 
             // Basic information that can be updated

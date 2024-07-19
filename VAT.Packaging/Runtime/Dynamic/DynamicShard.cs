@@ -58,7 +58,7 @@ namespace VAT.Packaging
 
         public override void BuildAddress()
         {
-            Address = Address.BuildAddress("Runtime", "Generated", Info.Title);
+            Address = new(Address.BuildAddress("Runtime", "Generated", Info.Title));
         }
 
         protected override void OnPack(JSONPacker packer, JObject json)

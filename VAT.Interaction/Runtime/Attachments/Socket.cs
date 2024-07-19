@@ -1,8 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+
+using VAT.Packaging;
 
 namespace VAT.Interaction.Attachments
 {
@@ -12,7 +13,7 @@ namespace VAT.Interaction.Attachments
         private InteractableHost _interactableHost = null;
 
         [SerializeField]
-        private SlotShapeReference _slotShape = new();
+        private TagMask _tagMask = new();
 
         private readonly List<Plug> _registeredPlugs = new();
         private readonly List<Plug> _lockedPlugs = new();
@@ -29,7 +30,7 @@ namespace VAT.Interaction.Attachments
             }
         }
 
-        public SlotShapeReference SlotShape => _slotShape;
+        public TagMask TagMask => _tagMask;
 
         public List<Plug> RegisteredPlugs => _registeredPlugs;
 
@@ -69,15 +70,7 @@ namespace VAT.Interaction.Attachments
                 return false;
             }
 
-            SlotShape.TryGetShard(out var socketShape);
-            plug.SlotShape.TryGetShard(out var plugShape);
-
-            if (socketShape == null || plugShape == null)
-            {
-                return false;
-            }
-
-            return socketShape.MatchesShape(plugShape);
+            return TagMask.HasTag(plug.Tag);
         }
 
         public void RegisterPlug(Plug plug)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using VAT.Packaging;
 
 namespace VAT.Interaction.Attachments
 {
@@ -19,11 +20,11 @@ namespace VAT.Interaction.Attachments
         private InteractableHost _host = null;
 
         [SerializeField]
-        private SlotShapeReference _slotShape = new();
+        private TagReference _tag = new();
 
         public InteractableHost Host { get { return _host; } set { _host = value; } }
 
-        public SlotShapeReference SlotShape => _slotShape;
+        public TagReference Tag => _tag;
 
         private Socket _insertedSocket = null;
         private bool _isLocked = false;

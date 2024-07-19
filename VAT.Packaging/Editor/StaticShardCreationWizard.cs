@@ -16,7 +16,7 @@ namespace VAT.Packaging.Editor
 {
     public class StaticShardCreationWizard : EditorWindow
     {
-        private Address _address = Address.EMPTY;
+        private Address _address = new(Address.EMPTY);
         private Crystal _crystal = null;
         private string _title = "My Shard";
         private Object _mainAsset = null;
@@ -89,7 +89,7 @@ namespace VAT.Packaging.Editor
 
             // Draw options
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField("Address", _address);
+            EditorGUILayout.TextField("Address", _address.ID);
             EditorGUILayout.ObjectField("Crystal", _crystal, typeof(Crystal), false);
             EditorGUI.EndDisabledGroup();
 
@@ -121,7 +121,7 @@ namespace VAT.Packaging.Editor
             // Recreate address
             string identifier = _contentIdentifier?.displayName ?? "Unknown";
 
-            _address = Address.BuildAddress(_crystal.CrystalInfo.Author, _crystal.CrystalInfo.Title, identifier, _title);
+            _address = new(Address.BuildAddress(_crystal.CrystalInfo.Author, _crystal.CrystalInfo.Title, identifier, _title));
 
             // Verify shard creation
             if (!InternalValidateContentSettings())

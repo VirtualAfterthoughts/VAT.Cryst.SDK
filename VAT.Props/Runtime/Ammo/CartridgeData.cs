@@ -34,7 +34,7 @@ namespace VAT.Props
         {
             if (json.TryGetValue("spawnable", out var spawnable))
             {
-                _spawnable = new SpawnableShardReference(spawnable.ToString());
+                _spawnable = new SpawnableShardReference(new(spawnable.ToString()));
             }
         }
 

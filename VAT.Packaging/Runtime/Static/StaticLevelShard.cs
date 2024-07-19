@@ -120,7 +120,7 @@ namespace VAT.Packaging
                         EditorUtility.SetDirty(this);
                     }
 
-                    ValidateAsset(chunk.Scene, Address.BuildAddress(Address, chunk.ChunkName), isBuilding);
+                    ValidateAsset(chunk.Scene, new(Address.BuildAddress(Address.ID, chunk.ChunkName)), isBuilding);
                 }
             }
         }

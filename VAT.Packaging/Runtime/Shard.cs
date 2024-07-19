@@ -102,11 +102,11 @@ namespace VAT.Packaging
 
             if (!string.IsNullOrWhiteSpace(AddressType))
             {
-                Address = Address.BuildAddress(crystalInfo.Author, crystalInfo.Title, AddressType, ShardInfo.Title);
+                Address = new(Address.BuildAddress(crystalInfo.Author, crystalInfo.Title, AddressType, ShardInfo.Title));
             }
             else
             {
-                Address = Address.BuildAddress(crystalInfo.Author, crystalInfo.Title, ShardInfo.Title);
+                Address = new(Address.BuildAddress(crystalInfo.Author, crystalInfo.Title, ShardInfo.Title));
             }
         }
     }

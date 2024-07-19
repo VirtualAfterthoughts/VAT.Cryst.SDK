@@ -89,7 +89,7 @@ namespace VAT.Audio
                 return;
             }
 
-            if (audioSettings.AudioPlayerReference == null || audioSettings.AudioPlayerReference.Address == Address.EMPTY)
+            if (audioSettings.AudioPlayerReference == null || audioSettings.AudioPlayerReference.Address.ID == Address.EMPTY)
             {
                 Debug.LogWarning("The current CrystAudioSettings contain an invalid audio player reference! Audio spawning will not function!");
                 return;

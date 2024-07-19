@@ -85,7 +85,7 @@ namespace VAT.Packaging
 
         public override void BuildAddress()
         {
-            Address = Address.BuildAddress(CrystalInfo.Author, "Crystal", CrystalInfo.Title);
+            Address = new(Address.BuildAddress(CrystalInfo.Author, "Crystal", CrystalInfo.Title));
         }
 
         public void Load(CrystalLoadOptions options)

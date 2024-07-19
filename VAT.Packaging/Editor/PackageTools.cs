@@ -36,7 +36,7 @@ namespace VAT.Packaging.Editor
                 var addressPath = $"{packageFolderPath}/{crystal.Address}";
                 if (!AssetDatabase.IsValidFolder(addressPath))
                 {
-                    AssetDatabase.CreateFolder(packageFolderPath, crystal.Address);
+                    AssetDatabase.CreateFolder(packageFolderPath, crystal.Address.ID);
                 }
 
                 AssetDatabase.CreateAsset(crystal, $"{addressPath}/{crystal.Info.Title}.asset");
@@ -70,7 +70,7 @@ namespace VAT.Packaging.Editor
             var packer = new JSONPacker();
             var json = packer.PackRoot(crystal);
 
-            string path = EditorUtility.SaveFilePanel("Export Crystal", Application.dataPath, crystal.Address, "json");
+            string path = EditorUtility.SaveFilePanel("Export Crystal", Application.dataPath, crystal.Address.ID, "json");
             if (!string.IsNullOrWhiteSpace(path))
             {
                 json.WriteToFile(path);

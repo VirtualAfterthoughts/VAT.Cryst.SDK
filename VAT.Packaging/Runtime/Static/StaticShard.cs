@@ -152,7 +152,7 @@ namespace VAT.Packaging
                 var group = AddressablesExtensions.CreateOrFindGroup(AddressableGroupName);
                 var entry = editorAsset.SetAddressable(group);
 
-                entry.SetAddress(address);
+                entry.SetAddress(address.ID);
             }
         }
 

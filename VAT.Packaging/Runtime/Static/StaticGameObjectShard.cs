@@ -133,9 +133,9 @@ namespace VAT.Packaging
 #if UNITY_EDITOR
         protected override void OnValidateAssets(bool isBuilding = false)
         {
-            ValidateAsset(_previewMesh, Address.BuildAddress(Address, "PreviewMesh"), isBuilding);
+            ValidateAsset(_previewMesh, new(Address.BuildAddress(Address.ID, "PreviewMesh")), isBuilding);
 
-            ValidateAsset(_previewIcon, Address.BuildAddress(Address, "PreviewIcon"), isBuilding);
+            ValidateAsset(_previewIcon, new(Address.BuildAddress(Address.ID, "PreviewIcon")), isBuilding);
 
             base.OnValidateAssets(isBuilding);
         }

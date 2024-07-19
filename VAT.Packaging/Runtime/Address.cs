@@ -56,7 +56,11 @@ namespace VAT.Packaging
 
         public override bool Equals(object obj)
         {
-            if (obj is not Address other) return false;
+            if (obj is not Address other) 
+            { 
+                return false; 
+            }
+
             return Equals(other);
         }
 
@@ -121,8 +125,41 @@ namespace VAT.Packaging
             return ID;
         }
 
-        public static implicit operator Address(string id) => new(id);
+        public static bool operator ==(Address lhs, Address rhs)
+        {
+            bool bothNull = lhs is null && rhs is null;
+            bool oneNull = lhs is null || rhs is null;
 
-        public static implicit operator string(Address address) => address.ID;
+            if (bothNull)
+            {
+                return true;
+            }
+
+            if (oneNull && !bothNull)
+            {
+                return false;
+            }
+
+            return lhs.ID == rhs.ID;
+        }
+
+        public static bool operator !=(Address lhs, Address rhs)
+        {
+            bool bothNull = lhs is null && rhs is null;
+            bool oneNull = lhs is null || rhs is null;
+
+            if (bothNull)
+            {
+                return true;
+            }
+
+            if (oneNull && !bothNull)
+            {
+                return false;
+            }
+
+            return lhs.ID != rhs.ID;
+        }
+
     }
 }

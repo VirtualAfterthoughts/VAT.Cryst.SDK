@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace VAT.Packaging
 {
+    [Serializable]
     public class TagReference : ShardReferenceT<Tag>
     {
     }

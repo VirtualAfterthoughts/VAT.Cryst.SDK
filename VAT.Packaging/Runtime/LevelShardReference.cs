@@ -15,7 +15,7 @@ namespace VAT.Packaging
 
         public LevelShardReference() 
         {
-            _address = Address.EMPTY;
+            _address = new(Address.EMPTY);
         }
 
         public LevelShardReference(Address address)

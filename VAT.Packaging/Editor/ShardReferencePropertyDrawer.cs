@@ -48,7 +48,7 @@ namespace VAT.Packaging.Editor
         protected virtual void OnDrawShard(Rect position, GUIContent label, SerializedProperty addressProperty)
         {
             var address = addressProperty.stringValue;
-            AssetPackager.Instance.TryGetShard<Shard>(address, out var content);
+            AssetPackager.Instance.TryGetShard<Shard>(new(address), out var content);
 
             EditorGUI.BeginChangeCheck();
 
@@ -56,7 +56,7 @@ namespace VAT.Packaging.Editor
 
             if (EditorGUI.EndChangeCheck())
             {
-                addressProperty.stringValue = content ? content.Address : Address.EMPTY;
+                addressProperty.stringValue = content ? content.Address.ID : Address.EMPTY;
             }
         }
 

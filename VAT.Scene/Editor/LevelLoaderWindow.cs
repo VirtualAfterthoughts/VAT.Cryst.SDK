@@ -42,8 +42,8 @@ namespace VAT.Scene.Editor
             {
                 if (Application.isPlaying)
                 {
-                    string level = null;
-                    string loadLevel = null;
+                    Address level = null;
+                    Address loadLevel = null;
 
                     if (_level != null)
                         level = _level.Address;
