@@ -153,13 +153,16 @@ namespace VAT.Avatars.Muscular
 
             Vector3 error = targetAngularVelocity - Foot.Body.AngularVelocity;
 
-            Vector3 pidv = kdg * error;
+            Vector3 torque = kdg * error;
 
             Quaternion rotInertia2World = Foot.Rigidbody.Rigidbody.inertiaTensorRotation * Foot.Transform.rotation;
-            pidv = Quaternion.Inverse(rotInertia2World) * pidv;
-            pidv.Scale(Foot.Rigidbody.Rigidbody.inertiaTensor);
-            pidv = rotInertia2World * pidv;
-            Foot.Body.AddTorque(pidv);
+            torque = Quaternion.Inverse(rotInertia2World) * torque;
+            torque.Scale(Foot.Rigidbody.Rigidbody.inertiaTensor);
+            torque = rotInertia2World * torque;
+
+            torque *= 2f;
+
+            Foot.Body.AddTorque(torque);
         }
 
         private void SlopeSolve(out Vector3 counterVelocity)

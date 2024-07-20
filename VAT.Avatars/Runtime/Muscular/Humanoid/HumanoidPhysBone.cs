@@ -79,7 +79,7 @@ namespace VAT.Avatars.Muscular
             joint.rotationDriveMode = RotationDriveMode.Slerp;
             joint.slerpDrive = new JointDrive()
             {
-                positionSpring = newtons * 10f,
+                positionSpring = newtons * 40f,
                 positionDamper = newtons,
                 maximumForce = newtons,
             };

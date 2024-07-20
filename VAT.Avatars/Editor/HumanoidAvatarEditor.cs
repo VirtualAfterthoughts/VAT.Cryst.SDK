@@ -487,7 +487,7 @@ namespace VAT.Avatars.Editor {
             offset = float3.zero;
 
             EditorGUI.BeginChangeCheck();
-            float3 newPosition = Handles.FreeMoveHandle(position, quaternion.identity, 0.01f, Vector3.zero, Handles.RectangleHandleCap);
+            float3 newPosition = Handles.FreeMoveHandle(position, 0.01f, Vector3.zero, Handles.RectangleHandleCap);
 
             position = mul(_worldToLocal, position);
             newPosition = mul(_worldToLocal, newPosition);

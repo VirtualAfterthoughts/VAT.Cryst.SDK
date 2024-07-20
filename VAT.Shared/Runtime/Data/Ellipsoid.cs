@@ -118,7 +118,7 @@ namespace VAT.Shared.Data
             float3 initialEdgeX = mul(worldToLocal, edgeX);
 
             EditorGUI.BeginChangeCheck();
-            edgeX = Handles.FreeMoveHandle(edgeX, rotation, 0.01f, float3.zero, Handles.SphereHandleCap);
+            edgeX = Handles.FreeMoveHandle(edgeX, 0.01f, float3.zero, Handles.SphereHandleCap);
             
             if (EditorGUI.EndChangeCheck()) {
                 float3 localEdgeX = mul(worldToLocal, edgeX);
@@ -133,7 +133,7 @@ namespace VAT.Shared.Data
             float3 initialEdgeY = mul(worldToLocal, edgeY);
 
             EditorGUI.BeginChangeCheck();
-            edgeY = Handles.FreeMoveHandle(edgeY, rotation, 0.01f, float3.zero, Handles.SphereHandleCap);
+            edgeY = Handles.FreeMoveHandle(edgeY, 0.01f, float3.zero, Handles.SphereHandleCap);
 
             if (EditorGUI.EndChangeCheck())
             {
@@ -153,7 +153,7 @@ namespace VAT.Shared.Data
 
             EditorGUI.BeginChangeCheck();
 
-            tip = Handles.FreeMoveHandle(tip, rotation, 0.01f, float3.zero, Handles.SphereHandleCap);
+            tip = Handles.FreeMoveHandle(tip, 0.01f, float3.zero, Handles.SphereHandleCap);
 
             Handles.ArrowHandleCap(0, tip, mul(rotation, Quaternion.AngleAxis(-90f * offsetSign, right)), 0.05f, EventType.Repaint);
 
