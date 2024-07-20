@@ -63,11 +63,37 @@ namespace VAT.Packaging.Editor
         protected void OnDrawAddressToggle(Rect position, SerializedProperty addressProperty)
         {
             int indent = EditorGUI.indentLevel;
+
             EditorGUI.indentLevel = 0;
             position.x += position.width + 24;
             position.width = position.height = EditorGUI.GetPropertyHeight(addressProperty);
             position.x -= position.width;
-            isDrawingAddress = EditorGUI.Toggle(position, isDrawingAddress, EditorStyles.radioButton);
+
+            // Unity icons can be found here:
+            // https://github.com/jasursadikov/unity-editor-icons
+            GUIContent content;
+
+            if (isDrawingAddress)
+            {
+                content = EditorGUIUtility.IconContent("InputField Icon");
+            }
+            else
+            {
+                content = EditorGUIUtility.IconContent("Selectable Icon");
+            }
+
+            var buttonStyle = new GUIStyle(GUI.skin.button)
+            {
+                padding = new RectOffset(1, 1, 1, 1)
+            };
+
+            bool toggle = GUI.Button(position, content, buttonStyle);
+
+            if (toggle)
+            {
+                isDrawingAddress = !isDrawingAddress;
+            }
+
             EditorGUI.indentLevel = indent;
         }
     }
