@@ -60,6 +60,9 @@ namespace VAT.Props
             UpdateState(percent);
         }
 
+        private Magazine _peekedMagazine = null;
+        private Cartridge _peekedCartridge = null;
+
         private void OnBoltStateChanged(BoltState previous, BoltState current)
         {
             if (current == BoltState.CLOSING)
@@ -77,10 +80,26 @@ namespace VAT.Props
                             unchambered.gameObject.SetActive(false);
                         }
 
-                        var cartridge = plug.magazine.TakeCartridge();
+                        _peekedMagazine = plug.magazine;
+                        _peekedCartridge = plug.magazine.PeekCartridge();
 
-                        chamber.InsertCartridge(cartridge);
+                        chamber.InsertCartridge(_peekedCartridge);
                     }
+                }
+            }
+
+            if (current == BoltState.CLOSED)
+            {
+                if (_peekedMagazine != null && _peekedCartridge != null)
+                {
+                    var parent = _peekedCartridge.transform.parent;
+
+                    _peekedMagazine.UnloadCartridge(_peekedCartridge);
+
+                    _peekedCartridge.transform.parent = parent;
+
+                    _peekedMagazine = null;
+                    _peekedCartridge = null;
                 }
             }
 
