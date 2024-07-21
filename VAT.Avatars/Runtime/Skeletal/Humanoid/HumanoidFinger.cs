@@ -10,6 +10,7 @@ using VAT.Shared.Data;
 using VAT.Input.Data;
 using VAT.Shared.Extensions;
 using UnityEngine.UIElements;
+using VAT.Cryst.Math;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -151,7 +152,7 @@ namespace VAT.Avatars.Skeletal
             float curl02 = Mathf.Lerp(openPose.phalanges[1].curl, closedPose.phalanges[1].curl, blendPose.phalanges[1].curl);
             float curl03 = Mathf.Lerp(openPose.phalanges[2].curl, closedPose.phalanges[2].curl, blendPose.phalanges[2].curl);
 
-            float lerp = Time.deltaTime * 20f;
+            float lerp = Smoothing.CalculateDecay(20f, Time.deltaTime);
 
             splay = Mathf.Lerp(_lastSplay, splay, lerp);
             curl01 = Mathf.Lerp(_lastCurl01, curl01, lerp);
@@ -177,6 +178,8 @@ namespace VAT.Avatars.Skeletal
 
             target = MetaCarpal.Parent.Transform.InverseTransform(Distal.Transform);
         }
+
+        private float _lastBlend = 0f;
 
         public override void Solve()
         {
@@ -221,6 +224,10 @@ namespace VAT.Avatars.Skeletal
             // Blend for open pose (REPLACE IN FUTURE)
             float blendCurl = 1f - blendPose.phalanges[0].curl;
 
+            blendCurl = Mathf.Lerp(_lastBlend, blendCurl, Smoothing.CalculateDecay(20f, Time.deltaTime));
+
+            _lastBlend = blendCurl;
+
             var gripOffset = parent.rotation * Quaternion.Inverse(realParent.rotation);
 
             // If quaternion angle is > 180 degrees (w is negative) convert to shortened angle
@@ -235,9 +242,9 @@ namespace VAT.Avatars.Skeletal
             gripOffset.ToAngleAxis(out var gripAngle, out var gripAxis);
             gripOffset = Quaternion.AngleAxis(gripAngle * 0.8f, gripAxis);
 
-            Proximal.rotation = Quaternion.Lerp(Proximal.rotation, gripOffset * solvedWorldProximal, blendCurl);
-            Middle.localRotation = Quaternion.Lerp(Middle.localRotation, solvedMiddle, blendCurl);
-            Distal.localRotation = Quaternion.Lerp(Distal.localRotation, solvedDistal, blendCurl);
+            Proximal.rotation = Quaternion.Slerp(Proximal.rotation, gripOffset * solvedWorldProximal, blendCurl);
+            Middle.localRotation = Quaternion.Slerp(Middle.localRotation, solvedMiddle, blendCurl);
+            Distal.localRotation = Quaternion.Slerp(Distal.localRotation, solvedDistal, blendCurl);
         }
     }
 }
