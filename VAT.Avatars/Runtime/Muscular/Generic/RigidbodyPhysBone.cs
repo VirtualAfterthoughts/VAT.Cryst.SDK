@@ -109,7 +109,8 @@ namespace VAT.Avatars.Muscular
             rigidbody.ResetCenterOfMass();
         }
 
-        public override void Solve(SimpleTransform target) {
+        public override void Solve(SimpleTransform target)
+        {
             var space = Joint.JointSpace;
             var previousTarget = space.RawTargetRotation;
             var currentTarget = space.InverseTransformTargetRotation(target.rotation, CrystSpace.WORLD);

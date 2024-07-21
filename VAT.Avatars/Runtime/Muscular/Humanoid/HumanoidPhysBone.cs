@@ -85,15 +85,6 @@ namespace VAT.Avatars.Muscular
             };
         }
 
-        public override void Solve(SimpleTransform target) {
-            var space = Joint.JointSpace;
-            var previousTarget = space.RawTargetRotation;
-            var currentTarget = space.InverseTransformTargetRotation(target.rotation, CrystSpace.WORLD);
-
-            space.RawTargetRotation = currentTarget;
-            space.RawTargetAngularVelocity = PhysicsExtensions.GetAngularVelocity(previousTarget, currentTarget);
-        }
-
         public override void AttachJoint(PhysBone bone = null)
         {
             // Recreate the joint
