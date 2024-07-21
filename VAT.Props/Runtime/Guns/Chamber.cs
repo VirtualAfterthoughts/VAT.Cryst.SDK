@@ -16,7 +16,7 @@ namespace VAT.Props
             {
                 if (_cartridgeTarget == null)
                 {
-                    _cartridgeTarget = transform;
+                    return transform;
                 }
 
                 return _cartridgeTarget;
@@ -60,5 +60,18 @@ namespace VAT.Props
 
             return takenCartridge;
         }
+
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            Gizmos.matrix = CartridgeTarget.localToWorldMatrix;
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireCube(Vector3.zero, Vector3.one * 0.02f);
+
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawSphere(Vector3.zero, 0.01f);
+        }
+#endif
     }
 }

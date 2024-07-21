@@ -72,6 +72,11 @@ namespace VAT.Props
                     {
                         var unchambered = chamber.TakeCartridge();
 
+                        if (unchambered != null)
+                        {
+                            unchambered.gameObject.SetActive(false);
+                        }
+
                         var cartridge = plug.magazine.TakeCartridge();
 
                         chamber.InsertCartridge(cartridge);

@@ -165,14 +165,13 @@ namespace VAT.Props
                 return;
             }
 
-            Gizmos.color = Color.yellow;
-
             for (var i = 0; i < _cartridgeTargets.Length && i < data.Inventory.cartridges.Length; i++)
             {
                 var target = _cartridgeTargets[i];
 
                 var spawnable = data.Inventory.cartridges[i].Shard.Spawnable;
-                var previewMesh = spawnable.Shard.PreviewMesh;
+                var shard = spawnable.Shard;
+                var previewMesh = shard.PreviewMesh;
 
                 if (previewMesh == null || previewMesh.EditorAssetT == null)
                 {
@@ -181,6 +180,10 @@ namespace VAT.Props
 
                 Gizmos.matrix = target.localToWorldMatrix;
 
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireCube(shard.Bounds.center, shard.Bounds.size);
+
+                Gizmos.color = Color.yellow;
                 Gizmos.DrawMesh(previewMesh.EditorAssetT);
             }
         }

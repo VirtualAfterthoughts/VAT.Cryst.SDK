@@ -17,7 +17,23 @@ namespace VAT.Props
 
         private void Update()
         {
-            _animator.SetFloat(_percentParameter, Mathf.Clamp(_bolt.PulledPercent, 0f, 0.99f));
+            float pulledPercent = _bolt.PulledPercent;
+
+            if (_bolt.State == BoltState.OPENING)
+            {
+                _animator.SetBool("Returning", false);
+            }
+            else if (_bolt.State == BoltState.CLOSING)
+            {
+                _animator.SetBool("Returning", true);
+            }
+
+            if (_animator.GetBool("Returning"))
+            {
+                pulledPercent = 1f - pulledPercent;
+            }
+
+            _animator.SetFloat(_percentParameter, Mathf.Clamp(pulledPercent, 0f, 0.99f));
         }
     }
 }

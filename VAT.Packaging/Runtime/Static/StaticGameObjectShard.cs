@@ -215,6 +215,11 @@ namespace VAT.Packaging
                 {
                     newBounds.Encapsulate(collider.bounds);
                 }
+
+                foreach (var renderer in instance.GetComponentsInChildren<Renderer>())
+                {
+                    newBounds.Encapsulate(renderer.bounds);
+                }
                 
                 _bounds = newBounds;
             }
