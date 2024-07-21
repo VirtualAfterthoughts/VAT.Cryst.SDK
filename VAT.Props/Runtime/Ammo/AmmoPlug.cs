@@ -7,6 +7,8 @@ namespace VAT.Props.Ammo
 {
     public class AmmoPlug : Plug
     {
+        public Magazine magazine;
+
         private ConfigurableJoint _insertJoint = null;
         private ConfigurableJointSpace _jointSpace = null;
 

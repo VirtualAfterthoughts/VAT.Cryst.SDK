@@ -30,6 +30,18 @@ namespace VAT.Pooling
         [Tooltip("Should the spawned object use the scale of the spawnable placer?")]
         private bool _useScale = false;
 
+        public Spawnable Spawnable
+        {
+            get
+            {
+                return _spawnable;
+            }
+            set
+            {
+                _spawnable = value;
+            }
+        }
+
         private void Awake()
         {
             GlobalSpawner.Register(_spawnable);

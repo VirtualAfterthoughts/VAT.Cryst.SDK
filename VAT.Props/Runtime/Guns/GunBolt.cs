@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using VAT.Props.Ammo;
+
 namespace VAT.Props
 {
     public enum BoltState
@@ -18,6 +20,9 @@ namespace VAT.Props
 
     public class GunBolt : MonoBehaviour
     {
+        public AmmoSocket socket;
+        public Chamber chamber;
+
         private float _pulledPercent = 0f;
         public float PulledPercent => _pulledPercent;
 
@@ -82,6 +87,21 @@ namespace VAT.Props
                     if (percent < 0.99f)
                     {
                         State = BoltState.CLOSING;
+
+                        if (socket != null && socket.LockedPlugs.Count > 0)
+                        {
+                            var plug = socket.LockedPlugs[0] as AmmoPlug;
+
+                            if (plug != null)
+                            {
+                                var unchambered = chamber.TakeCartridge();
+
+                                var cartridge = plug.magazine.TakeCartridge();
+
+                                chamber.InsertCartridge(cartridge);
+                            }
+                        }
+
                         UpdateState(percent);
                     }
                     break;

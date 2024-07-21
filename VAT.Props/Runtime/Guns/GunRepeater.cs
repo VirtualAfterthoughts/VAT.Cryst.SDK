@@ -62,15 +62,27 @@ namespace VAT.Props
             }
         }
 
+        private bool _wasReturning = false;
+
         private void Update()
         {
             float percent = _cycleTime / SecondsPerRound;
-            if (percent >= 0.5f)
+
+            bool isReturning = percent >= 0.5f;
+
+            if (isReturning)
             {
                 percent = 1f - percent;
             }
 
             percent *= 2f;
+
+            if (isReturning && !_wasReturning && !_bolt.IsLocked)
+            {
+                _bolt.UpdateBolt(1f);
+            }
+
+            _wasReturning = isReturning;
 
             if (!_bolt.IsLocked)
             {

@@ -21,5 +21,9 @@ namespace VAT.Props
                 _data = value;
             }
         }
+
+        private bool _spent = false;
+
+        public bool Spent => _spent;
     }
 }
