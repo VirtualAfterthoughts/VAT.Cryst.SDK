@@ -14,7 +14,7 @@ namespace VAT.Packaging.Editor
 {
     public static class PackageTools
     {
-        [MenuItem("VAT/Cryst SDK/Tools/Packages/Import Crystal")]
+        [MenuItem("Virtual Afterthoughts/Cryst SDK/Tools/Packages/Import Crystal")]
         public static void ImportCrystal()
         {
             string path = EditorUtility.OpenFilePanel("Import Crystal", Application.dataPath, "json");

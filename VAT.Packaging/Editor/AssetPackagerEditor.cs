@@ -16,7 +16,7 @@ namespace VAT.Packaging.Editor
 
         private string _searchQuery;
 
-        [MenuItem("VAT/Cryst SDK/Asset Packager", priority = -10000)]
+        [MenuItem("Virtual Afterthoughts/Cryst SDK/Asset Packager", priority = -10000)]
         public static void Initialize()
         {
             if (!Application.isPlaying)

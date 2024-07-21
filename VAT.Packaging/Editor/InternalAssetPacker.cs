@@ -13,7 +13,7 @@ namespace VAT.Packaging.Editor
         /// <summary>
         /// Packs all internal text assets with default settings.
         /// </summary>
-        [MenuItem("VAT/Debug/Pack Game Assets")]
+        [MenuItem("Virtual Afterthoughts/Debug/Pack Game Assets")]
         public static void PackTextAssets()
         {
             PackTextAssets(false);

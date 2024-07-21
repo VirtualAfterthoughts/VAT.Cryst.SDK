@@ -147,7 +147,7 @@ namespace VAT.Cryst.Game
         }
 
 #if UNITY_EDITOR
-        [MenuItem("VAT/Cryst SDK/Settings")]
+        [MenuItem("Virtual Afterthoughts/Cryst SDK/Settings")]
         private static void OpenSettings()
         {
             if (_loadedSettings != null)

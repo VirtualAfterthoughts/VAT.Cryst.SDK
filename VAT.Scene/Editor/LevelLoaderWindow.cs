@@ -13,7 +13,7 @@ namespace VAT.Scene.Editor
     {
         private StaticLevelShard _level, _loadLevel;
 
-        [MenuItem("VAT/Cryst SDK/Tools/Scene/Load Level", priority = -10000)]
+        [MenuItem("Virtual Afterthoughts/Cryst SDK/Tools/Scene/Load Level", priority = -10000)]
         public static void Initialize()
         {
             LevelLoaderWindow window = GetWindow<LevelLoaderWindow>("Level Loader");
