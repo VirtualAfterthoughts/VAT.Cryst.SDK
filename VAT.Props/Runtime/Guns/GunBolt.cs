@@ -47,7 +47,7 @@ namespace VAT.Props
                 var previousState = _state;
                 _state = value;
 
-                OnStateChanged?.Invoke(previousState, _state);
+                OnBoltStateChanged(previousState, _state);
             }
         }
 
@@ -58,6 +58,28 @@ namespace VAT.Props
             _pulledPercent = percent;
 
             UpdateState(percent);
+        }
+
+        private void OnBoltStateChanged(BoltState previous, BoltState current)
+        {
+            if (current == BoltState.CLOSING)
+            {
+                if (socket != null && socket.LockedPlugs.Count > 0)
+                {
+                    var plug = socket.LockedPlugs[0] as AmmoPlug;
+
+                    if (plug != null)
+                    {
+                        var unchambered = chamber.TakeCartridge();
+
+                        var cartridge = plug.magazine.TakeCartridge();
+
+                        chamber.InsertCartridge(cartridge);
+                    }
+                }
+            }
+
+            OnStateChanged?.Invoke(previous, current);
         }
 
         private void UpdateState(float percent)
@@ -87,21 +109,6 @@ namespace VAT.Props
                     if (percent < 0.99f)
                     {
                         State = BoltState.CLOSING;
-
-                        if (socket != null && socket.LockedPlugs.Count > 0)
-                        {
-                            var plug = socket.LockedPlugs[0] as AmmoPlug;
-
-                            if (plug != null)
-                            {
-                                var unchambered = chamber.TakeCartridge();
-
-                                var cartridge = plug.magazine.TakeCartridge();
-
-                                chamber.InsertCartridge(cartridge);
-                            }
-                        }
-
                         UpdateState(percent);
                     }
                     break;

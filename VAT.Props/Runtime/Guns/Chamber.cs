@@ -7,6 +7,22 @@ namespace VAT.Props
 {
     public class Chamber : MonoBehaviour
     {
+        [SerializeField]
+        private Transform _cartridgeTarget = null;
+
+        public Transform CartridgeTarget
+        {
+            get
+            {
+                if (_cartridgeTarget == null)
+                {
+                    _cartridgeTarget = transform;
+                }
+
+                return _cartridgeTarget;
+            }
+        }
+
         private Cartridge _cartridge = null;
         public Cartridge Cartridge => _cartridge;
 
@@ -17,7 +33,15 @@ namespace VAT.Props
                 return false;
             }
 
+            if (cartridge == null)
+            {
+                return false;
+            }
+
             _cartridge = cartridge;
+
+            cartridge.transform.parent = CartridgeTarget;
+            cartridge.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
 
             return true;
         }
@@ -31,6 +55,8 @@ namespace VAT.Props
 
             var takenCartridge = Cartridge;
             _cartridge = null;
+
+            takenCartridge.transform.parent = null;
 
             return takenCartridge;
         }
