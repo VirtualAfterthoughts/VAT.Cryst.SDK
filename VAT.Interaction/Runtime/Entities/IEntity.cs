@@ -7,5 +7,6 @@ namespace VAT.Interaction.Entities
 {
     public interface IEntity
     {
+        GameObject Root { get; set; }
     }
 }

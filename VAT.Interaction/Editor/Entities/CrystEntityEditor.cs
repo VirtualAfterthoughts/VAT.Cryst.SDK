@@ -14,6 +14,8 @@ namespace VAT.Interaction.Editor
     {
         public override void OnInspectorGUI()
         {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("_root"));
+
             EditorGUILayout.PropertyField(serializedObject.FindProperty("_bodies"));
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("_joints"));

@@ -9,6 +9,9 @@ namespace VAT.Interaction.Entities
     public class CrystEntity : MonoBehaviour, IEntity
     {
         [SerializeField]
+        private GameObject _root = null;
+
+        [SerializeField]
         private CrystBody[] _bodies = new CrystBody[0];
 
         [SerializeField]
@@ -17,6 +20,23 @@ namespace VAT.Interaction.Entities
         public CrystBody[] Bodies => _bodies;
 
         public CrystJoint[] Joints => _joints;
+
+        public GameObject Root
+        {
+            get
+            {
+                if (_root == null)
+                {
+                    _root = gameObject;
+                }
+
+                return _root;
+            }
+            set
+            {
+                _root = value;
+            }
+        }
 
         private void Awake()
         {
