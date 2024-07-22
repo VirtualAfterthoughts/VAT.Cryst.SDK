@@ -25,12 +25,15 @@ namespace VAT.Cryst.Data
         };
 
         [SerializeField]
+        [Min(1e-07f)]
         private float _mass;
 
         [SerializeField]
+        [Min(0f)]
         private float _drag;
 
         [SerializeField]
+        [Min(0f)]
         private float _angularDrag;
 
         [SerializeField]
