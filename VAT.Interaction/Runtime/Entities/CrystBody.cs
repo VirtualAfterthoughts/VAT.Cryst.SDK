@@ -99,5 +99,25 @@ namespace VAT.Interaction.Entities
 
             _rigidbody.isKinematic = Info.IsKinematic;
         }
+
+        public void AddForce(Vector3 force, ForceMode mode)
+        {
+            if (!HasBody)
+            {
+                return;
+            }
+
+            Rigidbody.AddForce(force, mode);
+        }
+
+        public void AddTorque(Vector3 torque, ForceMode mode)
+        {
+            if (!HasBody)
+            {
+                return;
+            }
+
+            Rigidbody.AddTorque(torque, mode);
+        }
     }
 }
