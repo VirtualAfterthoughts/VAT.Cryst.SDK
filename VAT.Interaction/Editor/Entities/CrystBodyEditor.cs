@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 
@@ -20,6 +19,8 @@ namespace VAT.Interaction.Editor
             EditorGUI.BeginDisabledGroup(true);
 
             EditorGUILayout.ObjectField("Rigidbody", body.Rigidbody, typeof(Rigidbody), true);
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("_colliders"));
 
             EditorGUI.EndDisabledGroup();
 
@@ -42,6 +43,9 @@ namespace VAT.Interaction.Editor
 
         private void CheckEditorChanges(CrystBody body)
         {
+            // Check colliders
+            CheckColliders(body);
+
             // Get rigidbody
             if (!body.HasBody && body.TryGetComponent<Rigidbody>(out var rigidbody))
             {
@@ -77,6 +81,41 @@ namespace VAT.Interaction.Editor
                     serializedObject.FindProperty("_rigidbody").objectReferenceValue = null;
                 }
             }
+        }
+
+        private void CheckColliders(CrystBody body)
+        {
+            var setColliders = body.Colliders;
+            var foundColliders = body.FindCollidersInChildren();
+
+            if (setColliders.Length != foundColliders.Length)
+            {
+                DrawColliderValidation(body);
+                return;
+            }
+
+            foreach (var collider in foundColliders)
+            {
+                if (!setColliders.Contains(collider))
+                {
+                    DrawColliderValidation(body);
+                    return;
+                }
+            }
+        }
+
+        private void DrawColliderValidation(CrystBody body)
+        {
+            EditorGUILayout.HelpBox("The colliders on this Cryst Body are no longer accurate, and need to be collected!", MessageType.Warning);
+
+            if (GUILayout.Button("Collect Colliders"))
+            {
+                body.CollectColliders();
+
+                EditorUtility.SetDirty(body);
+            }
+
+            EditorGUILayout.LabelField(string.Empty, GUI.skin.horizontalSlider);
         }
     }
 }

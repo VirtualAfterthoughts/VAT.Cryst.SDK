@@ -58,6 +58,30 @@ namespace VAT.Interaction.Entities
             }
         }
 
+        public void CollectColliders()
+        {
+            Colliders = FindCollidersInChildren();
+        }
+
+        public Collider[] FindCollidersInChildren()
+        {
+            var childColliders = GetComponentsInChildren<Collider>();
+
+            List<Collider> validColliders = new();
+
+            foreach (var collider in childColliders)
+            {
+                if (collider.GetComponentInParent<CrystBody>(true) != this)
+                {
+                    continue;
+                }
+
+                validColliders.Add(collider);
+            }
+
+            return validColliders.ToArray();
+        }
+
         public void CreateBody()
         {
             if (HasBody)
