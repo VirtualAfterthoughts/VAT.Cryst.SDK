@@ -16,10 +16,6 @@ namespace VAT.Cryst.Interfaces
             {
                 return _target;
             }
-            set
-            {
-                _target = value;
-            }
         }
 
         public TInterface Interface
@@ -27,6 +23,10 @@ namespace VAT.Cryst.Interfaces
             get
             {
                 return _target as TInterface;
+            }
+            set
+            {
+                _target = value as Object;
             }
         }
     }
