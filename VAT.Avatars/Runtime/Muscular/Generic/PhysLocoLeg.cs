@@ -49,8 +49,8 @@ namespace VAT.Avatars.Muscular
 
             var physMaterial = new PhysicMaterial("LocoSphere")
             {
-                dynamicFriction = 2f,
-                staticFriction = 2f,
+                dynamicFriction = 8f,
+                staticFriction = 8f,
                 frictionCombine = PhysicMaterialCombine.Maximum,
                 bounceCombine = PhysicMaterialCombine.Minimum
             };
