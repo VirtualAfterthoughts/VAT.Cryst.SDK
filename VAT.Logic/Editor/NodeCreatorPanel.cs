@@ -14,7 +14,7 @@ namespace VAT.Logic.Editor
 {
     using UnityEngine;
 
-    [Overlay(typeof(SceneView), null)]
+    [Overlay(typeof(SceneView), "Node Creator")]
     public class NodeCreatorPanel : Overlay
     {
         public static NodeCreatorPanel Instance { get; private set; }
@@ -27,20 +27,6 @@ namespace VAT.Logic.Editor
             base.OnCreated();
 
             Instance = this;
-
-            displayedChanged += OnDisplayChanged;
-        }
-
-        private void OnDisplayChanged(bool value)
-        {
-            if (value)
-            {
-                displayName = "Node Creator";
-            }
-            else
-            {
-                displayName = null;
-            }
         }
 
         public override void OnWillBeDestroyed()

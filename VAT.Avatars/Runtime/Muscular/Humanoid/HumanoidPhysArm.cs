@@ -82,6 +82,8 @@ namespace VAT.Avatars.Muscular
             var elbowJoint = Elbow.ConfigurableJoint.ConfigurableJoint;
             elbowJoint.angularXMotion = elbowJoint.angularYMotion = elbowJoint.angularZMotion = ConfigurableJointMotion.Limited;
             elbowJoint.highAngularXLimit = new SoftJointLimit() { limit = 160f };
+
+            Hand.Hand.Rigidbody.Rigidbody.maxDepenetrationVelocity = 0.2f;
         }
 
         public override void Solve()
