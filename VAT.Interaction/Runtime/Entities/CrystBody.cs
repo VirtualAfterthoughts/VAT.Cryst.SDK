@@ -104,24 +104,21 @@ namespace VAT.Interaction.Entities
             Destroy(Rigidbody);
         }
 
-        public void Freeze()
+        public void Freeze(bool frozen = true)
         {
             if (!HasBody)
             {
                 return;
             }
 
-            _rigidbody.isKinematic = true;
-        }
-
-        public void Unfreeze()
-        {
-            if (!HasBody)
+            if (frozen)
             {
-                return;
+                _rigidbody.isKinematic = true;
             }
-
-            _rigidbody.isKinematic = Info.IsKinematic;
+            else
+            {
+                _rigidbody.isKinematic = Info.IsKinematic;
+            }
         }
 
         public void AddForce(Vector3 force, ForceMode mode)

@@ -44,23 +44,5 @@ namespace VAT.Props
                 OnFire?.Invoke();
             }
         }
-
-#if UNITY_EDITOR
-        private void OnDrawGizmos()
-        {
-            if (Chamber == null)
-            {
-                GUIContent warningContent = new(EditorGUIUtility.IconContent("console.warnicon"));
-                var style = new GUIStyle
-                {
-                    alignment = TextAnchor.MiddleCenter
-                };
-                Handles.Label(transform.position, warningContent, style);
-
-                Gizmos.color = Color.clear;
-                Gizmos.DrawSphere(transform.position, 0.01f);
-            }
-        }
-#endif
     }
 }
