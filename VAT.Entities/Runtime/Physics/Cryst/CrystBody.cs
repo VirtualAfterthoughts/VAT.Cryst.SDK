@@ -14,7 +14,7 @@ namespace VAT.Entities
     /// <summary>
     /// The abstraction of a physics body in Crystalline. When adding through code, invoke <see cref="CreateItem"/>.
     /// </summary>
-    public abstract class CrystBody : MonoBehaviour, IRecreatable, ICrystBody, IEntityComponent
+    public abstract class CrystBody : MonoBehaviour, IRecreatable
     {
         public static ComponentCache<CrystBody> Cache = new();
 
@@ -22,12 +22,6 @@ namespace VAT.Entities
         [HideInInspector]
         protected bool _hasBody = false;
         public bool HasBody { get { return _hasBody; } }
-
-        protected ICrystEntity _entity = null;
-        public ICrystEntity Entity { get { return _entity; } }
-
-        private bool _hasEntity = false;
-        public bool HasEntity => _hasEntity;
 
         public abstract float Mass { get; set; }
 
@@ -70,31 +64,6 @@ namespace VAT.Entities
             Cache.Remove(gameObject);
 
             OnBodyDestroy();
-        }
-
-        private void OnEnable()
-        {
-            if (!HasEntity)
-            {
-                _entity = GetComponentInParent<ICrystEntity>();
-
-                if (_entity != null)
-                {
-                    _hasEntity = true;
-                    _entity.Hierarchy.AddBody(this);
-                }
-            }
-        }
-
-        private void OnDisable()
-        {
-            if (HasEntity)
-            {
-                _hasEntity = false;
-
-                _entity.Hierarchy.RemoveBody(this);
-                _entity = null;
-            }
         }
 
         protected virtual void OnBodyAwake() { }
