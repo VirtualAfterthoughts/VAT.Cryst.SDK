@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Entities.PhysX;
 using VAT.Packaging;
 using VAT.Audio;
+using VAT.Interaction.Entities;
 
 namespace VAT.Props
 {
@@ -13,7 +13,7 @@ namespace VAT.Props
     {
         [Header("References")]
         [SerializeField]
-        private CrystRigidbody _body = null;
+        private CrystBody _body = null;
 
         [SerializeField]
         private ShardReferenceT<ImpactMaterial> _materialReference;

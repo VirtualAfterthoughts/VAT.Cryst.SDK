@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace VAT.Interaction
+namespace VAT.Cryst
 {
     public abstract class Actuatable : MonoBehaviour
     {

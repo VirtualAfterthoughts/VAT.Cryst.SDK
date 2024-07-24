@@ -17,9 +17,16 @@ namespace VAT.Interaction.Entities
         [SerializeField]
         private CrystJoint[] _joints = new CrystJoint[0];
 
-        public CrystBody[] Bodies => _bodies;
+        private readonly List<CrystBody> _runtimeBodies = new();
+        private readonly List<CrystJoint> _runtimeJoints = new();
 
-        public CrystJoint[] Joints => _joints;
+        public IReadOnlyList<CrystBody> DefaultBodies => _bodies;
+
+        public IReadOnlyList<CrystJoint> DefaultJoints => _joints;
+
+        public IReadOnlyList<CrystBody> Bodies => _runtimeBodies;
+
+        public IReadOnlyList<CrystJoint> Joints => _runtimeJoints;
 
         public GameObject Root
         {
@@ -40,15 +47,52 @@ namespace VAT.Interaction.Entities
 
         private void Awake()
         {
+            foreach (var body in DefaultBodies)
+            {
+                AddBody(body);
+            }
+
+            foreach (var joint in DefaultJoints)
+            {
+                AddJoint(joint);
+            }
+        }
+
+        private void OnDestroy()
+        {
             foreach (var body in Bodies)
             {
-                body.ParentEntity = this;
+                RemoveBody(body);
             }
 
             foreach (var joint in Joints)
             {
-                joint.ParentEntity = this;
+                RemoveJoint(joint);
             }
+        }
+
+        public void AddBody(CrystBody body)
+        {
+            _runtimeBodies.Add(body);
+            body.ParentEntity = this;
+        }
+
+        public void RemoveBody(CrystBody body)
+        {
+            _runtimeBodies.Remove(body);
+            body.ParentEntity = null;
+        }
+
+        public void AddJoint(CrystJoint joint)
+        {
+            _runtimeJoints.Add(joint);
+            joint.ParentEntity = this;
+        }
+
+        public void RemoveJoint(CrystJoint joint)
+        {
+            _runtimeJoints.Remove(joint);
+            joint.ParentEntity = null;
         }
 
         public void Freeze(bool frozen = true)

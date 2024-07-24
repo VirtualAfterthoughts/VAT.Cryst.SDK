@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using VAT.Interaction;
+using VAT.Cryst;
 
 namespace VAT.Props
 {
