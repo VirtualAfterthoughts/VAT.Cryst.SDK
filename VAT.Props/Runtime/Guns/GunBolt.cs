@@ -68,6 +68,21 @@ namespace VAT.Props
             if (current == BoltState.OPEN)
             {
                 chamber.EjectCartridge();
+
+                if (socket != null && socket.LockedPlugs.Count > 0)
+                {
+                    var plug = socket.LockedPlugs[0] as AmmoPlug;
+
+                    if (plug != null)
+                    {
+                        var mag = plug.magazine;
+                        
+                        if (mag.Cartridges.Count <= 0)
+                        {
+                            Lock();
+                        }
+                    }
+                }
             }
 
             if (current == BoltState.CLOSING)
