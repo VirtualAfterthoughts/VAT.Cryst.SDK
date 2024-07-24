@@ -89,7 +89,8 @@ namespace VAT.Props
 
             cartridge.Entity.Freeze(false);
             cartridge.Entity.AddForce(direction * 1.5f, ForceMode.VelocityChange);
-            cartridge.Entity.AddTorque(direction * 30f, ForceMode.VelocityChange);
+
+            cartridge.Entity.AddTorque(Vector3.Reflect(direction - CartridgeTarget.forward * 0.1f, CartridgeTarget.right) * 30f, ForceMode.VelocityChange);
         }
 
 #if UNITY_EDITOR
