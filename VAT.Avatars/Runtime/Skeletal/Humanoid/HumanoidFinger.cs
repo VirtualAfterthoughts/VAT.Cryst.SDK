@@ -53,6 +53,8 @@ namespace VAT.Avatars.Skeletal
         public SimpleTransform offsetHand = SimpleTransform.Default;
         public bool shouldOffset = false;
 
+        private SimpleTransform _lastOffsetHand = SimpleTransform.Default;
+
         public override void Initiate()
         {
             base.Initiate();
@@ -196,7 +198,11 @@ namespace VAT.Avatars.Skeletal
 
             if (shouldOffset)
             {
-                parent = parent.Transform(offsetHand);
+                float lerp = Smoothing.CalculateDecay(24f, Time.deltaTime);
+                var newOffset = SimpleTransform.Create(Vector3.Slerp(_lastOffsetHand.position, offsetHand.position, lerp), Quaternion.Slerp(_lastOffsetHand.rotation, offsetHand.rotation, lerp));
+                _lastOffsetHand = newOffset;
+
+                parent = parent.Transform(newOffset);
             }
 
             var target = parent.Transform(this.target);
