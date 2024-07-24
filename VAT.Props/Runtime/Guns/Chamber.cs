@@ -1,5 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+
+using System;
 
 using UnityEngine;
 
@@ -91,6 +92,18 @@ namespace VAT.Props
             cartridge.Entity.AddForce(direction * 1.5f, ForceMode.VelocityChange);
 
             cartridge.Entity.AddTorque(Vector3.Reflect(direction - CartridgeTarget.forward * 0.1f, CartridgeTarget.right) * 30f, ForceMode.VelocityChange);
+
+            EnableCollisionAsync(cartridge).Forget();
+        }
+
+        private async UniTaskVoid EnableCollisionAsync(Cartridge cartridge)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+
+            foreach (var body in cartridge.Entity.Bodies)
+            {
+                body.Rigidbody.detectCollisions = true;
+            }
         }
 
 #if UNITY_EDITOR
