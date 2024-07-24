@@ -1,26 +1,72 @@
+using System;
+using System.Linq;
+
 using VAT.Cryst.Interfaces;
+
+using VAT.Shared.Editor;
 
 namespace VAT.Cryst.Editor
 {
-    using UnityEditor;
-
     using UnityEngine;
+    using UnityEngine.UIElements;
 
-    using VAT.Shared.Editor;
+    using UnityEditor;
+    using UnityEditor.UIElements;
 
     [CustomPropertyDrawer(typeof(InterfaceReference<>))]
     public class InterfaceReferenceEditor : PropertyDrawer
     {
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             var targetProperty = property.FindPropertyRelative("_target");
 
-            var propertyType = property.GetPropertyInstance().GetType();
-            var interfaceType = propertyType.GenericTypeArguments[0];
+            // Get our types
+            var interfaceType = property.GetPropertyInstance().GetType().GenericTypeArguments[0];
+            var dragType = typeof(Object);
 
-            EditorGUI.ObjectField(position, targetProperty, interfaceType, label);
+            // Create the object field for the interface reference
+            var objectField = new ObjectField(property.displayName);
+            objectField.AddToClassList(ObjectField.alignedFieldUssClassName);
+            objectField.BindProperty(targetProperty);
+            objectField.objectType = interfaceType;
 
-            property.serializedObject.ApplyModifiedProperties();
+            // Only allow drag and drop for the interface type
+            objectField.RegisterCallback<DragUpdatedEvent>(dragUpdated =>
+            {
+                if (!IsDraggingType(interfaceType))
+                {
+                    dragUpdated.PreventDefault();
+                    objectField.objectType = interfaceType;
+                }
+                else
+                {
+                    objectField.objectType = dragType;
+                }
+            });
+
+            // Reset to the interface type on drag exit
+            objectField.RegisterCallback<DragExitedEvent>(dragExited =>
+            {
+                objectField.objectType = interfaceType;
+            });
+
+            // Make sure to validate the value
+            objectField.RegisterValueChangedCallback(changed =>
+            {
+                var newValue = changed.newValue;
+
+                if (newValue is GameObject go)
+                {
+                    objectField.value = go.GetComponent(interfaceType);
+                }
+            });
+
+            return objectField;
+        }
+
+        private static bool IsDraggingType(Type type)
+        {
+            return DragAndDrop.objectReferences.Any(obj => type.IsAssignableFrom(obj.GetType()) || (obj is GameObject go && go.GetComponent(type)) );
         }
     }
 }
