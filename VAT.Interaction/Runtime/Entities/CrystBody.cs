@@ -5,11 +5,15 @@ using UnityEngine;
 
 using VAT.Cryst.Data;
 
+using VAT.Shared.Utilities;
+
 namespace VAT.Interaction.Entities
 {
     [DisallowMultipleComponent]
     public class CrystBody : MonoBehaviour, IEntityChild
     {
+        public static readonly ComponentCache<CrystBody> Cache = new();
+
         [SerializeField]
         private Rigidbody _rigidbody = null;
 
@@ -56,6 +60,16 @@ namespace VAT.Interaction.Entities
             {
                 return Rigidbody != null;
             }
+        }
+
+        private void Awake()
+        {
+            Cache.Add(gameObject, this);
+        }
+
+        private void OnDestroy()
+        {
+            Cache.Remove(gameObject, this);
         }
 
         public void CollectColliders()
@@ -121,7 +135,7 @@ namespace VAT.Interaction.Entities
             }
         }
 
-        public void AddForce(Vector3 force, ForceMode mode)
+        public void AddForce(Vector3 force, ForceMode mode = ForceMode.Force)
         {
             if (!HasBody)
             {
@@ -131,7 +145,7 @@ namespace VAT.Interaction.Entities
             Rigidbody.AddForce(force, mode);
         }
 
-        public void AddTorque(Vector3 torque, ForceMode mode)
+        public void AddTorque(Vector3 torque, ForceMode mode = ForceMode.Force)
         {
             if (!HasBody)
             {

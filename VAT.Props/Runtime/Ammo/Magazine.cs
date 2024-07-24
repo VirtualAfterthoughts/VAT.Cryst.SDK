@@ -91,6 +91,12 @@ namespace VAT.Props
 
         public void LoadCartridge(Cartridge cartridge)
         {
+            foreach (var body in cartridge.Entity.Bodies)
+            {
+                body.Freeze(true);
+                body.Rigidbody.detectCollisions = false;
+            }
+
             _cartridges.Add(cartridge);
 
             ParentCartridge(cartridge);
@@ -103,6 +109,12 @@ namespace VAT.Props
             cartridge.gameObject.SetActive(true);
 
             cartridge.transform.parent = null;
+
+            foreach (var body in cartridge.Entity.Bodies)
+            {
+                body.Freeze(false);
+                body.Rigidbody.detectCollisions = true;
+            }
 
             foreach (var other in Cartridges)
             {

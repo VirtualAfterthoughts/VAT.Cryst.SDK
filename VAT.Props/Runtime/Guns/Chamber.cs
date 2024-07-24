@@ -10,6 +10,9 @@ namespace VAT.Props
         [SerializeField]
         private Transform _cartridgeTarget = null;
 
+        [SerializeField]
+        private Vector3 _ejectDirection = new(0.5f, 0.8f, 0f);
+
         public Transform CartridgeTarget
         {
             get
@@ -20,6 +23,18 @@ namespace VAT.Props
                 }
 
                 return _cartridgeTarget;
+            }
+        }
+
+        public Vector3 EjectDirection
+        {
+            get
+            {
+                return _ejectDirection.normalized;
+            }
+            set
+            {
+                _ejectDirection = value.normalized;
             }
         }
 
@@ -59,6 +74,22 @@ namespace VAT.Props
             takenCartridge.transform.parent = null;
 
             return takenCartridge;
+        }
+
+        public void EjectCartridge()
+        {
+            var cartridge = TakeCartridge();
+
+            if (cartridge == null)
+            {
+                return;
+            }
+
+            var direction = CartridgeTarget.rotation * EjectDirection;
+
+            cartridge.Entity.Freeze(false);
+            cartridge.Entity.AddForce(direction * 1.5f, ForceMode.VelocityChange);
+            cartridge.Entity.AddTorque(direction * 30f, ForceMode.VelocityChange);
         }
 
 #if UNITY_EDITOR

@@ -1,14 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
+
+using VAT.Interaction.Entities;
 
 namespace VAT.Props
 {
     public class Cartridge : MonoBehaviour
     {
         [SerializeField]
-        private CartridgeDataReference _data;
+        private CrystEntity _entity = null;
+
+        [SerializeField]
+        private CartridgeDataReference _data = null;
+
+        public CrystEntity Entity
+        {
+            get
+            {
+                return _entity;
+            }
+            set
+            {
+                _entity = value;
+            }
+        }
 
         public CartridgeDataReference Data
         {

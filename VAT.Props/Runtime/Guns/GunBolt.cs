@@ -65,6 +65,11 @@ namespace VAT.Props
 
         private void OnBoltStateChanged(BoltState previous, BoltState current)
         {
+            if (current == BoltState.OPEN)
+            {
+                chamber.EjectCartridge();
+            }
+
             if (current == BoltState.CLOSING)
             {
                 if (socket != null && socket.LockedPlugs.Count > 0)
@@ -73,13 +78,6 @@ namespace VAT.Props
 
                     if (plug != null)
                     {
-                        var unchambered = chamber.TakeCartridge();
-
-                        if (unchambered != null)
-                        {
-                            unchambered.gameObject.SetActive(false);
-                        }
-
                         _peekedMagazine = plug.magazine;
                         _peekedCartridge = plug.magazine.PeekCartridge();
 
@@ -95,6 +93,12 @@ namespace VAT.Props
                     var parent = _peekedCartridge.transform.parent;
 
                     _peekedMagazine.UnloadCartridge(_peekedCartridge);
+
+                    foreach (var body in _peekedCartridge.Entity.Bodies)
+                    {
+                        body.Freeze(true);
+                        body.Rigidbody.detectCollisions = false;
+                    }
 
                     _peekedCartridge.transform.parent = parent;
 

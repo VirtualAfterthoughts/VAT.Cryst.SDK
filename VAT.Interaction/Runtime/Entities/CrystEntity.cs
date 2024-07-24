@@ -50,5 +50,29 @@ namespace VAT.Interaction.Entities
                 joint.ParentEntity = this;
             }
         }
+
+        public void Freeze(bool frozen = true)
+        {
+            foreach (var body in Bodies)
+            {
+                body.Freeze(frozen);
+            }
+        }
+
+        public void AddForce(Vector3 force, ForceMode mode = ForceMode.Force)
+        {
+            foreach (var body in Bodies)
+            {
+                body.AddForce(force, mode);
+            }
+        }
+
+        public void AddTorque(Vector3 torque, ForceMode mode = ForceMode.Force)
+        {
+            foreach (var body in Bodies)
+            {
+                body.AddTorque(torque, mode);
+            }
+        }
     }
 }
