@@ -45,6 +45,8 @@ namespace VAT.Avatars.Muscular
             _bones[2] = new RigidbodyPhysBone("Foot", Fender, JointAngularLimits.Free);
 
             Foot.Rigidbody.Rigidbody.angularDrag = 0f;
+            Foot.Rigidbody.Rigidbody.maxDepenetrationVelocity = 0.1f;
+
             _locoBall = Foot.UnityGameObject.AddComponent<SphereCollider>();
 
             var physMaterial = new PhysicMaterial("LocoSphere")

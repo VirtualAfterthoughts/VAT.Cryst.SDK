@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using static Unity.Mathematics.math;
 
 using UnityEngine;
 
+using VAT.Cryst.Math;
+
+using VAT.Shared.Data;
+using VAT.Shared.Extensions;
+
 namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
-    using VAT.Cryst.Math;
-    using VAT.Shared.Data;
-    using VAT.Shared.Extensions;
 
     public class LocoLeg : DataBoneGroup
     {
@@ -48,9 +47,10 @@ namespace VAT.Avatars.Skeletal
         public float _footShrink = 0f;
         public float _jumpPull = 0f;
         public float _jumpMultiplier = 1f;
-        private float _timeSinceJump = 0f;
+        private float _timeSinceJump = float.MaxValue;
 
         private float _legScalar = 1f;
+        private bool _zeroedJumpMult = false;
 
         public override void Solve()
         {
@@ -78,7 +78,8 @@ namespace VAT.Avatars.Skeletal
 
             var movementVelocity = Vector3.zero;
 
-            if (_avatarPayload.TryGetInput(out var input)) {
+            if (_avatarPayload.TryGetInput(out var input)) 
+            {
                 movementVelocity = input.GetMovement() * 4f;
                 velocity += movementVelocity;
 
@@ -103,21 +104,30 @@ namespace VAT.Avatars.Skeletal
                         _jumpMultiplier = Mathf.Lerp(0f, 5f, _timeSinceJump / initialTime);
                         _spineDebtMultiplier = Mathf.Lerp(0f, 1f, _timeSinceJump / 0.25f);
                         _jumpPull = Mathf.Lerp(0.4f, -0.5f, _timeSinceJump / pullTime);
+
+                        _zeroedJumpMult = false;
                     }
                     else
                     {
-                        _jumpMultiplier = 1f;
+                        if (!_zeroedJumpMult)
+                        {
+                            _jumpMultiplier = 0f;
+                            _zeroedJumpMult = true;
+                        }
+
+                        _jumpMultiplier = Mathf.Lerp(_jumpMultiplier, 1f, Smoothing.CalculateDecay(6f, Time.deltaTime));
+
                         _spineDebtMultiplier = 1f;
                         _jumpPull = Mathf.Lerp(_jumpPull, 0f, Smoothing.CalculateDecay(14f, Time.deltaTime));
                     }
 
-                    if (_timeSinceJump > 0.15f * timerScalar && _timeSinceJump < 1f * timerScalar)
+                    if (_timeSinceJump > 0.15f * timerScalar && _timeSinceJump < 0.5f * timerScalar)
                     {
-                        _footShrink = Mathf.Lerp(_footShrink, 0.3f, Smoothing.CalculateDecay(24f, Time.deltaTime));
+                        _footShrink = Mathf.Lerp(_footShrink, 0.3f, Smoothing.CalculateDecay(32f, Time.deltaTime));
                     }
                     else
                     {
-                        _footShrink = Mathf.Lerp(_footShrink, 0f, Smoothing.CalculateDecay(24f, Time.deltaTime));
+                        _footShrink = Mathf.Lerp(_footShrink, 0f, Smoothing.CalculateDecay(32f, Time.deltaTime));
                     }
 
                     _timeSinceJump += Time.deltaTime;
