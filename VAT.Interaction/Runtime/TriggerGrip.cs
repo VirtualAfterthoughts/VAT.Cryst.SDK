@@ -14,7 +14,7 @@ namespace VAT.Interaction
 
         [SerializeField]
         [Tooltip("The list of all targets to be actuated when this trigger is pulled down.")]
-        private Actuatable[] _targets = new Actuatable[0];
+        private InterfaceReference<IActuatable>[] _targets = new InterfaceReference<IActuatable>[0];
 
         [SerializeField]
         [Range(0f, 1f)]
@@ -23,7 +23,7 @@ namespace VAT.Interaction
 
         public Grip Grip { get { return _grip; } set { _grip = value; } }
 
-        public Actuatable[] Targets { get { return _targets; } set { _targets = value; } }
+        public InterfaceReference<IActuatable>[] Targets { get { return _targets; } set { _targets = value; } }
 
         public float ActuationThreshold { get { return _actuationThreshold; } set { _actuationThreshold = value; } }
 
@@ -81,7 +81,7 @@ namespace VAT.Interaction
         {
             foreach (var target in Targets)
             {
-                target.Actuate(isActuated);
+                target.Interface.Actuate(isActuated);
             }
 
             _isActuated = isActuated;

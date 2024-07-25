@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using VAT.Cryst.Math;
+
 using VAT.Interaction;
 
 namespace VAT.Props

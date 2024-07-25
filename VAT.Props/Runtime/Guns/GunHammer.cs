@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 using VAT.Cryst;
@@ -14,7 +11,7 @@ namespace VAT.Props
         COCKED = 2,
     }
 
-    public class GunHammer : Actuatable
+    public class GunHammer : MonoBehaviour, IActuatable
     {
         [SerializeField]
         private GunBarrel _barrel = null;
@@ -23,9 +20,19 @@ namespace VAT.Props
 
         public HammerState State => _state;
 
-        protected override void OnActuated(bool isActuated)
+        private bool _isActuated = false;
+        public bool IsActuated => _isActuated;
+
+        public void Actuate(bool actuated = true)
         {
-            if (isActuated)
+            if (actuated == IsActuated)
+            {
+                return;
+            }
+
+            _isActuated = actuated;
+
+            if (actuated)
             {
                 Release();
             }
