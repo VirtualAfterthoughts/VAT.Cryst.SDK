@@ -233,14 +233,15 @@ namespace VAT.Avatars.Muscular
 
             Knee.ConfigurableJoint.ConfigurableJoint.rotationDriveMode = RotationDriveMode.Slerp;
 
-            float kneeForce = 500000000f * legScalar;
-            float kneeDamper = kneeForce * 0.5f;
+            float kneeForce = 5000000f * legScalar;
+            float kneeDamper = kneeForce * 0.1f;
+            float kneeMaxForce = kneeDamper * 0.05f;
 
             Knee.ConfigurableJoint.ConfigurableJoint.slerpDrive = new JointDrive()
             {
                 positionSpring = kneeForce,
                 positionDamper = kneeDamper,
-                maximumForce = kneeForce
+                maximumForce = kneeMaxForce
             };
 
             Fender.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);

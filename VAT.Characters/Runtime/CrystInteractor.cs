@@ -341,6 +341,7 @@ namespace VAT.Characters
 
         private void ResetPin()
         {
+            _lerp = 1f;
             _pinAmount = 1f;
             lastTar = _latestTar;
         }
