@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 using VAT.Avatars.Proportions;
 using VAT.Avatars.Constants;
-using VAT.Avatars.Skeletal;
-
-using VAT.Cryst.Interfaces;
 
 using VAT.Shared.Data;
 
@@ -18,7 +12,7 @@ namespace VAT.Avatars.Muscular
     using Unity.Mathematics;
     using VAT.Avatars.Bones;
 
-    public class HumanoidPhysNeck : HumanoidPhysBoneGroup, IPoseableT<IHumanNeck>, IHumanNeck
+    public class HumanoidPhysNeck : HumanoidPhysBoneGroup, IHumanNeck
     {
         public override int BoneCount => 3;
 

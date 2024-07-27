@@ -1,14 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 using static Unity.Mathematics.math;
 
 using VAT.Avatars.Proportions;
 using VAT.Avatars.Constants;
-
-using VAT.Cryst.Interfaces;
 
 using VAT.Shared.Data;
 
@@ -20,7 +15,7 @@ namespace VAT.Avatars.Muscular
     using VAT.Cryst.Delegates;
     using VAT.Input;
 
-    public class HumanoidPhysArm : HumanoidPhysBoneGroup, IPoseableT<IHumanArm>, IHumanArm
+    public class HumanoidPhysArm : HumanoidPhysBoneGroup, IHumanArm
     {
         public bool isLeft = false;
         public override int BoneCount => 4;

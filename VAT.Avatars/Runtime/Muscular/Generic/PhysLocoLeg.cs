@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+
 using VAT.Avatars.Bones;
 using VAT.Avatars.Skeletal;
 
-using VAT.Cryst.Interfaces;
 using VAT.Cryst.Math;
 using VAT.Entities;
 using VAT.Input.Data;
@@ -14,7 +12,7 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Muscular
 {
-    public class PhysLocoLeg : PhysBoneGroupT<RigidbodyPhysBone>, IPoseableT<LocoLeg>
+    public class PhysLocoLeg : PhysBoneGroupT<RigidbodyPhysBone>
     {
         public override int BoneCount => 3;
 

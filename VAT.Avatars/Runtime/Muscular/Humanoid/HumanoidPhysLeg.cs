@@ -2,8 +2,6 @@ using UnityEngine;
 
 using VAT.Avatars.Proportions;
 
-using VAT.Cryst.Interfaces;
-
 using VAT.Shared.Data;
 
 using static Unity.Mathematics.math;
@@ -16,7 +14,7 @@ namespace VAT.Avatars.Muscular
     using VAT.Cryst.Delegates;
     using VAT.Input;
 
-    public class HumanoidPhysLeg : HumanoidPhysBoneGroup, IPoseableT<IHumanLeg>, IHumanLeg
+    public class HumanoidPhysLeg : HumanoidPhysBoneGroup, IHumanLeg
     {
         public bool isLeft = false;
 

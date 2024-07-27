@@ -1,11 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
-using VAT.Cryst;
-
-using VAT.Shared;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 using VAT.Shared.Utilities;
@@ -15,7 +9,7 @@ namespace VAT.Pooling
     public delegate void AssetPoolableDelegate(AssetPoolable poolable);
     public delegate void AssetSpawnDelegate(AssetPoolable poolable, ulong id);
 
-    public class AssetPoolable : MonoBehaviour, IDespawnable, IRespawnable
+    public class AssetPoolable : MonoBehaviour
     {
         public static ComponentCache<AssetPoolable> Cache { get; private set; } = new ComponentCache<AssetPoolable>();
 
@@ -48,8 +42,6 @@ namespace VAT.Pooling
         private void Awake()
         {
             Cache.Add(gameObject, this);
-            IDespawnable.Cache.Add(gameObject, this);
-            IRespawnable.Cache.Add(gameObject, this);
 
             _initialParent = transform.parent;
             _spawnTransform = SimpleTransform.Create(transform.position, transform.rotation);
@@ -60,8 +52,6 @@ namespace VAT.Pooling
             InternalPoolDestroyDelegate?.Invoke(this);
 
             Cache.Remove(gameObject, this);
-            IDespawnable.Cache.Remove(gameObject, this);
-            IRespawnable.Cache.Remove(gameObject, this);
         }
 
 #if UNITY_EDITOR
