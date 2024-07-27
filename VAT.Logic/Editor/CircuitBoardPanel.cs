@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEditor;
 using UnityEditor.Overlays;
@@ -107,14 +107,14 @@ namespace VAT.Logic.Editor
             return style;
         }
 
-        public Node GetSelectedNode()
+        public INode GetSelectedNode()
         {
             if (_isCreateMenu)
             {
                 return null;
             }
 
-            return _nodeField.value as Node;
+            return _nodeField.value as INode;
         }
 
         public Port GetSelectedPort()
@@ -142,7 +142,7 @@ namespace VAT.Logic.Editor
             var node = GetSelectedNode();
             var port = GetSelectedPort();
 
-            bool hasSingle = !(node && port) && (node || port);
+            bool hasSingle = !(node != null && port != null) && (node != null || port != null);
 
             if (hasSingle && !_isCreateMenu)
             {
@@ -195,13 +195,13 @@ namespace VAT.Logic.Editor
 
             var mouseInWorld = ray.origin + ray.direction * 2f;
 
-            if (node && port)
+            if (node != null && port != null)
             {
-                Handles.DrawLine(node.transform.position, port.transform.position, WIRE_THICKNESS);
+                Handles.DrawLine(((MonoBehaviour)node).transform.position, port.transform.position, WIRE_THICKNESS);
             }
-            else if (node)
+            else if (node != null)
             {
-                Handles.DrawLine(node.transform.position, mouseInWorld, WIRE_THICKNESS);
+                Handles.DrawLine(((MonoBehaviour)node).transform.position, mouseInWorld, WIRE_THICKNESS);
             }
             else if (port)
             {
@@ -210,16 +210,16 @@ namespace VAT.Logic.Editor
 
             Handles.color = Color.white;
 
-            bool hasBoth = node && port;
+            bool hasBoth = node != null && port != null;
             bool hasPort = false;
 
             if (hasBoth)
             {
-                hasPort = node.HasReceiver(port) || node.HasOutput(port);
+                hasPort = (node is IReceiverNode receiver && receiver.Inputs.Contains(port)) || (node is IDonorNode donor && donor.Outputs.Contains(port));
             }
 
-            bool outputActive = hasBoth && node.CanOutput() && !hasPort;
-            bool inputActive = hasBoth && node.CanReceive() && !hasPort;
+            bool outputActive = hasBoth && node is IDonorNode && !hasPort;
+            bool inputActive = hasBoth && node is IReceiverNode && !hasPort;
             bool disconnectActive = hasPort;
 
             _wireOutputButton.style.display = outputActive ? DisplayStyle.Flex : DisplayStyle.None;
@@ -227,13 +227,15 @@ namespace VAT.Logic.Editor
             _wireDisconnectButton.style.display = disconnectActive ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
-        private void SelectNode(Node node)
+        private void SelectNode(INode node)
         {
-            _nodeField.value = node;
+            var monoNode = (MonoBehaviour)node;
+
+            _nodeField.value = monoNode;
 
             if (_isCreateMenu)
             {
-                Selection.activeObject = node;
+                Selection.activeObject = monoNode;
             }
         }
 
@@ -249,7 +251,16 @@ namespace VAT.Logic.Editor
 
         private void DrawNodes(SceneView sceneView)
         {
-            var nodes = Object.FindObjectsOfType<Node>();
+            var monobehaviours = Object.FindObjectsOfType<MonoBehaviour>();
+            List<INode> nodes = new();
+
+            foreach (var monobehaviour in monobehaviours)
+            {
+                if (monobehaviour is INode node && monobehaviour is not Port)
+                {
+                    nodes.Add(node);
+                }
+            }
 
             var style = GetNodeStyle();
 
@@ -257,30 +268,31 @@ namespace VAT.Logic.Editor
 
             foreach (var node in nodes)
             {
-                var name = node.name;
+                var monoNode = (MonoBehaviour)node;
+                var name = monoNode.name;
 
-                if (node.CanOutput())
+                if (node is IDonorNode donor)
                 {
                     Handles.color = Color.yellow;
-                    foreach (var output in node.Outputs)
+                    foreach (var output in donor.Outputs)
                     {
-                        Handles.DrawLine(node.transform.position, output.transform.position, WIRE_THICKNESS);
+                        Handles.DrawLine(monoNode.transform.position, output.transform.position, WIRE_THICKNESS);
                     }
                     Handles.color = Color.white;
                 }
 
-                if (node.CanReceive())
+                if (node is IReceiverNode receiver)
                 {
                     Handles.color = Color.red;
 
-                    foreach (var receiver in node.Receivers)
+                    foreach (var input in receiver.Inputs)
                     {
                         if (receiver == null)
                         { 
                             continue;
                         }
 
-                        Handles.DrawLine(node.transform.position, receiver.transform.position, WIRE_THICKNESS);
+                        Handles.DrawLine(monoNode.transform.position, input.transform.position, WIRE_THICKNESS);
                     }
 
                     Handles.color = Color.white;
@@ -291,11 +303,11 @@ namespace VAT.Logic.Editor
                     continue;
                 }
 
-                var icon = EditorGUIUtility.GetIconForObject(node);
+                var icon = EditorGUIUtility.GetIconForObject(monoNode);
 
                 GUIContent content = new(name, icon);
 
-                bool button = DrawHandleButton(node.transform.position, content, style);
+                bool button = DrawHandleButton(monoNode.transform.position, content, style);
 
                 if (button)
                 {
@@ -487,11 +499,11 @@ namespace VAT.Logic.Editor
             var node = GetSelectedNode();
             var port = GetSelectedPort();
 
-            if (node.CanOutput() && !node.HasOutput(port))
+            if (node is IDonorNode donor && !donor.Outputs.Contains(port))
             {
-                node.AddOutput(port);
+                donor.AddOutput(port);
 
-                EditorUtility.SetDirty(node);
+                EditorUtility.SetDirty((MonoBehaviour)node);
 
                 SelectNode(null);
                 SelectPort(null);
@@ -503,12 +515,11 @@ namespace VAT.Logic.Editor
             var node = GetSelectedNode();
             var port = GetSelectedPort();
 
-
-            if (node.CanReceive() && !node.HasReceiver(port))
+            if (node is IReceiverNode receiver && !receiver.Inputs.Contains(port))
             {
-                node.AddReceiver(port);
+                receiver.AddInput(port);
 
-                EditorUtility.SetDirty(node);
+                EditorUtility.SetDirty((MonoBehaviour)node);
 
                 SelectNode(null);
                 SelectPort(null);
@@ -520,20 +531,20 @@ namespace VAT.Logic.Editor
             var node = GetSelectedNode();
             var port = GetSelectedPort();
 
-            if (node.HasOutput(port))
+            if (node is IDonorNode donor && donor.Outputs.Contains(port))
             {
-                node.RemoveOutput(port);
+                donor.RemoveOutput(port);
 
-                EditorUtility.SetDirty(node);
+                EditorUtility.SetDirty((MonoBehaviour)node);
 
                 SelectNode(null);
                 SelectPort(null);
             }
-            else if (node.HasReceiver(port))
+            else if (node is IReceiverNode receiver && receiver.Inputs.Contains(port))
             {
-                node.RemoveReceiver(port);
+                receiver.RemoveInput(port);
 
-                EditorUtility.SetDirty(node);
+                EditorUtility.SetDirty((MonoBehaviour)node);
 
                 SelectNode(null);
                 SelectPort(null);

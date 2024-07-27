@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using UnityEngine;
 
@@ -60,12 +60,12 @@ namespace VAT.Interaction.Entities
 
         private void OnDestroy()
         {
-            foreach (var body in Bodies)
+            foreach (var body in Bodies.ToArray())
             {
                 RemoveBody(body);
             }
 
-            foreach (var joint in Joints)
+            foreach (var joint in Joints.ToArray())
             {
                 RemoveJoint(joint);
             }

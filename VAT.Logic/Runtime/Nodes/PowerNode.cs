@@ -4,19 +4,27 @@ using UnityEngine;
 
 namespace VAT.Logic
 {
-    public class ActiveNode : MonoBehaviour, IReceiverNode
+    public class PowerNode : MonoBehaviour, IDonorNode
     {
         [SerializeField]
-        private Port _receiver;
+        [Range(-1f, 1f)]
+        private float _value = 1f;
 
         [SerializeField]
-        [Range(-1f, 1f)]
-        private float _minimumSignal = 1f;
+        private List<Port> _outputs = new();
 
-        public List<Port> Inputs => new List<Port>()
+        public List<Port> Outputs => _outputs;
+
+        public Signal ProcessedSignal
         {
-            _receiver,
-        };
+            get
+            {
+                return new Signal()
+                {
+                    value = _value
+                };
+            }
+        }
 
         private void Awake()
         {
@@ -30,9 +38,6 @@ namespace VAT.Logic
 
         public void OnLogicUpdate(float deltaTime)
         {
-            bool active = _receiver.ReceivedSignal.value >= _minimumSignal;
-
-            gameObject.SetActive(active);
         }
     }
 }

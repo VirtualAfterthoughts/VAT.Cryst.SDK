@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEditor;
 using UnityEditor.Overlays;
-using UnityEditor.UIElements;
 
 using UnityEngine.UIElements;
 
@@ -75,7 +73,7 @@ namespace VAT.Logic.Editor
                 return;
             }
 
-            if (PrefabUtility.IsOutermostPrefabInstanceRoot(activeObject) && activeObject.GetComponent<Node>() && activeObject.name.Contains("Template"))
+            if (PrefabUtility.IsOutermostPrefabInstanceRoot(activeObject) && activeObject.GetComponent<INode>() != null && activeObject.name.Contains("Template"))
             {
                 activeObject.name = activeObject.name.Replace("(Template)", string.Empty);
                 PrefabUtility.UnpackPrefabInstance(activeObject, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
@@ -110,7 +108,8 @@ namespace VAT.Logic.Editor
             var monoScripts = MonoImporter.GetAllRuntimeMonoScripts();
             List<MonoScript> nodeScripts = new();
 
-            var nodeType = typeof(Node);
+            var nodeType = typeof(INode);
+            var portType = typeof(Port);
 
             foreach (var script in monoScripts)
             {
@@ -121,7 +120,13 @@ namespace VAT.Logic.Editor
                     continue;
                 }
 
-                if (!type.IsAbstract && (type.IsAssignableFrom(nodeType) || type.IsSubclassOf(nodeType))) 
+                // Don't add ports
+                if (portType.IsAssignableFrom(type))
+                {
+                    continue;
+                }
+
+                if (!type.IsAbstract && nodeType.IsAssignableFrom(type)) 
                 {
                     nodeScripts.Add(script);
                 }

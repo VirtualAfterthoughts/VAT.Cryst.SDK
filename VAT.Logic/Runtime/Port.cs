@@ -1,24 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 namespace VAT.Logic
 {
-    public class Port : MonoBehaviour
+    public sealed class Port : MonoBehaviour, INode
     {
-        private Signal _currentSignal = default;
+        private Signal _receivedSignal = default;
         private int _signalCounter = 0;
 
-        public Signal CurrentSignal => _currentSignal;
+        public Signal ReceivedSignal => _receivedSignal;
 
         public void ReceiveSignal(Signal signal)
         {
-            _currentSignal = signal;
+            _receivedSignal = signal;
             _signalCounter = 1;
         }
 
-        private void LateUpdate()
+        private void Awake()
+        {
+            LogicManager.UpdateManager.RegisterNode(this);
+        }
+
+        private void OnDestroy()
+        {
+            LogicManager.UpdateManager.UnregisterNode(this);
+        }
+
+        public void OnLogicUpdate(float deltaTime)
         {
             if (_signalCounter > 0)
             {
@@ -26,7 +33,7 @@ namespace VAT.Logic
             }
             else
             {
-                _currentSignal = default;
+                _receivedSignal = default;
             }
         }
     }

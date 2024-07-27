@@ -1,4 +1,4 @@
-namespace VAT.Cryst
+namespace VAT.Cryst.Interfaces
 {
     public interface IActuatable
     {

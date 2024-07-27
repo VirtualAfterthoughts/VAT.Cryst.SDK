@@ -1,6 +1,6 @@
 using UnityEngine;
 
-using VAT.Cryst;
+using VAT.Cryst.Interfaces;
 
 namespace VAT.Props
 {
