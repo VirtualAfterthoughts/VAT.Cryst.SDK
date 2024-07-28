@@ -83,9 +83,9 @@ namespace VAT.Interaction
 
                 _joint.slerpDrive = new JointDrive()
                 {
-                    positionSpring = force,
-                    positionDamper = force * 0.1f,
-                    maximumForce = force
+                    positionSpring = force * 10f,
+                    positionDamper = force * 0.05f,
+                    maximumForce = force * 0.1f
                 };
             }
 

@@ -10,6 +10,16 @@ namespace VAT.Cryst.Interfaces
         [SerializeField]
         private Object _target = null;
 
+        public InterfaceReference()
+        {
+            _target = null;
+        }
+
+        public InterfaceReference(TInterface target)
+        {
+            Interface = target;
+        }
+
         public Object Target
         {
             get

@@ -1,14 +1,9 @@
 using UnityEngine;
 
-using VAT.Props.Ammo;
-
 namespace VAT.Props
 {
     public class GunBolt : MonoBehaviour, IBolt
     {
-        public AmmoSocket socket;
-        public Chamber chamber;
-
         private float _openedPercent = 0f;
         public float OpenedPercent => _openedPercent;
 
@@ -79,69 +74,8 @@ namespace VAT.Props
             _openedPercent = Mathf.SmoothDamp(_openedPercent, _targetPercent, ref _openedVelocity, 0.01f);
         }
 
-        private Magazine _peekedMagazine = null;
-        private Cartridge _peekedCartridge = null;
-
         private void OnBoltStateChanged(BoltState previous, BoltState current)
         {
-            if (current == BoltState.OPEN)
-            {
-                chamber.EjectCartridge();
-
-                if (socket != null && socket.LockedPlugs.Count > 0)
-                {
-                    var plug = socket.LockedPlugs[0] as AmmoPlug;
-
-                    if (plug != null)
-                    {
-                        var mag = plug.magazine;
-                        
-                        if (mag.Cartridges.Count <= 0)
-                        {
-                            Locked = true;
-                            TargetPercent = 1f;
-                        }
-                    }
-                }
-            }
-
-            if (current == BoltState.CLOSING)
-            {
-                if (socket != null && socket.LockedPlugs.Count > 0)
-                {
-                    var plug = socket.LockedPlugs[0] as AmmoPlug;
-
-                    if (plug != null)
-                    {
-                        _peekedMagazine = plug.magazine;
-                        _peekedCartridge = plug.magazine.PeekCartridge();
-
-                        chamber.InsertCartridge(_peekedCartridge);
-                    }
-                }
-            }
-
-            if (current == BoltState.CLOSED)
-            {
-                if (_peekedMagazine != null && _peekedCartridge != null)
-                {
-                    var parent = _peekedCartridge.transform.parent;
-
-                    _peekedMagazine.UnloadCartridge(_peekedCartridge);
-
-                    foreach (var body in _peekedCartridge.Entity.Bodies)
-                    {
-                        body.Freeze(true);
-                        body.Rigidbody.detectCollisions = false;
-                    }
-
-                    _peekedCartridge.transform.parent = parent;
-
-                    _peekedMagazine = null;
-                    _peekedCartridge = null;
-                }
-            }
-
             OnStateChanged?.Invoke(previous, current);
         }
 

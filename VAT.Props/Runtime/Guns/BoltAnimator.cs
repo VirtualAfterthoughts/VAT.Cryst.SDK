@@ -20,16 +20,20 @@ namespace VAT.Props
         {
             float openedPercent = _bolt.OpenedPercent;
 
-            if (_bolt.State == BoltState.OPENING)
+            bool returning = _animator.GetBool("Returning");
+
+            if (_bolt.State == BoltState.OPENING && returning)
             {
                 _animator.SetBool("Returning", false);
+                returning = false;
             }
-            else if (_bolt.State == BoltState.CLOSING)
+            else if (_bolt.State == BoltState.CLOSING && !returning)
             {
                 _animator.SetBool("Returning", true);
+                returning = true;
             }
 
-            if (_animator.GetBool("Returning"))
+            if (returning)
             {
                 openedPercent = 1f - openedPercent;
             }
