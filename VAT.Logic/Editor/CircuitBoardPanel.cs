@@ -162,11 +162,6 @@ namespace VAT.Logic.Editor
                 return;
             }
 
-            if (PrefabStageUtility.GetCurrentPrefabStage() != null)
-            {
-                return;
-            }
-
             if (_nodeToggle.value)
             {
                 DrawNodes(sceneView);
@@ -251,12 +246,24 @@ namespace VAT.Logic.Editor
 
         private void DrawNodes(SceneView sceneView)
         {
-            var monobehaviours = Object.FindObjectsOfType<MonoBehaviour>();
+            var currentStage = PrefabStageUtility.GetCurrentPrefabStage();
+
+            MonoBehaviour[] behaviours;
+
+            if (currentStage != null)
+            {
+                behaviours = currentStage.FindComponentsOfType<MonoBehaviour>();
+            }
+            else
+            {
+                behaviours = Object.FindObjectsOfType<MonoBehaviour>();
+            }
+
             List<INode> nodes = new();
 
-            foreach (var monobehaviour in monobehaviours)
+            foreach (var behaviour in behaviours)
             {
-                if (monobehaviour is INode node && monobehaviour is not Port)
+                if (behaviour is INode node && behaviour is not Port)
                 {
                     nodes.Add(node);
                 }
@@ -343,7 +350,18 @@ namespace VAT.Logic.Editor
 
         private void DrawPorts(SceneView sceneView)
         {
-            var ports = Object.FindObjectsOfType<Port>();
+            var currentStage = PrefabStageUtility.GetCurrentPrefabStage();
+
+            Port[] ports;
+
+            if (currentStage != null)
+            {
+                ports = currentStage.FindComponentsOfType<Port>();
+            }
+            else
+            {
+                ports = Object.FindObjectsOfType<Port>();
+            }
 
             var style = GetPortStyle();
 
