@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 namespace VAT.Props
@@ -17,7 +18,7 @@ namespace VAT.Props
 
         private void Update()
         {
-            float pulledPercent = _bolt.PulledPercent;
+            float openedPercent = _bolt.OpenedPercent;
 
             if (_bolt.State == BoltState.OPENING)
             {
@@ -30,10 +31,10 @@ namespace VAT.Props
 
             if (_animator.GetBool("Returning"))
             {
-                pulledPercent = 1f - pulledPercent;
+                openedPercent = 1f - openedPercent;
             }
 
-            _animator.SetFloat(_percentParameter, Mathf.Clamp(pulledPercent, 0f, 0.99f));
+            _animator.SetFloat(_percentParameter, Mathf.Clamp(openedPercent, 0f, 0.99f));
         }
     }
 }

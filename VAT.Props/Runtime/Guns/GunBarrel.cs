@@ -35,7 +35,7 @@ namespace VAT.Props
 
         public void Fire()
         {
-            if (Chamber.Cartridge != null)
+            if (Chamber.Cartridge != null && !Chamber.Cartridge.Spent)
             {
                 OnFire?.Invoke();
             }

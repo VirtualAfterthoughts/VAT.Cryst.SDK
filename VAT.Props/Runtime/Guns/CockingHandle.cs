@@ -61,19 +61,23 @@ namespace VAT.Props
             {
                 _mainInteractor = null;
                 _lastLocalPosition = Vector3.zero;
+
+                if (!_bolt.Overriden)
+                {
+                    _bolt.ResetTarget();
+                }
             }
         }
 
         private void LateUpdate()
         {
-            if (_bolt.IsLocked)
+            if (_bolt.Overriden)
             {
                 return;
             }
 
             if (_mainInteractor == null)
             {
-                ApplySpring();
                 return;
             }
 
@@ -81,17 +85,20 @@ namespace VAT.Props
 
             var difference = localPosition - _lastLocalPosition;
 
-            var dot = Vector3.Dot(difference, Vector3.back) / 0.2f;
-            float newPercent = Mathf.Clamp01(_bolt.PulledPercent + dot);
-            _bolt.UpdateBolt(newPercent);
+            var dot = Vector3.Dot(difference, Vector3.back) / 0.05f;
+            float newPercent = Mathf.Clamp01(_bolt.OpenedPercent + dot);
+
+            if (!_bolt.Locked)
+            {
+                _bolt.TargetPercent = newPercent;
+            }
+
+            if (_bolt.Locked && dot > 0.2f)
+            {
+                _bolt.Locked = false;
+            }
 
             _lastLocalPosition = localPosition;
-        }
-
-        private void ApplySpring()
-        {
-            float springPercent = Mathf.MoveTowards(_bolt.PulledPercent, 0f, Time.deltaTime * 40f);
-            _bolt.UpdateBolt(springPercent);
         }
     }
 }

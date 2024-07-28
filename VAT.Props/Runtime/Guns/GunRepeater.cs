@@ -77,26 +77,35 @@ namespace VAT.Props
 
             percent *= 2f;
 
-            if (isReturning && !_wasReturning && !_bolt.IsLocked)
-            {
-                _bolt.UpdateBolt(1f);
-            }
-
-            _wasReturning = isReturning;
-
-            if (!_bolt.IsLocked)
-            {
-                _bolt.UpdateBolt(percent);
-            }
-
             if (_isCycling)
             {
+                _bolt.Overriden = true;
+
+                if (isReturning && !_wasReturning && !_bolt.Locked)
+                {
+                    _bolt.TargetPercent = 1f;
+                }
+
+                _wasReturning = isReturning;
+
+                if (!_bolt.Locked)
+                {
+                    _bolt.TargetPercent = percent;
+                }
+
                 _cycleTime += Time.deltaTime;
 
                 if (_cycleTime > SecondsPerRound)
                 {
                     _isCycling = false;
                     _cycleTime = 0f;
+
+                    _bolt.Overriden = false;
+
+                    if (!_bolt.Locked)
+                    {
+                        _bolt.ResetTarget();
+                    }
                 }
             }
         }

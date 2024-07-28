@@ -1,33 +1,42 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 using VAT.Props.Ammo;
 
 namespace VAT.Props
 {
-    public enum BoltState
-    {
-        CLOSED = 0,
-        OPENING = 1,
-        OPEN = 2,
-        CLOSING = 3,
-    }
-
-    public delegate void BoltCallback(BoltState previous, BoltState current);
-
-    public class GunBolt : MonoBehaviour
+    public class GunBolt : MonoBehaviour, IBolt
     {
         public AmmoSocket socket;
         public Chamber chamber;
 
-        private float _pulledPercent = 0f;
-        public float PulledPercent => _pulledPercent;
+        private float _openedPercent = 0f;
+        public float OpenedPercent => _openedPercent;
 
-        private bool _isLocked = false;
-        public bool IsLocked => _isLocked;
+        private float _openedVelocity = 0f;
+
+        private float _targetPercent = 0f;
+        public float TargetPercent { 
+            get 
+            { 
+                return _targetPercent;
+            } 
+            set 
+            { 
+                _targetPercent = value;
+
+                if (Overriden)
+                {
+                    _openedPercent = value;
+                    UpdateState(OpenedPercent);
+                }
+            } 
+        }
+
+        private bool _locked = false;
+        public bool Locked { get { return _locked; } set { _locked = value; } }
+
+        private bool _overriden = false;
+        public bool Overriden { get { return _overriden; } set { _overriden = value; } }
 
         [SerializeField]
         private BoltState _state = BoltState.CLOSED;
@@ -53,11 +62,21 @@ namespace VAT.Props
 
         public event BoltCallback OnStateChanged;
 
-        public void UpdateBolt(float percent)
+        public void ResetTarget()
         {
-            _pulledPercent = percent;
+            TargetPercent = 0f;
+        }
 
-            UpdateState(percent);
+        private void LateUpdate()
+        {
+            ApplySpring();
+
+            UpdateState(OpenedPercent);
+        }
+
+        private void ApplySpring()
+        {
+            _openedPercent = Mathf.SmoothDamp(_openedPercent, _targetPercent, ref _openedVelocity, 0.01f);
         }
 
         private Magazine _peekedMagazine = null;
@@ -79,7 +98,8 @@ namespace VAT.Props
                         
                         if (mag.Cartridges.Count <= 0)
                         {
-                            Lock();
+                            Locked = true;
+                            TargetPercent = 1f;
                         }
                     }
                 }
@@ -163,17 +183,6 @@ namespace VAT.Props
                     }
                     break;
             }
-        }
-
-        public void Lock()
-        {
-            UpdateBolt(1f);
-            _isLocked = true;
-        }
-
-        public void Unlock()
-        {
-            _isLocked = false;
         }
     }
 }

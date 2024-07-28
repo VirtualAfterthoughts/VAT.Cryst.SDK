@@ -1,6 +1,5 @@
 using UnityEngine;
 
-using VAT.Cryst;
 using VAT.Cryst.Game;
 using VAT.Cryst.Interfaces;
 
