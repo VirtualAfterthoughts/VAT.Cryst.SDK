@@ -55,7 +55,7 @@ namespace VAT.Props
             {
                 _hammer.Cock();
 
-                if (_isAutomatic && _hammer.IsActuated)
+                if (_isAutomatic && _hammer.Threshold.State)
                 {
                     _hammer.Release();
                 }

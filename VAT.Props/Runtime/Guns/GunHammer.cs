@@ -1,6 +1,6 @@
 using UnityEngine;
 
-using VAT.Cryst.Interfaces;
+using VAT.Logic;
 
 namespace VAT.Props
 {
@@ -11,30 +11,31 @@ namespace VAT.Props
         COCKED = 2,
     }
 
-    public class GunHammer : MonoBehaviour, IActuatable
+    public class GunHammer : Actuator
     {
         [SerializeField]
         private GunBarrel _barrel = null;
+
+        [SerializeField]
+        private Threshold _threshold = new();
 
         private HammerState _state = HammerState.RELEASED;
 
         public HammerState State => _state;
 
-        private bool _isActuated = false;
-        public bool IsActuated => _isActuated;
+        public Threshold Threshold => _threshold;
 
-        public void Actuate(bool actuated = true)
+        protected override void OnInputChanged(float value)
         {
-            if (actuated == IsActuated)
-            {
-                return;
-            }
+            Value = value;
 
-            _isActuated = actuated;
-
-            if (actuated)
+            switch (_threshold.SendInput(value))
             {
-                Release();
+                case Threshold.ThresholdPulse.HIGH:
+                    Release();
+                    break;
+                case Threshold.ThresholdPulse.LOW:
+                    break;
             }
         }
 

@@ -2,18 +2,15 @@ using UnityEngine;
 
 using VAT.Cryst.Game;
 using VAT.Cryst.Interfaces;
+using VAT.Logic;
 
 namespace VAT.Interaction
 {
-    public class TriggerGrip : MonoBehaviour, IUpdateable
+    public class TriggerGrip : Node, IUpdateable
     {
         [SerializeField]
         [Tooltip("The grip used for this trigger.")]
         private Grip _grip = null;
-
-        [SerializeField]
-        [Tooltip("The list of all targets to be actuated when this trigger is pulled down.")]
-        private InterfaceReference<IActuatable>[] _targets = new InterfaceReference<IActuatable>[0];
 
         [SerializeField]
         [Range(0f, 1f)]
@@ -21,8 +18,6 @@ namespace VAT.Interaction
         private float _actuationThreshold = 0.8f;
 
         public Grip Grip { get { return _grip; } set { _grip = value; } }
-
-        public InterfaceReference<IActuatable>[] Targets { get { return _targets; } set { _targets = value; } }
 
         public float ActuationThreshold { get { return _actuationThreshold; } set { _actuationThreshold = value; } }
 
@@ -78,10 +73,7 @@ namespace VAT.Interaction
 
         private void Actuate(bool isActuated)
         {
-            foreach (var target in Targets)
-            {
-                target.Interface.Actuate(isActuated);
-            }
+            Value = isActuated ? 1f : 0f;
 
             _isActuated = isActuated;
         }

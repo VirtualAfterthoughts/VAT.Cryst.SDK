@@ -1,6 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:TextField picking-mode="Ignore" name="SearchBar" />
-    <ui:ScrollView name="NodeScrollView" style="min-height: 200px; max-width: 300px; min-width: 300px;">
-        <ui:GroupBox name="NodeBox" style="flex-wrap: wrap; flex-direction: row;" />
-    </ui:ScrollView>
-</ui:UXML>
