@@ -17,9 +17,9 @@ namespace VAT.Packaging
     public abstract class StaticShard : AssetShard
     {
         protected Crystal _crystal;
-        public Crystal StaticCrystal 
-        { 
-            get 
+        public Crystal StaticCrystal
+        {
+            get
             {
 #if UNITY_EDITOR
                 if (!Application.isPlaying && _crystal == null)
@@ -28,12 +28,12 @@ namespace VAT.Packaging
                 }
 #endif
 
-                return _crystal; 
-            } 
-            set 
-            { 
-                _crystal = value; 
-            } 
+                return _crystal;
+            }
+            set
+            {
+                _crystal = value;
+            }
         }
 
         public override ICrystal MainCrystal { get => StaticCrystal; set => StaticCrystal = value as Crystal; }

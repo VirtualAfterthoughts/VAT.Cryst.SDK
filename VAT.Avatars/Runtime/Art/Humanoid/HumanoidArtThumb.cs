@@ -10,7 +10,8 @@ using VAT.Shared.Data;
 
 namespace VAT.Avatars.Art
 {
-    public class HumanoidArtThumb : HumanoidArtBoneGroupT<HumanoidFingerDescriptor, IThumbGroup> {
+    public class HumanoidArtThumb : HumanoidArtBoneGroupT<HumanoidFingerDescriptor, IThumbGroup>
+    {
         public override int BoneCount => 4;
 
         public ArtBone MetaCarpal => Bones[0] as ArtBone;
@@ -26,7 +27,8 @@ namespace VAT.Avatars.Art
             Distal.Solve(BoneGroup.Distal.Transform);
         }
 
-        public override void WriteOffsets(IThumbGroup boneGroup) {
+        public override void WriteOffsets(IThumbGroup boneGroup)
+        {
             // MetaCarpal.WriteOffset(boneGroup.MetaCarpal);
             Proximal.WriteOffset(boneGroup.Proximal);
             Middle.WriteOffset(boneGroup.Middle);

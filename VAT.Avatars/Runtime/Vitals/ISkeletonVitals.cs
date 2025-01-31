@@ -8,13 +8,15 @@ using VAT.Avatars.Proportions;
 
 namespace VAT.Avatars.Vitals
 {
-    public interface ISkeletonVitals {
+    public interface ISkeletonVitals
+    {
 
     }
 
     public interface ISkeletonVitalsT<TGroup, TPayload> : ISkeletonVitals
         where TGroup : IBoneGroupVitals
-        where TPayload : IVitalsPayload {
+        where TPayload : IVitalsPayload
+    {
 
         public void InjectDependencies(TGroup[] groups, TPayload payload);
 

@@ -87,10 +87,10 @@ namespace VAT.Packaging
             }
         }
 
-        public override DynamicCrystAsset DynamicAsset 
-        { 
-            get => DynamicAssetT; 
-            set => DynamicAssetT = new DynamicCrystAssetT<T>(value.Asset); 
+        public override DynamicCrystAsset DynamicAsset
+        {
+            get => DynamicAssetT;
+            set => DynamicAssetT = new DynamicCrystAssetT<T>(value.Asset);
         }
 
         public IWeakAssetT<T> MainAssetT => DynamicAssetT;

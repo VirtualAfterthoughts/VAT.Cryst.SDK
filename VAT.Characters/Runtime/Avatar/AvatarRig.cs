@@ -306,7 +306,7 @@ namespace VAT.Characters
 
             var physHead = SimpleTransform.Create(transform.position, transform.rotation).Transform(thisHead.Transform);
             var head = root.Transform(lastHead.Transform);
-             
+
             var pos = (physHead.position - head.position);
 
             root.position += pos;

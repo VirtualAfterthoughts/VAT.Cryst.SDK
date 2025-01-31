@@ -21,7 +21,7 @@ namespace VAT.Audio
     public class AudioCollection : DataShard
     {
         [SerializeField]
-        private AudioClipShardReference[] _audioClipReferences; 
+        private AudioClipShardReference[] _audioClipReferences;
 
         public AudioClipShardReference GetRandomAudioClip()
         {

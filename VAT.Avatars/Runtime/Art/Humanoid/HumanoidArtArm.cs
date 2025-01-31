@@ -43,7 +43,8 @@ namespace VAT.Avatars.Art
             Hand.Deinitiate();
         }
 
-        public override void Solve() {
+        public override void Solve()
+        {
             float mult = _isLeft ? 1f : -1f;
 
             var clavicle = BoneGroup.Clavicle.Transform;
@@ -97,7 +98,8 @@ namespace VAT.Avatars.Art
             Hand.WriteData(boneGroup.Hand);
         }
 
-        public override void WriteOffsets(IHumanArm boneGroup) {
+        public override void WriteOffsets(IHumanArm boneGroup)
+        {
             CollarBone.WriteOffset(boneGroup.Clavicle);
             ShoulderBlade.WriteOffset(boneGroup.Scapula);
             UpperArm.WriteOffset(boneGroup.UpperArm);
@@ -124,7 +126,7 @@ namespace VAT.Avatars.Art
             LowerArm.WriteReference(artDescriptorGroup.lowerArm);
 
             LowerTwists = new ArtBone[artDescriptorGroup.lowerTwists != null ? artDescriptorGroup.lowerTwists.Length : 0];
-            for (var i = 0; i <  LowerTwists.Length; i++)
+            for (var i = 0; i < LowerTwists.Length; i++)
             {
                 var bone = new ArtBone();
 

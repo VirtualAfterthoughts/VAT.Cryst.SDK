@@ -22,12 +22,12 @@ namespace VAT.Props.Editor
 
             Handles.color = Color.cyan;
             Handles.DrawLine(start, end, 0.15f);
-            
+
             Handles.ConeHandleCap(0, end, rotation, 0.02f, EventType.Repaint);
-            
+
             Handles.color = Color.black;
             Handles.DrawLine(start, end, 0.1f);
-            
+
             Handles.ConeHandleCap(0, end, rotation, 0.017f, EventType.Repaint);
 
             EditorGUI.BeginChangeCheck();

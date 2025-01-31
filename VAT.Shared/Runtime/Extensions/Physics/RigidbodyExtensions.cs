@@ -6,10 +6,12 @@ using UnityEngine;
 
 using static Unity.Mathematics.math;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     using Unity.Mathematics;
 
-    public static partial class PhysicsExtensions {
+    public static partial class PhysicsExtensions
+    {
         /// <summary>
         /// Returns true if the rigidbody should be asleep. This does not necessarily mean it is sleeping.
         /// </summary>
@@ -26,7 +28,8 @@ namespace VAT.Shared.Extensions {
         {
             if (rb.IsSleeping()) return true;
 
-            if (rb.NeedsSleep()) {
+            if (rb.NeedsSleep())
+            {
                 rb.Sleep();
                 return true;
             }
@@ -42,7 +45,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="velocity"></param>
         /// <returns></returns>
         // Thanks to https://answers.unity.com/questions/1192716/get-velocity-of-point-offset-from-center-of-rigidb.html
-        public static Vector3 GetPointVelocity(this Rigidbody rb, Vector3 point, Vector3 velocity) {
+        public static Vector3 GetPointVelocity(this Rigidbody rb, Vector3 point, Vector3 velocity)
+        {
             Vector3 localP = rb.transform.InverseTransformPoint(point);
             Vector3 vel = Vector3.Cross(rb.angularVelocity, localP - rb.centerOfMass);
             vel = rb.transform.TransformDirection(vel) + velocity;
@@ -72,7 +76,8 @@ namespace VAT.Shared.Extensions {
         /// </summary>
         /// <param name="rb"></param>
         /// <returns></returns>
-        public static Collider[] GetColliders(this Rigidbody rb) {
+        public static Collider[] GetColliders(this Rigidbody rb)
+        {
             var children = rb.GetComponentsInChildren<Collider>().ToList();
             children.RemoveAll((c) => c.attachedRigidbody != rb);
             return children.ToArray();
@@ -84,11 +89,13 @@ namespace VAT.Shared.Extensions {
         /// <param name="rb1"></param>
         /// <param name="rb2"></param>
         /// <param name="ignore"></param>
-        public static void IgnoreCollision(this Rigidbody rb1, Rigidbody rb2, bool ignore = true) {
+        public static void IgnoreCollision(this Rigidbody rb1, Rigidbody rb2, bool ignore = true)
+        {
             var self = rb1.GetColliders();
             var other = rb2.GetColliders();
 
-            for (int i = 0; i < self.Length; i++) {
+            for (int i = 0; i < self.Length; i++)
+            {
                 Collider col1 = self[i];
                 for (int c = 0; c < other.Length; c++)
                     Physics.IgnoreCollision(col1, other[c]);

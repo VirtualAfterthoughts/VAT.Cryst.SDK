@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace VAT.Avatars.Art
 {
-    public interface IHumanoidDescriptor {
+    public interface IHumanoidDescriptor
+    {
         public void AutoFillBones(Animator animator);
     }
 
@@ -42,7 +43,8 @@ namespace VAT.Avatars.Art
     }
 
     [Serializable]
-    public class HumanoidFingerDescriptor : IArtDescriptorGroup, IHumanoidDescriptor {
+    public class HumanoidFingerDescriptor : IArtDescriptorGroup, IHumanoidDescriptor
+    {
         public TransformArtReference metaCarpal;
         public TransformArtReference proximal;
         public TransformArtReference middle;
@@ -51,7 +53,8 @@ namespace VAT.Avatars.Art
         [HideInInspector]
         public HumanBodyBones? proximalBone, middleBone, distalBone;
 
-        public void AutoFillBones(Animator animator) {
+        public void AutoFillBones(Animator animator)
+        {
             metaCarpal = new TransformArtReference(null);
 
             if (proximalBone.HasValue)
@@ -64,7 +67,8 @@ namespace VAT.Avatars.Art
                 distal = new TransformArtReference(animator.GetBoneTransform(distalBone.Value));
         }
 
-        public HumanoidFingerDescriptor(HumanBodyBones? proximal, HumanBodyBones? middle, HumanBodyBones? distal) {
+        public HumanoidFingerDescriptor(HumanBodyBones? proximal, HumanBodyBones? middle, HumanBodyBones? distal)
+        {
             proximalBone = proximal;
             middleBone = middle;
             distalBone = distal;
@@ -85,7 +89,8 @@ namespace VAT.Avatars.Art
         [HideInInspector]
         public bool isLeft = false;
 
-        public void AutoFillBones(Animator animator) {
+        public void AutoFillBones(Animator animator)
+        {
             if (isLeft)
             {
                 hand = new TransformArtReference(animator.GetBoneTransform(HumanBodyBones.LeftHand));
@@ -150,7 +155,8 @@ namespace VAT.Avatars.Art
         {
             this.isLeft = isLeft;
 
-            hand = new HumanoidHandDescriptor() {
+            hand = new HumanoidHandDescriptor()
+            {
                 isLeft = isLeft,
             };
         }
@@ -193,7 +199,8 @@ namespace VAT.Avatars.Art
 
 
     [Serializable]
-    public class HumanoidArtDescriptor : IArtDescriptor, IHumanoidDescriptor {
+    public class HumanoidArtDescriptor : IArtDescriptor, IHumanoidDescriptor
+    {
         public HumanoidNeckDescriptor neckDescriptor = new();
         public HumanoidSpineDescriptor spineDescriptor = new();
 
@@ -203,7 +210,8 @@ namespace VAT.Avatars.Art
         public HumanoidLegDescriptor leftLegDescriptor = new(true);
         public HumanoidLegDescriptor rightLegDescriptor = new(false);
 
-        public void AutoFillBones(Animator animator) {
+        public void AutoFillBones(Animator animator)
+        {
             (neckDescriptor = new()).AutoFillBones(animator);
             (spineDescriptor = new()).AutoFillBones(animator);
 

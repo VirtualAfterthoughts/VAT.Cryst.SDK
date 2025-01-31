@@ -9,6 +9,6 @@ namespace VAT.Interaction
 {
     public interface IVirtualControllerOverride
     {
-        void OnSolveController(VirtualControllerPayload payload); 
+        void OnSolveController(VirtualControllerPayload payload);
     }
 }

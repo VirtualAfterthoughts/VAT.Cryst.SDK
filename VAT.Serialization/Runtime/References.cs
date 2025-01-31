@@ -1,11 +1,14 @@
-namespace VAT.Serialization {
+namespace VAT.Serialization
+{
     /// <summary>
     /// The id pointing towards an object in a json file.
     /// </summary>
-    public struct ReferenceId {
+    public struct ReferenceId
+    {
         public readonly string id;
 
-        public ReferenceId(string id) {
+        public ReferenceId(string id)
+        {
             this.id = id;
         }
 

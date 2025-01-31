@@ -2,13 +2,15 @@
 
 using static Unity.Mathematics.math;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     using VAT.Shared.Data;
 
     /// <summary>
     /// Extension methods for Vector3s.
     /// </summary>
-    public static partial class Vector3Extensions {
+    public static partial class Vector3Extensions
+    {
         /// <summary>
         /// Vector3.Distance except slightly faster by immediately subtracting the vectors and comparing the magnitude.
         /// </summary>
@@ -31,7 +33,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="up">The up vector.</param>
         /// <param name="root">The relative root vector (ex. the character controller's up). Defaults to world space up.</param>
         /// <returns>The flattened vector.</returns>
-        public static Vector3 FlattenNeck(this Vector3 forward, Vector3 up, Vector3? root = null) {
+        public static Vector3 FlattenNeck(this Vector3 forward, Vector3 up, Vector3? root = null)
+        {
             if (!root.HasValue)
                 root = Vector3.up;
 
@@ -44,7 +47,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="lft"></param>
         /// <param name="rht"></param>
         /// <returns></returns>
-        public static bool Approximately(this Vector3 lft, Vector3 rht) {
+        public static bool Approximately(this Vector3 lft, Vector3 rht)
+        {
             return Mathf.Approximately(lft.x, rht.x) && Mathf.Approximately(lft.y, rht.y) && Mathf.Approximately(lft.z, rht.z);
         }
 

@@ -23,7 +23,7 @@ namespace VAT.Audio
 
         private Vector3 _velocity = Vector3.zero;
 
-        public Vector3 Velocity { get { return _velocity; } set {  _velocity = value; } }
+        public Vector3 Velocity { get { return _velocity; } set { _velocity = value; } }
 
         public AudioSource Source => _source;
 

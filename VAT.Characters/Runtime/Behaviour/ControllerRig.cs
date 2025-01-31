@@ -11,7 +11,8 @@ using VAT.Shared.Data;
 
 namespace VAT.Characters
 {
-    public abstract class ControllerRig : CrystRig, IBehaviourRig {
+    public abstract class ControllerRig : CrystRig, IBehaviourRig
+    {
         [Header("References")]
         [SerializeField] protected Transform _leftWrist;
 

@@ -16,7 +16,8 @@ namespace VAT.Shared.Data
 {
     using Unity.Mathematics;
 
-    public struct EllipseCylinderMesh {
+    public struct EllipseCylinderMesh
+    {
         public Ellipse bottom;
         public SimpleTransform bottomTransform;
         public bool isBottomFilled;
@@ -27,7 +28,8 @@ namespace VAT.Shared.Data
 
         public int segments;
 
-        public MeshDescriptor CreateDescriptor() {
+        public MeshDescriptor CreateDescriptor()
+        {
             if (segments <= 0)
                 segments = 32;
 
@@ -36,13 +38,15 @@ namespace VAT.Shared.Data
 
             segments = 16;
 
-            foreach (var point in bottom.GetLocalPoints(segments)) {
+            foreach (var point in bottom.GetLocalPoints(segments))
+            {
                 verticies.Add(mul(bottomTransform.rotation, point) + bottomTransform.position);
             }
 
             int offset = verticies.Count;
 
-            foreach (var point in top.GetLocalPoints(segments)) {
+            foreach (var point in top.GetLocalPoints(segments))
+            {
                 verticies.Add(mul(topTransform.rotation, point) + topTransform.position);
             }
 
@@ -58,12 +62,14 @@ namespace VAT.Shared.Data
                 }
             }
 
-            if (isBottomFilled) {
+            if (isBottomFilled)
+            {
                 verticies.Add(bottomTransform.position);
 
                 int holeIndex = 1;
 
-                for (var i = 0; i < offset - 1; i++) {
+                for (var i = 0; i < offset - 1; i++)
+                {
                     triangles.Add(new MeshTriangle(holeIndex - 1, verticies.Count - 1, holeIndex));
                     holeIndex += 1;
                 }
@@ -87,29 +93,36 @@ namespace VAT.Shared.Data
     }
 
     [Serializable]
-    public struct Ellipse : IEllipse {
+    public struct Ellipse : IEllipse
+    {
         public const int DefaultSegments = 32;
 
         public float2 radius;
 
         public IEllipse AsInterface() => this;
 
-        public void SetRadius(float2 radius) { 
-            this.radius = radius; 
+        public void SetRadius(float2 radius)
+        {
+            this.radius = radius;
         }
 
-        public float2 GetRadius() {
+        public float2 GetRadius()
+        {
             return radius;
         }
 
-        public Ellipse Scaled(float scale) {
-            return new Ellipse() {
+        public Ellipse Scaled(float scale)
+        {
+            return new Ellipse()
+            {
                 radius = radius * scale
             };
         }
 
-        public Ellipse Scaled(float2 scale) {
-            return new Ellipse() {
+        public Ellipse Scaled(float2 scale)
+        {
+            return new Ellipse()
+            {
                 radius = radius * scale
             };
         }
@@ -135,12 +148,14 @@ namespace VAT.Shared.Data
                 return float3.zero;
         }
 
-        public float3[] GetLocalPoints(int segments = DefaultSegments) {
+        public float3[] GetLocalPoints(int segments = DefaultSegments)
+        {
             float3[] points = new float3[segments + 1];
 
             float angle = 0f;
 
-            for (int i = 0; i < segments + 1; i++) {
+            for (int i = 0; i < segments + 1; i++)
+            {
                 points[i] = new float3(sin(Mathf.Deg2Rad * angle) * radius.x, 0f, cos(Mathf.Deg2Rad * angle) * radius.y);
                 angle += 360f / segments;
             }
@@ -159,8 +174,10 @@ namespace VAT.Shared.Data
             var ellipse = new Ellipse() { radius = radius };
             var points = ellipse.GetLocalPoints();
 
-            for (var i = 0; i < points.Length; i++) {
-                if (i > 0) {
+            for (var i = 0; i < points.Length; i++)
+            {
+                if (i > 0)
+                {
                     Gizmos.DrawLine(mul(rotation, points[i - 1]) + position, mul(rotation, points[i]) + position);
                 }
             }

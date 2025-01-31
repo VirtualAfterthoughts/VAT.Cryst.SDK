@@ -37,9 +37,9 @@ namespace VAT.Pooling
 
         public static void Spawn(SpawnRequestInfo info)
         {
-            PoolManager.HookOnReady(() => 
-            { 
-                OnPoolManagerReady(info); 
+            PoolManager.HookOnReady(() =>
+            {
+                OnPoolManagerReady(info);
             });
         }
 

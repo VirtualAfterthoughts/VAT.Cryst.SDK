@@ -9,7 +9,8 @@ using VAT.Avatars.Art;
 
 namespace VAT.Avatars.Integumentary
 {
-    public interface IAvatarSkeleton {
+    public interface IAvatarSkeleton
+    {
         DataBoneSkeleton GetData();
 
         PhysBoneSkeleton GetPhysics();

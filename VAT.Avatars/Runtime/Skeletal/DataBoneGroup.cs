@@ -42,17 +42,20 @@ namespace VAT.Avatars.Skeletal
             _subGroups = new DataBoneGroup[SubGroupCount];
         }
 
-        public virtual void BindPose() {
+        public virtual void BindPose()
+        {
             for (var i = 0; i < SubGroupCount; i++)
                 SubGroups[i].BindPose();
         }
 
-        public virtual void NeutralPose() {
+        public virtual void NeutralPose()
+        {
             for (var i = 0; i < SubGroupCount; i++)
                 SubGroups[i].NeutralPose();
         }
 
-        public virtual void Write(IAvatarPayload payload) {
+        public virtual void Write(IAvatarPayload payload)
+        {
             _avatarPayload = payload;
         }
 
@@ -64,7 +67,8 @@ namespace VAT.Avatars.Skeletal
         }
 
 #if UNITY_EDITOR
-        public virtual void DrawGizmos() {
+        public virtual void DrawGizmos()
+        {
             if (_bones == null)
                 return;
 
@@ -72,11 +76,13 @@ namespace VAT.Avatars.Skeletal
             if (mesh == null)
                 return;
 
-            if (BoneCount > 0) {
+            if (BoneCount > 0)
+            {
                 DataBone root = _bones[0].Parent;
                 foreach (var bone in _bones)
                 {
-                    if (root != null) {
+                    if (root != null)
+                    {
                         Vector3 direction = bone.position - root.position;
                         if (direction.sqrMagnitude <= 0f)
                             continue;
@@ -91,8 +97,10 @@ namespace VAT.Avatars.Skeletal
                 }
             }
 
-            if (SubGroupCount > 0) {
-                foreach (var group in SubGroups) {
+            if (SubGroupCount > 0)
+            {
+                foreach (var group in SubGroups)
+                {
                     group.DrawGizmos();
                 }
             }

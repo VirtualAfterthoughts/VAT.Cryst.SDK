@@ -15,7 +15,8 @@ namespace VAT.Avatars.Helpers
 {
     using Unity.Mathematics;
 
-    public static class HumanoidHelper {
+    public static class HumanoidHelper
+    {
         public static void CalculateLeg(ref HumanoidLegProportions proportions, HumanoidLeg leg, HumanoidLegDescriptor descriptor, Transform root)
         {
             if (descriptor.upperLeg.HasTransform)
@@ -37,24 +38,28 @@ namespace VAT.Avatars.Helpers
         {
         }
 
-        public static void CalculateSpine(ref HumanoidSpineProportions proportions, HumanoidDataSkeleton skeleton, HumanoidArtDescriptor descriptor) {
+        public static void CalculateSpine(ref HumanoidSpineProportions proportions, HumanoidDataSkeleton skeleton, HumanoidArtDescriptor descriptor)
+        {
             var spineDescriptor = descriptor.spineDescriptor;
             var spine = skeleton.Spine;
 
-            if (spineDescriptor.chest.HasTransform) {
+            if (spineDescriptor.chest.HasTransform)
+            {
                 var chestOffset = (Vector3)spine.T1Vertebra.position - spineDescriptor.chest.transform.position;
                 proportions.upperChestEllipsoid.height = Vector3.Dot(Vector3.ProjectOnPlane(chestOffset, spine.T1Vertebra.forward), spine.T1Vertebra.up);
             }
 
-            if (spineDescriptor.hips.HasTransform) {
+            if (spineDescriptor.hips.HasTransform)
+            {
                 var hipsOffset = (Vector3)spine.L1Vertebra.position - spineDescriptor.hips.transform.position;
                 proportions.spineEllipsoid.height = Vector3.Dot(Vector3.ProjectOnPlane(hipsOffset, spine.L1Vertebra.forward), spine.L1Vertebra.up);
             }
         }
 
-        public static void CalculateArm(ref HumanoidArmProportions proportions, HumanoidArm arm, HumanoidArmDescriptor descriptor) {
+        public static void CalculateArm(ref HumanoidArmProportions proportions, HumanoidArm arm, HumanoidArmDescriptor descriptor)
+        {
             proportions.upperArmRotation = Quaternion.AngleAxis(90f * (arm.isLeft ? -1f : 1f), Vector3.up);
-            
+
             if (descriptor.upperArm.HasTransform)
             {
                 var upperArmOffset = (Vector3)arm.Scapula.position - descriptor.upperArm.transform.position;
@@ -62,7 +67,8 @@ namespace VAT.Avatars.Helpers
                 proportions.shoulderBladeEllipsoid.radius.x = -Vector3.Dot(Vector3.ProjectOnPlane(upperArmOffset, arm.UpperArm.up), arm.UpperArm.forward);
             }
 
-            if (descriptor.lowerArm.HasTransform) {
+            if (descriptor.lowerArm.HasTransform)
+            {
                 var lowerArmOffset = (Vector3)arm.UpperArm.position - descriptor.lowerArm.transform.position;
 
                 proportions.upperArmEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(lowerArmOffset, arm.UpperArm.up), arm.UpperArm.forward);
@@ -84,7 +90,7 @@ namespace VAT.Avatars.Helpers
 
                 proportions.elbowEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(wristOffset, arm.Elbow.up), arm.Elbow.forward);
             }
-            else if (descriptor.hand.hand.HasTransform) 
+            else if (descriptor.hand.hand.HasTransform)
             {
                 var fromTo = (descriptor.hand.hand.transform.position + offset - (Vector3)arm.UpperArm.position).normalized;
                 var worldRotation = quaternion.LookRotation(fromTo, arm.Scapula.up);
@@ -94,7 +100,7 @@ namespace VAT.Avatars.Helpers
 
                 proportions.elbowEllipsoid.height = -Vector3.Dot(Vector3.ProjectOnPlane(handOffset, arm.Elbow.up), arm.Elbow.forward);
             }
-            
+
             CalculateHand(ref proportions.handProportions, arm.Hand, descriptor.hand);
         }
 

@@ -6,14 +6,16 @@ using UnityEngine;
 
 using VAT.Shared.Extensions;
 
-namespace VAT.Shared.Data {
+namespace VAT.Shared.Data
+{
     using Unity.Mathematics;
 
     /// <summary>
     /// A transform in data form.
     /// </summary>
     [Serializable]
-    public struct SimpleTransform {
+    public struct SimpleTransform
+    {
         /// <summary>
         /// A SimpleTransform with default values.
         /// </summary>
@@ -112,7 +114,8 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public float3 TransformPoint(float3 position) {
+        public float3 TransformPoint(float3 position)
+        {
             BurstCompiled_Transform.BurstCompiled_TransformPoint(position, this.position, rotation, scale, out var result);
             return result;
         }
@@ -122,7 +125,8 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public float3 TransformDirection(float3 direction) {
+        public float3 TransformDirection(float3 direction)
+        {
             BurstCompiled_Transform.BurstCompiled_TransformDirection(direction, rotation, out var result);
             return result;
         }
@@ -132,7 +136,8 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="vector"></param>
         /// <returns></returns>
-        public float3 TransformVector(float3 vector) {
+        public float3 TransformVector(float3 vector)
+        {
             BurstCompiled_Transform.BurstCompiled_TransformVector(vector, rotation, scale, out var result);
             return result;
         }
@@ -142,7 +147,8 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="rotation"></param>
         /// <returns></returns>
-        public quaternion TransformRotation(quaternion rotation) {
+        public quaternion TransformRotation(quaternion rotation)
+        {
             BurstCompiled_Transform.BurstCompiled_TransformRotation(rotation, this.rotation, this.scale, out var result);
             return result;
         }
@@ -152,7 +158,8 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="transform"></param>
         /// <returns></returns>
-        public SimpleTransform InverseTransform(SimpleTransform transform) {
+        public SimpleTransform InverseTransform(SimpleTransform transform)
+        {
             return Create(InverseTransformPoint(transform.position), InverseTransformRotation(transform.rotation), transform.scale / scale);
         }
 
@@ -161,7 +168,8 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public float3 InverseTransformPoint(float3 position) {
+        public float3 InverseTransformPoint(float3 position)
+        {
             BurstCompiled_Transform.BurstCompiled_InverseTransformPoint(position, this.position, rotation, scale, out var result);
             return result;
         }
@@ -171,7 +179,8 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>
-        public float3 InverseTransformDirection(float3 direction) {
+        public float3 InverseTransformDirection(float3 direction)
+        {
             BurstCompiled_Transform.BurstCompiled_InverseTransformDirection(direction, rotation, out var result);
             return result;
         }
@@ -181,7 +190,8 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="vector"></param>
         /// <returns></returns>
-        public float3 InverseTransformVector(float3 vector) {
+        public float3 InverseTransformVector(float3 vector)
+        {
             BurstCompiled_Transform.BurstCompiled_InverseTransformVector(vector, rotation, scale, out var result);
             return result;
         }
@@ -191,7 +201,8 @@ namespace VAT.Shared.Data {
         /// </summary>
         /// <param name="rotation"></param>
         /// <returns></returns>
-        public quaternion InverseTransformRotation(quaternion rotation) { 
+        public quaternion InverseTransformRotation(quaternion rotation)
+        {
             BurstCompiled_Transform.BurstCompiled_InverseTransformRotation(rotation, this.rotation, scale, out var result);
             return result;
         }
@@ -203,7 +214,8 @@ namespace VAT.Shared.Data {
         /// <param name="b"></param>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static SimpleTransform Lerp(SimpleTransform a, SimpleTransform b, float t) {
+        public static SimpleTransform Lerp(SimpleTransform a, SimpleTransform b, float t)
+        {
             return Create(
                 lerp(a.position, b.position, t),
                 slerp(a.rotation, b.rotation, t),

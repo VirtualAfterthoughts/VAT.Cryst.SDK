@@ -66,14 +66,17 @@ namespace VAT.Avatars.Skeletal
             }
         }
 
-        public override void WriteProportions(HumanoidProportions proportions) {
+        public override void WriteProportions(HumanoidProportions proportions)
+        {
             _spineProportions = proportions.spineProportions;
 
-            if (isLeft) {
+            if (isLeft)
+            {
                 _legProportions = proportions.leftLegProportions;
                 _legIndex = 0;
             }
-            else {
+            else
+            {
                 _legProportions = proportions.rightLegProportions;
                 _legIndex = 1;
             }
@@ -99,7 +102,7 @@ namespace VAT.Avatars.Skeletal
             var locomotor = _spine.Locomotion.Locomotors[_legIndex];
 
             var target = locomotor.Result;
-            
+
             _originalTarget = target;
 
             // Apply any overrides
@@ -112,7 +115,8 @@ namespace VAT.Avatars.Skeletal
             LegSolve(target);
         }
 
-        private void LegSolve(SimpleTransform target) {
+        private void LegSolve(SimpleTransform target)
+        {
             var position = target.position;
             var rotation = target.rotation;
 
@@ -148,10 +152,11 @@ namespace VAT.Avatars.Skeletal
             Toe.rotation = rotation;
         }
 
-        public float3 GetFootCenter() {
+        public float3 GetFootCenter()
+        {
             float3 forward = Ankle.forward;
             float3 up = Ankle.up;
-            
+
             float3 heel = Ankle.position - up * _legProportions.ankleEllipsoid.height;
 
             heel += ((-forward * _legProportions.ankleEllipsoid.radius.y) + (forward * Toe.localPosition.z)) * 0.5f;

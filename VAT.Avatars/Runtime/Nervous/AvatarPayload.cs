@@ -8,8 +8,10 @@ using VAT.Input;
 using VAT.Input.Skeleton;
 using VAT.Shared.Data;
 
-namespace VAT.Avatars.Nervous {
-    public interface IAvatarPayload {
+namespace VAT.Avatars.Nervous
+{
+    public interface IAvatarPayload
+    {
         public bool TryGetHead(out SimpleTransform result);
 
         public SimpleTransform[] GetHeads();
@@ -58,7 +60,7 @@ namespace VAT.Avatars.Nervous {
                 Handedness.RIGHT => new IInputArm[] { RightArm },
                 Handedness.BOTH => new IInputArm[] { LeftArm, RightArm },
                 _ => Array.Empty<IInputArm>(),
-            };;
+            }; ;
         }
 
         public readonly SimpleTransform[] GetHeads()

@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace VAT.Shared.Utilities
 {
-    public interface IRecreatable {
+    public interface IRecreatable
+    {
         void CreateItem();
 
         void DestroyItem();

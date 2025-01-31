@@ -6,7 +6,8 @@ using VAT.Avatars.Bones;
 
 namespace VAT.Avatars.Art
 {
-    public abstract class ArtBoneGroup : IBoneGroup {
+    public abstract class ArtBoneGroup : IBoneGroup
+    {
         protected ArtBone[] _bones = null;
         public ArtBone[] Bones => _bones;
         public abstract int BoneCount { get; }

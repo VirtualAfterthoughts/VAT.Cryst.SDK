@@ -18,8 +18,8 @@ namespace VAT.UI
             _eventDataCache[interactor] = new PointerEventData(eventSystem);
         }
 
-        public void DeregisterInteractor(IXRUIInteractor interactor) 
-        { 
+        public void DeregisterInteractor(IXRUIInteractor interactor)
+        {
             _interactors.Remove(interactor);
             _eventDataCache.Remove(interactor);
         }
@@ -27,7 +27,7 @@ namespace VAT.UI
         private void ProcessInteractor(IXRUIInteractor interactor)
         {
             var data = _eventDataCache[interactor];
-            
+
             Vector2 screenPoint = Camera.main.WorldToScreenPoint(interactor.GetEndPosition());
 
             data.button = PointerEventData.InputButton.Left;

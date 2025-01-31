@@ -14,11 +14,13 @@ namespace VAT.Avatars.Integumentary
 
         private Dictionary<Handedness, List<AvatarLeg>> _legLookup = null;
 
-        public void InitiateLimbs() {
+        public void InitiateLimbs()
+        {
             // Arms
             _armLookup = new();
 
-            foreach (var hand in CreateArms()) {
+            foreach (var hand in CreateArms())
+            {
                 if (!_armLookup.ContainsKey(hand.Handedness))
                     _armLookup.Add(hand.Handedness, new List<AvatarArm>());
 
@@ -39,7 +41,8 @@ namespace VAT.Avatars.Integumentary
             }
         }
 
-        public void UninitiateLimbs() {
+        public void UninitiateLimbs()
+        {
             // Arms
             _armLookup = null;
 
@@ -47,7 +50,8 @@ namespace VAT.Avatars.Integumentary
             _legLookup = null;
         }
 
-        protected AvatarArm[] CreateArms() {
+        protected AvatarArm[] CreateArms()
+        {
             var skeleton = GetSkeleton();
             var dataSkeleton = skeleton.GetData();
             var physSkeleton = skeleton.GetPhysics();
@@ -96,10 +100,12 @@ namespace VAT.Avatars.Integumentary
             return array;
         }
 
-        public AvatarArm[] GetArms() {
+        public AvatarArm[] GetArms()
+        {
             List<AvatarArm> arms = null;
 
-            foreach (var list in _armLookup.Values) {
+            foreach (var list in _armLookup.Values)
+            {
                 arms ??= new();
                 arms.AddRange(list);
             }

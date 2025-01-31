@@ -15,7 +15,8 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Characters
 {
-    public class XRControllerRig : ControllerRig {
+    public class XRControllerRig : ControllerRig
+    {
         public override void OnRigEnable()
         {
             base.OnRigEnable();
@@ -85,7 +86,7 @@ namespace VAT.Characters
 
         protected override void OnProcessTracking()
         {
-            
+
         }
     }
 }

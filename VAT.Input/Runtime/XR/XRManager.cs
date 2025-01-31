@@ -55,7 +55,7 @@ namespace VAT.Input.XR
 
             Application.quitting += OnApplicationQuit;
         }
-        
+
         public static void DeinitializeApi()
         {
             Application.quitting -= OnApplicationQuit;

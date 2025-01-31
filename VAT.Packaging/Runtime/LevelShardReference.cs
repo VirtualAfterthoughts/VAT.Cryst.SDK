@@ -13,7 +13,7 @@ namespace VAT.Packaging
         public override Type EditorShardType => typeof(StaticLevelShard);
 #endif
 
-        public LevelShardReference() 
+        public LevelShardReference()
         {
             _address = new(Address.EMPTY);
         }

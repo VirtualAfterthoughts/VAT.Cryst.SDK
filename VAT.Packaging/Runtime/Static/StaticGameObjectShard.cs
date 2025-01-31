@@ -153,7 +153,7 @@ namespace VAT.Packaging
 
             var folderPath = CrystAssetManager.GetCrystRelativePath($"Packed Assets/Preview Meshes/{StaticCrystal.CrystalInfo.Title}");
             CrystAssetManager.EnsureCrystFolderExists(folderPath);
-            
+
             string path = folderPath + $"/{ShardInfo.Title} PreviewMesh.mesh";
             AssetDatabase.CreateAsset(newMesh, path);
             var meshAsset = AssetDatabase.LoadAssetAtPath<Mesh>(path);
@@ -208,9 +208,9 @@ namespace VAT.Packaging
             {
                 var editorAsset = MainGameObject.EditorAssetT;
                 using var tempScene = TempGameObjectScene.Create(editorAsset, out var instance);
-                
+
                 var newBounds = new Bounds();
-                
+
                 foreach (var collider in instance.GetComponentsInChildren<Collider>())
                 {
                     newBounds.Encapsulate(collider.bounds);
@@ -220,7 +220,7 @@ namespace VAT.Packaging
                 {
                     newBounds.Encapsulate(renderer.bounds);
                 }
-                
+
                 _bounds = newBounds;
             }
 #endif

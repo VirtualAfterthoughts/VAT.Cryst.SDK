@@ -88,9 +88,9 @@ namespace VAT.Props.Ammo
             Body.transform.rotation = socket.Body.transform.rotation;
 
             _insertJoint = Body.Rigidbody.gameObject.AddComponent<ConfigurableJoint>();
-            
-            _insertJoint.xDrive = _insertJoint.zDrive = new JointDrive() { positionSpring = 5000000f, positionDamper = 10000f, maximumForce =  float.PositiveInfinity };
-            
+
+            _insertJoint.xDrive = _insertJoint.zDrive = new JointDrive() { positionSpring = 5000000f, positionDamper = 10000f, maximumForce = float.PositiveInfinity };
+
             var insideToOut = ammoSocket.InsidePoint.position - ammoSocket.OutsidePoint.position;
             _insertJoint.secondaryAxis = _insertJoint.transform.InverseTransformDirection(insideToOut.normalized);
 

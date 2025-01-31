@@ -27,14 +27,16 @@ namespace VAT.Avatars.Skeletal
 
         private Vector3 _localHead;
 
-        public override void BindPose() {
+        public override void BindPose()
+        {
             base.BindPose();
 
             Knee.localPosition = float3.zero;
             Foot.localPosition = down() * _length;
         }
 
-        public void WriteProportions(float length) {
+        public void WriteProportions(float length)
+        {
             _length = length;
 
             _legScalar = length / 0.5f;
@@ -75,7 +77,7 @@ namespace VAT.Avatars.Skeletal
 
             var movementVelocity = Vector3.zero;
 
-            if (_avatarPayload.TryGetInput(out var input)) 
+            if (_avatarPayload.TryGetInput(out var input))
             {
                 movementVelocity = input.GetMovement() * 4f;
                 velocity += movementVelocity;

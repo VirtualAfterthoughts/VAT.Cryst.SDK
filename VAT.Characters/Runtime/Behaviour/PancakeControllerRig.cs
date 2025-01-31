@@ -12,7 +12,8 @@ using VAT.Cryst.Math;
 
 namespace VAT.Characters
 {
-    public class PancakeControllerRig : ControllerRig {
+    public class PancakeControllerRig : ControllerRig
+    {
         public Transform neckPivot;
 
         private DesktopInputActions _inputActions;

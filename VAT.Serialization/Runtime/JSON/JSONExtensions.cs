@@ -2,14 +2,17 @@ using System.IO;
 
 using Newtonsoft.Json.Linq;
 
-namespace VAT.Serialization.JSON {
-    public static partial class JSONExtensions {
+namespace VAT.Serialization.JSON
+{
+    public static partial class JSONExtensions
+    {
         /// <summary>
         /// Writes the desired json to a file at the specified path.
         /// </summary>
         /// <param name="json"></param>
         /// <param name="path"></param>
-        public static void WriteToFile(this JObject json, string path) {
+        public static void WriteToFile(this JObject json, string path)
+        {
             File.WriteAllText(path, json.ToString());
         }
 
@@ -18,7 +21,8 @@ namespace VAT.Serialization.JSON {
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static JObject ReadFromFile(this string path) {
+        public static JObject ReadFromFile(this string path)
+        {
             return JObject.Parse(File.ReadAllText(path));
         }
     }

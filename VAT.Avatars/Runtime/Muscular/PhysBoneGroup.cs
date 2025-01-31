@@ -6,7 +6,8 @@ namespace VAT.Avatars.Muscular
     using UnityEngine;
     using VAT.Avatars.Bones;
 
-    public abstract class PhysBoneGroup : IBoneGroup {
+    public abstract class PhysBoneGroup : IBoneGroup
+    {
         public abstract int BoneCount { get; }
 
         public virtual int SubGroupCount => 0;
@@ -23,7 +24,8 @@ namespace VAT.Avatars.Muscular
 
         public virtual void NeutralPose() { }
 
-        public virtual void ResetAnchors() {
+        public virtual void ResetAnchors()
+        {
             for (var i = 0; i < BoneCount; i++)
                 GetBone(i).ResetAnchors();
 
@@ -33,30 +35,36 @@ namespace VAT.Avatars.Muscular
 
         public abstract void Solve();
 
-        public virtual IReadOnlyList<Collider> GetColliders() {
+        public virtual IReadOnlyList<Collider> GetColliders()
+        {
             var colliders = new List<Collider>();
 
-            for (var i = 0; i < BoneCount; i++) {
+            for (var i = 0; i < BoneCount; i++)
+            {
                 var bone = GetBone(i);
 
                 colliders.AddRange(bone.Colliders);
             }
-            
-            for (var i = 0; i < SubGroupCount; i++) {
+
+            for (var i = 0; i < SubGroupCount; i++)
+            {
                 colliders.AddRange(GetSubGroup(i).GetColliders());
             }
 
             return colliders;
         }
 
-        public virtual void IgnoreCollision(PhysBoneGroup other, bool ignore) {
+        public virtual void IgnoreCollision(PhysBoneGroup other, bool ignore)
+        {
             var localColliders = GetColliders();
             var otherColliders = other.GetColliders();
 
-            for (var i = 0; i < localColliders.Count; i++) {
+            for (var i = 0; i < localColliders.Count; i++)
+            {
                 var localCollider = localColliders[i];
 
-                for (var j = 0; j < otherColliders.Count; j++) {
+                for (var j = 0; j < otherColliders.Count; j++)
+                {
                     Physics.IgnoreCollision(localCollider, otherColliders[j], ignore);
                 }
             }
@@ -66,13 +74,14 @@ namespace VAT.Avatars.Muscular
 
         public abstract PhysBoneGroup GetSubGroup(int index);
 
-        public virtual void Attach(PhysBoneGroup group) {
+        public virtual void Attach(PhysBoneGroup group)
+        {
             FirstBone.Parent = group.LastBone;
         }
     }
 
-    public abstract class PhysBoneGroupT<TBone> : PhysBoneGroup 
-        where TBone : PhysBone 
+    public abstract class PhysBoneGroupT<TBone> : PhysBoneGroup
+        where TBone : PhysBone
     {
         public override IBone[] Bones => TBones;
         public override IBoneGroup[] SubGroups => PhysSubGroups;
@@ -86,16 +95,19 @@ namespace VAT.Avatars.Muscular
         public virtual TBone GenericFirstBone => TBones[0];
         public virtual TBone GenericLastBone => TBones[BoneCount - 1];
 
-        public override void Initiate() {
+        public override void Initiate()
+        {
             _bones = new TBone[BoneCount];
             _subGroups = new PhysBoneGroup[SubGroupCount];
         }
 
-        public override PhysBone GetBone(int index) {
+        public override PhysBone GetBone(int index)
+        {
             return TBones[index];
         }
 
-        public override PhysBoneGroup GetSubGroup(int index) {
+        public override PhysBoneGroup GetSubGroup(int index)
+        {
             return PhysSubGroups[index];
         }
     }

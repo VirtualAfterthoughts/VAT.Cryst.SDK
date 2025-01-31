@@ -6,15 +6,18 @@ using static Unity.Mathematics.math;
 
 using VAT.Shared.Data;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     using Unity.Mathematics;
 
-    public static partial class ConfigurableJointExtensions {
+    public static partial class ConfigurableJointExtensions
+    {
         /// <summary>
         /// Refreshes the joint so that the current rotation and (if autoConfigureConnectedAnchor is enabled) position are the defaults.
         /// </summary>
         /// <param name="joint">The joint.</param>
-        public static void RefreshJointSpace(this ConfigurableJoint joint) {
+        public static void RefreshJointSpace(this ConfigurableJoint joint)
+        {
             // Flipping swapBodies causes a change in the joint. Useful since unity doesn't provide this to us.
             joint.swapBodies = !joint.swapBodies;
             joint.swapBodies = !joint.swapBodies;
@@ -26,7 +29,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="joint">The joint.</param>
         /// <param name="transform">The transform to move.</param>
         /// <param name="rotation">The desired rotation.</param>
-        public static void UpdateRotation(this ConfigurableJoint joint, Transform transform, quaternion rotation) {
+        public static void UpdateRotation(this ConfigurableJoint joint, Transform transform, quaternion rotation)
+        {
             Quaternion original = transform.rotation;
 
             transform.rotation = rotation;
@@ -39,7 +43,8 @@ namespace VAT.Shared.Extensions {
         /// </summary>
         /// <param name="joint">The joint.</param>
         /// <returns></returns>
-        public static quaternion GetJointRotation(this ConfigurableJoint joint) {
+        public static quaternion GetJointRotation(this ConfigurableJoint joint)
+        {
             quaternion initialRotation = joint.configuredInWorldSpace ? quaternion.identity : joint.transform.rotation;
             BurstCompiled_ConfigurableJointExtensions.BurstCompiled_GetJointRotation(initialRotation, joint.axis, joint.secondaryAxis, out var result);
             return result;
@@ -63,7 +68,8 @@ namespace VAT.Shared.Extensions {
         /// </summary>
         /// <param name="joint">The joint.</param>
         /// <param name="targetRotation">The targetRotation in joint space.</param>
-        public static void SetTargetRotationAndVelocity(this ConfigurableJoint joint, Quaternion targetRotation) {
+        public static void SetTargetRotationAndVelocity(this ConfigurableJoint joint, Quaternion targetRotation)
+        {
             // Getting the difference between the last target and the current is an easy way to set angular velocity without doing another conversion.
             BurstCompiled_PhysicsExtensions.BurstCompiled_GetAngularVelocity(joint.targetRotation, targetRotation, Time.deltaTime, out var result);
             joint.targetAngularVelocity = result;
@@ -90,7 +96,7 @@ namespace VAT.Shared.Extensions {
         /// <param name="joint">The joint.</param>
         /// <param name="anchor">The world space anchor.</param>
         public static void SetWorldAnchor(this ConfigurableJoint joint, Vector3 anchor) => joint.anchor = joint.transform.InverseTransformPoint(anchor);
-        
+
         /// <summary>
         /// Sets the connected anchor of the joint in world space.
         /// </summary>
@@ -104,7 +110,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="joint">The joint.</param>
         /// <param name="linearMotion">The joint motion for linear axes.</param>
         /// <param name="angularMotion">The joint motion for angular axes.</param>
-        public static void SetJointMotion(this ConfigurableJoint joint, ConfigurableJointMotion linearMotion = ConfigurableJointMotion.Free, ConfigurableJointMotion angularMotion = ConfigurableJointMotion.Free) {
+        public static void SetJointMotion(this ConfigurableJoint joint, ConfigurableJointMotion linearMotion = ConfigurableJointMotion.Free, ConfigurableJointMotion angularMotion = ConfigurableJointMotion.Free)
+        {
             joint.xMotion = joint.yMotion = joint.zMotion = linearMotion;
             joint.angularXMotion = joint.angularYMotion = joint.angularZMotion = angularMotion;
         }
@@ -114,7 +121,8 @@ namespace VAT.Shared.Extensions {
         /// </summary>
         /// <param name="joint">The joint.</param>
         /// <param name="limits">The angular limits.</param>
-        public static void SetAngularLimits(this ConfigurableJoint joint, JointAngularLimits limits) {
+        public static void SetAngularLimits(this ConfigurableJoint joint, JointAngularLimits limits)
+        {
             joint.lowAngularXLimit = new SoftJointLimit() { limit = limits.lowAngularXLimit };
             joint.highAngularXLimit = new SoftJointLimit() { limit = limits.highAngularXLimit };
             joint.angularYLimit = new SoftJointLimit() { limit = limits.angularYLimit };
@@ -123,12 +131,14 @@ namespace VAT.Shared.Extensions {
     }
 
     [BurstCompile]
-    public static partial class BurstCompiled_ConfigurableJointExtensions {
+    public static partial class BurstCompiled_ConfigurableJointExtensions
+    {
         /// <summary>
         /// Calculates the joint space rotation as of this frame (BURST).
         /// </summary>
         [BurstCompile]
-        public static void BurstCompiled_GetJointRotation(in quaternion initialRotation, in float3 axis, in float3 secondaryAxis, out quaternion jointRotation) {
+        public static void BurstCompiled_GetJointRotation(in quaternion initialRotation, in float3 axis, in float3 secondaryAxis, out quaternion jointRotation)
+        {
             // Calculate each axis of the joint space
             float3 right = axis.forcenormalize(math.right());
             float3 nSecondaryAxis = secondaryAxis.forcenormalize(math.up());
@@ -153,7 +163,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="connectedRotation"></param>
         /// <param name="result"></param>
         [BurstCompile]
-        public static void BurstCompiled_GetTargetRotationWorld(in quaternion jointRotation, in quaternion initialRotation, in quaternion targetRotation, in quaternion initialConnectedRotation, in quaternion connectedRotation, out quaternion result) {
+        public static void BurstCompiled_GetTargetRotationWorld(in quaternion jointRotation, in quaternion initialRotation, in quaternion targetRotation, in quaternion initialConnectedRotation, in quaternion connectedRotation, out quaternion result)
+        {
             result = inverse(jointRotation);
             result = mul(result, mul(initialRotation, inverse(targetRotation)));
             result = mul(result, inverse(mul(initialConnectedRotation, inverse(connectedRotation))));
@@ -168,7 +179,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="targetRotation"></param>
         /// <param name="result"></param>
         [BurstCompile]
-        public static void BurstCompiled_GetTargetRotationWorld(in quaternion jointRotation, in quaternion initialRotation, in quaternion targetRotation, out quaternion result) {
+        public static void BurstCompiled_GetTargetRotationWorld(in quaternion jointRotation, in quaternion initialRotation, in quaternion targetRotation, out quaternion result)
+        {
             result = inverse(jointRotation);
             result = mul(result, mul(initialRotation, inverse(targetRotation)));
             result = mul(result, jointRotation);

@@ -16,7 +16,8 @@ namespace VAT.Input
 
         private readonly HandPoseData _handPoseData;
 
-        public XRHandPoseProvider(Handedness handedness, XRHandSubsystem subsystem) {
+        public XRHandPoseProvider(Handedness handedness, XRHandSubsystem subsystem)
+        {
             _handedness = handedness;
             _subsystem = subsystem;
 

@@ -6,14 +6,16 @@ using VAT.Shared.Math;
 
 namespace VAT.Shared.Extensions
 {
-    public static partial class PhysicsExtensions {
+    public static partial class PhysicsExtensions
+    {
         /// <summary>
         /// Clamps the cylinder height within range of the radius.
         /// </summary>
         /// <param name="radius">The radius of the cylinder.</param>
         /// <param name="height">The height of the cylinder.</param>
         /// <returns></returns>
-        public static float GetClampedHeight(float radius, float height) {
+        public static float GetClampedHeight(float radius, float height)
+        {
             return Mathf.Max(radius * 2f, height) * 0.5f;
         }
 
@@ -75,7 +77,8 @@ namespace VAT.Shared.Extensions
         /// </summary>
         /// <param name="collider"></param>
         /// <returns></returns>
-        public static float GetVolume(this CapsuleCollider collider) {
+        public static float GetVolume(this CapsuleCollider collider)
+        {
             var targetTransform = collider.transform;
             var scale = targetTransform.lossyScale;
 

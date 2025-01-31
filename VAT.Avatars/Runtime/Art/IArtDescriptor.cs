@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace VAT.Avatars.Art
 {
-    public interface IArtDescriptor {
+    public interface IArtDescriptor
+    {
     }
 }

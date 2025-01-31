@@ -77,7 +77,7 @@ namespace VAT.Props
 
         protected override void OnUnpack(JSONUnpacker unpacker, JObject json)
         {
-            if (json.TryGetValue("impactGroups", out var groupToken)) 
+            if (json.TryGetValue("impactGroups", out var groupToken))
             {
                 _impactGroups = groupToken.ToObject<ImpactGroup[]>();
             }

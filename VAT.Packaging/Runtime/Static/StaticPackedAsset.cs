@@ -31,7 +31,7 @@ namespace VAT.Packaging
         public StaticPackedAsset() { }
 
         public StaticPackedAsset(string title, StaticCrystAsset mainAsset)
-        { 
+        {
             _title = title;
             _mainAsset = mainAsset;
             _subAssets = new List<StaticPackedAsset>();

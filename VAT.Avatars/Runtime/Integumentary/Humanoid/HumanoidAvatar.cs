@@ -25,7 +25,8 @@ namespace VAT.Avatars.Integumentary
 {
     [RequireComponent(typeof(Animator))]
     [ExecuteAlways]
-    public partial class HumanoidAvatar : Avatar {
+    public partial class HumanoidAvatar : Avatar
+    {
         public Animator animator;
 
         public Transform eyeCenterOverride;
@@ -64,17 +65,20 @@ namespace VAT.Avatars.Integumentary
         }
 
 #if UNITY_EDITOR
-        public void Update() {
+        public void Update()
+        {
             if (Application.isPlaying)
                 return;
 
             // Save eye center
             var editorEyeCenter = EditorGetEyeCenter();
 
-            if (editorEyeCenter.HasValue) {
+            if (editorEyeCenter.HasValue)
+            {
                 var localEyeCenter = transform.InverseTransformPoint(editorEyeCenter.Value);
 
-                if (!runtimeEyeCenter.HasValue() || !localEyeCenter.Approximately(runtimeEyeCenter.GetValueOrDefault())) {
+                if (!runtimeEyeCenter.HasValue() || !localEyeCenter.Approximately(runtimeEyeCenter.GetValueOrDefault()))
+                {
                     runtimeEyeCenter = localEyeCenter;
                     EditorUtility.SetDirty(this);
                     AssetDatabase.SaveAssetIfDirty(this);
@@ -83,11 +87,13 @@ namespace VAT.Avatars.Integumentary
         }
 #endif
 
-        public override void WriteArtOffsets() {
+        public override void WriteArtOffsets()
+        {
             Skeleton.ArtSkeleton.WriteOffsets(Skeleton.DataSkeleton);
         }
 
-        public override bool TryCreateHandPoser(out HandPoser poser) {
+        public override bool TryCreateHandPoser(out HandPoser poser)
+        {
             if (!Initiated)
                 Initiate();
 
@@ -103,7 +109,8 @@ namespace VAT.Avatars.Integumentary
             return true;
         }
 
-        protected override void OnInitiate() {
+        protected override void OnInitiate()
+        {
             _vitals = new HumanoidVitals();
 
             var dataSkeleton = new HumanoidDataSkeleton();
@@ -128,7 +135,8 @@ namespace VAT.Avatars.Integumentary
             _skeleton = new HumanoidAvatarSkeleton(dataSkeleton, physSkeleton, artSkeleton);
         }
 
-        protected override void OnInitiateRuntime() {
+        protected override void OnInitiateRuntime()
+        {
             _physicsRoot = GameObjectExtensions.CreateGameObject(PhysSkeletonName, transform.parent).transform;
 
             base.OnInitiateRuntime();
@@ -138,10 +146,12 @@ namespace VAT.Avatars.Integumentary
 
             eyeCenter.rotation = transform.rotation;
 
-            if (runtimeEyeCenter.HasValue()) {
+            if (runtimeEyeCenter.HasValue())
+            {
                 eyeCenter.position = transform.TransformPoint(runtimeEyeCenter.Value);
             }
-            else {
+            else
+            {
                 throw new MissingReferenceException("No HumanoidAvatar eye center was found at runtime! Please recompile your avatar!");
             }
 
@@ -181,7 +191,8 @@ namespace VAT.Avatars.Integumentary
             Vitals.ApplyVitals();
         }
 
-        protected override void OnUninitiateRuntime() {
+        protected override void OnUninitiateRuntime()
+        {
             _physicsRoot.gameObject.SetActive(false);
             Destroy(_physicsRoot.gameObject);
 

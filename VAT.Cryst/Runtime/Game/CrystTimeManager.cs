@@ -112,7 +112,7 @@ namespace VAT.Cryst.Game
             Time.fixedDeltaTime = current;
             OnFixedDeltaChanged?.Invoke(current, previous);
         }
-        
+
         public static void Pause()
         {
             _isPaused = true;

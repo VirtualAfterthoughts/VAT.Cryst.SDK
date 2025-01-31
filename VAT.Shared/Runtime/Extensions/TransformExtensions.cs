@@ -12,21 +12,24 @@ using static Unity.Mathematics.math;
 using Cysharp.Threading.Tasks;
 #endif
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     using Unity.Burst;
     using Unity.Mathematics;
 
     /// <summary>
     /// Extension methods for Transforms.
     /// </summary>
-    public static partial class TransformExtensions {
+    public static partial class TransformExtensions
+    {
         /// <summary>
         /// Ensures the parent is set even when called in a method that does not allow parent setting.
         /// Requires UniTask to function properly.
         /// </summary>
         /// <param name="transform"></param>
         /// <param name="parent"></param>
-        public static void EnsureParent(this Transform transform, Transform parent, Action onFinish = null) {
+        public static void EnsureParent(this Transform transform, Transform parent, Action onFinish = null)
+        {
             if (transform == null)
                 return;
 
@@ -38,8 +41,10 @@ namespace VAT.Shared.Extensions {
         }
 
 #if USE_UNITASK
-        private static async UniTaskVoid EnsureParentAsync(Transform transform, Transform parent, Action onFinish = null) {
-            while (transform.parent != parent) {
+        private static async UniTaskVoid EnsureParentAsync(Transform transform, Transform parent, Action onFinish = null)
+        {
+            while (transform.parent != parent)
+            {
                 transform.parent = parent;
                 await UniTask.Yield();
             }
@@ -69,7 +74,8 @@ namespace VAT.Shared.Extensions {
         /// Resets the local position, rotation, and scale of this transform to default values.
         /// </summary>
         /// <param name="transform"></param>
-        public static void Reset(this Transform transform) {
+        public static void Reset(this Transform transform)
+        {
             transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             transform.localScale = Vector3.one;
         }
@@ -88,8 +94,9 @@ namespace VAT.Shared.Extensions {
         public static void BurstCompiled_TransformVector(in float3 input, in quaternion rotation, in float3 lossyScale, out float3 result) => BurstCompiled_TransformDirection(input * lossyScale, rotation, out result);
 
         [BurstCompile(FloatMode = FloatMode.Fast)]
-        public static void BurstCompiled_TransformRotation(in quaternion input, in quaternion rotation, in float3 lossyScale, out quaternion result) {
-            result = mul(rotation, input); 
+        public static void BurstCompiled_TransformRotation(in quaternion input, in quaternion rotation, in float3 lossyScale, out quaternion result)
+        {
+            result = mul(rotation, input);
         }
 
         [BurstCompile(FloatMode = FloatMode.Fast)]
@@ -106,7 +113,8 @@ namespace VAT.Shared.Extensions {
         }
 
         [BurstCompile(FloatMode = FloatMode.Fast)]
-        public static void BurstCompiled_InverseTransformRotation(in quaternion input, in quaternion rotation, in float3 lossyScale, out quaternion result) {
+        public static void BurstCompiled_InverseTransformRotation(in quaternion input, in quaternion rotation, in float3 lossyScale, out quaternion result)
+        {
             result = mul(inverse(rotation), input);
         }
     }

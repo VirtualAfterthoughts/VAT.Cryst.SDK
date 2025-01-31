@@ -25,16 +25,16 @@ namespace VAT.Interaction
         [Min(0f)]
         private float _radius = 0f;
 
-        public float Radius { get { return _radius; } set {  _radius = value; } }
+        public float Radius { get { return _radius; } set { _radius = value; } }
 
-        public Transform GetTargetTransform() 
-        { 
+        public Transform GetTargetTransform()
+        {
             if (_target == null)
             {
                 _target = transform;
             }
 
-            return _target; 
+            return _target;
         }
 
         public virtual float GetWorldRadius()

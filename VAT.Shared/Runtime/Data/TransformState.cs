@@ -9,12 +9,13 @@ namespace VAT.Shared.Data
     /// <summary>
     /// A snapshot state of a transform, allowing for the parent and positions to be reset at any time.
     /// </summary>
-    public class TransformState {
+    public class TransformState
+    {
         /// <summary>
         /// The world space position of this state.
         /// </summary>
         public readonly float3 position;
-        
+
         /// <summary>
         /// The world space rotation of this state.
         /// </summary>
@@ -63,7 +64,8 @@ namespace VAT.Shared.Data
         /// <summary>
         /// Creates a transform state with default values.
         /// </summary>
-        public TransformState() {
+        public TransformState()
+        {
             position = float3.zero;
             rotation = quaternion.identity;
             lossyScale = new float3(1f);
@@ -258,7 +260,8 @@ namespace VAT.Shared.Data
         /// <summary>
         /// Moves the transform to its cached positions and parent.
         /// </summary>
-        public void MoveToState() {
+        public void MoveToState()
+        {
             if (HasTransform)
                 transform.EnsureParent(parent, InternalOnParented);
         }
@@ -266,17 +269,21 @@ namespace VAT.Shared.Data
         /// <summary>
         /// Moves the transform to its cached positions without setting the parent.
         /// </summary>
-        public void MoveToPosition() {
-            if (HasTransform) {
+        public void MoveToPosition()
+        {
+            if (HasTransform)
+            {
                 var initialParent = transform.parent;
-                transform.EnsureParent(parent, () => {
+                transform.EnsureParent(parent, () =>
+                {
                     InternalOnParented();
                     transform.parent = initialParent;
                 });
             }
         }
 
-        private void InternalOnParented() {
+        private void InternalOnParented()
+        {
             transform.localPosition = localPosition;
             transform.localRotation = localRotation;
             transform.localScale = localScale;

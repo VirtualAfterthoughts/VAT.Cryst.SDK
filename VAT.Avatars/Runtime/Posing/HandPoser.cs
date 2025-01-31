@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace VAT.Avatars.Posing {
+namespace VAT.Avatars.Posing
+{
     [ExecuteAlways]
-    public abstract class HandPoser : MonoBehaviour {
+    public abstract class HandPoser : MonoBehaviour
+    {
         public bool Generated => _generated;
 
         [SerializeField]
@@ -15,7 +17,8 @@ namespace VAT.Avatars.Posing {
         public bool Initiated => _initiated;
         private bool _initiated = false;
 
-        public void Initiate() {
+        public void Initiate()
+        {
             _generated = true;
 
             if (_initiated)
@@ -25,28 +28,33 @@ namespace VAT.Avatars.Posing {
             _initiated = true;
         }
 
-        public void Uninitiate() {
-            if (_initiated) {
+        public void Uninitiate()
+        {
+            if (_initiated)
+            {
                 OnUninitiate();
                 _initiated = false;
             }
         }
 
-        private void OnEnable() {
+        private void OnEnable()
+        {
             if (!_generated)
                 return;
 
             Initiate();
         }
 
-        private void OnDisable() {
+        private void OnDisable()
+        {
             if (!_generated)
                 return;
 
             Uninitiate();
         }
 
-        private void Update() {
+        private void Update()
+        {
             OnUpdate();
         }
 
@@ -59,7 +67,8 @@ namespace VAT.Avatars.Posing {
         protected virtual void OnUpdate() { }
 
 #if UNITY_EDITOR
-        private void OnDrawGizmosSelected() {
+        private void OnDrawGizmosSelected()
+        {
             DrawGizmos();
         }
 

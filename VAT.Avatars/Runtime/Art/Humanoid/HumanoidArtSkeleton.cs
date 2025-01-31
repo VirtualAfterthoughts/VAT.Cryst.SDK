@@ -11,7 +11,8 @@ using VAT.Shared.Data;
 
 namespace VAT.Avatars.Art
 {
-    public class HumanoidArtSkeleton : ArtBoneSkeleton {
+    public class HumanoidArtSkeleton : ArtBoneSkeleton
+    {
         private ArtBoneGroup[] _groups = null;
         public override IBoneGroup[] BoneGroups => _groups;
 
@@ -34,7 +35,8 @@ namespace VAT.Avatars.Art
             _groups[4] = new HumanoidArtLeg();
             _groups[5] = new HumanoidArtLeg();
 
-            for (var i = 0; i < BoneGroupCount; i++) {
+            for (var i = 0; i < BoneGroupCount; i++)
+            {
                 _groups[i].Initiate();
             }
         }
@@ -47,7 +49,8 @@ namespace VAT.Avatars.Art
             }
         }
 
-        public void WriteTransforms(HumanoidArtDescriptor artDescriptor) {
+        public void WriteTransforms(HumanoidArtDescriptor artDescriptor)
+        {
             Neck.WriteTransforms(artDescriptor.neckDescriptor);
             Spine.WriteTransforms(artDescriptor.spineDescriptor);
 
@@ -70,7 +73,8 @@ namespace VAT.Avatars.Art
             RightLeg.WriteData(skeleton.RightLeg);
         }
 
-        public void WriteOffsets(IHumanSkeleton skeleton) {
+        public void WriteOffsets(IHumanSkeleton skeleton)
+        {
             Neck.WriteOffsets(skeleton.Neck);
             Spine.WriteOffsets(skeleton.Spine);
 
@@ -81,7 +85,8 @@ namespace VAT.Avatars.Art
             RightLeg.WriteOffsets(skeleton.RightLeg);
         }
 
-        public override void Solve(float deltaTime) {
+        public override void Solve(float deltaTime)
+        {
             Spine.Solve();
 
             LeftLeg.Solve();

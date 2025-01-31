@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     using UnityEngine;
 
-    public static partial class ObjectExtensions {
+    public static partial class ObjectExtensions
+    {
         /// <summary>
         /// Removes a GameObject, component, or asset if it exists.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static bool TryDestroy(this Object obj) {
+        public static bool TryDestroy(this Object obj)
+        {
             return TryDestroy(obj, 0f);
         }
 

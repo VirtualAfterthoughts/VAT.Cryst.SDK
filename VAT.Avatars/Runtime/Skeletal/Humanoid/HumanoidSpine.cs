@@ -57,7 +57,8 @@ namespace VAT.Avatars.Skeletal
 
         private SimpleTransform _targetRoot = SimpleTransform.Default;
 
-        public override void Initiate() {
+        public override void Initiate()
+        {
             base.Initiate();
 
             Root = new DataBone();
@@ -69,7 +70,8 @@ namespace VAT.Avatars.Skeletal
             _locomotion.Initiate(Sacrum, L1Vertebra);
         }
 
-        public override void Write(IAvatarPayload payload) {
+        public override void Write(IAvatarPayload payload)
+        {
             base.Write(payload);
 
             _locomotion.Write(payload);
@@ -164,7 +166,8 @@ namespace VAT.Avatars.Skeletal
             _neck.feetCenterInRoot = root.InverseTransformPoint(_locomotion.GetLocomotorCenter());
             _neck.legVelocity = legVelocity;
         }
-        public override void Attach(DataBoneGroup group) {
+        public override void Attach(DataBoneGroup group)
+        {
             base.Attach(group);
 
             _neck = group as HumanoidNeck;

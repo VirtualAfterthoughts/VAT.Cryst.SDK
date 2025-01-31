@@ -12,11 +12,13 @@ namespace VAT.Avatars.Skeletal
     using Unity.Mathematics;
     using VAT.Shared.Math;
 
-    public struct BodyRemapGroup {
+    public struct BodyRemapGroup
+    {
         public SimpleTransform transform;
         public Ellipsoid ellipsoid;
 
-        public BodyRemapGroup(SimpleTransform transform, Ellipsoid ellipsoid) {
+        public BodyRemapGroup(SimpleTransform transform, Ellipsoid ellipsoid)
+        {
             this.transform = transform;
             this.ellipsoid = ellipsoid;
         }
@@ -24,15 +26,18 @@ namespace VAT.Avatars.Skeletal
 
     public static class BodyRemapping
     {
-        public static BodyRemapGroup BlendClosest(float3 point, params BodyRemapGroup[] groups) {
+        public static BodyRemapGroup BlendClosest(float3 point, params BodyRemapGroup[] groups)
+        {
             float distance = float.PositiveInfinity;
             BodyRemapGroup? closest = null;
-            for (var i = 0; i < groups.Length; i++) {
+            for (var i = 0; i < groups.Length; i++)
+            {
                 var group = groups[i];
 
                 float dist = lengthsq(point - groups[i].transform.position);
 
-                if (!closest.HasValue || dist < distance) {
+                if (!closest.HasValue || dist < distance)
+                {
                     distance = dist;
                     closest = group;
                 }
@@ -40,14 +45,16 @@ namespace VAT.Avatars.Skeletal
 
             float secondDistance = float.PositiveInfinity;
             BodyRemapGroup? secondClosest = null;
-            for (var i = 0; i < groups.Length; i++) {
+            for (var i = 0; i < groups.Length; i++)
+            {
                 var group = groups[i];
                 if (group.GetHashCode() == closest.Value.GetHashCode())
                     continue;
 
                 float dist = lengthsq(point - groups[i].transform.position);
 
-                if (!secondClosest.HasValue || dist < secondDistance) {
+                if (!secondClosest.HasValue || dist < secondDistance)
+                {
                     secondDistance = dist;
                     secondClosest = group;
                 }

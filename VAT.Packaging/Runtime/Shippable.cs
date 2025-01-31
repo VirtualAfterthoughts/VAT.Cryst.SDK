@@ -41,7 +41,7 @@ namespace VAT.Packaging
         private void ContextBuildAddress()
         {
             if (EditorUtility.DisplayDialog(
-                "Build Address", 
+                "Build Address",
                 "Are you sure you want to rebuild the address? This will break all existing references!",
                 "Build"))
             {

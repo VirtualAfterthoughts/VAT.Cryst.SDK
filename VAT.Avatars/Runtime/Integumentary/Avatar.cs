@@ -9,7 +9,8 @@ using VAT.Avatars.Posing;
 using VAT.Input.Data;
 using VAT.Shared.Extensions;
 
-namespace VAT.Avatars.Integumentary {
+namespace VAT.Avatars.Integumentary
+{
     public abstract partial class Avatar : MonoBehaviour
     {
         public const string PhysSkeletonName = "[Rig - Physics]";
@@ -20,7 +21,8 @@ namespace VAT.Avatars.Integumentary {
 
         public abstract IAvatarSkeleton GetSkeleton();
 
-        public bool Uninitiate() {
+        public bool Uninitiate()
+        {
             if (!_initiated)
             {
 #if UNITY_EDITOR
@@ -32,7 +34,8 @@ namespace VAT.Avatars.Integumentary {
             OnUninitiate();
 
 #if UNITY_EDITOR
-            if (Application.isPlaying) {
+            if (Application.isPlaying)
+            {
 #endif
                 OnUninitiateRuntime();
                 UninitiateLimbs();
@@ -105,7 +108,8 @@ namespace VAT.Avatars.Integumentary {
         /// </summary>
         /// <param name="poser">The resulting poser.</param>
         /// <returns>Whether or not a poser was successfully created.</returns>
-        public virtual bool TryCreateHandPoser(out HandPoser poser) {
+        public virtual bool TryCreateHandPoser(out HandPoser poser)
+        {
             poser = null;
             return false;
         }
@@ -115,8 +119,10 @@ namespace VAT.Avatars.Integumentary {
         public abstract IAvatarStats GetStats();
 
 #if UNITY_EDITOR
-        protected virtual void OnDrawGizmos() {
-            if (Initiated) {
+        protected virtual void OnDrawGizmos()
+        {
+            if (Initiated)
+            {
                 using TempGizmoColor color = TempGizmoColor.Create();
                 Gizmos.color = Color.green;
 
@@ -124,7 +130,8 @@ namespace VAT.Avatars.Integumentary {
             }
         }
 
-        protected virtual void OnValidate() {
+        protected virtual void OnValidate()
+        {
             if (Application.isPlaying)
                 return;
 
@@ -134,7 +141,8 @@ namespace VAT.Avatars.Integumentary {
             Initiate();
         }
 
-        public void EditorRefreshAvatar() {
+        public void EditorRefreshAvatar()
+        {
             OnValidate();
         }
 #endif

@@ -8,19 +8,22 @@ namespace VAT.Shared.Extensions
 {
     using Unity.Mathematics;
 
-    public static partial class PhysicsExtensions {
+    public static partial class PhysicsExtensions
+    {
         /// <summary>
         /// Gets the center point of all contacts.
         /// </summary>
         /// <param name="collision"></param>
         /// <returns></returns>
-        public static Vector3 GetContactCenter(this Collision collision) {
+        public static Vector3 GetContactCenter(this Collision collision)
+        {
             if (collision.contactCount <= 0)
                 return Vector3.zero;
 
             var center = Vector3.zero;
 
-            for (var i = 0; i < collision.contactCount; i++) {
+            for (var i = 0; i < collision.contactCount; i++)
+            {
                 center += collision.GetContact(i).point;
             }
 
@@ -32,13 +35,15 @@ namespace VAT.Shared.Extensions
         /// </summary>
         /// <param name="collision"></param>
         /// <returns></returns>
-        public static float GetSeparationCenter(this Collision collision) {
+        public static float GetSeparationCenter(this Collision collision)
+        {
             if (collision.contactCount <= 0)
                 return 0f;
 
             var center = 0f;
 
-            for (var i = 0; i < collision.contactCount; i++) {
+            for (var i = 0; i < collision.contactCount; i++)
+            {
                 center += collision.GetContact(i).separation;
             }
 
@@ -57,7 +62,8 @@ namespace VAT.Shared.Extensions
 
             var center = Vector3.zero;
 
-            for (var i = 0; i < collision.contactCount; i++) {
+            for (var i = 0; i < collision.contactCount; i++)
+            {
                 center += collision.GetContact(i).normal;
             }
 

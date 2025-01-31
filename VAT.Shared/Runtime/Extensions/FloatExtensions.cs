@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     /// <summary>
     /// Extension methods for floats.
     /// </summary>
-    public static partial class FloatExtensions {
+    public static partial class FloatExtensions
+    {
         /// <summary>
         /// Returns the average of each float.
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public static float Average(params float[] values) {
+        public static float Average(params float[] values)
+        {
             return Sum(values) / values.Length;
         }
 
@@ -19,7 +22,8 @@ namespace VAT.Shared.Extensions {
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public static float Sum(params float[] values) {
+        public static float Sum(params float[] values)
+        {
             float t = 0f;
             for (int i = 0; i < values.Length; i++)
                 t += values[i];

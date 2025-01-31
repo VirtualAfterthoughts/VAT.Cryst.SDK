@@ -9,12 +9,15 @@ using VAT.Avatars.Skeletal;
 
 namespace VAT.Avatars.Muscular
 {
-    public abstract class HumanoidPhysBoneGroup : PhysBoneGroupT<HumanoidPhysBone> {
-        public void SetTransformRoot(Transform root) {
+    public abstract class HumanoidPhysBoneGroup : PhysBoneGroupT<HumanoidPhysBone>
+    {
+        public void SetTransformRoot(Transform root)
+        {
             for (var i = 0; i < BoneCount; i++)
                 (Bones[i] as HumanoidPhysBone).SetTransformRoot(root);
 
-            for (var i = 0; i < SubGroupCount; i++) {
+            for (var i = 0; i < SubGroupCount; i++)
+            {
                 if (SubGroups[i] is HumanoidPhysBoneGroup group)
                     group.SetTransformRoot(root);
             }

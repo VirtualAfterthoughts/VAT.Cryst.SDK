@@ -15,17 +15,20 @@ namespace VAT.Shared.Data
         public Vector3[] verticies;
         public MeshTriangle[] triangles;
 
-        public MeshDescriptor(Vector3[] verticies, MeshTriangle[] triangles) {
+        public MeshDescriptor(Vector3[] verticies, MeshTriangle[] triangles)
+        {
             this.verticies = verticies;
             this.triangles = triangles;
         }
 
-        public MeshDescriptor(IList<Vector3> verticies, IList<MeshTriangle> triangles) {
+        public MeshDescriptor(IList<Vector3> verticies, IList<MeshTriangle> triangles)
+        {
             this.verticies = verticies.ToArray();
             this.triangles = triangles.ToArray();
         }
 
-        public static MeshDescriptor Combine(MeshDescriptor x, MeshDescriptor y) {
+        public static MeshDescriptor Combine(MeshDescriptor x, MeshDescriptor y)
+        {
             int xVerticies = x.verticies.Length;
             int yVerticies = y.verticies.Length;
 
@@ -36,20 +39,24 @@ namespace VAT.Shared.Data
             MeshTriangle[] triangles = new MeshTriangle[xTriangles + yTriangles];
 
             // Combine vertex arrays
-            for (var i = 0; i < xVerticies; i++) {
+            for (var i = 0; i < xVerticies; i++)
+            {
                 verticies[i] = x.verticies[i];
             }
 
-            for (var i = 0; i < yVerticies; i++) {
+            for (var i = 0; i < yVerticies; i++)
+            {
                 verticies[i + xVerticies] = y.verticies[i];
             }
 
             // Combine triangle arrays
-            for (var i = 0; i < xTriangles; i++) {
+            for (var i = 0; i < xTriangles; i++)
+            {
                 triangles[i] = x.triangles[i];
             }
 
-            for (var i = 0; i < yTriangles; i++) {
+            for (var i = 0; i < yTriangles; i++)
+            {
                 var triangle = y.triangles[i];
                 triangles[i + xTriangles] = MeshTriangle.Offset(triangle, xTriangles + 2);
             }
@@ -58,8 +65,10 @@ namespace VAT.Shared.Data
             return new MeshDescriptor(verticies, triangles);
         }
 
-        public Mesh CreateMesh() {
-            Mesh mesh = new() {
+        public Mesh CreateMesh()
+        {
+            Mesh mesh = new()
+            {
                 vertices = verticies
             };
 

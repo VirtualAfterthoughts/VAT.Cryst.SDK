@@ -10,13 +10,14 @@ namespace VAT.Props
         private float _openedVelocity = 0f;
 
         private float _targetPercent = 0f;
-        public float TargetPercent { 
-            get 
-            { 
+        public float TargetPercent
+        {
+            get
+            {
                 return _targetPercent;
-            } 
-            set 
-            { 
+            }
+            set
+            {
                 _targetPercent = value;
 
                 if (Overriden)
@@ -24,7 +25,7 @@ namespace VAT.Props
                     _openedPercent = value;
                     UpdateState(OpenedPercent);
                 }
-            } 
+            }
         }
 
         private bool _locked = false;
@@ -37,9 +38,9 @@ namespace VAT.Props
         private BoltState _state = BoltState.CLOSED;
         public BoltState State
         {
-            get 
-            { 
-                return _state; 
+            get
+            {
+                return _state;
             }
             set
             {
@@ -81,7 +82,7 @@ namespace VAT.Props
 
         private void UpdateState(float percent)
         {
-            switch (State) 
+            switch (State)
             {
                 case BoltState.CLOSED:
                     if (percent >= 0.01f)

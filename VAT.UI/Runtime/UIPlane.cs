@@ -54,7 +54,7 @@ namespace VAT.UI
             Gizmos.color = Color.cyan;
 
             Gizmos.matrix = transform.localToWorldMatrix;
-            
+
             Gizmos.DrawWireCube(center, size);
         }
     }

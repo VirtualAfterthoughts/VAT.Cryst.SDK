@@ -11,25 +11,29 @@ using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Muscular
 {
-    public sealed class HumanoidPhysBone : RigidbodyPhysBone {
+    public sealed class HumanoidPhysBone : RigidbodyPhysBone
+    {
         private MeshCollider _meshCollider = null;
         private Mesh _mesh = null;
 
         public HumanoidPhysBone(string name) : base(name) { }
 
-        public HumanoidPhysBone(string name, PhysBone parent, JointAngularLimits limits = default) 
+        public HumanoidPhysBone(string name, PhysBone parent, JointAngularLimits limits = default)
             : base(name, parent, limits) { }
 
-        public void SetTransformRoot(Transform root) {
+        public void SetTransformRoot(Transform root)
+        {
             _transform.parent = root;
         }
 
-        public override void Destroy() {
+        public override void Destroy()
+        {
             _gameObject.TryDestroy();
             _mesh.TryDestroy();
         }
 
-        public void SetMesh(Mesh mesh) {
+        public void SetMesh(Mesh mesh)
+        {
             if (_meshCollider != null)
                 RemoveCollider(_meshCollider);
 
@@ -50,7 +54,8 @@ namespace VAT.Avatars.Muscular
             InsertCollider(_meshCollider);
         }
 
-        public void ConfigureJoint() {
+        public void ConfigureJoint()
+        {
             // Setup positional forces
             JointDrive positionDrive = default;
 
@@ -91,16 +96,19 @@ namespace VAT.Avatars.Muscular
             _configurableJoint.DestroyItem();
             _configurableJoint.CreateItem();
 
-            if (bone is HumanoidPhysBone rigidbodyBone) {
+            if (bone is HumanoidPhysBone rigidbodyBone)
+            {
                 _configurableJoint.ConnectedBody = rigidbodyBone.Joint.Body;
 
-                _configurableJoint.ConfigurableJoint.linearLimitSpring = new SoftJointLimitSpring() {
+                _configurableJoint.ConfigurableJoint.linearLimitSpring = new SoftJointLimitSpring()
+                {
                     spring = 5e+06f,
                     damper = 1e+06f,
                 };
                 _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
             }
-            else {
+            else
+            {
                 Joint.ConnectedBody = null;
 
                 _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Free);

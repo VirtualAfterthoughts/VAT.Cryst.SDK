@@ -8,7 +8,8 @@ namespace VAT.Input
     /// <summary>
     /// A basic discriminator for left and right.
     /// </summary>
-    public enum Handedness {
+    public enum Handedness
+    {
         NONE = 1 << 0,
         LEFT = 1 << 1,
         RIGHT = 1 << 2,

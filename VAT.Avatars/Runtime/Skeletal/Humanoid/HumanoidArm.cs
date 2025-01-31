@@ -102,7 +102,8 @@ namespace VAT.Avatars.Skeletal
             SubGroups[0] = new HumanoidHand(this);
         }
 
-        public override void WriteProportions(HumanoidProportions proportions) {
+        public override void WriteProportions(HumanoidProportions proportions)
+        {
             _bodyMeasurements = proportions.GetMeasurements();
             _spineProportions = proportions.spineProportions;
 
@@ -118,7 +119,8 @@ namespace VAT.Avatars.Skeletal
             Hand.WriteProportions(_armProportions.handProportions);
         }
 
-        public override void BindPose() {
+        public override void BindPose()
+        {
             float mult = isLeft ? -1f : 1f;
 
             var chest = Clavicle.Parent;
@@ -130,7 +132,7 @@ namespace VAT.Avatars.Skeletal
             Scapula.rotation = chest.rotation;
 
             UpperArm.position = chest.position + math.mul(chest.rotation, new float3(mult * _spineProportions.upperChestEllipsoid.radius.x, 0f, _armProportions.upperArmOffsetZ));
-            
+
             UpperArm.localRotation = math.normalizesafe(_armProportions.upperArmRotation);
 
             Elbow.localPosition = new float3(0f, 0f, _armProportions.upperArmEllipsoid.height);
@@ -197,7 +199,8 @@ namespace VAT.Avatars.Skeletal
             }
         }
 
-        public override void Solve() {
+        public override void Solve()
+        {
             // Process target
             if (OnProcessTarget != null)
             {
@@ -224,7 +227,8 @@ namespace VAT.Avatars.Skeletal
             Hand.Solve();
         }
 
-        private void ClavicleSolve() {
+        private void ClavicleSolve()
+        {
             float mult = isLeft ? 1f : -1f;
 
             var lastClavicleRot = Clavicle.localRotation;
@@ -257,14 +261,15 @@ namespace VAT.Avatars.Skeletal
             angle = ClavicleYCurve.Evaluate(atan) * Mathf.Rad2Deg;
             angle = -angle * mult * 0.05f;
             Clavicle.rotation = Quaternion.AngleAxis(angle, _spine.T1Vertebra.forward) * Clavicle.rotation;
-            
+
             Clavicle.rotation = (Quaternion.AngleAxis(25f * mult, -Clavicle.up)) * Clavicle.rotation;
 
             // Smoothing
             Clavicle.localRotation = Quaternion.Slerp(lastClavicleRot, Clavicle.localRotation, Smoothing.CalculateDecay(24f, Time.deltaTime));
         }
 
-        private void ScapulaSolve() {
+        private void ScapulaSolve()
+        {
             float scapulaMult = 2f;
 
             float mult = isLeft ? 1f : -1f;
@@ -282,7 +287,8 @@ namespace VAT.Avatars.Skeletal
             Scapula.rotation = protractRotation * lateralRotation * _spine.T1Vertebra.rotation;
         }
 
-        private void ArmSolve() {
+        private void ArmSolve()
+        {
             // First we solve a likely elbow position, then we can rotate the elbow using the wrist twist
             // cos(y) = a^2 + b^2 - c^2 / 2ab
             // Find angle between any two lengths let a be length 1 and b be length 2
@@ -440,7 +446,8 @@ namespace VAT.Avatars.Skeletal
             }
         }
 
-        public override void Attach(DataBoneGroup group) {
+        public override void Attach(DataBoneGroup group)
+        {
             FirstBone.Parent = group.FirstBone;
 
             _spine = group as HumanoidSpine;

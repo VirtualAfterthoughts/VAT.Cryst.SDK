@@ -2,13 +2,15 @@ using UnityEngine;
 
 using static Unity.Mathematics.math;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     using Unity.Mathematics;
 
     /// <summary>
     /// Extension methods for Float3s.
     /// </summary>
-    public static partial class Float3Extensions {
+    public static partial class Float3Extensions
+    {
         /// <summary>
         /// If the vector is equal to zero and is unable to be normalized, it is replaced with the supplement.
         /// </summary>

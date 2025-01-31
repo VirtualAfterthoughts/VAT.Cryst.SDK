@@ -14,13 +14,16 @@ namespace VAT.Entities.PhysX
     {
         public static readonly SimpleConfigurableJoint Default = new() { };
 
-        public static SimpleConfigurableJoint Create(ConfigurableJoint joint) {
-            return new() {
+        public static SimpleConfigurableJoint Create(ConfigurableJoint joint)
+        {
+            return new()
+            {
 
             };
         }
 
-        public void Apply(ConfigurableJoint joint) {
+        public void Apply(ConfigurableJoint joint)
+        {
 
         }
     }

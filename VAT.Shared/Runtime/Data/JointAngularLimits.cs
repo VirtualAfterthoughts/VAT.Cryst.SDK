@@ -45,7 +45,8 @@ namespace VAT.Shared.Data
         /// </summary>
         /// <param name="axis">The drive axis.</param>
         /// <returns></returns>
-        public bool IsFree(Axis axis) {
+        public bool IsFree(Axis axis)
+        {
             return axis switch
             {
                 Axis.Y => angularYLimit > 177f,
@@ -54,7 +55,8 @@ namespace VAT.Shared.Data
             };
         }
 
-        public static JointAngularLimits operator +(JointAngularLimits lft, JointAngularLimits rht) {
+        public static JointAngularLimits operator +(JointAngularLimits lft, JointAngularLimits rht)
+        {
             return new JointAngularLimits(
                 lft.lowAngularXLimit + rht.lowAngularXLimit,
                 lft.highAngularXLimit + rht.highAngularXLimit,

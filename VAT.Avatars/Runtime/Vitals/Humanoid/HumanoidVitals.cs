@@ -4,19 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using VAT.Avatars.Proportions;
 
-namespace VAT.Avatars.Vitals {
-    public class HumanoidVitals : ISkeletonVitalsT<HumanoidBoneGroupVitals, HumanoidVitalsPayload> {
+namespace VAT.Avatars.Vitals
+{
+    public class HumanoidVitals : ISkeletonVitalsT<HumanoidBoneGroupVitals, HumanoidVitalsPayload>
+    {
         private HumanoidBoneGroupVitals[] _groups;
 
-        public void InjectDependencies(HumanoidBoneGroupVitals[] groups, HumanoidVitalsPayload payload) {
+        public void InjectDependencies(HumanoidBoneGroupVitals[] groups, HumanoidVitalsPayload payload)
+        {
             _groups = groups;
 
-            for (var i = 0; i < groups.Length; i++) {
+            for (var i = 0; i < groups.Length; i++)
+            {
                 groups[i].InjectDependencies(payload);
             }
         }
 
-        public void CalculateVitals() {
+        public void CalculateVitals()
+        {
             for (var i = 0; i < _groups.Length; i++)
                 _groups[i].CalculateVitals();
         }
@@ -50,7 +55,8 @@ namespace VAT.Avatars.Vitals {
             };
         }
 
-        public void ApplyVitals() {
+        public void ApplyVitals()
+        {
             // First, calculate  vitals for every group
             for (var i = 0; i < _groups.Length; i++)
                 _groups[i].ApplyVitals();
@@ -60,7 +66,8 @@ namespace VAT.Avatars.Vitals {
                 _groups[i].ConfigureJoints();
         }
 
-        public float GetTotalMass() {
+        public float GetTotalMass()
+        {
             float mass = 0f;
 
             for (var i = 0; i < _groups.Length; i++)

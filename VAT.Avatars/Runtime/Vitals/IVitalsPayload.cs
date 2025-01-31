@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace VAT.Avatars.Vitals
 {
-    public interface IVitalsPayload {
+    public interface IVitalsPayload
+    {
     }
 }

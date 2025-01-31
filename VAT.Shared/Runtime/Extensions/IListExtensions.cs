@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     /// <summary>
     /// Extension methods for ILists.
     /// </summary>
-    public static partial class IListExtensions {
+    public static partial class IListExtensions
+    {
         /// <summary>
         /// Tries to add the element to the list. If it already exists, false is returned.
         /// </summary>
@@ -12,7 +14,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="list"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static bool TryAdd<T>(this IList<T> list, T item) {
+        public static bool TryAdd<T>(this IList<T> list, T item)
+        {
             if (list.Contains(item)) return false;
             list.Add(item); return true;
         }

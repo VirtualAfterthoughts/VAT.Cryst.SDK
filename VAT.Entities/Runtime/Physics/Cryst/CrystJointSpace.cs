@@ -5,8 +5,10 @@ using Unity.Mathematics;
 
 using UnityEngine;
 
-namespace VAT.Entities {
-    public abstract class CrystJointSpace {
+namespace VAT.Entities
+{
+    public abstract class CrystJointSpace
+    {
         public abstract float3 RawTargetPosition { get; set; }
         public abstract quaternion RawTargetRotation { get; set; }
         public abstract float3 RawTargetVelocity { get; set; }

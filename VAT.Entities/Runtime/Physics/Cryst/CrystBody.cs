@@ -33,7 +33,8 @@ namespace VAT.Entities
 
         private Collider[] _colliders = null;
 
-        private void Awake() {
+        private void Awake()
+        {
             Cache.Add(gameObject, this);
 
             if (HasBody)
@@ -60,7 +61,8 @@ namespace VAT.Entities
             _colliders = result.ToArray();
         }
 
-        private void OnDestroy() {
+        private void OnDestroy()
+        {
             Cache.Remove(gameObject);
 
             OnBodyDestroy();

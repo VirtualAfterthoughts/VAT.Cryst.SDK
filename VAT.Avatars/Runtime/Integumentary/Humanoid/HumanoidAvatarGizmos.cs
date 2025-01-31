@@ -17,9 +17,11 @@ namespace VAT.Avatars.Integumentary
     using System.Linq;
     using Unity.Mathematics;
 
-    public partial class HumanoidAvatar : Avatar {
+    public partial class HumanoidAvatar : Avatar
+    {
 #if UNITY_EDITOR
-        protected override void OnValidate() {
+        protected override void OnValidate()
+        {
             base.OnValidate();
 
             EditorUpdateEyeCenter();
@@ -38,12 +40,15 @@ namespace VAT.Avatars.Integumentary
             }
         }
 
-        public float3? EditorGetEyeCenter() {
-            if (eyeCenterOverride != null) {
+        public float3? EditorGetEyeCenter()
+        {
+            if (eyeCenterOverride != null)
+            {
                 return eyeCenterOverride.position;
             }
 
-            if (animator != null) {
+            if (animator != null)
+            {
                 Transform leftEye = animator.GetBoneTransform(HumanBodyBones.LeftEye);
                 Transform rightEye = animator.GetBoneTransform(HumanBodyBones.RightEye);
 
@@ -56,18 +61,22 @@ namespace VAT.Avatars.Integumentary
 
         protected override void OnDrawGizmos()
         {
-            if (Application.isPlaying) {
+            if (Application.isPlaying)
+            {
                 base.OnDrawGizmos();
                 return;
             }
-            else if (!Selection.GetTransforms(SelectionMode.Deep).Contains(transform)) {
+            else if (!Selection.GetTransforms(SelectionMode.Deep).Contains(transform))
+            {
                 return;
             }
 
-            using (TempGizmoColor.Create()) {
+            using (TempGizmoColor.Create())
+            {
                 float3? eyeCenter = EditorGetEyeCenter();
 
-                if (eyeCenter.HasValue) {
+                if (eyeCenter.HasValue)
+                {
                     Skeleton.DataSkeleton.Neck.EyeCenter.position = eyeCenter.Value;
                     Skeleton.DataSkeleton.Neck.EyeCenter.rotation = transform.rotation;
 
@@ -93,20 +102,23 @@ namespace VAT.Avatars.Integumentary
             }
         }
 
-        private void DrawNeckGizmos(HumanoidNeck neck, HumanoidPhysNeck physNeck, HumanoidNeckProportions proportions) {
+        private void DrawNeckGizmos(HumanoidNeck neck, HumanoidPhysNeck physNeck, HumanoidNeckProportions proportions)
+        {
             Gizmos.DrawWireMesh(physNeck.GenerateSkullMesh(proportions), neck.Skull.position, neck.Skull.rotation);
             Gizmos.DrawWireMesh(physNeck.GenerateUpperNeckMesh(proportions), neck.C1Vertebra.position, neck.C1Vertebra.rotation);
             Gizmos.DrawWireMesh(physNeck.GenerateLowerNeckMesh(proportions), neck.C4Vertebra.position, neck.C4Vertebra.rotation);
         }
 
-        private void DrawSpineGizmos(HumanoidSpine spine, HumanoidPhysSpine physSpine, HumanoidSpineProportions proportions, HumanoidNeckProportions neck) {
+        private void DrawSpineGizmos(HumanoidSpine spine, HumanoidPhysSpine physSpine, HumanoidSpineProportions proportions, HumanoidNeckProportions neck)
+        {
             Gizmos.DrawWireMesh(physSpine.GenerateUpperChestMesh(proportions, neck), spine.T1Vertebra.position, spine.T1Vertebra.rotation);
             Gizmos.DrawWireMesh(physSpine.GenerateChestMesh(proportions), spine.T7Vertebra.position, spine.T7Vertebra.rotation);
             Gizmos.DrawWireMesh(physSpine.GenerateSpineMesh(proportions), spine.L1Vertebra.position, spine.L1Vertebra.rotation);
             Gizmos.DrawWireMesh(physSpine.GeneratePelvisMesh(proportions), spine.Sacrum.position, spine.Sacrum.rotation);
         }
 
-        private void DrawArmGizmos(HumanoidArm arm, HumanoidPhysArm physArm, HumanoidArmProportions proportions) {
+        private void DrawArmGizmos(HumanoidArm arm, HumanoidPhysArm physArm, HumanoidArmProportions proportions)
+        {
             Gizmos.DrawWireMesh(physArm.GenerateClavicleMesh(proportions), arm.Clavicle.position, arm.Clavicle.rotation);
             Gizmos.DrawWireMesh(physArm.GenerateShoulderBladeMesh(proportions), arm.Scapula.position, arm.Scapula.rotation);
             Gizmos.DrawWireMesh(physArm.GenerateUpperArmMesh(proportions), arm.UpperArm.position, arm.UpperArm.rotation);
@@ -115,7 +127,8 @@ namespace VAT.Avatars.Integumentary
             Gizmos.DrawWireMesh(HumanoidPhysHand.GenerateKnuckleMesh(proportions), arm.Hand.Hand.position + arm.Hand.Hand.forward * proportions.handProportions.wristEllipsoid.height, arm.Hand.Hand.rotation);
         }
 
-        private void DrawLegGizmos(HumanoidLeg leg, HumanoidPhysLeg physLeg, HumanoidLegProportions proportions) {
+        private void DrawLegGizmos(HumanoidLeg leg, HumanoidPhysLeg physLeg, HumanoidLegProportions proportions)
+        {
             Gizmos.DrawWireMesh(physLeg.GenerateHipMesh(proportions), leg.Hip.position, leg.Hip.rotation);
             Gizmos.DrawWireMesh(physLeg.GenerateKneeMesh(proportions), leg.Knee.position, leg.Knee.rotation);
             Gizmos.DrawWireMesh(physLeg.GenerateAnkleMesh(proportions), leg.Ankle.position, leg.Ankle.rotation);

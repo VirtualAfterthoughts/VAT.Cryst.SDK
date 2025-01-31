@@ -6,6 +6,6 @@ namespace VAT.UI
 {
     public class UIRadialPanel : UIPanel
     {
-        
+
     }
 }

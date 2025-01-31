@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     /// <summary>
     /// Extension methods for GameObjects.
     /// </summary>
-    public static partial class GameObjectExtensions {
+    public static partial class GameObjectExtensions
+    {
         /// <summary>
         /// Creates a new GameObject as a child of a transform.
         /// </summary>
         /// <param name="name"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public static GameObject CreateGameObject(string name, Transform parent) {
+        public static GameObject CreateGameObject(string name, Transform parent)
+        {
             GameObject go = new(name);
             Transform tran = go.transform;
             tran.parent = parent;
@@ -35,7 +38,8 @@ namespace VAT.Shared.Extensions {
         /// <typeparam name="T">The component type.</typeparam>
         /// <param name="go">The GameObject.</param>
         /// <returns>The found or added component.</returns>
-        public static T AddOrGetComponent<T>(this GameObject go) where T : Component {
+        public static T AddOrGetComponent<T>(this GameObject go) where T : Component
+        {
             if (!go.TryGetComponent(out T comp))
                 comp = go.AddComponent(typeof(T)) as T;
             return comp;

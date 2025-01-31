@@ -18,7 +18,8 @@ namespace VAT.Avatars.Art
         public ArtBone Foot => Bones[2];
         public ArtBone Toe => Bones[3];
 
-        public override void Solve() {
+        public override void Solve()
+        {
             SimpleTransform pelvis = BoneGroup.Hip.Parent.Transform;
 
             SimpleTransform hip = BoneGroup.Hip.Transform;
@@ -44,7 +45,8 @@ namespace VAT.Avatars.Art
             Toe.Solve(toe);
         }
 
-        public override void WriteOffsets(IHumanLeg boneGroup) {
+        public override void WriteOffsets(IHumanLeg boneGroup)
+        {
             UpperLeg.WriteOffset(boneGroup.Hip);
             LowerLeg.WriteOffset(boneGroup.Knee);
             Foot.WriteOffset(boneGroup.Ankle);

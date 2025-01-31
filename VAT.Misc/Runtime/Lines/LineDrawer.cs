@@ -24,8 +24,8 @@ namespace VAT.Misc
             }
         }
 
-        private void GetLine() 
-        { 
+        private void GetLine()
+        {
             _renderer = GetComponent<LineRenderer>();
         }
 

@@ -45,7 +45,7 @@ namespace VAT.Interaction
 
             _primaryGrip.VirtualController.UnregisterOverride(this);
 
-            foreach(var grip in _secondaryGrips)
+            foreach (var grip in _secondaryGrips)
             {
                 grip.VirtualController.UnregisterOverride(this);
             }
@@ -92,7 +92,8 @@ namespace VAT.Interaction
             }
         }
 
-        private void OnPrimaryGripDetached(IInteractor interactor) {
+        private void OnPrimaryGripDetached(IInteractor interactor)
+        {
             if (!_primaryGrip.IsHeld)
             {
                 if (_swapHandOnDetach)

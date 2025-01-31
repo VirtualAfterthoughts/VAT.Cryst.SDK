@@ -20,7 +20,7 @@ namespace VAT.Input
 
         private readonly UnityButton _primaryButton;
         private readonly UnityButton _secondaryButton;
-        
+
         private readonly UnityTrackpad _thumbstick;
         private readonly UnityTrackpad _trackpad;
 

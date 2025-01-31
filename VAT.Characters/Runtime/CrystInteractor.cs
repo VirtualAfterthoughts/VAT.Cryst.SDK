@@ -387,7 +387,7 @@ namespace VAT.Characters
             var grabCenter = host.Transform(_palm.GetProximityCenterInHost());
 
             var colliders = Physics.OverlapSphere(grabCenter.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
-            
+
             var nearHover = GetInteractableFromColliders(colliders, HoverFlags.NEAR);
 
             _hoverHolder.HoveringInteractable = nearHover;

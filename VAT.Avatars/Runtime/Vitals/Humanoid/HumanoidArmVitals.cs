@@ -23,11 +23,13 @@ namespace VAT.Avatars.Vitals
         public float ElbowMass => _boneMasses[2];
         public float HandMass => _boneMasses[3];
 
-        public HumanoidArmVitals(bool isLeft) {
+        public HumanoidArmVitals(bool isLeft)
+        {
             _isLeft = isLeft;
         }
 
-        public override void ConfigureJoints() {
+        public override void ConfigureJoints()
+        {
             _arm.Clavicle.ConfigureJoint();
             _arm.Scapula.ConfigureJoint();
 
@@ -38,7 +40,8 @@ namespace VAT.Avatars.Vitals
             _arm.Hand.Hand.ConfigureJoint(totalNewtons * 0.125f);
         }
 
-        public override void ApplyVitals() {
+        public override void ApplyVitals()
+        {
             // Apply mass
             float individualShoulderMass = ShoulderMass * 0.5f;
 
@@ -49,7 +52,8 @@ namespace VAT.Avatars.Vitals
             _arm.Hand.Hand.SetMass(HandMass);
         }
 
-        public override void CalculateVitals() {
+        public override void CalculateVitals()
+        {
             // Calculate mass
             float density = 1.1f * 1000f;
 
@@ -63,11 +67,13 @@ namespace VAT.Avatars.Vitals
         {
             _spineProportions = payload.Proportions.spineProportions;
 
-            if (_isLeft) {
+            if (_isLeft)
+            {
                 _proportions = payload.Proportions.leftArmProportions;
                 _arm = payload.Skeleton.LeftArm;
             }
-            else {
+            else
+            {
                 _proportions = payload.Proportions.rightArmProportions;
                 _arm = payload.Skeleton.RightArm;
             }

@@ -18,7 +18,7 @@ namespace VAT.Interaction
             _controllerOverrides.Add(controllerOverride);
         }
 
-        public void UnregisterOverride(IVirtualControllerOverride controllerOverride) 
+        public void UnregisterOverride(IVirtualControllerOverride controllerOverride)
         {
             _controllerOverrides.Remove(controllerOverride);
         }

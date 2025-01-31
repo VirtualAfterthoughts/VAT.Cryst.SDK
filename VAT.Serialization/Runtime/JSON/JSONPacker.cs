@@ -9,7 +9,8 @@ namespace VAT.Serialization.JSON
     /// <summary>
     /// Utility for packing a json file.
     /// </summary>
-    public class JSONPacker {
+    public class JSONPacker
+    {
         public const int VERSION = 1;
 
         private const int RECURSION_CAP = 8;
@@ -27,7 +28,8 @@ namespace VAT.Serialization.JSON
 
         private bool _hasPackedRoot = false;
 
-        private JSONPacker(JObject jsonDocument) {
+        private JSONPacker(JObject jsonDocument)
+        {
             _references = new Dictionary<ReferenceId, IJSONPackable>();
             _referenceSet = new HashSet<IJSONPackable>();
 
@@ -45,7 +47,8 @@ namespace VAT.Serialization.JSON
         /// <typeparam name="TPackable"></typeparam>
         /// <param name="root"></param>
         /// <returns></returns>
-        public JObject PackRoot<TPackable>(TPackable root) where TPackable : IJSONPackable {
+        public JObject PackRoot<TPackable>(TPackable root) where TPackable : IJSONPackable
+        {
             if (_hasPackedRoot)
                 throw new Exception("Root for document was already packed.");
 
@@ -56,10 +59,12 @@ namespace VAT.Serialization.JSON
             var objectsJson = new JObject();
             List<IJSONPackable> packedJson = new();
 
-            for (var i = 0; i < RECURSION_CAP; i++) {
+            for (var i = 0; i < RECURSION_CAP; i++)
+            {
                 var referenceCopy = new Dictionary<ReferenceId, IJSONPackable>(_references);
 
-                foreach (var pair in referenceCopy) {
+                foreach (var pair in referenceCopy)
+                {
                     if (packedJson.Contains(pair.Value))
                         continue;
 
@@ -68,7 +73,8 @@ namespace VAT.Serialization.JSON
                     pair.Value.Pack(this, newObject);
 
                     // Pack the type as well if we can
-                    if (_typesInverse.TryGetValue(pair.Value.GetType(), out var id)) {
+                    if (_typesInverse.TryGetValue(pair.Value.GetType(), out var id))
+                    {
                         var typeObject = new JObject
                         {
                             { "type", id.ToString() }
@@ -87,7 +93,8 @@ namespace VAT.Serialization.JSON
 
             // Serialize types
             var typesJson = new JObject();
-            foreach (var pair in _types) {
+            foreach (var pair in _types)
+            {
                 var newObject = new JObject();
                 newObject.Add("type", pair.Key.ToString());
                 newObject.Add("typeName", pair.Value.AssemblyQualifiedName);
@@ -108,8 +115,10 @@ namespace VAT.Serialization.JSON
         /// <typeparam name="TPackable"></typeparam>
         /// <param name="packable"></param>
         /// <returns></returns>
-        public JObject PackReference<TPackable>(TPackable packable) where TPackable : IJSONPackable {
-            return new JObject {
+        public JObject PackReference<TPackable>(TPackable packable) where TPackable : IJSONPackable
+        {
+            return new JObject
+            {
                 ["ref"] = GetPackedReference(packable).ToString(),
                 ["type"] = GetPackedType(packable.GetType()).ToString(),
             };
@@ -119,11 +128,14 @@ namespace VAT.Serialization.JSON
         private int _lastReferenceId;
         private ReferenceId CreateReferenceId() => new ReferenceId($"{REFERENCE_PREFIX}{_lastReferenceId++}");
 
-        private ReferenceId GetPackedReference(IJSONPackable packable) {
-            if (_referenceSet.Contains(packable)) {
+        private ReferenceId GetPackedReference(IJSONPackable packable)
+        {
+            if (_referenceSet.Contains(packable))
+            {
                 return _references.FirstOrDefault((p) => p.Value == packable).Key;
             }
-            else {
+            else
+            {
                 var id = CreateReferenceId();
                 _references.Add(id, packable);
                 _referenceSet.Add(packable);
@@ -134,8 +146,9 @@ namespace VAT.Serialization.JSON
         private int _lastTypeId;
         private TypeId CreateTypeId() => new TypeId($"{TYPE_PREFIX}{_lastTypeId++}");
 
-        private TypeId GetPackedType(Type type) {
-            if (_typesInverse.ContainsKey(type)) 
+        private TypeId GetPackedType(Type type)
+        {
+            if (_typesInverse.ContainsKey(type))
                 return _typesInverse[type];
 
             var id = CreateTypeId();

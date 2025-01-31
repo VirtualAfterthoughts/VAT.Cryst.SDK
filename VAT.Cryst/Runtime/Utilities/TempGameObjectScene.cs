@@ -14,7 +14,7 @@ namespace VAT.Cryst.Utilities
 
         private GameObject _instance = null;
 
-        private TempGameObjectScene(GameObject asset) 
+        private TempGameObjectScene(GameObject asset)
         {
             _previewScene = new();
 

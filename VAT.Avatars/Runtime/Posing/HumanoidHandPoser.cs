@@ -19,7 +19,8 @@ using VAT.Shared.Extensions;
 namespace VAT.Avatars.Posing
 {
     [ExecuteAlways]
-    public sealed class HumanoidHandPoser : HandPoser {
+    public sealed class HumanoidHandPoser : HandPoser
+    {
         [HideInInspector]
         public SimpleTransform offset = SimpleTransform.Default;
 
@@ -40,7 +41,8 @@ namespace VAT.Avatars.Posing
         private HumanoidHand _hand;
         private HumanoidArtHand _artHand;
 
-        protected override void OnInitiate() {
+        protected override void OnInitiate()
+        {
             base.OnInitiate();
 
             _hand = new HumanoidHand();
@@ -78,7 +80,8 @@ namespace VAT.Avatars.Posing
             };
         }
 
-        public void Solve() {
+        public void Solve()
+        {
             _hand.Hand.Transform = descriptor.hand.Transform.Transform(offset);
 
             _hand.SetOpenPose(handPoseData);
@@ -134,7 +137,8 @@ namespace VAT.Avatars.Posing
             if (_hand == null)
                 return;
 
-            using (TempGizmoColor.Create()) {
+            using (TempGizmoColor.Create())
+            {
                 Gizmos.color = new Color(255, 10f, 0f, 255f) / 255f;
 
                 _hand.DrawGizmos();

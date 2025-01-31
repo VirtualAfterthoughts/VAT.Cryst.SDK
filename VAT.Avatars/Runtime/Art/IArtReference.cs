@@ -9,7 +9,8 @@ using VAT.Avatars.Bones;
 
 namespace VAT.Avatars.Art
 {
-    public interface IArtReference {
+    public interface IArtReference
+    {
         public abstract bool HasTransform { get; }
 
         public abstract SimpleTransform Transform { get; set; }
@@ -18,7 +19,8 @@ namespace VAT.Avatars.Art
 
         public SimpleTransform ArtOffset { get; set; }
 
-        public void WriteOffset(IBone bone) {
+        public void WriteOffset(IBone bone)
+        {
             if (HasTransform)
                 ArtOffset = bone.Transform.InverseTransform(Transform);
         }

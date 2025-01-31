@@ -18,7 +18,8 @@ namespace VAT.Avatars.Skeletal
     using Unity.Mathematics;
     using VAT.Cryst.Math;
 
-    public sealed class HumanoidLocomotion {
+    public sealed class HumanoidLocomotion
+    {
         private DataBone _feetCenter;
         public DataBone FeetCenter => _feetCenter;
 
@@ -32,7 +33,8 @@ namespace VAT.Avatars.Skeletal
 
         private IAvatarPayload _payload;
 
-        public void Initiate(DataBone sacrum, DataBone l1Vertebra) {
+        public void Initiate(DataBone sacrum, DataBone l1Vertebra)
+        {
             _l1Vertebra = l1Vertebra;
             _sacrum = sacrum;
 
@@ -53,14 +55,16 @@ namespace VAT.Avatars.Skeletal
             return center;
         }
 
-        public void WriteProportions(HumanoidProportions proportions) {
+        public void WriteProportions(HumanoidProportions proportions)
+        {
             _proportions = proportions;
 
             // Note: may be replaced with not hard coded leg count.
             int count = 2;
             _locomotors = new HumanoidLocomotor[count];
-            
-            for (var i = 0; i < count; i++) {
+
+            for (var i = 0; i < count; i++)
+            {
                 _locomotors[i] = new HumanoidLocomotor();
             }
 
@@ -68,7 +72,8 @@ namespace VAT.Avatars.Skeletal
             _locomotors[1].Initiate(proportions.rightLegProportions, false);
         }
 
-        public void Write(IAvatarPayload payload) {
+        public void Write(IAvatarPayload payload)
+        {
             _payload = payload;
         }
 
@@ -76,7 +81,8 @@ namespace VAT.Avatars.Skeletal
 
         private Vector3 _lastVelocity;
 
-        public void Solve(SimpleTransform root, SimpleTransform sacrum, float3 velocity = default) {
+        public void Solve(SimpleTransform root, SimpleTransform sacrum, float3 velocity = default)
+        {
             // Position the feet center
             float feetAngle = Vector3.Angle(root.up, sacrum.up);
             Vector3 feetAxis = Vector3.Cross(root.up, sacrum.up);
@@ -98,7 +104,8 @@ namespace VAT.Avatars.Skeletal
             _lastVelocity = velocity;
 
             // Presolve the locomotors
-            for (var i = 0; i < Locomotors.Length; i++) {
+            for (var i = 0; i < Locomotors.Length; i++)
+            {
                 Locomotors[i].PreSolve(sacrum, _feetCenter.Transform, velocity);
             }
 
@@ -106,7 +113,8 @@ namespace VAT.Avatars.Skeletal
             foreach (var locomotor in Locomotors)
                 if (locomotor.IsThreshold) canStep = false;
 
-            if (canStep) {
+            if (canStep)
+            {
                 int stepIndex = -1;
                 float bestValue = -Mathf.Infinity;
                 float bestAngle = -Mathf.Infinity;
@@ -138,7 +146,8 @@ namespace VAT.Avatars.Skeletal
             }
 
             // Now, solve the footstepping logic
-            for (var i = 0; i < Locomotors.Length; i++) {
+            for (var i = 0; i < Locomotors.Length; i++)
+            {
                 Locomotors[i].Solve();
             }
         }
@@ -200,7 +209,8 @@ namespace VAT.Avatars.Skeletal
 
         private float _maxSpeed = 4f;
 
-        public void Initiate(HumanoidLegProportions proportions, bool isLeft) {
+        public void Initiate(HumanoidLegProportions proportions, bool isLeft)
+        {
             _proportions = proportions;
             _legLength = _proportions.GetLength();
             _legMultiplier = _legLength / 0.84f;
@@ -215,7 +225,8 @@ namespace VAT.Avatars.Skeletal
         private Vector3 _groundNormal = Vector3.up;
         private Vector3 _groundVelocity = Vector3.zero;
 
-        public void PreSolve(SimpleTransform sacrum, SimpleTransform feetCenter, Vector3 velocity) {
+        public void PreSolve(SimpleTransform sacrum, SimpleTransform feetCenter, Vector3 velocity)
+        {
             var originalUp = feetCenter.up;
             feetCenter.rotation = Quaternion.FromToRotation(originalUp, _groundNormal) * feetCenter.rotation;
 
@@ -255,7 +266,7 @@ namespace VAT.Avatars.Skeletal
                 }
 
                 _isGrounded = true;
-                
+
                 if (!closestHit.HasValue)
                 {
                     closestHit = hit;
@@ -318,7 +329,8 @@ namespace VAT.Avatars.Skeletal
             return Mathf.Clamp01(velocity.magnitude / _maxSpeed);
         }
 
-        private float3 ClampPosition(float3 position) {
+        private float3 ClampPosition(float3 position)
+        {
             var feetCenter = _feetCenter;
 
             position = feetCenter.InverseTransformPoint(position);
@@ -329,7 +341,8 @@ namespace VAT.Avatars.Skeletal
             return position;
         }
 
-        public void Step() {
+        public void Step()
+        {
             _stepping = true;
             _stepTime = 0f;
             _currentStepHeight = 0f;
@@ -360,20 +373,20 @@ namespace VAT.Avatars.Skeletal
             _stepTo = _feetCenter.InverseTransform(SimpleTransform.Create(toPos, _resting.rotation));
 
             var stepDist = distance(_stepFrom.position, _stepTo.position) + _legLength * 0.25f;
-            var stepSp  = _stepSpeed;
+            var stepSp = _stepSpeed;
 
             _targetStepTime = stepDist / stepSp;
         }
 
-        public void Solve() 
+        public void Solve()
         {
-            if (_stepping) 
+            if (_stepping)
             {
-                if (StepPercent >= 1f) 
+                if (StepPercent >= 1f)
                 {
                     EndStep();
                 }
-                else 
+                else
                 {
                     var stepFromWorld = _feetCenter.Transform(_stepFrom);
                     var stepToWorld = _feetCenter.Transform(_stepTo);
@@ -388,7 +401,7 @@ namespace VAT.Avatars.Skeletal
                     stepHeight *= max;
                     pos += _groundNormal * stepHeight;
 
-                    if (stepHeight < 0.3f * _legMultiplier && _isGrounded) 
+                    if (stepHeight < 0.3f * _legMultiplier && _isGrounded)
                     {
                         stepFromWorld.position -= (float3)_velocityAtStep * Time.deltaTime;
                     }
@@ -424,11 +437,13 @@ namespace VAT.Avatars.Skeletal
             _localResult = _feetCenter.InverseTransform(_result);
         }
 
-        private float CurveFootHeight(float percent) {
+        private float CurveFootHeight(float percent)
+        {
             return StepCurve.Evaluate(percent);
         }
 
-        private void EndStep() {
+        private void EndStep()
+        {
             _stepTime = 0f;
             _currentStepHeight = 0f;
             _stepping = false;

@@ -48,12 +48,14 @@ namespace VAT.Avatars.Muscular
             }
             set
             {
-                if (_parent != null) {
+                if (_parent != null)
+                {
                     _parent.Internal_RemoveChild(this);
                     DetachJoint();
                 }
 
-                if (value != null) {
+                if (value != null)
+                {
                     value.Internal_InsertChild(this);
                 }
 
@@ -65,14 +67,16 @@ namespace VAT.Avatars.Muscular
 
         int IBone.ChildCount => _children.Count;
 
-        public virtual void MatchBone(IBone bone) {
+        public virtual void MatchBone(IBone bone)
+        {
             Transform = bone.Transform;
             Joint.RecalculateJointSpace();
         }
 
         public abstract void AttachJoint(PhysBone bone);
 
-        public virtual bool DetachJoint() {
+        public virtual bool DetachJoint()
+        {
             if (!Joint.HasJoint)
                 return false;
 
@@ -80,7 +84,8 @@ namespace VAT.Avatars.Muscular
             return true;
         }
 
-        public virtual void Destroy() {
+        public virtual void Destroy()
+        {
             _gameObject.TryDestroy();
         }
 
@@ -88,7 +93,8 @@ namespace VAT.Avatars.Muscular
 
         public abstract void Solve(SimpleTransform target);
 
-        public void ResetAnchors() {
+        public void ResetAnchors()
+        {
             ResetAnchors(Joint.transform.position);
         }
 
@@ -98,26 +104,30 @@ namespace VAT.Avatars.Muscular
 
         public abstract void SetConnectedAnchor(float3 connectedAnchor);
 
-        public void InsertCollider(Collider collider) {
+        public void InsertCollider(Collider collider)
+        {
             _colliders.Add(collider);
 
             Body.CollectColliders();
         }
 
-        public void RemoveCollider(Collider collider) {
+        public void RemoveCollider(Collider collider)
+        {
             _colliders.Remove(collider);
 
             Body.CollectColliders();
         }
 
-        private void Internal_InsertChild(PhysBone child) {
+        private void Internal_InsertChild(PhysBone child)
+        {
             _children ??= new List<PhysBone>();
 
             _children.Add(child);
             child._parent = this;
         }
 
-        private void Internal_RemoveChild(PhysBone child) {
+        private void Internal_RemoveChild(PhysBone child)
+        {
             if (child._parent != this)
                 return;
 

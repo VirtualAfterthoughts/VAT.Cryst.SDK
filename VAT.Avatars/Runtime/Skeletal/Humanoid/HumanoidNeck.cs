@@ -48,11 +48,13 @@ namespace VAT.Avatars.Skeletal
 
         public Vector3 legVelocity;
 
-        public override void Initiate() {
+        public override void Initiate()
+        {
             base.Initiate();
         }
 
-        public override void WriteProportions(HumanoidProportions proportions) {
+        public override void WriteProportions(HumanoidProportions proportions)
+        {
             _measurements = proportions.GetMeasurements();
 
             _neckProportions = proportions.neckProportions;
@@ -61,7 +63,8 @@ namespace VAT.Avatars.Skeletal
             _armLength = arm.upperArmEllipsoid.height + arm.elbowEllipsoid.height;
         }
 
-        public override void BindPose() {
+        public override void BindPose()
+        {
             base.BindPose();
 
             Ellipsoid skull = _neckProportions.skullEllipsoid;

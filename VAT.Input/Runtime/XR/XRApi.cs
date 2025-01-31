@@ -18,14 +18,15 @@ namespace VAT.Input.XR
 
         private readonly XRInputActions _inputActions;
 
-        public XRApi() {
+        public XRApi()
+        {
             var manager = XRGeneralSettings.Instance.Manager;
 
             _inputActions = new XRInputActions();
             _inputActions.Enable();
 
             var xrHandSubsystem = manager.activeLoader.GetLoadedSubsystem<XRHandSubsystem>();
-            
+
             if (xrHandSubsystem != null)
             {
                 LeftHand = new XRHand(new XRHandPoseProvider(Handedness.LEFT, xrHandSubsystem));

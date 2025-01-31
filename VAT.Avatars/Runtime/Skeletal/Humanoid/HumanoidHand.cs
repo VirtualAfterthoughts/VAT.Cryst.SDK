@@ -47,13 +47,15 @@ namespace VAT.Avatars.Skeletal
 
         IThumbGroup[] IHandGroup.Thumbs => _thumbs;
 
-        public HumanoidHand() {
+        public HumanoidHand()
+        {
             _fingers = Array.Empty<HumanoidFinger>();
 
             Initiate();
         }
 
-        public HumanoidHand(DataBoneGroup parent) : this() {
+        public HumanoidHand(DataBoneGroup parent) : this()
+        {
             Attach(parent);
         }
 
@@ -74,7 +76,8 @@ namespace VAT.Avatars.Skeletal
 
         Vector2 _centerOfPressure = Vector2.up;
 
-        public void WriteProportions(HandProportions proportions) {
+        public void WriteProportions(HandProportions proportions)
+        {
             _proportions = proportions;
 
             _handedness = proportions.handedness;
@@ -103,7 +106,8 @@ namespace VAT.Avatars.Skeletal
             _closedThumbPoses = HandPoseCreator.CreateThumbs(_thumbCount);
             _blendThumbPoses = HandPoseCreator.CreateThumbs(_thumbCount);
 
-            for (var i = 0; i < _fingerCount; i++) {
+            for (var i = 0; i < _fingerCount; i++)
+            {
                 var finger = new HumanoidFinger();
                 finger.Initiate();
                 finger.Attach(this);
@@ -128,7 +132,8 @@ namespace VAT.Avatars.Skeletal
 
         public override void Solve()
         {
-            for (var i = 0; i < _fingerCount; i++) {
+            for (var i = 0; i < _fingerCount; i++)
+            {
                 _fingers[i].Solve();
             }
 
@@ -238,7 +243,7 @@ namespace VAT.Avatars.Skeletal
 
             Gizmos.DrawSphere(palmPoint, 0.005f);
 
-            using (var matrix = TempGizmoMatrix.Create()) 
+            using (var matrix = TempGizmoMatrix.Create())
             {
                 Gizmos.matrix = Palm.Transform.localToWorldMatrix;
 

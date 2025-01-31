@@ -19,7 +19,7 @@ namespace VAT.Cryst.Editor
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            
+
             if (GUILayout.Button("Add Sub Settings"))
             {
                 AddMenu();

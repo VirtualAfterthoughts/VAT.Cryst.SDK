@@ -182,7 +182,7 @@ namespace VAT.UI
             end.position = Vector3.Slerp(relativeParent.TransformPoint(_lastEndPos), _endPos, deltaTime * 6f);
             _lastEndPos = relativeParent.InverseTransformPoint(end.position);
 
-            if (_currentPlane != null) 
+            if (_currentPlane != null)
             {
                 end.position = _currentPlane.GetPlane().ClosestPointOnPlane(end.position);
             }

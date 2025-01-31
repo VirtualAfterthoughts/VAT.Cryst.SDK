@@ -86,7 +86,7 @@ namespace VAT.Cryst.Game
         private void ValidateSettings()
         {
             var path = AssetDatabase.GetAssetPath(this);
-            
+
             var allSubAssets = AssetDatabase.LoadAllAssetRepresentationsAtPath(path);
 
             foreach (var subAsset in allSubAssets)

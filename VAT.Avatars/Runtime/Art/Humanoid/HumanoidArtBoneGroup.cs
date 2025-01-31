@@ -17,7 +17,8 @@ namespace VAT.Avatars.Art
 
         public abstract void WriteTransforms(TArtGroup artDescriptorGroup);
 
-        public virtual void WriteData(TBoneGroup boneGroup) {
+        public virtual void WriteData(TBoneGroup boneGroup)
+        {
             _boneGroup = boneGroup;
         }
 

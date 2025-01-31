@@ -21,7 +21,8 @@ namespace VAT.Avatars.Art
         private HumanoidArtFinger[] _fingers = null;
         public HumanoidArtFinger[] Fingers => _fingers;
 
-        public override void Initiate() {
+        public override void Initiate()
+        {
             base.Initiate();
 
             _thumbs = new HumanoidArtThumb[1];
@@ -32,7 +33,8 @@ namespace VAT.Avatars.Art
             }
 
             _fingers = new HumanoidArtFinger[4];
-            for (var i = 0; i < _fingers.Length; i++) {
+            for (var i = 0; i < _fingers.Length; i++)
+            {
                 _fingers[i] = new HumanoidArtFinger();
                 _fingers[i].Initiate();
             }
@@ -60,7 +62,8 @@ namespace VAT.Avatars.Art
             SolveFingers();
         }
 
-        public void SolveFingers() {
+        public void SolveFingers()
+        {
             for (var i = 0; i < _fingers.Length; i++)
             {
                 _fingers[i].Solve();
@@ -72,7 +75,8 @@ namespace VAT.Avatars.Art
             }
         }
 
-        public override void WriteData(IHandGroup boneGroup) {
+        public override void WriteData(IHandGroup boneGroup)
+        {
             base.WriteData(boneGroup);
 
             for (var i = 0; i < _fingers.Length; i++)
@@ -86,10 +90,12 @@ namespace VAT.Avatars.Art
             }
         }
 
-        public override void WriteOffsets(IHandGroup boneGroup) {
+        public override void WriteOffsets(IHandGroup boneGroup)
+        {
             Hand.WriteOffset(boneGroup.Hand);
 
-            for (var i = 0; i < _fingers.Length; i++) {
+            for (var i = 0; i < _fingers.Length; i++)
+            {
                 _fingers[i].WriteOffsets(boneGroup.Fingers[i]);
             }
 

@@ -23,7 +23,7 @@ namespace VAT.Avatars.Sounds
         [Tooltip("Sounds for changes in avatar health.")]
         private HealthSounds _healthSounds = new();
 
-        public AudioCollectionReference[] EffortLevels {  get { return _effortLevels; }  set { _effortLevels = value; } }
+        public AudioCollectionReference[] EffortLevels { get { return _effortLevels; } set { _effortLevels = value; } }
 
         public AudioCollectionReference[] FootstepLevels { get { return _footstepLevels; } set { _footstepLevels = value; } }
 

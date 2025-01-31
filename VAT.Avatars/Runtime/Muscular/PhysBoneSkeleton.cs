@@ -8,7 +8,8 @@ using VAT.Avatars.Bones;
 
 namespace VAT.Avatars.Muscular
 {
-    public abstract class PhysBoneSkeleton : ISkeleton {
+    public abstract class PhysBoneSkeleton : ISkeleton
+    {
         public abstract int BoneGroupCount { get; }
 
         public abstract PhysBoneGroup[] BoneGroups { get; }
@@ -19,12 +20,14 @@ namespace VAT.Avatars.Muscular
 
         public abstract void InitiateRuntime();
 
-        public virtual void Solve(float deltaTime) {
+        public virtual void Solve(float deltaTime)
+        {
             for (var i = 0; i < BoneGroupCount; i++)
                 GetGroup(i).Solve();
         }
 
-        public PhysBoneGroup GetGroup(int index) {
+        public PhysBoneGroup GetGroup(int index)
+        {
             return BoneGroups[index];
         }
 
@@ -34,23 +37,28 @@ namespace VAT.Avatars.Muscular
                 GetGroup(i).NeutralPose();
         }
 
-        public virtual void ResetAnchors() {
+        public virtual void ResetAnchors()
+        {
             for (var i = 0; i < BoneGroupCount; i++)
                 GetGroup(i).ResetAnchors();
         }
 
-        public virtual void IgnoreCollisions(bool ignore) {
-            for (var i = 0; i < BoneGroupCount; i++) {
+        public virtual void IgnoreCollisions(bool ignore)
+        {
+            for (var i = 0; i < BoneGroupCount; i++)
+            {
                 var first = GetGroup(i);
 
-                for (var j = 0; j < BoneGroupCount; j++) {
+                for (var j = 0; j < BoneGroupCount; j++)
+                {
                     first.IgnoreCollision(GetGroup(j), ignore);
                 }
             }
         }
 
         public abstract bool TryGetHead(out PhysBone result);
-        public virtual PhysBone[] GetHeads() {
+        public virtual PhysBone[] GetHeads()
+        {
             TryGetHead(out var result);
             return new PhysBone[] { result };
         }
@@ -62,19 +70,23 @@ namespace VAT.Avatars.Muscular
             return new PhysBone[] { result };
         }
 
-        public virtual bool TryGetPelvis(out PhysBone result) {
+        public virtual bool TryGetPelvis(out PhysBone result)
+        {
             result = null;
             return false;
         }
-        public virtual PhysBone[] GetPelvises() {
+        public virtual PhysBone[] GetPelvises()
+        {
             return Array.Empty<PhysBone>();
         }
 
-        public virtual bool TryGetFoot(Handedness handedness, out PhysBone result) {
+        public virtual bool TryGetFoot(Handedness handedness, out PhysBone result)
+        {
             result = null;
             return false;
         }
-        public virtual PhysBone[] GetFeet(Handedness handedness) {
+        public virtual PhysBone[] GetFeet(Handedness handedness)
+        {
             return Array.Empty<PhysBone>();
         }
 

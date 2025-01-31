@@ -21,7 +21,7 @@ namespace VAT.Props
                 crystalText.text = shard.MainCrystal?.Info.Title;
             }
 
-            if (shardText != null) 
+            if (shardText != null)
             {
                 shardText.text = shard.Info.Title;
             }

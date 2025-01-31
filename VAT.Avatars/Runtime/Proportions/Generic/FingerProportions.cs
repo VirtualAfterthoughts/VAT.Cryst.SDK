@@ -26,7 +26,8 @@ namespace VAT.Avatars.Proportions
 
         public int phalanxCount;
 
-        public float GetLength() {
+        public float GetLength()
+        {
             return proximalEllipsoid.height + middleEllipsoid.height + distalEllipsoid.height;
         }
     }

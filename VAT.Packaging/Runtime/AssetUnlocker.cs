@@ -15,7 +15,7 @@ namespace VAT.Packaging
         public static void UnlockShard(IShard shard)
         {
         }
-        
+
         public static void LockShard(IShard shard)
         {
         }

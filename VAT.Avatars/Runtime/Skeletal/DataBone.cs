@@ -9,40 +9,50 @@ using static Unity.Mathematics.math;
 
 using VAT.Avatars.Bones;
 
-namespace VAT.Avatars.Skeletal {
+namespace VAT.Avatars.Skeletal
+{
     using Unity.Mathematics;
     using VAT.Shared.Data;
 
-    public sealed class DataBone : IBone {
+    public sealed class DataBone : IBone
+    {
         private float3 _localPosition;
         private quaternion _localRotation = quaternion.identity;
 
         private List<DataBone> _children = null;
         private DataBone _parent = null;
 
-        public SimpleTransform Transform { get { return SimpleTransform.Create(position, rotation); }
-            set {
+        public SimpleTransform Transform
+        {
+            get { return SimpleTransform.Create(position, rotation); }
+            set
+            {
                 position = value.position;
                 rotation = value.rotation;
             }
         }
 
-        public float3 position {
-            get {
+        public float3 position
+        {
+            get
+            {
                 if (_parent == null)
                     return _localPosition;
 
                 return _parent.TransformPoint(_localPosition);
             }
-            set {
+            set
+            {
                 if (_parent == null)
                     _localPosition = value;
                 else
                     _localPosition = _parent.InverseTransformPoint(value);
             }
         }
-        public quaternion rotation { 
-            get {
+        public quaternion rotation
+        {
+            get
+            {
                 if (_parent == null)
                     return _localRotation;
 
@@ -64,29 +74,35 @@ namespace VAT.Avatars.Skeletal {
         public float3 up { get { return mul(rotation, new float3(0f, 1f, 0f)); } }
         public float3 right { get { return mul(rotation, new float3(1f, 0f, 0f)); } }
 
-        public DataBone Parent { 
-            get { 
-                return _parent; 
-            } 
-            set { 
-                if (_parent != null) {
+        public DataBone Parent
+        {
+            get
+            {
+                return _parent;
+            }
+            set
+            {
+                if (_parent != null)
+                {
                     _parent.Internal_RemoveChild(this);
                 }
 
                 if (value != null)
                     value.Internal_InsertChild(this);
-            } 
+            }
         }
 
         public DataBone() : this(null) { }
 
-        public DataBone(DataBone parent) {
+        public DataBone(DataBone parent)
+        {
             position = float3.zero;
             rotation = quaternion.identity;
             Parent = parent;
         }
 
-        public float3 TransformPoint(float3 point) {
+        public float3 TransformPoint(float3 point)
+        {
             BurstCompiled_Transform.BurstCompiled_TransformPoint(point, position, rotation, 1f, out var result);
             return result;
         }
@@ -97,7 +113,8 @@ namespace VAT.Avatars.Skeletal {
             return result;
         }
 
-        public float3 InverseTransformPoint(float3 point) {
+        public float3 InverseTransformPoint(float3 point)
+        {
             BurstCompiled_Transform.BurstCompiled_InverseTransformPoint(point, position, rotation, 1f, out var result);
             return result;
         }
@@ -108,22 +125,25 @@ namespace VAT.Avatars.Skeletal {
             return result;
         }
 
-        private void Internal_InsertChild(DataBone child) {
+        private void Internal_InsertChild(DataBone child)
+        {
             _children ??= new List<DataBone>();
-            
+
             _children.Add(child);
             child._parent = this;
         }
 
-        private void Internal_RemoveChild(DataBone child) {
+        private void Internal_RemoveChild(DataBone child)
+        {
             if (child._parent != this)
                 return;
-            
+
             _children.Remove(child);
             child.Parent = null;
         }
 
-        public DataBone GetChild(int index) {
+        public DataBone GetChild(int index)
+        {
             return _children[index];
         }
 

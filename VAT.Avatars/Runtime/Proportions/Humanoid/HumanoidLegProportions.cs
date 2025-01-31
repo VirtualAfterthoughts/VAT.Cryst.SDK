@@ -11,7 +11,8 @@ using VAT.Shared.Data;
 namespace VAT.Avatars.Proportions
 {
     [Serializable]
-    public struct HumanoidLegProportions : IBoneGroupProportions {
+    public struct HumanoidLegProportions : IBoneGroupProportions
+    {
         public Ellipsoid hipEllipsoid;
         public float hipSeparationOffset;
 
@@ -24,7 +25,8 @@ namespace VAT.Avatars.Proportions
         public Ellipsoid toeEllipsoid;
         public float3 toeOffset;
 
-        public float GetLength() {
+        public float GetLength()
+        {
             return hipEllipsoid.height + kneeEllipsoid.height;
         }
     }

@@ -56,9 +56,9 @@ namespace VAT.Packaging
 
         public override bool Equals(object obj)
         {
-            if (obj is not Address other) 
-            { 
-                return false; 
+            if (obj is not Address other)
+            {
+                return false;
             }
 
             return Equals(other);

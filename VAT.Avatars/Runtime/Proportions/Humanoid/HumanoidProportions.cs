@@ -6,9 +6,11 @@ using UnityEngine;
 
 using VAT.Input.Data;
 
-namespace VAT.Avatars.Proportions {
+namespace VAT.Avatars.Proportions
+{
     [Serializable]
-    public struct HumanoidProportions : ISkeletonProportions {
+    public struct HumanoidProportions : ISkeletonProportions
+    {
         public HumanoidNeckProportions neckProportions;
 
         public HumanoidSpineProportions spineProportions;

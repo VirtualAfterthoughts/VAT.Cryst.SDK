@@ -16,8 +16,10 @@ namespace VAT.Avatars.Art
         [HideInInspector]
         public SimpleTransform offset;
 
-        public bool HasTransform {
-            get {
+        public bool HasTransform
+        {
+            get
+            {
                 return transform != null;
             }
         }
@@ -58,7 +60,8 @@ namespace VAT.Avatars.Art
             }
         }
 
-        public SimpleTransform ArtOffset {
+        public SimpleTransform ArtOffset
+        {
             get { return offset; }
             set { offset = value; }
         }

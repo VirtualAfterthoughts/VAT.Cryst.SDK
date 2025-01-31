@@ -24,7 +24,7 @@ namespace VAT.Props
         }
 
         [SerializeField]
-        private Transform[] _cartridgeTargets = new Transform[0]; 
+        private Transform[] _cartridgeTargets = new Transform[0];
 
         private readonly List<Cartridge> _cartridges = new();
 

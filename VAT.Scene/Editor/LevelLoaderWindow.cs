@@ -31,7 +31,7 @@ namespace VAT.Scene.Editor
             _level = EditorGUILayout.ObjectField("Level", _level, typeof(StaticLevelShard), false) as StaticLevelShard;
 
             EditorGUI.BeginDisabledGroup(!Application.isPlaying);
-            
+
             _loadLevel = EditorGUILayout.ObjectField("Load Level", _loadLevel, typeof(StaticLevelShard), false) as StaticLevelShard;
 
             EditorGUI.EndDisabledGroup();

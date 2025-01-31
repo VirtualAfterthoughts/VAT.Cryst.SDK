@@ -9,7 +9,8 @@ using VAT.Shared.Data;
 namespace VAT.Avatars.Proportions
 {
     [Serializable]
-    public struct HumanoidNeckProportions : IBoneGroupProportions {
+    public struct HumanoidNeckProportions : IBoneGroupProportions
+    {
         public Ellipse topEllipse;
 
         public Ellipse foreheadEllipse;

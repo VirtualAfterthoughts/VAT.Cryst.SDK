@@ -6,12 +6,14 @@ using static Unity.Mathematics.math;
 
 using VAT.Shared.Extensions;
 
-namespace VAT.Shared.Math {
+namespace VAT.Shared.Math
+{
     /// <summary>
     /// Enum representing every possible face for a cube.
     /// </summary>
     [Flags]
-    public enum Faces {
+    public enum Faces
+    {
         EVERYTHING = -1,
         NONE = 0,
         PositiveX = 1 << 0,
@@ -73,7 +75,8 @@ namespace VAT.Shared.Math {
     /// <summary>
     /// Base interface for a box vertex.
     /// </summary>
-    internal interface IBoxVertex {
+    internal interface IBoxVertex
+    {
         /// <summary>
         /// Calculates the closest point residing on the surface of the box.
         /// </summary>
@@ -85,7 +88,8 @@ namespace VAT.Shared.Math {
     /// <summary>
     /// Structure containing all necessary information about a cube face in local space.
     /// </summary>
-    public struct FaceInfo : IBoxVertex {
+    public struct FaceInfo : IBoxVertex
+    {
         public Faces face;
         public Vector3 origin;
         public Vector3 normal;
@@ -93,7 +97,8 @@ namespace VAT.Shared.Math {
 
         private Vector3 center;
 
-        public FaceInfo(Vector3 center, Vector3 size, Faces face) {
+        public FaceInfo(Vector3 center, Vector3 size, Faces face)
+        {
             this.center = center;
             origin = Geometry.GetFaceCenter(center, size, face);
             this.face = face;
@@ -101,7 +106,8 @@ namespace VAT.Shared.Math {
             extents = size * 0.5f;
         }
 
-        public Vector3 ClosestPoint(Vector3 point) {
+        public Vector3 ClosestPoint(Vector3 point)
+        {
             // Clamp the point within the bounds of the box
             point -= center;
             point = clamp(point, -extents, extents);
@@ -118,12 +124,14 @@ namespace VAT.Shared.Math {
     /// <summary>
     /// Structure containing all necessary information about a cube edge in local space.
     /// </summary>
-    public struct EdgeInfo : IBoxVertex {
+    public struct EdgeInfo : IBoxVertex
+    {
         public Edges edge;
         public LineData line;
         public Vector3 normal;
 
-        public EdgeInfo(Vector3 center, Vector3 size, Edges edge) {
+        public EdgeInfo(Vector3 center, Vector3 size, Edges edge)
+        {
             line = Geometry.GetEdgeLine(center, size, edge);
             this.edge = edge;
             normal = Geometry.GetEdgeNormal(edge);
@@ -135,12 +143,14 @@ namespace VAT.Shared.Math {
     /// <summary>
     /// Structure containing all necessary information about a cube corner in local space.
     /// </summary>
-    public struct CornerInfo : IBoxVertex {
+    public struct CornerInfo : IBoxVertex
+    {
         public Corners corner;
         public Vector3 origin;
         public Vector3 normal;
 
-        public CornerInfo(Vector3 center, Vector3 size, Corners corner) {
+        public CornerInfo(Vector3 center, Vector3 size, Corners corner)
+        {
             origin = Geometry.GetCornerCenter(center, size, corner);
             this.corner = corner;
             normal = Geometry.GetCornerNormal(corner);
@@ -149,7 +159,8 @@ namespace VAT.Shared.Math {
         public Vector3 ClosestPoint(Vector3 point) => origin;
     }
 
-    public static partial class Geometry {
+    public static partial class Geometry
+    {
         private static readonly List<FaceInfo> _faceInfoBuffer = new();
         private static readonly List<CornerInfo> _cornerInfoBuffer = new();
         private static readonly List<EdgeInfo> _edgeInfoBuffer = new();
@@ -161,7 +172,8 @@ namespace VAT.Shared.Math {
         /// <param name="size">The size of the box in local space. (extents * 2).</param>
         /// <param name="normal">The direction pointing towards the point in local space.</param>
         /// <returns>The point inside the box in local space.</returns>
-        public static Vector3 GetConformedPoint(Vector3 center, Vector3 size, Vector3 normal) {
+        public static Vector3 GetConformedPoint(Vector3 center, Vector3 size, Vector3 normal)
+        {
             return center + Vector3.Scale(normal, size * 0.5f);
         }
 
@@ -191,7 +203,8 @@ namespace VAT.Shared.Math {
         /// <param name="size">The local space size of the box (extents * 2).</param>
         /// <param name="face">The desired face.</param>
         /// <returns>The center of the face.</returns>
-        public static Vector3 GetFaceCenter(Vector3 center, Vector3 size, Faces face) {
+        public static Vector3 GetFaceCenter(Vector3 center, Vector3 size, Faces face)
+        {
             return GetConformedPoint(center, size, GetFaceNormal(face));
         }
 
@@ -202,10 +215,12 @@ namespace VAT.Shared.Math {
         /// <param name="size">The size of the box in local space (extents * 2).</param>
         /// <param name="faces">The flag containing all faces.</param>
         /// <returns>The list containing all faces.</returns>
-        public static IReadOnlyList<FaceInfo> GetFaceInformation(Vector3 center, Vector3 size, Faces faces) {
+        public static IReadOnlyList<FaceInfo> GetFaceInformation(Vector3 center, Vector3 size, Faces faces)
+        {
             _faceInfoBuffer.Clear();
 
-            for (var i = 0; i < 6; i++) {
+            for (var i = 0; i < 6; i++)
+            {
                 var face = (Faces)(1 << i);
 
                 if ((faces & face) > 0)
@@ -223,16 +238,19 @@ namespace VAT.Shared.Math {
         /// <param name="size">The size of the box in local space (extents * 2).</param>
         /// <param name="faces">The flag containing all faces.</param>
         /// <returns>The closest found face. Returns null if none were found.</returns>
-        public static FaceInfo? ClosestFace(Vector3 point, Vector3 center, Vector3 size, Faces faces) {
+        public static FaceInfo? ClosestFace(Vector3 point, Vector3 center, Vector3 size, Faces faces)
+        {
             float minDistance = float.PositiveInfinity;
             var faceInfos = GetFaceInformation(center, size, faces);
 
             FaceInfo? result = null;
 
-            foreach (var info in faceInfos) {
+            foreach (var info in faceInfos)
+            {
                 float distance = info.ClosestPoint(point).FastDistance(point);
 
-                if (!result.HasValue || distance < minDistance) {
+                if (!result.HasValue || distance < minDistance)
+                {
                     minDistance = distance;
                     result = info;
                 }
@@ -281,10 +299,12 @@ namespace VAT.Shared.Math {
         /// <param name="size">The size of the box in local space (extents * 2).</param>
         /// <param name="corners">The flag containing all corners.</param>
         /// <returns>The list containing all corners.</returns>
-        public static IReadOnlyList<CornerInfo> GetCornerInformation(Vector3 center, Vector3 size, Corners corners) {
+        public static IReadOnlyList<CornerInfo> GetCornerInformation(Vector3 center, Vector3 size, Corners corners)
+        {
             _cornerInfoBuffer.Clear();
 
-            for (var i = 0; i < 8; i++) {
+            for (var i = 0; i < 8; i++)
+            {
                 var corner = (Corners)(1 << i);
 
                 if ((corners & corner) > 0)
@@ -309,10 +329,12 @@ namespace VAT.Shared.Math {
 
             CornerInfo? result = null;
 
-            foreach (var info in cornerInfos) {
+            foreach (var info in cornerInfos)
+            {
                 float distance = info.ClosestPoint(point).FastDistance(point);
 
-                if (!result.HasValue || distance < minDistance) {
+                if (!result.HasValue || distance < minDistance)
+                {
                     minDistance = distance;
                     result = info;
                 }
@@ -364,7 +386,8 @@ namespace VAT.Shared.Math {
         /// <param name="size">The size of the box in local space (extents * 2).</param>
         /// <param name="edge">The desired edge.</param>
         /// <returns>The center of the edge.</returns>
-        public static Vector3 GetEdgeCenter(Vector3 center, Vector3 size, Edges edge) {
+        public static Vector3 GetEdgeCenter(Vector3 center, Vector3 size, Edges edge)
+        {
             return GetConformedPoint(center, size, GetEdgeNormal(edge));
         }
 
@@ -375,7 +398,8 @@ namespace VAT.Shared.Math {
         /// <param name="size">The size of the box in local space.</param>
         /// <param name="edge">The desired edge.</param>
         /// <returns>The line data of the edge.</returns>
-        public static LineData GetEdgeLine(Vector3 center, Vector3 size, Edges edge) {
+        public static LineData GetEdgeLine(Vector3 center, Vector3 size, Edges edge)
+        {
             var lineCenter = GetEdgeCenter(center, size, edge);
             var lineDirection = Vector3.Scale(GetEdgeDirection(edge), size * 0.5f);
 
@@ -389,10 +413,12 @@ namespace VAT.Shared.Math {
         /// <param name="size">The size of the box in local space (extents * 2).</param>
         /// <param name="edges">The flag containing all edges.</param>
         /// <returns>The list containing all edges.</returns>
-        public static IReadOnlyList<EdgeInfo> GetEdgeInformation(Vector3 center, Vector3 size, Edges edges) {
+        public static IReadOnlyList<EdgeInfo> GetEdgeInformation(Vector3 center, Vector3 size, Edges edges)
+        {
             _edgeInfoBuffer.Clear();
 
-            for (var i = 0; i < 12; i++) {
+            for (var i = 0; i < 12; i++)
+            {
                 var edge = (Edges)(1 << i);
 
                 if ((edges & edge) > 0)
@@ -410,16 +436,19 @@ namespace VAT.Shared.Math {
         /// <param name="size">The size of the box in local space (extents * 2).</param>
         /// <param name="edges">The flag containing all edges.</param>
         /// <returns>Returns the found edge. Returns null if none were found.</returns>
-        public static EdgeInfo? ClosestEdge(Vector3 point, Vector3 center, Vector3 size, Edges edges) {
+        public static EdgeInfo? ClosestEdge(Vector3 point, Vector3 center, Vector3 size, Edges edges)
+        {
             float minDistance = float.PositiveInfinity;
             var edgeInfos = GetEdgeInformation(center, size, edges);
 
             EdgeInfo? result = null;
 
-            foreach (var info in edgeInfos) {
+            foreach (var info in edgeInfos)
+            {
                 float distance = info.ClosestPoint(point).FastDistance(point);
 
-                if (!result.HasValue || distance < minDistance) {
+                if (!result.HasValue || distance < minDistance)
+                {
                     minDistance = distance;
                     result = info;
                 }

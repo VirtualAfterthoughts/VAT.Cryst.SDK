@@ -90,8 +90,8 @@ namespace VAT.Input.Unity
         private float _force;
         private bool _isPressed;
 
-        public UnityTrigger(InputAction axisAction, InputAction pressedAction) 
-            : this(axisAction, axisAction, pressedAction)  { }
+        public UnityTrigger(InputAction axisAction, InputAction pressedAction)
+            : this(axisAction, axisAction, pressedAction) { }
 
         public UnityTrigger(InputAction axisAction, InputAction forceAction, InputAction pressedAction)
         {

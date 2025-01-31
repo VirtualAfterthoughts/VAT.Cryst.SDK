@@ -19,8 +19,10 @@ namespace VAT.Avatars.Integumentary
     public partial class HumanoidAvatar : Avatar
     {
 #if UNITY_EDITOR
-        private void Reset() {
-            if (TryGetComponent(out animator)) {
+        private void Reset()
+        {
+            if (TryGetComponent(out animator))
+            {
                 EditorAutoFillBoneTransforms();
                 EditorCalculateProportions();
             }
@@ -34,7 +36,8 @@ namespace VAT.Avatars.Integumentary
             quaternion worldToLocal = inverse(transform.rotation);
 
             float3? eyeCenterRaw = EditorGetEyeCenter();
-            if (!eyeCenterRaw.HasValue) {
+            if (!eyeCenterRaw.HasValue)
+            {
                 Debug.LogWarning($"Avatar {name} is missing an eye center! Please add an Eye Center Override before calculating proportions!", this);
                 return;
             }
@@ -191,10 +194,12 @@ namespace VAT.Avatars.Integumentary
             proportions.leftArmProportions.elbowEllipsoid.radius.x = armWingspan * 0.034934707f;
             proportions.leftArmProportions.elbowEllipsoid.radius.y = armWingspan * 0.0429197829f;
 
-            if (leftHand && leftElbow) {
+            if (leftHand && leftElbow)
+            {
                 proportions.leftArmProportions.elbowEllipsoid.height = distance(leftHand.position, leftElbow.position);
             }
-            else {
+            else
+            {
                 proportions.leftArmProportions.elbowEllipsoid.height = armWingspan * 0.234561604f;
             }
 
@@ -251,7 +256,8 @@ namespace VAT.Avatars.Integumentary
             HumanoidHelper.CalculateNeck(ref proportions.neckProportions, Skeleton.DataSkeleton, artDescriptor);
         }
 
-        public void EditorCalculateSpine() {
+        public void EditorCalculateSpine()
+        {
             float3? eyeCenterRaw = EditorGetEyeCenter();
             if (!eyeCenterRaw.HasValue)
             {
@@ -267,7 +273,8 @@ namespace VAT.Avatars.Integumentary
             HumanoidHelper.CalculateSpine(ref proportions.spineProportions, Skeleton.DataSkeleton, artDescriptor);
         }
 
-        public void EditorCalculateArms() {
+        public void EditorCalculateArms()
+        {
             float3? eyeCenterRaw = EditorGetEyeCenter();
             if (!eyeCenterRaw.HasValue)
             {
@@ -285,7 +292,8 @@ namespace VAT.Avatars.Integumentary
         }
 
         [ContextMenu("Auto Fill Bone Transforms from Animator")]
-        public void EditorAutoFillBoneTransforms() {
+        public void EditorAutoFillBoneTransforms()
+        {
             Undo.RecordObject(this, "Auto Fill Bone Transforms from Animator");
 
             artDescriptor = new HumanoidArtDescriptor();

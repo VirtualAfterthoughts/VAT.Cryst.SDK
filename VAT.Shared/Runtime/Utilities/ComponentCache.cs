@@ -2,12 +2,14 @@
 
 using UnityEngine;
 
-namespace VAT.Shared.Utilities {
+namespace VAT.Shared.Utilities
+{
     /// <summary>
     /// A utility for caching objects to replace GetComponent.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ComponentCache<T> {
+    public class ComponentCache<T>
+    {
         // The internal cache.
         private readonly Dictionary<GameObject, List<T>> _cache = new(new UnityComparer());
 
@@ -21,8 +23,9 @@ namespace VAT.Shared.Utilities {
         /// </summary>
         /// <param name="go"></param>
         /// <returns></returns>
-        public T Get(GameObject go) {
-            if (Has(go)) 
+        public T Get(GameObject go)
+        {
+            if (Has(go))
                 return _cache[go][0];
             else
                 return default;
@@ -49,12 +52,15 @@ namespace VAT.Shared.Utilities {
         /// <param name="go"></param>
         /// <param name="comp"></param>
         /// <returns></returns>
-        public bool TryGet(GameObject go, out T comp) {
-            if (Has(go)) {
+        public bool TryGet(GameObject go, out T comp)
+        {
+            if (Has(go))
+            {
                 comp = _cache[go][0];
                 return true;
             }
-            else {
+            else
+            {
                 comp = default;
                 return false;
             }
@@ -75,11 +81,14 @@ namespace VAT.Shared.Utilities {
         /// </summary>
         /// <param name="go"></param>
         /// <param name="comp"></param>
-        public void Add(GameObject go, T comp) {
-            if (Has(go) && !_cache[go].Contains(comp)) {
+        public void Add(GameObject go, T comp)
+        {
+            if (Has(go) && !_cache[go].Contains(comp))
+            {
                 _cache[go].Add(comp);
             }
-            else {
+            else
+            {
                 _cache.Add(go, new List<T>(1) { comp });
             }
         }
@@ -95,7 +104,8 @@ namespace VAT.Shared.Utilities {
         /// </summary>
         /// <param name="go"></param>
         /// <param name="comp"></param>
-        public void Remove(GameObject go, T comp) {
+        public void Remove(GameObject go, T comp)
+        {
             if (Has(go))
                 _cache[go].Remove(comp);
         }

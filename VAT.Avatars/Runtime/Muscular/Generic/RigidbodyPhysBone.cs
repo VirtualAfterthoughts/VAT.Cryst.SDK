@@ -28,7 +28,8 @@ namespace VAT.Avatars.Muscular
 
         public RigidbodyPhysBone(string name) : this(name, null, default) { }
 
-        public RigidbodyPhysBone(string name, PhysBone parent, JointAngularLimits limits = default) {
+        public RigidbodyPhysBone(string name, PhysBone parent, JointAngularLimits limits = default)
+        {
             _gameObject = new GameObject();
             _transform = _gameObject.transform;
             _name = name;

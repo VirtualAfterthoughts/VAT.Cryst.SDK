@@ -32,7 +32,8 @@ namespace VAT.Avatars.Muscular
 
         private RelativeBone _relativeEyeCenter;
 
-        public override void Initiate() {
+        public override void Initiate()
+        {
             base.Initiate();
 
             _bones[0] = new HumanoidPhysBone("Lower Neck", null, HumanoidConstants.LowerNeckLimits);
@@ -40,7 +41,8 @@ namespace VAT.Avatars.Muscular
             _bones[2] = new HumanoidPhysBone("Skull", C1Vertebra, HumanoidConstants.SkullLimits);
         }
 
-        public void WriteProportions(HumanoidNeckProportions proportions) { 
+        public void WriteProportions(HumanoidNeckProportions proportions)
+        {
             C4Vertebra.SetMesh(GenerateLowerNeckMesh(proportions));
             C1Vertebra.SetMesh(GenerateUpperNeckMesh(proportions));
             Skull.SetMesh(GenerateSkullMesh(proportions));
@@ -51,7 +53,8 @@ namespace VAT.Avatars.Muscular
             return Skull.TransformBone(_neck.Skull, _neck.EyeCenter);
         }
 
-        public void MatchPose(IHumanNeck neck) {
+        public void MatchPose(IHumanNeck neck)
+        {
             _neck = neck;
 
             C4Vertebra.MatchBone(neck.C4Vertebra);
@@ -82,7 +85,8 @@ namespace VAT.Avatars.Muscular
             Skull.ConfigurableJoint.ConfigurableJoint.anchor = _neck.Skull.Transform.InverseTransformPoint(_neck.C1Vertebra.Transform.position);
         }
 
-        public Mesh GenerateSkullMesh(HumanoidNeckProportions proportions) {
+        public Mesh GenerateSkullMesh(HumanoidNeckProportions proportions)
+        {
             // Convert ellipsoids to ellipses
             var skull = proportions.skullEllipsoid.Convert<Ellipse>();
 
@@ -107,7 +111,8 @@ namespace VAT.Avatars.Muscular
             };
 
             // Create skull -> jaw
-            EllipseCylinderMesh jaw = new() {
+            EllipseCylinderMesh jaw = new()
+            {
                 bottom = proportions.jawEllipse,
                 bottomTransform = SimpleTransform.Create(down() * proportions.skullEllipsoid.height * 0.3f, Quaternion.AngleAxis(25f, right())),
 

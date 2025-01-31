@@ -6,8 +6,10 @@ using VAT.Avatars.Bones;
 using VAT.Input;
 using VAT.Shared.Data;
 
-namespace VAT.Avatars.Integumentary {
-    public struct AvatarArm {
+namespace VAT.Avatars.Integumentary
+{
+    public struct AvatarArm
+    {
         public Handedness Handedness { get; }
         public IBone DataRig { get; }
         public IBone PhysRig { get; }

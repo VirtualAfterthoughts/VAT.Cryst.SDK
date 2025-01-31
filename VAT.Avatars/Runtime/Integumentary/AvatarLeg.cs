@@ -2,7 +2,8 @@ using VAT.Avatars.Bones;
 
 using VAT.Input;
 
-namespace VAT.Avatars.Integumentary {
+namespace VAT.Avatars.Integumentary
+{
     public readonly struct AvatarLeg
     {
         public Handedness Handedness { get; }

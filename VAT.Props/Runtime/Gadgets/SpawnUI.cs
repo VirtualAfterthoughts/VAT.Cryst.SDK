@@ -145,7 +145,7 @@ namespace VAT.Interaction
             var reference = new SpawnableShardReference(address);
             OnSpawnableSelected?.Invoke(reference);
 
-            if (reference.TryGetShard(out var shard)) 
+            if (reference.TryGetShard(out var shard))
             {
                 previewUI.SetShard(shard);
             }

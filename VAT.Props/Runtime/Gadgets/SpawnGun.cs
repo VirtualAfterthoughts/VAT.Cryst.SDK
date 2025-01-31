@@ -64,7 +64,7 @@ namespace VAT.Interaction
                 }
             }
         }
-        
+
         private void OnSpawnableSelected(SpawnableShardReference reference)
         {
             _selectedSpawnable = reference;

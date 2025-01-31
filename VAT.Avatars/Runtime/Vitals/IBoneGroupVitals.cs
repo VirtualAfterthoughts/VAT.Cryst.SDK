@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace VAT.Avatars.Vitals
 {
-    public interface IBoneGroupVitals {
+    public interface IBoneGroupVitals
+    {
         public abstract int BoneCount { get; }
 
         public void CalculateVitals();
@@ -16,7 +17,8 @@ namespace VAT.Avatars.Vitals
     }
 
     public interface IBoneGroupVitalsT<TPayload> : IBoneGroupVitals
-        where TPayload : IVitalsPayload {
+        where TPayload : IVitalsPayload
+    {
 
         public void InjectDependencies(TPayload payload);
     }

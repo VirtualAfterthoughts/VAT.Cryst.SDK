@@ -64,7 +64,7 @@ namespace VAT.Audio
 
         private float CalculateVolume(float magnitude)
         {
-			float volume = (magnitude - _minAcceleration) / (_maxAcceleration - _minAcceleration);
+            float volume = (magnitude - _minAcceleration) / (_maxAcceleration - _minAcceleration);
 
             if (volume <= 0.1f)
             {

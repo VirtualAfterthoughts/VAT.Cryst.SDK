@@ -16,8 +16,9 @@ namespace VAT.Avatars.Art
         private bool _hasReference = false;
         public bool HasReference => _hasReference;
 
-        public SimpleTransform Transform {
-            get 
+        public SimpleTransform Transform
+        {
+            get
             {
                 if (HasReference)
                 {
@@ -26,7 +27,7 @@ namespace VAT.Avatars.Art
 
                 return SimpleTransform.Default;
             }
-            set 
+            set
             {
                 if (HasReference)
                 {
@@ -49,19 +50,22 @@ namespace VAT.Avatars.Art
             }
         }
 
-        public void WriteReference(IArtReference reference) {
+        public void WriteReference(IArtReference reference)
+        {
             _artReference = reference;
             _hasReference = true;
 
             _defaultTransform = reference.LocalTransform;
         }
 
-        public void WriteOffset(IBone bone) {
+        public void WriteOffset(IBone bone)
+        {
             if (HasReference)
                 ArtReference.WriteOffset(bone);
         }
 
-        public void Solve(SimpleTransform target) {
+        public void Solve(SimpleTransform target)
+        {
             Transform = target;
         }
 

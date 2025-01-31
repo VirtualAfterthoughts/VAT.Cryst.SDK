@@ -63,7 +63,8 @@ namespace VAT.Avatars.Muscular
             }
         }
 
-        public override void Initiate() {
+        public override void Initiate()
+        {
             base.Initiate();
 
             string prefix = isLeft ? "Left" : "Right";

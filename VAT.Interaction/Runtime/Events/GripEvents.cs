@@ -21,7 +21,7 @@ namespace VAT.Interaction
 
         private void OnEnable()
         {
-            foreach (var grip  in _grips)
+            foreach (var grip in _grips)
             {
                 grip.OnAttached += OnAttached;
                 grip.OnDetached += OnDetached;

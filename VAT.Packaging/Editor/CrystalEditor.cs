@@ -47,7 +47,7 @@ namespace VAT.Packaging.Editor
                 StaticShardCreationWizard.Initialize(crystal);
             }
 
-            if (GUILayout.Button("Add Data Shard", GUILayout.Width(120))) 
+            if (GUILayout.Button("Add Data Shard", GUILayout.Width(120)))
             {
                 DataShardCreationWizard.Initialize(crystal);
             }

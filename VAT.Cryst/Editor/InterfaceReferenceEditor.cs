@@ -66,7 +66,7 @@ namespace VAT.Cryst.Editor
 
         private static bool IsDraggingType(Type type)
         {
-            return DragAndDrop.objectReferences.Any(obj => type.IsAssignableFrom(obj.GetType()) || (obj is GameObject go && go.GetComponent(type)) );
+            return DragAndDrop.objectReferences.Any(obj => type.IsAssignableFrom(obj.GetType()) || (obj is GameObject go && go.GetComponent(type)));
         }
     }
 }

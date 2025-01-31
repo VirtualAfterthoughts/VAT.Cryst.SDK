@@ -57,7 +57,8 @@ namespace VAT.Avatars.Skeletal
             blendPose = ThumbPoseData.Create(2);
         }
 
-        public override void BindPose() {
+        public override void BindPose()
+        {
             base.BindPose();
 
             MetaCarpal.localPosition = _proportions.metaCarpalTransform.position;
@@ -77,7 +78,8 @@ namespace VAT.Avatars.Skeletal
             End.localPosition = Vector3.forward * _distalLength;
         }
 
-        public override void NeutralPose() {
+        public override void NeutralPose()
+        {
             base.NeutralPose();
 
             MetaCarpal.localRotation = defaultRotation;
@@ -86,7 +88,8 @@ namespace VAT.Avatars.Skeletal
             Distal.localRotation = quaternion.identity;
         }
 
-        public override void Attach(DataBoneGroup group) {
+        public override void Attach(DataBoneGroup group)
+        {
             base.Attach(group);
             _hand = group.LastBone;
         }

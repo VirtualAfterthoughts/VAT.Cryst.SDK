@@ -11,7 +11,8 @@ using VAT.Shared.Extensions;
 namespace VAT.Entities.PhysX
 {
     [RequireComponent(typeof(CrystRigidbody))]
-    public sealed class CrystConfigurableJoint : CrystJoint {
+    public sealed class CrystConfigurableJoint : CrystJoint
+    {
         [SerializeField] private ConfigurableJoint _joint;
         [SerializeField] private CrystRigidbody _connectedBody;
         [SerializeField] private SimpleConfigurableJoint _info = SimpleConfigurableJoint.Default;
@@ -23,11 +24,14 @@ namespace VAT.Entities.PhysX
         public ConfigurableJoint ConfigurableJoint { get { return _joint; } }
 
         public CrystRigidbody Rigidbody { get { return _body; } }
-        public CrystRigidbody ConnectedRigidbody { 
-            get  { 
-                return _connectedBody; 
-            } 
-            set {
+        public CrystRigidbody ConnectedRigidbody
+        {
+            get
+            {
+                return _connectedBody;
+            }
+            set
+            {
                 _connectedBody = value;
 
                 if (HasJoint)
@@ -36,11 +40,14 @@ namespace VAT.Entities.PhysX
         }
 
         public override CrystBody Body { get { return _body; } }
-        public override CrystBody ConnectedBody { 
-            get { 
+        public override CrystBody ConnectedBody
+        {
+            get
+            {
                 return _connectedBody;
-            } 
-            set {
+            }
+            set
+            {
                 if (value is CrystRigidbody rigidbody)
                     ConnectedRigidbody = rigidbody;
             }
@@ -48,12 +55,14 @@ namespace VAT.Entities.PhysX
 
         public override CrystJointSpace JointSpace { get { return _jointSpace; } }
 
-        protected override void OnJointAwake() {
+        protected override void OnJointAwake()
+        {
             base.OnJointAwake();
 
             _body = gameObject.AddOrGetComponent<CrystRigidbody>();
 
-            if (_joint != null) {
+            if (_joint != null)
+            {
                 _hasJoint = true;
             }
         }
@@ -61,7 +70,8 @@ namespace VAT.Entities.PhysX
         [ContextMenu("Create ConfigurableJoint")]
         public override void CreateItem()
         {
-            if (!HasJoint) {
+            if (!HasJoint)
+            {
                 // Make sure there is a rigidbody
                 _body.CreateItem();
 
@@ -76,7 +86,8 @@ namespace VAT.Entities.PhysX
         [ContextMenu("Destroy ConfigurableJoint")]
         public override void DestroyItem()
         {
-            if (HasJoint) {
+            if (HasJoint)
+            {
                 _info = SimpleConfigurableJoint.Create(_joint);
 
 #if UNITY_EDITOR
@@ -86,7 +97,8 @@ namespace VAT.Entities.PhysX
 #endif
 
                 // Make sure the process succeeded, it could have failed to delete
-                if (!_joint) {
+                if (!_joint)
+                {
                     _joint = null;
 
                     _hasJoint = false;
@@ -94,20 +106,24 @@ namespace VAT.Entities.PhysX
             }
         }
 
-        public override void RecalculateJointSpace() {
+        public override void RecalculateJointSpace()
+        {
             _jointSpace = new CrystConfigurableJointSpace(_joint);
         }
 
 #if UNITY_EDITOR
-        private void Reset() {
+        private void Reset()
+        {
             _info = SimpleConfigurableJoint.Default;
             CreateItem();
         }
 
-        private void OnValidate() {
+        private void OnValidate()
+        {
             _hasJoint = _joint != null;
 
-            if (_hasJoint) {
+            if (_hasJoint)
+            {
                 _info.Apply(_joint);
             }
         }

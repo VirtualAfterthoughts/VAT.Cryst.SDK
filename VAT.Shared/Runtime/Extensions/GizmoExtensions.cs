@@ -5,21 +5,25 @@ using UnityEngine;
 
 using VAT.Shared.Data;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
 #if UNITY_EDITOR
-    public class TempGizmoColor : IDisposable {
+    public class TempGizmoColor : IDisposable
+    {
         public Color color;
 
         private TempGizmoColor() { }
 
-        public static TempGizmoColor Create() {
+        public static TempGizmoColor Create()
+        {
             return new TempGizmoColor()
             {
                 color = Gizmos.color
             };
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             Gizmos.color = color;
         }
     }
@@ -47,7 +51,8 @@ namespace VAT.Shared.Extensions {
     /// <summary>
     /// Extension methods for drawing gizmos.
     /// </summary>
-    public static class GizmosExtensions {
+    public static class GizmosExtensions
+    {
         /// <summary>
         /// Draws the Gizmos of every mesh on this GameObject.
         /// </summary>
@@ -64,7 +69,7 @@ namespace VAT.Shared.Extensions {
         /// <param name="transform">The target position and rotations.</param>
         /// <param name="color">The color to draw.</param>
         /// <param name="isWireframe">Should this draw as a wireframe?</param>
-        public static void DrawGameObject(this GameObject go, Transform transform, Color color, bool isWireframe = true) 
+        public static void DrawGameObject(this GameObject go, Transform transform, Color color, bool isWireframe = true)
             => go.DrawGameObject(SimpleTransform.Create(transform.position, transform.rotation, transform.lossyScale), color, isWireframe);
 
         /// <summary>
@@ -73,7 +78,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="go">The GameObject to draw.</param>
         /// <param name="transform">The target position and rotations.</param>
         /// <param name="isWireframe">Should this draw as a wireframe?</param>
-        public static void DrawGameObject(this GameObject go, SimpleTransform transform, bool isWireframe = true) {
+        public static void DrawGameObject(this GameObject go, SimpleTransform transform, bool isWireframe = true)
+        {
             // Draw all of the object's meshes
             InternalDrawMeshRenderers(go, transform, isWireframe);
             InternalDrawSkinnedMeshes(go, transform, isWireframe);
@@ -86,7 +92,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="transform">The target position and rotations.</param>
         /// <param name="color">The color to draw.</param>
         /// <param name="isWireframe">Should this draw as a wireframe?</param>
-        public static void DrawGameObject(this GameObject go, SimpleTransform transform, Color color, bool isWireframe = true) {
+        public static void DrawGameObject(this GameObject go, SimpleTransform transform, Color color, bool isWireframe = true)
+        {
             // Make the gizmo color reset when this goes out of scope
             using (TempGizmoColor.Create())
             {
@@ -98,7 +105,8 @@ namespace VAT.Shared.Extensions {
             }
         }
 
-        private static void InternalDrawMeshRenderers(GameObject go, SimpleTransform transform, bool isWireframe = true) {
+        private static void InternalDrawMeshRenderers(GameObject go, SimpleTransform transform, bool isWireframe = true)
+        {
             if (Application.isPlaying)
                 return;
 
@@ -107,10 +115,11 @@ namespace VAT.Shared.Extensions {
             Matrix4x4 original = Gizmos.matrix;
 
             // Loop through all mesh filters and draw their meshes
-            for (int i = 0; i < meshes.Length; i++) {
+            for (int i = 0; i < meshes.Length; i++)
+            {
                 // Make sure this filter has an assigned mesh
                 MeshFilter mesh = meshes[i];
-                if (!mesh.sharedMesh) 
+                if (!mesh.sharedMesh)
                     continue;
 
                 // Get offset matrix
@@ -137,7 +146,8 @@ namespace VAT.Shared.Extensions {
             Gizmos.matrix = original;
         }
 
-        private static void InternalDrawSkinnedMeshes(GameObject go, SimpleTransform transform, bool isWireframe = true) {
+        private static void InternalDrawSkinnedMeshes(GameObject go, SimpleTransform transform, bool isWireframe = true)
+        {
             if (Application.isPlaying)
                 return;
 
@@ -146,10 +156,11 @@ namespace VAT.Shared.Extensions {
             Matrix4x4 original = Gizmos.matrix;
 
             // Loop through all of the skinned mesh renderers
-            for (int i = 0; i < meshes.Length; i++) {
+            for (int i = 0; i < meshes.Length; i++)
+            {
                 // Make sure the skinned mesh renderer has an assigned mesh
                 SkinnedMeshRenderer mesh = meshes[i];
-                if (!mesh.sharedMesh) 
+                if (!mesh.sharedMesh)
                     continue;
 
                 // Get offset matrix

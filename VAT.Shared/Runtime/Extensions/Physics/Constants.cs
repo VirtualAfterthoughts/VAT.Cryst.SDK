@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace VAT.Shared.Extensions {
-    public static partial class PhysicsExtensions {
+namespace VAT.Shared.Extensions
+{
+    public static partial class PhysicsExtensions
+    {
         /// <summary>
         /// The speed of sound in meters per second, in dry, 20°C air.
         /// </summary>

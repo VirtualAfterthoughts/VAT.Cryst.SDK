@@ -6,20 +6,24 @@ using UnityEngine;
 
 namespace VAT.Shared
 {
-    public static class SerializedNullableTExtensions {
-        public static T GetValueOrDefault<T>(this SerializedNullableT<T> nullable) where T : struct {
+    public static class SerializedNullableTExtensions
+    {
+        public static T GetValueOrDefault<T>(this SerializedNullableT<T> nullable) where T : struct
+        {
             if (HasValue(nullable))
                 return nullable.Value;
             else
                 return default;
         }
 
-        public static bool HasValue<T>(this SerializedNullableT<T> nullable) where T : struct {
+        public static bool HasValue<T>(this SerializedNullableT<T> nullable) where T : struct
+        {
             return nullable != null && nullable.InternalGetHasValue();
         }
     }
 
-    public abstract class SerializedNullableT<T> where T : struct {
+    public abstract class SerializedNullableT<T> where T : struct
+    {
         [HideInInspector]
         [SerializeField]
         protected T _value;
@@ -28,8 +32,10 @@ namespace VAT.Shared
         [SerializeField]
         protected bool _hasValue;
 
-        public T Value {
-            get {
+        public T Value
+        {
+            get
+            {
                 if (!this.HasValue())
                     throw new NullReferenceException();
 
@@ -37,21 +43,24 @@ namespace VAT.Shared
             }
         }
 
-        protected SerializedNullableT(T value) {
+        protected SerializedNullableT(T value)
+        {
             _value = value;
             _hasValue = true;
         }
 
         internal bool InternalGetHasValue() => _hasValue;
 
-        public override int GetHashCode() {
+        public override int GetHashCode()
+        {
             return _value.GetHashCode();
         }
 
         public override bool Equals(object other)
         {
             SerializedNullableT<T> nullable = other as SerializedNullableT<T>;
-            if (nullable == null && other != null && other is not SerializedNullableT<T>) {
+            if (nullable == null && other != null && other is not SerializedNullableT<T>)
+            {
                 return false;
             }
 
@@ -65,7 +74,8 @@ namespace VAT.Shared
             return _value.Equals(nullable._value);
         }
 
-        public static implicit operator bool(SerializedNullableT<T> nullable) {
+        public static implicit operator bool(SerializedNullableT<T> nullable)
+        {
             return nullable.HasValue();
         }
     }

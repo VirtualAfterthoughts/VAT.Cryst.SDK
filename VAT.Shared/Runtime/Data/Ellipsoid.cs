@@ -15,7 +15,8 @@ namespace VAT.Shared.Data
     using Unity.Mathematics;
 
     [Serializable]
-    public struct Ellipsoid : IEllipse {
+    public struct Ellipsoid : IEllipse
+    {
         public const int DefaultSegments = 32;
 
         public float2 radius;
@@ -23,33 +24,41 @@ namespace VAT.Shared.Data
 
         public IEllipse AsInterface() => this;
 
-        public static Ellipsoid Lerp(Ellipsoid a, Ellipsoid b, float t) {
-            return new Ellipsoid() {
+        public static Ellipsoid Lerp(Ellipsoid a, Ellipsoid b, float t)
+        {
+            return new Ellipsoid()
+            {
                 radius = lerp(a.radius, b.radius, t),
                 height = lerp(a.height, b.height, t)
             };
         }
 
-        public void SetRadius(float2 radius) {
+        public void SetRadius(float2 radius)
+        {
             this.radius = radius;
         }
 
-        public float2 GetRadius() {
+        public float2 GetRadius()
+        {
             return radius;
         }
 
-        public float GetVolume() {
+        public float GetVolume()
+        {
             return AsInterface().GetArea() * height;
         }
 
-        public bool IsInside(SimpleTransform transform, float3 point) {
+        public bool IsInside(SimpleTransform transform, float3 point)
+        {
             var local = abs(transform.InverseTransformPoint(point));
             var plane = local.xz < radius;
             return plane.x && plane.y && local.y < height * 0.5f;
         }
 
-        public float3 GetDepenetration(SimpleTransform transform, float3 point) {
-            if (IsInside(transform, point)) {
+        public float3 GetDepenetration(SimpleTransform transform, float3 point)
+        {
+            if (IsInside(transform, point))
+            {
                 var local = transform.InverseTransformPoint(point);
                 var final = normalize(local) * new float3(radius.x, height * 0.5f, radius.y);
                 return transform.TransformVector(final - local);
@@ -59,7 +68,8 @@ namespace VAT.Shared.Data
         }
 
 #if UNITY_EDITOR
-        public void Draw(float3 position, quaternion rotation) {
+        public void Draw(float3 position, quaternion rotation)
+        {
             DrawEllipsoid(radius, height, position, rotation);
         }
 
@@ -78,11 +88,13 @@ namespace VAT.Shared.Data
             rotation = quaternion.LookRotation(up, fwd);
 
             // Draw the 2D ellipse
-            for (int i = 0; i < DefaultSegments + 1; i++) {
+            for (int i = 0; i < DefaultSegments + 1; i++)
+            {
                 thisPoint.x = Mathf.Sin(Mathf.Deg2Rad * angle) * radius.x;
                 thisPoint.y = Mathf.Cos(Mathf.Deg2Rad * angle) * radius.y;
 
-                if (i > 0) {
+                if (i > 0)
+                {
                     Gizmos.DrawLine(mul(rotation, lastPoint) + position, mul(rotation, thisPoint) + position);
                 }
 
@@ -97,7 +109,8 @@ namespace VAT.Shared.Data
             Gizmos.DrawCube(midpoint, lineUp);
         }
 
-        public bool DrawHandles(float3 position, Quaternion rotation, float2 handleDirections, out float2 radius, out float height, float offset = 0f) {
+        public bool DrawHandles(float3 position, Quaternion rotation, float2 handleDirections, out float2 radius, out float height, float offset = 0f)
+        {
             bool modified = false;
             float offsetSign = offset == 0f ? 1f : Mathf.Sign(offset);
 
@@ -119,8 +132,9 @@ namespace VAT.Shared.Data
 
             EditorGUI.BeginChangeCheck();
             edgeX = Handles.FreeMoveHandle(edgeX, 0.01f, float3.zero, Handles.SphereHandleCap);
-            
-            if (EditorGUI.EndChangeCheck()) {
+
+            if (EditorGUI.EndChangeCheck())
+            {
                 float3 localEdgeX = mul(worldToLocal, edgeX);
 
                 radius.x += (localEdgeX.x - initialEdgeX.x) * Mathf.Sign(handleDirections.x);
@@ -157,7 +171,8 @@ namespace VAT.Shared.Data
 
             Handles.ArrowHandleCap(0, tip, mul(rotation, Quaternion.AngleAxis(-90f * offsetSign, right)), 0.05f, EventType.Repaint);
 
-            if (EditorGUI.EndChangeCheck()) {
+            if (EditorGUI.EndChangeCheck())
+            {
                 float3 localTip = mul(worldToLocal, tip);
 
                 height += (localTip.y - initialTip.y) * offsetSign;

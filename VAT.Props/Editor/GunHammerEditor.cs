@@ -13,7 +13,7 @@ namespace VAT.Props.Editor
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            
+
             var hammer = (GunHammer)target;
 
             // Draw read only states

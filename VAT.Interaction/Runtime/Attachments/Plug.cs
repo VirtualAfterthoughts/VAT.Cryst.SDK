@@ -50,7 +50,7 @@ namespace VAT.Interaction.Attachments
 
             OnBeginInsert(socket);
         }
-        
+
         public void CompleteInsert()
         {
             _isLocked = true;

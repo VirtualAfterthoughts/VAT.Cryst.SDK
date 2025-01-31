@@ -7,7 +7,8 @@ using VAT.Shared.Data;
 
 namespace VAT.Avatars.Constants
 {
-    public static class HumanoidConstants {
+    public static class HumanoidConstants
+    {
         // Neck
         public static readonly JointAngularLimits SkullLimits = new(-60f, 60f, 0f, 10f);
         public static readonly JointAngularLimits UpperNeckLimits = new(-20f, 20f, 47f, 0f);

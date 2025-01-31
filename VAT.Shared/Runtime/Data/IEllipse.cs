@@ -23,7 +23,8 @@ namespace VAT.Shared.Data
         }
     }
 
-    public interface IEllipse {
+    public interface IEllipse
+    {
         /// <summary>
         /// Converts this ellipse to its interface form.
         /// </summary>
@@ -46,7 +47,8 @@ namespace VAT.Shared.Data
         /// Gets the area of the ellipse.
         /// </summary>
         /// <returns>The area.</returns>
-        public float GetArea() {
+        public float GetArea()
+        {
             var radius = GetRadius();
             return Mathf.PI * radius.x * radius.y;
         }
@@ -71,16 +73,19 @@ namespace VAT.Shared.Data
         /// Gets the circumference of the ellipse.
         /// </summary>
         /// <returns>The circumference.</returns>
-        public float GetCircumference() {
+        public float GetCircumference()
+        {
             var radius = GetRadius();
 
             // If this is a circle, we can just skip all the extra calcs
-            if (radius.x == radius.y) {
+            if (radius.x == radius.y)
+            {
                 return 2f * Mathf.PI * radius.x;
             }
             // Otherwise, do an ellipse calc
             // This will return a semi-accurate approximation
-            else {
+            else
+            {
                 return 2f * Mathf.PI * Mathf.Sqrt((Mathf.Pow(radius.x, 2f) + Mathf.Pow(radius.y, 2f)) * 0.5f);
             }
         }

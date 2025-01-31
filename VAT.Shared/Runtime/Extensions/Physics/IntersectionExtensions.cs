@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using VAT.Shared.Extensions;
 using VAT.Shared.Math;
 
-namespace VAT.Shared.Extensions {
-    public static partial class PhysicsExtensions {
+namespace VAT.Shared.Extensions
+{
+    public static partial class PhysicsExtensions
+    {
         /// <summary>
         /// Returns the closest point on the outside of a sphere.
         /// </summary>
@@ -14,7 +16,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="point"></param>
         /// <param name="intersect"></param>
         /// <param name="normal"></param>
-        public static void GetSphereIntersect(in Vector3 center, in float radius, in Vector3 point, out Vector3 intersect, out Vector3 normal) {
+        public static void GetSphereIntersect(in Vector3 center, in float radius, in Vector3 point, out Vector3 intersect, out Vector3 normal)
+        {
             var direction = (center - point).normalized;
             if (direction == Vector3.zero)
                 direction = Vector3.forward;
@@ -42,7 +45,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="initialDirection">The direction the point is shooting a ray.</param>
         /// <param name="intersect">The resulting intersect point.</param>
         /// <param name="normal">The normal of the intersection.</param>
-        public static void GetCylinderIntersect(Vector3 center, Vector3 axis, float radius, float height, Vector3 point, Vector3 initialDirection, out Vector3 intersect, out Vector3 normal) {
+        public static void GetCylinderIntersect(Vector3 center, Vector3 axis, float radius, float height, Vector3 point, Vector3 initialDirection, out Vector3 intersect, out Vector3 normal)
+        {
             var heightDir = axis * height;
             var maxPoint = center + heightDir;
             var minPoint = center - heightDir;

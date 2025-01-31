@@ -17,7 +17,7 @@ namespace VAT.Interaction
 
         public List<InteractorGripPair> GripPairs { get; }
 
-        public VirtualControllerPayload(InteractorGripPair activePair, SimpleTransform rig, SimpleTransform targetInRig, SimpleTransform targetInGripHost, List<InteractorGripPair> gripPairs) 
+        public VirtualControllerPayload(InteractorGripPair activePair, SimpleTransform rig, SimpleTransform targetInRig, SimpleTransform targetInGripHost, List<InteractorGripPair> gripPairs)
         {
             ActivePair = activePair;
             Rig = rig;

@@ -59,7 +59,8 @@ namespace VAT.Avatars.Skeletal
             _groups[5] = new HumanoidLeg();
             _groups[6] = new LocoLeg();
 
-            for (var i = 0; i < BoneGroupCount; i++) {
+            for (var i = 0; i < BoneGroupCount; i++)
+            {
                 _groups[i].Initiate();
             }
 
@@ -83,7 +84,8 @@ namespace VAT.Avatars.Skeletal
             base.Write(payload);
         }
 
-        public void WriteProportions(HumanoidProportions proportions) {
+        public void WriteProportions(HumanoidProportions proportions)
+        {
             Neck.WriteProportions(proportions);
             Spine.WriteProportions(proportions);
             LeftArm.WriteProportions(proportions);
@@ -105,7 +107,8 @@ namespace VAT.Avatars.Skeletal
 
             float3 floorOffset = float3.zero;
 
-            if (ShimbleWam) {
+            if (ShimbleWam)
+            {
                 var rot = _payload.GetRoot();
 
                 rot.rotation = PhysicsRotation;
@@ -182,7 +185,8 @@ namespace VAT.Avatars.Skeletal
 
         public override bool TryGetHand(Handedness handedness, out DataBone result)
         {
-            switch (handedness) {
+            switch (handedness)
+            {
                 default:
                     result = null;
                     return false;
@@ -195,13 +199,16 @@ namespace VAT.Avatars.Skeletal
             }
         }
 
-        public override bool TryGetPelvis(out DataBone result) {
+        public override bool TryGetPelvis(out DataBone result)
+        {
             result = Spine.Sacrum;
             return true;
         }
 
-        public override bool TryGetFoot(Handedness handedness, out DataBone result) {
-            switch (handedness) {
+        public override bool TryGetFoot(Handedness handedness, out DataBone result)
+        {
+            switch (handedness)
+            {
                 default:
                     result = null;
                     return false;

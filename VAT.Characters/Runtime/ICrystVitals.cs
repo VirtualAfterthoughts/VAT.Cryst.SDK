@@ -14,7 +14,7 @@ namespace VAT.Characters
         event CrystVitalsDelegate OnUpdatedVitals;
 
         BodyMeasurements PlayerMeasurements { get; set; }
-        
+
         BodyMeasurements CharacterMeasurements { get; set; }
 
         void UpdateVitals();

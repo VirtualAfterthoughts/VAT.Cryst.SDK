@@ -36,10 +36,10 @@ namespace VAT.Characters
         }
 
         public virtual void OnRigEnable()
-        { 
+        {
         }
 
-        public virtual void OnRigDisable() 
+        public virtual void OnRigDisable()
         {
         }
 

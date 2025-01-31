@@ -35,7 +35,8 @@ namespace VAT.Avatars.Art
             Head.Solve(BoneGroup.Skull.Transform);
         }
 
-        public override void WriteOffsets(IHumanNeck boneGroup) {
+        public override void WriteOffsets(IHumanNeck boneGroup)
+        {
             Head.WriteOffset(boneGroup.Skull);
             UpperNeck.WriteOffset(boneGroup.C1Vertebra);
             LowerNeck.WriteOffset(boneGroup.C4Vertebra);

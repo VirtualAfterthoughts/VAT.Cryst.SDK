@@ -59,7 +59,8 @@ namespace VAT.Avatars.Muscular
             LeftLeg.isLeft = true;
         }
 
-        public override IBone GetHead() {
+        public override IBone GetHead()
+        {
             return Neck.Skull;
         }
 
@@ -68,8 +69,10 @@ namespace VAT.Avatars.Muscular
             return Neck.GetEyeCenter();
         }
 
-        public override void InitiateRuntime() {
-            for (var i = 0; i < BoneGroupCount; i++) {
+        public override void InitiateRuntime()
+        {
+            for (var i = 0; i < BoneGroupCount; i++)
+            {
                 _groups[i].Initiate();
             }
 
@@ -86,7 +89,8 @@ namespace VAT.Avatars.Muscular
             LocoLeg._pivot = ((IHumanNeck)Neck).EyeCenter;
         }
 
-        public void WriteProportions(HumanoidProportions proportions) {
+        public void WriteProportions(HumanoidProportions proportions)
+        {
             Neck.WriteProportions(proportions.neckProportions);
             Spine.WriteProportions(proportions.spineProportions, proportions.neckProportions);
 
@@ -114,7 +118,8 @@ namespace VAT.Avatars.Muscular
             RightArm.Hand.MatchFingers(skeleton.RightArm.Hand);
         }
 
-        public void MatchPose(IHumanSkeleton skeleton) {
+        public void MatchPose(IHumanSkeleton skeleton)
+        {
             _skeleton = skeleton;
 
             Spine.MatchPose(skeleton.Spine);
@@ -155,7 +160,8 @@ namespace VAT.Avatars.Muscular
 
         public override bool TryGetHand(Handedness handedness, out PhysBone result)
         {
-            switch (handedness) {
+            switch (handedness)
+            {
                 default:
                     result = null;
                     return false;
@@ -168,13 +174,16 @@ namespace VAT.Avatars.Muscular
             }
         }
 
-        public override bool TryGetPelvis(out PhysBone result) {
+        public override bool TryGetPelvis(out PhysBone result)
+        {
             result = Spine.Sacrum;
             return true;
         }
 
-        public override bool TryGetFoot(Handedness handedness, out PhysBone result) {
-            switch (handedness) {
+        public override bool TryGetFoot(Handedness handedness, out PhysBone result)
+        {
+            switch (handedness)
+            {
                 default:
                     result = null;
                     return false;
@@ -192,7 +201,8 @@ namespace VAT.Avatars.Muscular
             return Spine.Root;
         }
 
-        public override SimpleTransform GetFloor() {
+        public override SimpleTransform GetFloor()
+        {
             return SimpleTransform.Create(LocoLeg.GetCenterOfPressure(), Spine.Root.Transform.rotation);
         }
 

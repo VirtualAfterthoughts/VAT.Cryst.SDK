@@ -14,7 +14,8 @@ using VAT.Shared.Extensions;
 
 using static Unity.Mathematics.math;
 
-namespace VAT.Avatars.Editor {
+namespace VAT.Avatars.Editor
+{
     using Unity.Mathematics;
 
     using UnityEditor;
@@ -22,8 +23,10 @@ namespace VAT.Avatars.Editor {
     using VAT.Entities.Stats;
 
     [CustomEditor(typeof(HumanoidAvatar), true)]
-    public sealed class HumanoidAvatarEditor : Editor {
-        private enum BoneGroup {
+    public sealed class HumanoidAvatarEditor : Editor
+    {
+        private enum BoneGroup
+        {
             NECK = 1 << 0,
             SPINE = 1 << 1,
             ARMS = 1 << 2,
@@ -46,7 +49,8 @@ namespace VAT.Avatars.Editor {
         private SerializedProperty _proportions;
         private SerializedProperty _artDescriptor;
 
-        private void OnEnable() {
+        private void OnEnable()
+        {
             _avatar = target as HumanoidAvatar;
 
             _animator = serializedObject.FindProperty("animator");
@@ -55,39 +59,45 @@ namespace VAT.Avatars.Editor {
             _artDescriptor = serializedObject.FindProperty("artDescriptor");
         }
 
-        public override void OnInspectorGUI() {
+        public override void OnInspectorGUI()
+        {
             serializedObject.Update();
 
             EditorGUILayout.LabelField("Humanoid Avatar", EditorStyles.whiteLargeLabel);
 
             GUILayout.Space(5);
 
-            if (OnValidateAvatar(out var reasons)) {
+            if (OnValidateAvatar(out var reasons))
+            {
                 EditorGUILayout.HelpBox("No issues found!", MessageType.Info);
-                
+
                 EditorGUILayout.LabelField("Quick Actions", EditorStyles.whiteLargeLabel);
-                
+
                 GUILayout.Space(5);
 
                 EditorGUILayout.HelpBox("A T-Pose or A-Pose is recommended for best avatar setup, but " +
                     "Crystalline will attempt to resolve most default poses.", MessageType.Warning);
 
-                if (GUILayout.Button("Auto Calculate Proportions")) {
+                if (GUILayout.Button("Auto Calculate Proportions"))
+                {
                     _avatar.EditorCalculateProportions();
                 }
 
-                if (GUILayout.Button("Auto Fill Bone Transforms")) {
+                if (GUILayout.Button("Auto Fill Bone Transforms"))
+                {
                     _avatar.EditorAutoFillBoneTransforms();
                 }
 
-                if (GUILayout.Button("Create Hand Poser")) {
+                if (GUILayout.Button("Create Hand Poser"))
+                {
                     HumanoidAvatar instance = Instantiate(_avatar);
                     instance.transform.SetPositionAndRotation(_avatar.transform.position, _avatar.transform.rotation);
 
                     instance.Initiate();
                     instance.EditorUpdateEyeCenter();
 
-                    if (instance.TryCreateHandPoser(out var poser)) {
+                    if (instance.TryCreateHandPoser(out var poser))
+                    {
                         // Rename poser
                         instance.gameObject.hideFlags = HideFlags.DontSaveInBuild;
                         instance.gameObject.name = $"{_avatar.name} Hand Poser";
@@ -101,13 +111,15 @@ namespace VAT.Avatars.Editor {
                         avatarTransform.SetPositionAndRotation(hand.position, hand.rotation);
                         hand.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
                         Transform hips = instance.artDescriptor.spineDescriptor.hips.transform;
-                        if (hips != null) {
+                        if (hips != null)
+                        {
                             hips.parent = hand;
                             hips.Reset();
                             hips.localScale = Vector3.zero;
                         }
 
-                        foreach (var mesh in instance.GetComponentsInChildren<SkinnedMeshRenderer>(true)) {
+                        foreach (var mesh in instance.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+                        {
                             mesh.rootBone = hand;
                         }
 
@@ -117,7 +129,7 @@ namespace VAT.Avatars.Editor {
 
                         // Recursive destroy incase of dependent components
                         var gameObject = instance.gameObject;
-                        
+
                         for (var i = 0; i < 8; i++)
                         {
                             foreach (var behaviour in gameObject.GetComponentsInChildren<MonoBehaviour>(true))
@@ -138,13 +150,16 @@ namespace VAT.Avatars.Editor {
                         Selection.SetActiveObjectWithContext(handPoser.gameObject, handPoser);
                         return;
                     }
-                    else {
+                    else
+                    {
                         DestroyImmediate(instance.gameObject);
                     }
                 }
             }
-            else {
-                foreach (var reason in reasons) {
+            else
+            {
+                foreach (var reason in reasons)
+                {
                     EditorGUILayout.HelpBox(reason, MessageType.Error);
                 }
             }
@@ -168,7 +183,7 @@ namespace VAT.Avatars.Editor {
             EditorGUILayout.LabelField("Stats", EditorStyles.whiteLargeLabel);
 
             EditorGUILayout.FloatField("Health", stats.GetStat<IHealthStat>().Health);
-            
+
             EditorGUILayout.FloatField("Strength", stats.GetStat<IStrengthStat>().Strength);
 
             EditorGUILayout.FloatField("Speed", stats.GetStat<ISpeedStat>().Speed);
@@ -186,29 +201,35 @@ namespace VAT.Avatars.Editor {
             serializedObject.ApplyModifiedProperties();
         }
 
-        private bool OnValidateAvatar(out List<string> reasons) {
+        private bool OnValidateAvatar(out List<string> reasons)
+        {
             reasons = new List<string>();
 
             // Make sure we have an animator and it's humanoid
-            if (!_avatar.animator) {
+            if (!_avatar.animator)
+            {
                 reasons.Add("There is no animator set! Please add an animator!");
             }
-            else if (!_avatar.animator.avatar) {
+            else if (!_avatar.animator.avatar)
+            {
                 reasons.Add("The animator does not have an avatar! Please generate an avatar in the mesh file!");
             }
-            else if (!_avatar.animator.isHuman) {
+            else if (!_avatar.animator.isHuman)
+            {
                 reasons.Add("The animator is not humanoid! Please mark it as humanoid in the mesh settings!");
             }
 
             // Check if we have an eye set
-            if (!_avatar.EditorGetEyeCenter().HasValue) {
+            if (!_avatar.EditorGetEyeCenter().HasValue)
+            {
                 reasons.Add("The Avatar has no eye center! Please assign an EyeCenterOverride!");
             }
 
             return reasons.Count <= 0;
         }
 
-        private void OnEditingFoldout() {
+        private void OnEditingFoldout()
+        {
             _editingFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(_editingFoldout, "Editor Settings", EditorStyles.foldoutHeader);
 
             if (_editingFoldout)
@@ -228,7 +249,8 @@ namespace VAT.Avatars.Editor {
 
         }
 
-        private void OnManualFoldout() {
+        private void OnManualFoldout()
+        {
             _manualFoldout = EditorGUILayout.BeginFoldoutHeaderGroup(_manualFoldout, "Manual Settings", EditorStyles.foldoutHeader);
             EditorGUILayout.EndFoldoutHeaderGroup();
 
@@ -246,7 +268,8 @@ namespace VAT.Avatars.Editor {
 
             _worldToLocal = inverse(_avatar.transform.rotation);
 
-            switch (_boneGroup) {
+            switch (_boneGroup)
+            {
                 default:
                 case BoneGroup.NECK:
                     DrawNeckHandles();
@@ -274,12 +297,14 @@ namespace VAT.Avatars.Editor {
             _avatar.EditorCalculateArms();
             _avatar.EditorCalculateLegs();
 
-            if (_avatar.Initiated) {
+            if (_avatar.Initiated)
+            {
                 _avatar.WriteArtOffsets();
             }
         }
 
-        private void DrawNeckHandles() {
+        private void DrawNeckHandles()
+        {
             var dataSkeleton = _avatar.Skeleton.DataSkeleton;
             var neck = dataSkeleton.Neck;
 
@@ -333,7 +358,8 @@ namespace VAT.Avatars.Editor {
             DrawAvatarEllipsoid(ref _avatar.proportions.neckProportions.lowerNeckEllipsoid, _avatar, dataSkeleton.Neck.C4Vertebra.Transform, -1f, "Lower Neck");
         }
 
-        private void DrawChestHandles() {
+        private void DrawChestHandles()
+        {
             var dataSkeleton = _avatar.Skeleton.DataSkeleton;
             var spine = dataSkeleton.Spine;
 
@@ -378,7 +404,8 @@ namespace VAT.Avatars.Editor {
             DrawAvatarEllipsoid(ref _avatar.proportions.spineProportions.pelvisEllipsoid, _avatar, spine.Sacrum.Transform, -1f, "Pelvis");
         }
 
-        private void DrawLegHandles(ref HumanoidLegProportions proportions, ref HumanoidLegProportions otherProportions, HumanoidLeg leg) {
+        private void DrawLegHandles(ref HumanoidLegProportions proportions, ref HumanoidLegProportions otherProportions, HumanoidLeg leg)
+        {
             if (DrawOffset(leg.Hip.position, out var hipOffset))
             {
                 Undo.RecordObject(_avatar, "Adjust Hip Offset");
@@ -437,7 +464,8 @@ namespace VAT.Avatars.Editor {
             DrawAvatarEllipsoidSymmetry(ref proportions.toeEllipsoid, ref otherProportions.toeEllipsoid, _avatar, leg.Toe.Transform, 0f, "Toe");
         }
 
-        private void DrawArmHandles(ref HumanoidArmProportions proportions, ref HumanoidArmProportions otherProportions, HumanoidArm arm) {
+        private void DrawArmHandles(ref HumanoidArmProportions proportions, ref HumanoidArmProportions otherProportions, HumanoidArm arm)
+        {
             var clavicleTransform = arm.Clavicle.Transform;
             clavicleTransform.position += arm.Clavicle.right * (arm.isLeft ? -1f : 1f) * proportions.clavicleEllipsoid.radius.x;
             DrawAvatarEllipsoidSymmetry(ref proportions.clavicleEllipsoid, ref otherProportions.clavicleEllipsoid, _avatar, clavicleTransform, -1f, "Clavicle");
@@ -483,7 +511,8 @@ namespace VAT.Avatars.Editor {
             }
         }
 
-        private bool DrawOffset(float3 position, out float3 offset) {
+        private bool DrawOffset(float3 position, out float3 offset)
+        {
             offset = float3.zero;
 
             EditorGUI.BeginChangeCheck();
@@ -492,7 +521,8 @@ namespace VAT.Avatars.Editor {
             position = mul(_worldToLocal, position);
             newPosition = mul(_worldToLocal, newPosition);
 
-            if (EditorGUI.EndChangeCheck()) {
+            if (EditorGUI.EndChangeCheck())
+            {
                 offset = newPosition - position;
 
                 return true;
@@ -501,8 +531,10 @@ namespace VAT.Avatars.Editor {
             return false;
         }
 
-        private void DrawAvatarEllipsoid(ref Ellipsoid ellipsoid, HumanoidAvatar _avatar, SimpleTransform transform, float offset, string name) {
-            if (ellipsoid.DrawHandles(transform.position, transform.rotation, new float2(1f, -1f), out var radius, out var height, offset)) {
+        private void DrawAvatarEllipsoid(ref Ellipsoid ellipsoid, HumanoidAvatar _avatar, SimpleTransform transform, float offset, string name)
+        {
+            if (ellipsoid.DrawHandles(transform.position, transform.rotation, new float2(1f, -1f), out var radius, out var height, offset))
+            {
                 Undo.RecordObject(_avatar, $"Adjust {name} Ellipsoid");
 
                 ellipsoid.radius = radius;
@@ -538,7 +570,8 @@ namespace VAT.Avatars.Editor {
                 ellipsoid.radius = radius;
                 ellipsoid.height = height;
 
-                if (_useSymmetry) {
+                if (_useSymmetry)
+                {
                     otherEllipsoid.radius = radius;
                     otherEllipsoid.height = height;
                 }

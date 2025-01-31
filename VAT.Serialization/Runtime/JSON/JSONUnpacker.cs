@@ -3,17 +3,20 @@ using System.Collections.Generic;
 
 using Newtonsoft.Json.Linq;
 
-namespace VAT.Serialization.JSON {
+namespace VAT.Serialization.JSON
+{
     /// <summary>
     /// Utility for unpacking a json file.
     /// </summary>
-    public class JSONUnpacker {
+    public class JSONUnpacker
+    {
         private readonly JObject _jsonDocument;
 
         private readonly Dictionary<ReferenceId, IJSONPackable> _references;
         private readonly Dictionary<TypeId, Type> _types;
 
-        public JSONUnpacker(JObject jsonDocument) {
+        public JSONUnpacker(JObject jsonDocument)
+        {
             _references = new Dictionary<ReferenceId, IJSONPackable>();
             _types = new Dictionary<TypeId, Type>();
 
@@ -26,14 +29,16 @@ namespace VAT.Serialization.JSON {
         /// <typeparam name="TPackable"></typeparam>
         /// <param name="root"></param>
         /// <param name="constructor"></param>
-        public void UnpackRoot<TPackable>(out TPackable root, Func<Type, TPackable> constructor) where TPackable : IJSONPackable {
+        public void UnpackRoot<TPackable>(out TPackable root, Func<Type, TPackable> constructor) where TPackable : IJSONPackable
+        {
             JObject rootObj = _jsonDocument["root"].ToObject<JObject>();
             JObject objectsObj = _jsonDocument["references"].ToObject<JObject>();
             JObject typesObj = _jsonDocument["types"].ToObject<JObject>();
-            
+
             ConstructTypes(typesObj);
 
-            if (TryCreateFromReference(rootObj, out root, constructor)) {
+            if (TryCreateFromReference(rootObj, out root, constructor))
+            {
                 root.Unpack(this, objectsObj[rootObj["ref"].ToString()]);
             }
         }
@@ -44,7 +49,8 @@ namespace VAT.Serialization.JSON {
         /// <param name="reference"></param>
         /// <param name="referenceId"></param>
         /// <param name="typeId"></param>
-        public void UnpackReference(JToken reference, out ReferenceId referenceId, out TypeId typeId) {
+        public void UnpackReference(JToken reference, out ReferenceId referenceId, out TypeId typeId)
+        {
             referenceId = new ReferenceId(reference["ref"].ToString());
             typeId = new TypeId(reference["type"].ToString());
         }
@@ -63,7 +69,8 @@ namespace VAT.Serialization.JSON {
 
             UnpackReference(reference, out var referenceId, out var typeId);
 
-            if (_references.ContainsKey(referenceId)) {
+            if (_references.ContainsKey(referenceId))
+            {
                 packable = (TPackable)_references[referenceId];
                 return true;
             }
@@ -80,13 +87,16 @@ namespace VAT.Serialization.JSON {
             return true;
         }
 
-        private void ConstructTypes(JObject types) {
-            foreach (var typeObj in types) {
+        private void ConstructTypes(JObject types)
+        {
+            foreach (var typeObj in types)
+            {
                 var typeId = new TypeId(typeObj.Key);
                 var typeName = typeObj.Value["typeName"].ToString();
 
                 var type = Type.GetType(typeName);
-                if (type == null) {
+                if (type == null)
+                {
                     continue;
                 }
 

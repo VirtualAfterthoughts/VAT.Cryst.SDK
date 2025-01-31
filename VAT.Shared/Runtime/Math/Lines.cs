@@ -32,7 +32,8 @@ namespace VAT.Shared.Math
         /// </summary>
         /// <param name="start">The start of the line.</param>
         /// <param name="end">The end of the line.</param>
-        public LineData(Vector3 start, Vector3 end) {
+        public LineData(Vector3 start, Vector3 end)
+        {
             Start = start;
             End = end;
             Center = Start - ((Start - end) * 0.5f);
@@ -44,7 +45,8 @@ namespace VAT.Shared.Math
         /// </summary>
         /// <param name="point">The point.</param>
         /// <returns>The closest point.</returns>
-        public Vector3 ClosestPointOnLine(Vector3 point) {
+        public Vector3 ClosestPointOnLine(Vector3 point)
+        {
             return point.ClosestPointOnLine(Start, End);
         }
     }
@@ -52,7 +54,8 @@ namespace VAT.Shared.Math
     /// <summary>
     /// Helper class for calculating line information.
     /// </summary>
-    public static partial class Lines {
+    public static partial class Lines
+    {
         /// <summary>
         /// Calculates the closest point on a line.
         /// </summary>
@@ -60,7 +63,8 @@ namespace VAT.Shared.Math
         /// <param name="start">The start of the line.</param>
         /// <param name="end">The end of the line.</param>
         /// <returns>The closest point.</returns>
-        public static Vector3 ClosestPointOnLine(this Vector3 point, Vector3 start, Vector3 end) {
+        public static Vector3 ClosestPointOnLine(this Vector3 point, Vector3 start, Vector3 end)
+        {
             var direction = end - start;
             float length = direction.magnitude;
             direction.Normalize();

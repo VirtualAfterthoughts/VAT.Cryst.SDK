@@ -12,7 +12,8 @@ namespace VAT.Input
     {
         private readonly IXRPoseProvider[] _providers;
 
-        public XRHand(params IXRPoseProvider[] providers) {
+        public XRHand(params IXRPoseProvider[] providers)
+        {
             _providers = providers;
         }
 

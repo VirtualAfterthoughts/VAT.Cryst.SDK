@@ -4,10 +4,12 @@ using static Unity.Mathematics.math;
 
 using Unity.Burst;
 
-namespace VAT.Shared.Extensions {
+namespace VAT.Shared.Extensions
+{
     using Unity.Mathematics;
 
-    public static partial class PhysicsExtensions {
+    public static partial class PhysicsExtensions
+    {
         /// <summary>
         /// Returns the displacement between two vectors.
         /// </summary>
@@ -22,7 +24,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public static float3 GetAngularDisplacement(quaternion from, quaternion to) {
+        public static float3 GetAngularDisplacement(quaternion from, quaternion to)
+        {
             // We get the displacement between the quaternions, normalize it to ensure there are no math errors
             // Finally, we check the w component to make sure it is the shortest possible rotation
             quaternion q = normalize(mul(to, inverse(from))).shortest();
@@ -41,7 +44,7 @@ namespace VAT.Shared.Extensions {
         /// <param name="to"></param>
         /// <returns></returns>
         public static float3 GetLinearVelocity(float3 from, float3 to) => GetLinearDisplacement(from, to) / Time.deltaTime;
-        
+
         /// <summary>
         /// Returns the linear velocity between two points with a given time delta.
         /// </summary>
@@ -107,7 +110,8 @@ namespace VAT.Shared.Extensions {
         /// </summary>
         /// <param name="displacement"></param>
         /// <returns></returns>
-        public static Quaternion GetQuaternionDisplacement(Vector3 displacement) {
+        public static Quaternion GetQuaternionDisplacement(Vector3 displacement)
+        {
             float xMag = displacement.magnitude * Mathf.Rad2Deg;
             Vector3 x = displacement.normalized;
 
@@ -150,7 +154,8 @@ namespace VAT.Shared.Extensions {
     }
 
     [BurstCompile(FloatMode = FloatMode.Fast)]
-    public static partial class BurstCompiled_PhysicsExtensions {
+    public static partial class BurstCompiled_PhysicsExtensions
+    {
         /// <summary>
         /// Returns the displacement between two vectors (BURST).
         /// </summary>
@@ -158,7 +163,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="to">The current position.</param>
         /// <param name="result">The output vector.</param>
         [BurstCompile(FloatMode = FloatMode.Fast)]
-        public static void BurstCompiled_GetLinearDisplacement(in float3 from, in float3 to, out float3 result) {
+        public static void BurstCompiled_GetLinearDisplacement(in float3 from, in float3 to, out float3 result)
+        {
             result = to - from;
         }
 
@@ -170,7 +176,8 @@ namespace VAT.Shared.Extensions {
         /// <param name="delta">The time passed between the two positions.</param>
         /// <param name="result">The output velocity.</param>
         [BurstCompile(FloatMode = FloatMode.Fast)]
-        public static void BurstCompiled_GetLinearVelocity(in float3 from, in float3 to, in float delta, out float3 result) {
+        public static void BurstCompiled_GetLinearVelocity(in float3 from, in float3 to, in float delta, out float3 result)
+        {
             BurstCompiled_GetLinearDisplacement(from, to, out result);
             result /= delta;
         }

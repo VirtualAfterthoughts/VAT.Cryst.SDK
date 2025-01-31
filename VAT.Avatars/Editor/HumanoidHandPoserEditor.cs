@@ -27,7 +27,8 @@ namespace VAT.Avatars.Editor
         private SerializedProperty _selectedPose;
         private SerializedProperty _targetGrip;
 
-        private void OnEnable() {
+        private void OnEnable()
+        {
             _poser = target as HumanoidHandPoser;
             _handPoseData = serializedObject.FindProperty(nameof(_poser.handPoseData));
 
@@ -35,12 +36,14 @@ namespace VAT.Avatars.Editor
             _targetGrip = serializedObject.FindProperty(nameof(_poser.targetGrip));
         }
 
-        public override void OnInspectorGUI() {
+        public override void OnInspectorGUI()
+        {
             EditorGUILayout.LabelField("Humanoid Hand Poser", EditorStyles.whiteLargeLabel);
 
             GUILayout.Space(5);
 
-            if (_poser.Generated) {
+            if (_poser.Generated)
+            {
                 EditorGUILayout.HelpBox("No issues found!", MessageType.Info);
 
                 EditorGUI.BeginChangeCheck();
@@ -69,7 +72,8 @@ namespace VAT.Avatars.Editor
 
                 GUILayout.FlexibleSpace();
 
-                if (_poser.selectedPose != null) {
+                if (_poser.selectedPose != null)
+                {
                     DrawSaveToPose();
                 }
 
@@ -79,7 +83,8 @@ namespace VAT.Avatars.Editor
 
                 EditorGUILayout.PropertyField(_handPoseData, true);
 
-                if (EditorGUI.EndChangeCheck()) {
+                if (EditorGUI.EndChangeCheck())
+                {
                     _poser.Solve();
                 }
 
@@ -99,7 +104,8 @@ namespace VAT.Avatars.Editor
                     }
                 }
             }
-            else {
+            else
+            {
                 EditorGUILayout.HelpBox("This poser is invalid! Please generate it from an avatar.", MessageType.Error);
             }
         }
@@ -159,8 +165,8 @@ namespace VAT.Avatars.Editor
 
         private void DrawClickableGrips()
         {
-            var style = new GUIStyle(GUI.skin.label) 
-            { 
+            var style = new GUIStyle(GUI.skin.label)
+            {
                 alignment = TextAnchor.MiddleCenter,
             };
 
@@ -184,8 +190,10 @@ namespace VAT.Avatars.Editor
             }
         }
 
-        public void OnSceneGUI() {
-            if (_poser.Initiated) {
+        public void OnSceneGUI()
+        {
+            if (_poser.Initiated)
+            {
                 DrawClickableGrips();
 
                 Handles.color = new Color(255, 87, 51, 255) / 255;

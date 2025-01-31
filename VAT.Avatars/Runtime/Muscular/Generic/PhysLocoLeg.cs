@@ -215,7 +215,8 @@ namespace VAT.Avatars.Muscular
             Foot.Rigidbody.AddForce(stairDebt, CrystForceMode.Acceleration);
         }
 
-        public void MatchPose(LocoLeg leg) {
+        public void MatchPose(LocoLeg leg)
+        {
             _leg = leg;
 
             Knee.MatchBone(leg.Knee);
@@ -254,7 +255,8 @@ namespace VAT.Avatars.Muscular
             };
         }
 
-        public override void ResetAnchors() {
+        public override void ResetAnchors()
+        {
             Knee.ResetAnchors();
 
             Fender.ResetAnchors((Knee.Transform.position + Foot.Transform.position) * 0.5f);
@@ -264,11 +266,13 @@ namespace VAT.Avatars.Muscular
             Foot.SetConnectedAnchor(Fender.Transform.position + Fender.Transform.up * _radius);
         }
 
-        public override void Attach(PhysBoneGroup group) {
+        public override void Attach(PhysBoneGroup group)
+        {
             FirstBone.Parent = group.FirstBone;
         }
 
-        public float3 GetCenterOfPressure() {
+        public float3 GetCenterOfPressure()
+        {
             return Fender.Transform.position;
         }
     }
