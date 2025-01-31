@@ -1,16 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
 
 using VAT.Cryst.Data;
-
+using VAT.Shared.Extensions;
 using VAT.Shared.Utilities;
 
 namespace VAT.Interaction.Entities
 {
     [DisallowMultipleComponent]
-    public class CrystBody : MonoBehaviour, IEntityChild
+    public class CrystBody : MonoBehaviour
     {
         public static readonly ComponentCache<CrystBody> Cache = new();
 
@@ -23,8 +22,8 @@ namespace VAT.Interaction.Entities
         [SerializeField]
         private RigidbodyInfo _defaultInfo = RigidbodyInfo.Default;
 
-        private IEntity _parentEntity = null;
-        public IEntity ParentEntity { get => _parentEntity; set => _parentEntity = value; }
+        private CrystEntity _entity = null;
+        public CrystEntity Entity { get => _entity; set => _entity = value; }
 
         public Rigidbody Rigidbody
         {
@@ -62,9 +61,39 @@ namespace VAT.Interaction.Entities
             }
         }
 
+        private Link<CrystBody> _link = null;
+        public Link<CrystBody> Link => _link;
+
         private void Awake()
         {
+            _link = new Link<CrystBody>(this);
+
             Cache.Add(gameObject, this);
+
+            Link.OnLinkConnected += OnLinkConnected;
+            Link.OnLinkDisconnected += OnLinkDisconnected;
+        }
+
+        private void OnLinkConnected(Link<CrystBody> from, Link<CrystBody> to, Link<CrystBody>.LinkType type)
+        {
+            foreach (var collider in to.Origin.Colliders)
+            {
+                foreach (var other in Colliders)
+                {
+                    Physics.IgnoreCollision(collider, other, true);
+                }
+            }
+        }
+
+        private void OnLinkDisconnected(Link<CrystBody> from, Link<CrystBody> to, Link<CrystBody>.LinkType type)
+        {
+            foreach (var collider in to.Origin.Colliders)
+            {
+                foreach (var other in Colliders)
+                {
+                    Physics.IgnoreCollision(collider, other, false);
+                }
+            }
         }
 
         private void OnDestroy()
@@ -103,7 +132,7 @@ namespace VAT.Interaction.Entities
                 return;
             }
 
-            _rigidbody = gameObject.AddComponent<Rigidbody>();
+            _rigidbody = gameObject.AddOrGetComponent<Rigidbody>();
 
             Info.CopyTo(_rigidbody);
         }

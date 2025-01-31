@@ -23,9 +23,6 @@ namespace VAT.Avatars.Skeletal
 
         public Vector3 velocity;
 
-        private Vector3 _lastAngleVelocity;
-        private float _lastVelocityDrag;
-
         private Vector3 _trackedDebt;
 
         private Vector3 _localHead;
@@ -137,21 +134,6 @@ namespace VAT.Avatars.Skeletal
                 distanceToFloor -= offset;
                 extension = Mathf.Abs(offset);
             }
-
-            // Solve velocity drag
-            var angleVelocity = movementVelocity;
-            angleVelocity.y = 0f;
-
-            angleVelocity = Vector3.Lerp(_lastAngleVelocity, angleVelocity, Smoothing.CalculateDecay(12f, Time.deltaTime));
-            _lastAngleVelocity = angleVelocity;
-
-            float velocityDrag = Mathf.Clamp01(math.length(angleVelocity) / 4f);
-
-            velocityDrag = Mathf.Lerp(_lastVelocityDrag, velocityDrag, Smoothing.CalculateDecay(12f, Time.deltaTime));
-            _lastVelocityDrag = velocityDrag;
-
-            // Drop spine when running
-            distanceToFloor *= Mathf.Lerp(1f, 0.9f, velocityDrag);
 
             // Apply leg extension
             Foot.localPosition = down() * Mathf.Clamp(distanceToFloor, 0f, _length * 1.1f + extension);

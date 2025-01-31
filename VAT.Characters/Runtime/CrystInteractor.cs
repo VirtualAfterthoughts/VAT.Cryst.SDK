@@ -20,19 +20,19 @@ using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 using VAT.Cryst.Math;
 using VAT.Avatars.Skeletal;
+using VAT.Interaction.Entities;
 
 namespace VAT.Characters
 {
     public class CrystInteractor : MonoBehaviour, IInteractor, IAvatarTrackingOverride, IInteractorHoverModule, IInteractorFarHoverModule
     {
-        public CrystRigidbody rb;
+        public CrystBody rb;
         public Handedness handedness;
         public IInputController controller;
         public IInputHand hand;
         public AvatarArm arm;
         public HandPoseData openPose;
         public HandPoseData closedPose;
-        public InteractableLimb limb = null;
 
         public AudioClip[] grabSounds = new AudioClip[0];
 
@@ -58,7 +58,10 @@ namespace VAT.Characters
 
         private void Awake()
         {
-            rb = GetComponent<CrystRigidbody>();
+            rb = gameObject.AddComponent<CrystBody>();
+            rb.CreateBody();
+            rb.CollectColliders();
+
             _hoverHolder = new HoverHolder(this);
             _farHoverHolder = new HoverHolder(this);
 
@@ -67,6 +70,12 @@ namespace VAT.Characters
 
         private void Start()
         {
+            var elbowRb = ((Avatars.Muscular.PhysBone)arm.PhysArm.Elbow).UnityGameObject.AddComponent<CrystBody>();
+            elbowRb.CreateBody();
+            elbowRb.CollectColliders();
+
+            rb.Link.Connect(elbowRb.Link);
+
             _palm = new AvatarGrabberPoint
             {
                 hand = arm.PhysArm.Hand,
@@ -284,7 +293,7 @@ namespace VAT.Characters
             _attachedGrip = grip;
             _isSnatching = true;
 
-            grip.GetHost()?.AttachGroup(limb.LimbGroup, HostLink.LinkType.EXTERNAL);
+            grip.GetHost()?.Link.Connect(rb.Link);
 
             ResetHover();
         }
@@ -350,7 +359,7 @@ namespace VAT.Characters
         {
             grip.OnDetachConfirm(this);
 
-            grip.GetHost()?.DetachGroup(limb.LimbGroup);
+            grip.GetHost()?.Link.Disconnect(rb.Link);
 
             _attachedGrip = null;
             _isSnatching = false;
@@ -525,11 +534,6 @@ namespace VAT.Characters
         public void SetOpenPose(HandPoseData pose)
         {
             arm.DataArm.Hand.SetOpenPose(pose);
-        }
-
-        public InteractableLimb GetLimb()
-        {
-            return limb;
         }
     }
 }

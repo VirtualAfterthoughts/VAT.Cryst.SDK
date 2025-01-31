@@ -88,7 +88,7 @@ namespace VAT.Characters
 
             private void UpdatePull()
             {
-                ApplyDrag(_pullingGrip.GetHost().GetRigidbody(), _interactor.GetRigidbody());
+                ApplyDrag(_pullingGrip.GetHost().Rigidbody, _interactor.GetRigidbody());
 
                 var palm = _interactor.GetPalm();
                 var worldTarget = GrabTargetHelper.GetTargetInWorld(_pullingGrip, _interactor);
@@ -107,14 +107,14 @@ namespace VAT.Characters
             {
                 var host = grip.GetHost();
 
-                if (host == null || host.GetRigidbody() == null || host.GetRigidbody().isKinematic)
+                if (host == null || host.Rigidbody == null || host.Rigidbody.isKinematic)
                 {
                     return;
                 }
 
                 _pullingGrip = grip;
 
-                var rb = host.GetRigidbody();
+                var rb = host.Rigidbody;
                 var grabPoint = _interactor.GetPalm();
                 var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(grabPoint, grip.GetDefaultPose());
 
@@ -149,7 +149,7 @@ namespace VAT.Characters
 
                 _pullingGrip.EnableInteraction();
 
-                var rb = _pullingGrip.GetHost().GetRigidbody();
+                var rb = _pullingGrip.GetHost().Rigidbody;
                 var interactorRb = _interactor.GetRigidbody();
 
                 rb.velocity = interactorRb.velocity;

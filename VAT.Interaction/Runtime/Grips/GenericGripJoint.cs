@@ -46,7 +46,7 @@ namespace VAT.Interaction
 
             if (host != null)
             {
-                joint.connectedBody = host.GetRigidbody();
+                joint.connectedBody = host.Rigidbody;
             }
 
             joint.enableCollision = true;

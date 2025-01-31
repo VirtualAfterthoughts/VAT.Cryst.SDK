@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace VAT.Interaction.Entities
 {
-    public class CrystJoint : MonoBehaviour, IEntityChild
+    public class CrystJoint : MonoBehaviour
     {
-        private IEntity _parentEntity = null;
-        public IEntity ParentEntity { get => _parentEntity; set => _parentEntity = value; }
+        private CrystEntity _entity = null;
+        public CrystEntity Entity { get => _entity; set => _entity = value; }
     }
 }

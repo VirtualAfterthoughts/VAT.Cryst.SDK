@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using VAT.Interaction.Entities;
+
 namespace VAT.Interaction.Editor
 {
     using UnityEditor;
@@ -20,22 +22,22 @@ namespace VAT.Interaction.Editor
 
             EditorGUILayout.LabelField("Grip Validation", EditorStyles.boldLabel);
 
-            var host = grip.GetComponentInParent<InteractableHost>(true);
+            var body = grip.GetComponentInParent<CrystBody>(true);
 
-            if (host == null)
+            if (body == null)
             {
-                EditorGUILayout.HelpBox("This Grip is missing an Interactable Host!", MessageType.Error);
+                EditorGUILayout.HelpBox("This Grip is missing a Cryst Body!", MessageType.Error);
 
-                if (GUILayout.Button("Add Interactable Host"))
+                if (GUILayout.Button("Add Cryst Body"))
                 {
                     var rb = grip.GetComponentInParent<Rigidbody>(true);
                     var root = rb ? rb.gameObject : grip.gameObject;
 
-                    var newHost = root.AddComponent<InteractableHost>();
-                    Undo.RegisterCreatedObjectUndo(newHost, "Add Interactable Host");
+                    var newBody = root.AddComponent<CrystBody>();
+                    Undo.RegisterCreatedObjectUndo(newBody, "Add Cryst Body");
 
                     Selection.activeGameObject = root;
-                    EditorGUIUtility.PingObject(newHost);
+                    EditorGUIUtility.PingObject(newBody);
                 }
             }
             else

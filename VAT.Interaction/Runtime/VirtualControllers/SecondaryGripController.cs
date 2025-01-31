@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
+
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -11,10 +10,6 @@ namespace VAT.Interaction
     public sealed class SecondaryGripController : MonoBehaviour, IVirtualControllerOverride
     {
         [Header("References")]
-        [SerializeField]
-        [Tooltip("The interactable host that this is a part of.")]
-        private InteractableHost _host = null;
-
         [SerializeField]
         [Tooltip("The primary grip.")]
         private Grip _primaryGrip = null;
@@ -33,17 +28,14 @@ namespace VAT.Interaction
             foreach (var grip in _secondaryGrips)
             {
                 grip.DisableInteraction();
+
+                grip.VirtualController.RegisterOverride(this);
             }
 
             _primaryGrip.OnAttached += OnPrimaryGripAttached;
             _primaryGrip.OnDetached += OnPrimaryGripDetached;
 
-            if (_host == null)
-            {
-                _host = GetComponentInParent<InteractableHost>();
-            }
-
-            _host.VirtualController.RegisterOverride(this);
+            _primaryGrip.VirtualController.RegisterOverride(this);
         }
 
         private void OnDisable()
@@ -51,12 +43,12 @@ namespace VAT.Interaction
             _primaryGrip.OnAttached -= OnPrimaryGripAttached;
             _primaryGrip.OnDetached -= OnPrimaryGripDetached;
 
-            if (_host != null)
-            {
-                _host.VirtualController.UnregisterOverride(this);
-            }
+            _primaryGrip.VirtualController.UnregisterOverride(this);
 
-            _host = null;
+            foreach(var grip in _secondaryGrips)
+            {
+                grip.VirtualController.UnregisterOverride(this);
+            }
         }
 
         private void OnPrimaryGripAttached(IInteractor interactor)

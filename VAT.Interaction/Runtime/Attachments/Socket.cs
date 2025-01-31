@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using VAT.Interaction.Entities;
 using VAT.Packaging;
 
 namespace VAT.Interaction.Attachments
@@ -10,7 +11,7 @@ namespace VAT.Interaction.Attachments
     public abstract class Socket : MonoBehaviour
     {
         [SerializeField]
-        private InteractableHost _interactableHost = null;
+        private CrystBody _body = null;
 
         [SerializeField]
         private TagMask _tagMask = new();
@@ -18,15 +19,15 @@ namespace VAT.Interaction.Attachments
         private readonly List<Plug> _registeredPlugs = new();
         private readonly List<Plug> _lockedPlugs = new();
 
-        public InteractableHost Host
+        public CrystBody Body
         {
             get
             {
-                return _interactableHost;
+                return _body;
             }
             set
             {
-                _interactableHost = value;
+                _body = value;
             }
         }
 

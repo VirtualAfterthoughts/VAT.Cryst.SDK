@@ -44,12 +44,8 @@ namespace VAT.Characters
 
         private AvatarSounds _avatarSounds = null;
 
-        private InteractableSpine _physBody = null;
-
         public override void OnRigEnable()
         {
-            _physBody = gameObject.AddComponent<InteractableSpine>();
-
             _constantAbilities = new List<IAvatarAbility>
             {
                 new ForcePullAbility()
@@ -93,8 +89,6 @@ namespace VAT.Characters
             }
 
             RigManager.GetVitals().OnUpdatedVitals -= OnUpdatedVitals;
-
-            Destroy(_physBody);
         }
 
         private void OnUpdatedVitals(ICrystVitals vitals)
@@ -169,8 +163,6 @@ namespace VAT.Characters
             int index = 0;
             _interactors = new IInteractor[arms.Length];
 
-            List<InteractableLimb> limbs = new();
-
             foreach (var arm in arms)
             {
                 behaviourRig.TryGetArm(arm.Handedness, out var rigArm);
@@ -189,26 +181,8 @@ namespace VAT.Characters
                 interactor.openPose = openPose.data;
                 interactor.closedPose = closedPose.data;
 
-                List<InteractableHost> hosts = new();
-                foreach (var physBone in arm.PhysArm.Bones)
-                {
-                    hosts.Add(((PhysBone)physBone).UnityGameObject.AddComponent<InteractableHost>());
-                }
-
-                hosts.Add(((PhysBone)arm.PhysArm.Hand.Hand).UnityGameObject.AddComponent<InteractableHost>());
-
-                var limb = ((PhysBone)arm.PhysArm.UpperArm).UnityGameObject.AddComponent<InteractableLimb>();
-
-                limb.LimbHosts = hosts.ToArray();
-
-                interactor.limb = limb;
-
-                limbs.Add(limb);
-
                 _interactors[index++] = interactor;
             }
-
-            _physBody.Limbs = limbs.ToArray();
 
             var legs = avatar.GetLegs();
 

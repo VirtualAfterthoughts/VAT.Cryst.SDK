@@ -6,7 +6,7 @@ using UnityEngine;
 namespace VAT.Interaction.Entities
 {
     [SelectionBase]
-    public class CrystEntity : MonoBehaviour, IEntity
+    public class CrystEntity : MonoBehaviour
     {
         [SerializeField]
         private GameObject _root = null;
@@ -74,25 +74,25 @@ namespace VAT.Interaction.Entities
         public void AddBody(CrystBody body)
         {
             _runtimeBodies.Add(body);
-            body.ParentEntity = this;
+            body.Entity = this;
         }
 
         public void RemoveBody(CrystBody body)
         {
             _runtimeBodies.Remove(body);
-            body.ParentEntity = null;
+            body.Entity = null;
         }
 
         public void AddJoint(CrystJoint joint)
         {
             _runtimeJoints.Add(joint);
-            joint.ParentEntity = this;
+            joint.Entity = this;
         }
 
         public void RemoveJoint(CrystJoint joint)
         {
             _runtimeJoints.Remove(joint);
-            joint.ParentEntity = null;
+            joint.Entity = null;
         }
 
         public void Freeze(bool frozen = true)

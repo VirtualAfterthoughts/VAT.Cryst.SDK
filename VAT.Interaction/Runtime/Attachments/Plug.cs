@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
+
+using VAT.Interaction.Entities;
 using VAT.Packaging;
 
 namespace VAT.Interaction.Attachments
@@ -17,12 +16,12 @@ namespace VAT.Interaction.Attachments
     public abstract class Plug : MonoBehaviour
     {
         [SerializeField]
-        private InteractableHost _host = null;
+        private CrystBody _body = null;
 
         [SerializeField]
         private TagReference _tag = new();
 
-        public InteractableHost Host { get { return _host; } set { _host = value; } }
+        public CrystBody Body { get { return _body; } set { _body = value; } }
 
         public TagReference Tag => _tag;
 

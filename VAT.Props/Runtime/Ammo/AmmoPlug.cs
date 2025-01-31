@@ -77,17 +77,17 @@ namespace VAT.Props.Ammo
         {
             // Makes the joint less "clippy" when inserting.
             // Reset immediately after ejecting for performance.
-            Host.GetRigidbody().solverIterations = 256;
+            Body.Rigidbody.solverIterations = 256;
 
-            socket.Host.AttachGroup(Host.SelfGroup);
+            socket.Body.Link.Connect(Body.Link);
 
             var ammoSocket = socket as AmmoSocket;
             var outsidePoint = ammoSocket.OutsidePoint;
 
-            var startRotation = Host.transform.rotation;
-            Host.transform.rotation = socket.Host.transform.rotation;
+            var startRotation = Body.transform.rotation;
+            Body.transform.rotation = socket.Body.transform.rotation;
 
-            _insertJoint = Host.GetRigidbody().gameObject.AddComponent<ConfigurableJoint>();
+            _insertJoint = Body.Rigidbody.gameObject.AddComponent<ConfigurableJoint>();
             
             _insertJoint.xDrive = _insertJoint.zDrive = new JointDrive() { positionSpring = 5000000f, positionDamper = 10000f, maximumForce =  float.PositiveInfinity };
             
@@ -102,12 +102,12 @@ namespace VAT.Props.Ammo
 
             _insertJoint.autoConfigureConnectedAnchor = false;
             _insertJoint.anchor = _insertJoint.transform.InverseTransformPoint(transform.position);
-            _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(outsidePoint.position);
-            _insertJoint.connectedBody = socket.Host.GetRigidbody();
+            _insertJoint.connectedAnchor = socket.Body.transform.InverseTransformPoint(outsidePoint.position);
+            _insertJoint.connectedBody = socket.Body.Rigidbody;
 
             _insertJoint.enableCollision = true;
 
-            Host.transform.rotation = startRotation;
+            Body.transform.rotation = startRotation;
 
             _jointSpace = new ConfigurableJointSpace(_insertJoint);
         }
@@ -117,14 +117,14 @@ namespace VAT.Props.Ammo
             var ammoSocket = socket as AmmoSocket;
             var outsidePoint = ammoSocket.OutsidePoint;
 
-            _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(outsidePoint.position);
+            _insertJoint.connectedAnchor = socket.Body.transform.InverseTransformPoint(outsidePoint.position);
 
             _insertJoint.xMotion = _insertJoint.yMotion = _insertJoint.zMotion = ConfigurableJointMotion.Limited;
             _insertJoint.angularXMotion = _insertJoint.angularYMotion = _insertJoint.angularZMotion = ConfigurableJointMotion.Free;
 
             _insertJoint.projectionMode = JointProjectionMode.None;
 
-            Host.EnableInteraction();
+            // Body.EnableInteraction();
         }
 
         private void LockJoint(Socket socket)
@@ -132,7 +132,7 @@ namespace VAT.Props.Ammo
             var ammoSocket = socket as AmmoSocket;
             var insidePoint = ammoSocket.InsidePoint;
 
-            _insertJoint.connectedAnchor = socket.Host.transform.InverseTransformPoint(insidePoint.position);
+            _insertJoint.connectedAnchor = socket.Body.transform.InverseTransformPoint(insidePoint.position);
 
             _insertJoint.xMotion = _insertJoint.yMotion = _insertJoint.zMotion = ConfigurableJointMotion.Locked;
 
@@ -142,17 +142,17 @@ namespace VAT.Props.Ammo
             _insertJoint.projectionDistance = 0f;
             _insertJoint.projectionAngle = 0f;
 
-            Host.DisableInteraction();
+            // Body.DisableInteraction();
         }
 
         protected override void OnCompleteEject(Socket socket)
         {
-            socket.Host.DetachGroup(Host.SelfGroup);
+            socket.Body.Link.Disconnect(Body.Link);
 
             Destroy(_insertJoint);
             _insertJoint = null;
 
-            Host.GetRigidbody().solverIterations = Physics.defaultSolverIterations;
+            Body.Rigidbody.solverIterations = Physics.defaultSolverIterations;
         }
 
         protected override void OnCompleteInsert(Socket socket)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using VAT.Input.Data;
+using VAT.Interaction.Entities;
 using VAT.Shared.Data;
 
 namespace VAT.Interaction
@@ -50,7 +51,9 @@ namespace VAT.Interaction
         private readonly Dictionary<IInteractor, InteractorGripState> _interactorStates = new();
         private readonly Dictionary<IInteractor, IGripJoint> _gripJoints = new();
 
-        private InteractableHost _host = null;
+        public VirtualController VirtualController { get; } = new VirtualController();
+
+        private CrystBody _body = null;
 
         private bool _isInteractable = true;
 
@@ -91,33 +94,14 @@ namespace VAT.Interaction
 
         public void UnregisterHost()
         {
-            if (_host != null)
-            {
-                foreach (var interactor in _attachedInteractors)
-                {
-                    _host.VirtualController.UnregisterPair(interactor);
-                }
-
-                _host.UnregisterInteractable(this);
-                _host = null;
-            }
+            _body = null;
         }
 
         public void FindHost()
         {
             UnregisterHost();
 
-            _host = GetComponentInParent<InteractableHost>();
-
-            if (_host != null)
-            {
-                _host.RegisterInteractable(this);
-
-                foreach (var interactor in _attachedInteractors)
-                {
-                    _host.VirtualController.RegisterPair(interactor, this);
-                }
-            }
+            _body = GetComponentInParent<CrystBody>();
         }
 
         protected virtual IGripJoint OnCreateGripJoint(IInteractor interactor)
@@ -148,10 +132,7 @@ namespace VAT.Interaction
                 isAttaching = true,
             });
 
-            if (_host != null)
-            {
-                _host.VirtualController.RegisterPair(interactor, this);
-            }
+            VirtualController.RegisterPair(interactor, this);
         }
 
         public void OnAttachComplete(IInteractor interactor)
@@ -187,10 +168,7 @@ namespace VAT.Interaction
             _attachedInteractors.Remove(interactor);
             _interactorStates.Remove(interactor);
 
-            if (_host != null)
-            {
-                _host.VirtualController.UnregisterPair(interactor);
-            }
+            VirtualController.UnregisterPair(interactor);
 
             if (!wasAttaching)
             {
@@ -273,9 +251,9 @@ namespace VAT.Interaction
 
         public GameObject GetHostGameObject()
         {
-            if (_host != null)
+            if (_body != null)
             {
-                return _host.GetGameObject();
+                return _body.gameObject;
             }
             else
             {
@@ -298,9 +276,9 @@ namespace VAT.Interaction
             return GrabTargetHelper.GetTargetInInteractor(point, pose);
         }
 
-        public InteractableHost GetHost()
+        public CrystBody GetHost()
         {
-            return _host;
+            return _body;
         }
 
         public HoverFlags GetHoverFlags()

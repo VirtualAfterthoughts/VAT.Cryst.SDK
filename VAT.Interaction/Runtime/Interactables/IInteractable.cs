@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using VAT.Interaction.Entities;
+
 namespace VAT.Interaction
 {
     public interface IInteractable : IHoverable
@@ -17,7 +19,7 @@ namespace VAT.Interaction
 
         GameObject GetHostGameObject();
 
-        InteractableHost GetHost();
+        CrystBody GetHost();
 
         void FindHost();
     }
