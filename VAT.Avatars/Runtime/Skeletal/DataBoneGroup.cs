@@ -5,7 +5,6 @@ using UnityEngine;
 
 using VAT.Avatars.Nervous;
 using VAT.Avatars.Bones;
-using VAT.Shared.Extensions;
 
 namespace VAT.Avatars.Skeletal
 {

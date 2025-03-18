@@ -45,6 +45,15 @@ namespace VAT.Input.XR
             var timer = Stopwatch.StartNew();
 
             await manager.InitializeLoader().ToUniTask();
+
+            if (manager.activeLoader == null)
+            {
+                timer.Stop();
+
+                Debug.LogError($"Initializing XRApi failed, Elapsed {timer.Elapsed.TotalSeconds} seconds");
+                return;
+            }
+
             manager.StartSubsystems();
 
             Api = new XRApi();
