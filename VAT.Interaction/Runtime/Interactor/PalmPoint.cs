@@ -13,7 +13,7 @@ namespace VAT.Interaction
     {
         public float GetThumbDot()
         {
-            return Vector3.Dot(GetUpperPalmInHost().right, -GetNormalInHost());
+            return Vector3.Dot(GetUpperPalmInHost().Right, -GetNormalInHost());
         }
 
         public Handedness GetHandedness()

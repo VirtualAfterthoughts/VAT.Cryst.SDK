@@ -70,19 +70,19 @@ namespace VAT.Avatars.Muscular
             C4Vertebra.Solve(c4VertebraTarget);
 
             C4Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
-            C4Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _neck.C4Vertebra.Transform.InverseTransformPoint(_neck.C4Vertebra.GetChild(0).Transform.position);
+            C4Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _neck.C4Vertebra.Transform.InverseTransformPoint(_neck.C4Vertebra.GetChild(0).Transform.Position);
 
             var c1VertebraTarget = C4Vertebra.TransformBone(_neck.C4Vertebra, _neck.C1Vertebra);
             C1Vertebra.Solve(c1VertebraTarget);
 
             C1Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
-            C1Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _neck.C1Vertebra.Transform.InverseTransformPoint(_neck.C4Vertebra.Transform.position);
+            C1Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _neck.C1Vertebra.Transform.InverseTransformPoint(_neck.C4Vertebra.Transform.Position);
 
             var skullTarget = C1Vertebra.TransformBone(_neck.C1Vertebra, _neck.Skull);
             Skull.Solve(skullTarget);
 
             Skull.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
-            Skull.ConfigurableJoint.ConfigurableJoint.anchor = _neck.Skull.Transform.InverseTransformPoint(_neck.C1Vertebra.Transform.position);
+            Skull.ConfigurableJoint.ConfigurableJoint.anchor = _neck.Skull.Transform.InverseTransformPoint(_neck.C1Vertebra.Transform.Position);
         }
 
         public Mesh GenerateSkullMesh(HumanoidNeckProportions proportions)
@@ -94,30 +94,30 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh top = new()
             {
                 bottom = proportions.foreheadEllipse,
-                bottomTransform = SimpleTransform.Create(up() * proportions.skullEllipsoid.height * 0.3f, quaternion.identity),
+                bottomTransform = new SimpleTransform(up() * proportions.skullEllipsoid.height * 0.3f, quaternion.identity),
 
                 top = proportions.topEllipse,
-                topTransform = SimpleTransform.Create(up() * proportions.skullEllipsoid.height * 0.5f, quaternion.identity),
+                topTransform = new SimpleTransform(up() * proportions.skullEllipsoid.height * 0.5f, quaternion.identity),
             };
 
             // Create skull -> forehead
             EllipseCylinderMesh forehead = new()
             {
                 bottom = skull,
-                bottomTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                bottomTransform = new SimpleTransform(float3.zero, quaternion.identity),
 
                 top = proportions.foreheadEllipse,
-                topTransform = SimpleTransform.Create(up() * proportions.skullEllipsoid.height * 0.3f, quaternion.identity),
+                topTransform = new SimpleTransform(up() * proportions.skullEllipsoid.height * 0.3f, quaternion.identity),
             };
 
             // Create skull -> jaw
             EllipseCylinderMesh jaw = new()
             {
                 bottom = proportions.jawEllipse,
-                bottomTransform = SimpleTransform.Create(down() * proportions.skullEllipsoid.height * 0.3f, Quaternion.AngleAxis(25f, right())),
+                bottomTransform = new SimpleTransform(down() * proportions.skullEllipsoid.height * 0.3f, Quaternion.AngleAxis(25f, right())),
 
                 top = skull,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Combine ellipses and create mesh
@@ -134,20 +134,20 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh jawToNeck = new()
             {
                 bottom = upperNeck,
-                bottomTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                bottomTransform = new SimpleTransform(float3.zero, quaternion.identity),
 
                 top = upperNeck.Scaled(new float2(1f, 1.2f)),
-                topTransform = SimpleTransform.Create(up() * proportions.upperNeckEllipsoid.height * 0.7f, quaternion.identity),
+                topTransform = new SimpleTransform(up() * proportions.upperNeckEllipsoid.height * 0.7f, quaternion.identity),
             };
 
             // Create upper neck -> lower neck
             EllipseCylinderMesh upperToLower = new()
             {
                 bottom = lowerNeck,
-                bottomTransform = SimpleTransform.Create(forward() * proportions.lowerNeckOffsetZ + down() * proportions.upperNeckEllipsoid.height * 0.5f, quaternion.identity),
+                bottomTransform = new SimpleTransform(forward() * proportions.lowerNeckOffsetZ + down() * proportions.upperNeckEllipsoid.height * 0.5f, quaternion.identity),
 
                 top = upperNeck,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Combine ellipses and create mesh
@@ -163,20 +163,20 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh upperToLower = new()
             {
                 bottom = lowerNeck,
-                bottomTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                bottomTransform = new SimpleTransform(float3.zero, quaternion.identity),
 
                 top = lowerNeck,
-                topTransform = SimpleTransform.Create(up() * proportions.upperNeckEllipsoid.height * 0.5f, quaternion.identity),
+                topTransform = new SimpleTransform(up() * proportions.upperNeckEllipsoid.height * 0.5f, quaternion.identity),
             };
 
             // Create lower neck -> larger lower neck
             EllipseCylinderMesh lowerToChest = new()
             {
                 bottom = lowerNeck.Scaled(new float2(1f, 1.2f)),
-                bottomTransform = SimpleTransform.Create(down() * proportions.lowerNeckEllipsoid.height * 0.5f, quaternion.identity),
+                bottomTransform = new SimpleTransform(down() * proportions.lowerNeckEllipsoid.height * 0.5f, quaternion.identity),
 
                 top = lowerNeck,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Combine ellipses and create mesh

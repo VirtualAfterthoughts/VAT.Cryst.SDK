@@ -102,7 +102,7 @@ namespace VAT.Avatars.Integumentary
             Transform hips = animator.GetBoneTransform(HumanBodyBones.Hips);
             float3 hipPosition = mul(worldToLocal, hips.position);
 
-            float3 midway = (artDescriptor.leftArmDescriptor.upperArm.Transform.position + artDescriptor.rightArmDescriptor.upperArm.Transform.position) * 0.5f;
+            float3 midway = (artDescriptor.leftArmDescriptor.upperArm.Transform.Position + artDescriptor.rightArmDescriptor.upperArm.Transform.Position) * 0.5f;
             float3 chestPosition = mul(worldToLocal, midway);
 
             var lowerNeckPosition = mul(worldToLocal, Skeleton.DataSkeleton.Neck.C4Vertebra.position);

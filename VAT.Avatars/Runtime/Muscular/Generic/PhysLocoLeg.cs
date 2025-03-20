@@ -9,6 +9,7 @@ using VAT.Entities;
 using VAT.Input.Data;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
+using VAT.Shared.Math;
 
 namespace VAT.Avatars.Muscular
 {
@@ -98,15 +99,15 @@ namespace VAT.Avatars.Muscular
 
             Knee.Solve(kneeTarget);
 
-            Knee.SetConnectedAnchor(kneeTarget.position);
+            Knee.SetConnectedAnchor(kneeTarget.Position);
 
             var dataKnee = _leg.Knee.Transform;
             var physKnee = Knee.Transform;
-            var distance = dataKnee.InverseTransformDirection(_pivotData.Transform.position - _leg.Foot.Transform.position);
+            var distance = dataKnee.InverseTransformDirection(_pivotData.Transform.Position - _leg.Foot.Transform.Position);
             distance.y = 0f;
             distance = dataKnee.TransformDirection(distance);
 
-            var footVelocity = physKnee.TransformDirection(dataKnee.InverseTransformDirection(PhysicsExtensions.GetLinearVelocity(_lastDistance, distance)));
+            var footVelocity = physKnee.TransformDirection(dataKnee.InverseTransformDirection(Derivatives.GetLinearVelocity(_lastDistance, distance)));
             _lastDistance = distance;
 
             footVelocity *= _leg._spineDebtMultiplier;
@@ -116,11 +117,11 @@ namespace VAT.Avatars.Muscular
 
             var space = Fender.Joint.JointSpace;
             var previousTarget = space.RawTargetPosition;
-            var currentTarget = space.InverseTransformTargetPosition(footTarget.position, CrystSpace.WORLD);
+            var currentTarget = space.InverseTransformTargetPosition(footTarget.Position, CrystSpace.WORLD);
 
             space.RawTargetPosition = currentTarget;
 
-            _fenderDebt += (Vector3)PhysicsExtensions.GetLinearVelocity(previousTarget, currentTarget);
+            _fenderDebt += (Vector3)Derivatives.GetLinearVelocity(previousTarget, currentTarget);
 
             var debt = _fenderDebt * 0.5f;
             _fenderDebt -= debt;
@@ -155,7 +156,7 @@ namespace VAT.Avatars.Muscular
 
             Vector3 torque = kdg * error;
 
-            Quaternion rotInertia2World = Foot.Rigidbody.Rigidbody.inertiaTensorRotation * Foot.Transform.rotation;
+            Quaternion rotInertia2World = Foot.Rigidbody.Rigidbody.inertiaTensorRotation * Foot.Transform.Rotation;
             torque = Quaternion.Inverse(rotInertia2World) * torque;
             torque.Scale(Foot.Rigidbody.Rigidbody.inertiaTensor);
             torque = rotInertia2World * torque;
@@ -243,7 +244,7 @@ namespace VAT.Avatars.Muscular
                 maximumForce = kneeMaxForce
             };
 
-            Fender.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
+            Fender.ConfigurableJoint.ConfigurableJoint.SetMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Locked);
             Fender.ConfigurableJoint.ConfigurableJoint.yMotion = ConfigurableJointMotion.Limited;
             Fender.ConfigurableJoint.ConfigurableJoint.linearLimit = new SoftJointLimit() { limit = legLength * 1.1f };
 
@@ -259,11 +260,11 @@ namespace VAT.Avatars.Muscular
         {
             Knee.ResetAnchors();
 
-            Fender.ResetAnchors((Knee.Transform.position + Foot.Transform.position) * 0.5f);
-            Fender.SetAnchor(Fender.Transform.position);
+            Fender.ResetAnchors((Knee.Transform.Position + Foot.Transform.Position) * 0.5f);
+            Fender.SetAnchor(Fender.Transform.Position);
 
             Foot.ResetAnchors();
-            Foot.SetConnectedAnchor(Fender.Transform.position + Fender.Transform.up * _radius);
+            Foot.SetConnectedAnchor(Fender.Transform.Position + Fender.Transform.Up * _radius);
         }
 
         public override void Attach(PhysBoneGroup group)
@@ -273,7 +274,7 @@ namespace VAT.Avatars.Muscular
 
         public float3 GetCenterOfPressure()
         {
-            return Fender.Transform.position;
+            return Fender.Transform.Position;
         }
     }
 }

@@ -61,13 +61,13 @@ namespace VAT.Avatars.Skeletal
         {
             base.BindPose();
 
-            MetaCarpal.localPosition = _proportions.metaCarpalTransform.position;
-            MetaCarpal.localRotation = _proportions.metaCarpalTransform.rotation;
+            MetaCarpal.localPosition = _proportions.metaCarpalTransform.Position;
+            MetaCarpal.localRotation = _proportions.metaCarpalTransform.Rotation;
 
-            Proximal.localPosition = _proportions.proximalTransform.position;
-            Proximal.localRotation = _proportions.proximalTransform.rotation;
+            Proximal.localPosition = _proportions.proximalTransform.Position;
+            Proximal.localRotation = _proportions.proximalTransform.Rotation;
 
-            Middle.localRotation = _proportions.middleTransform.rotation;
+            Middle.localRotation = _proportions.middleTransform.Rotation;
 
             _proximalLength = _proportions.proximalEllipsoid.height;
             _middleLength = _proportions.middleEllipsoid.height;

@@ -4,6 +4,8 @@ using VAT.Shared.Extensions;
 using VAT.Shared;
 using VAT.Packaging;
 using VAT.Shared.Data;
+using VAT.Shared.Utilities;
+
 
 
 #if UNITY_EDITOR
@@ -12,7 +14,7 @@ using UnityEditor;
 
 namespace VAT.Pooling
 {
-    public sealed class Spawner : MonoBehaviour, ITriggerable
+    public sealed class Spawner : MonoBehaviour
     {
         [SerializeField]
         [Tooltip("The spawnable to place.")]
@@ -109,10 +111,10 @@ namespace VAT.Pooling
             {
                 var scale = _useScale ? this.transform.lossyScale : Vector3.one;
 
-                SimpleTransform transform = SimpleTransform.Create(this.transform.position, this.transform.rotation, scale);
+                SimpleTransform transform = new(this.transform.position, this.transform.rotation, scale);
 
                 var bounds = shard.Bounds;
-                Gizmos.matrix = transform.localToWorldMatrix;
+                Gizmos.matrix = transform.LocalToWorldMatrix;
 
                 Gizmos.color = new Color(1f, 0f, 1f);
                 Gizmos.DrawMesh(shard.PreviewMesh?.EditorAssetT);
@@ -127,7 +129,11 @@ namespace VAT.Pooling
             var questionMark = Resources.Load<GameObject>("Question Mark");
             if (questionMark != null)
             {
-                questionMark.DrawGameObject(transform, Color.red, false);
+                using var tempMatrix = new TempGizmoMatrix();
+
+                Gizmos.matrix = transform.localToWorldMatrix;
+
+                Gizmos.DrawMesh(questionMark.GetComponentInChildren<MeshFilter>().sharedMesh);
             }
             else
             {

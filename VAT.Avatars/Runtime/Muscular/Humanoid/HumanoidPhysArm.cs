@@ -137,10 +137,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = clavicle,
-                bottomTransform = SimpleTransform.Create(offset + down() * proportions.clavicleEllipsoid.height, quaternion.identity),
+                bottomTransform = new SimpleTransform(offset + down() * proportions.clavicleEllipsoid.height, quaternion.identity),
 
                 top = clavicle,
-                topTransform = SimpleTransform.Create(offset + up() * proportions.clavicleEllipsoid.height, quaternion.identity),
+                topTransform = new SimpleTransform(offset + up() * proportions.clavicleEllipsoid.height, quaternion.identity),
             };
 
             // Create mesh
@@ -156,10 +156,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = scapula,
-                bottomTransform = SimpleTransform.Create(down() * proportions.shoulderBladeEllipsoid.height, quaternion.identity),
+                bottomTransform = new SimpleTransform(down() * proportions.shoulderBladeEllipsoid.height, quaternion.identity),
 
                 top = scapula,
-                topTransform = SimpleTransform.Create(up() * proportions.shoulderBladeEllipsoid.height, quaternion.identity),
+                topTransform = new SimpleTransform(up() * proportions.shoulderBladeEllipsoid.height, quaternion.identity),
             };
 
             // Create mesh
@@ -178,10 +178,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = upperArm,
-                bottomTransform = SimpleTransform.Create(float3.zero, rotation),
+                bottomTransform = new SimpleTransform(float3.zero, rotation),
 
                 top = elbow,
-                topTransform = SimpleTransform.Create(forward() * proportions.upperArmEllipsoid.height, rotation),
+                topTransform = new SimpleTransform(forward() * proportions.upperArmEllipsoid.height, rotation),
             };
 
             // Create mesh
@@ -200,10 +200,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = elbow,
-                bottomTransform = SimpleTransform.Create(float3.zero, rotation),
+                bottomTransform = new SimpleTransform(float3.zero, rotation),
 
                 top = wrist,
-                topTransform = SimpleTransform.Create(forward() * proportions.elbowEllipsoid.height, rotation),
+                topTransform = new SimpleTransform(forward() * proportions.elbowEllipsoid.height, rotation),
             };
 
             // Create mesh

@@ -111,17 +111,17 @@ namespace VAT.Avatars.Skeletal
             {
                 var rot = _payload.GetRoot();
 
-                rot.rotation = PhysicsRotation;
+                rot.Rotation = PhysicsRotation;
 
-                rot.position += PhysicsPosition - rot.TransformPoint(head.position);
+                rot.Position += PhysicsPosition - rot.TransformPoint(head.Position);
 
                 _payload.SetRoot(rot);
 
                 // Get offset
-                var relativeTransform = SimpleTransform.Create(rot.TransformPoint(head.position), LocoLeg.Knee.rotation);
+                var relativeTransform = new SimpleTransform(rot.TransformPoint(head.Position), LocoLeg.Knee.rotation);
                 var thing = relativeTransform.TransformPoint(Flof);
 
-                var offset = thing - rot.position;
+                var offset = thing - rot.Position;
                 offset = Quaternion.Inverse(PhysicsRotation) * offset;
                 offset.xz = 0f;
                 floorOffset = PhysicsRotation * offset;
@@ -160,14 +160,14 @@ namespace VAT.Avatars.Skeletal
         {
             ShimbleWam = true;
             var relativeTransform = skeleton.GetEyeCenter();
-            relativeTransform.rotation = skeleton.LocoLeg.Bones[0].Transform.rotation;
+            relativeTransform.Rotation = skeleton.LocoLeg.Bones[0].Transform.Rotation;
 
             var floor = skeleton.GetFloor();
 
-            Flof = relativeTransform.InverseTransformPoint(floor.position);
+            Flof = relativeTransform.InverseTransformPoint(floor.Position);
 
-            PhysicsRotation = skeleton.Spine.Root.Transform.rotation;
-            PhysicsPosition = skeleton.GetEyeCenter().position;
+            PhysicsRotation = skeleton.Spine.Root.Transform.Rotation;
+            PhysicsPosition = skeleton.GetEyeCenter().Position;
 
             _physSkeleton = skeleton;
         }

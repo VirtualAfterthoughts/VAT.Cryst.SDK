@@ -12,6 +12,7 @@ using UnityEngine;
 using VAT.Input.Data;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
+using VAT.Shared.Utilities;
 
 namespace VAT.Interaction
 {
@@ -39,7 +40,7 @@ namespace VAT.Interaction
 
         public virtual float GetWorldRadius()
         {
-            return transform.lossyScale.Maximum() * _radius;
+            return transform.lossyScale.Max() * _radius;
         }
 
         private void Awake()
@@ -56,10 +57,10 @@ namespace VAT.Interaction
 
             var normalRelative = point.GetPressureCenterInHost(pose).InverseTransformDirection(point.GetNormalInHost());
 
-            pivot.position -= pivot.TransformDirection(normalRelative) * GetWorldRadius();
+            pivot.Position -= pivot.TransformDirection(normalRelative) * GetWorldRadius();
 
             var host = GetHostGameObject().transform;
-            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
+            var hostTransform = new SimpleTransform(host.position, host.rotation);
 
             return hostTransform.InverseTransform(pivot);
         }
@@ -70,13 +71,13 @@ namespace VAT.Interaction
 
             var rotation = target.rotation;
 
-            return SimpleTransform.Create(target.position, rotation);
+            return new SimpleTransform(target.position, rotation);
         }
 
         public override SimpleTransform GetPivotInInteractor(PalmPoint point, HandPoseData pose)
         {
             var grabPoint = base.GetPivotInInteractor(point, pose);
-            grabPoint.position += math.down() * GetWorldRadius();
+            grabPoint.Position += math.down() * GetWorldRadius();
             return grabPoint;
         }
 
@@ -99,7 +100,7 @@ namespace VAT.Interaction
             var axis = offset * Vector3.forward;
             var secondaryAxis = offset * Vector3.up;
 
-            using (var color = TempGizmoColor.Create())
+            using (var color = new TempGizmoColor())
             {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawLine(target.position, target.position + axis * worldRadius * 2f);

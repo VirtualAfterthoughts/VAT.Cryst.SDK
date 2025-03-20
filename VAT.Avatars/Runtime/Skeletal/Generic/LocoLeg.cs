@@ -10,6 +10,7 @@ using VAT.Shared.Extensions;
 namespace VAT.Avatars.Skeletal
 {
     using Unity.Mathematics;
+    using VAT.Shared.Math;
 
     public class LocoLeg : DataBoneGroup
     {
@@ -58,12 +59,12 @@ namespace VAT.Avatars.Skeletal
             _avatarPayload.TryGetHead(out SimpleTransform head);
             head = root.Transform(head);
 
-            _trackedDebt += (Vector3)PhysicsExtensions.GetLinearVelocity(root.TransformPoint(_localHead), head.position);
-            _localHead = root.InverseTransformPoint(head.position);
+            _trackedDebt += (Vector3)Derivatives.GetLinearVelocity(root.TransformPoint(_localHead), head.Position);
+            _localHead = root.InverseTransformPoint(head.Position);
 
             var parent = Knee.Parent;
             var forward = parent.forward;
-            var up = root.up;
+            var up = root.Up;
             var flattened = ((Vector3)forward).FlattenNeck(parent.up, up);
 
             Knee.rotation = Quaternion.LookRotation(flattened, up);

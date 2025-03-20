@@ -60,8 +60,8 @@ namespace VAT.Avatars.Muscular
 
             Root.ConfigureJoint(500000000f);
 
-            Sacrum.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Free, ConfigurableJointMotion.Free);
-            Root.ConfigurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
+            Sacrum.ConfigurableJoint.ConfigurableJoint.SetMotion(ConfigurableJointMotion.Free, ConfigurableJointMotion.Free);
+            Root.ConfigurableJoint.ConfigurableJoint.SetMotion(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free);
 
             // Joint limits
             var l1Joint = L1Vertebra.ConfigurableJoint.ConfigurableJoint;
@@ -106,25 +106,25 @@ namespace VAT.Avatars.Muscular
             var sacrumTarget = Root.TransformBone(_spine.Root, _spine.Sacrum);
             Sacrum.Solve(sacrumTarget);
 
-            Sacrum.SetConnectedAnchor(sacrumTarget.position);
+            Sacrum.SetConnectedAnchor(sacrumTarget.Position);
 
             var l1Target = Sacrum.TransformBone(_spine.Sacrum, _spine.L1Vertebra);
             L1Vertebra.Solve(l1Target);
 
             L1Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
-            L1Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _spine.L1Vertebra.Transform.InverseTransformPoint(_spine.Sacrum.Transform.position);
+            L1Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _spine.L1Vertebra.Transform.InverseTransformPoint(_spine.Sacrum.Transform.Position);
 
             var t7Target = L1Vertebra.TransformBone(_spine.L1Vertebra, _spine.T7Vertebra);
             T7Vertebra.Solve(t7Target);
 
             T7Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
-            T7Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _spine.T7Vertebra.Transform.InverseTransformPoint(_spine.L1Vertebra.Transform.position);
+            T7Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _spine.T7Vertebra.Transform.InverseTransformPoint(_spine.L1Vertebra.Transform.Position);
 
             var t1Target = T7Vertebra.TransformBone(_spine.T7Vertebra, _spine.T1Vertebra);
             T1Vertebra.Solve(t1Target);
 
             T1Vertebra.ConfigurableJoint.ConfigurableJoint.connectedAnchor = Vector3.zero;
-            T1Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _spine.T1Vertebra.Transform.InverseTransformPoint(_spine.T7Vertebra.Transform.position);
+            T1Vertebra.ConfigurableJoint.ConfigurableJoint.anchor = _spine.T1Vertebra.Transform.InverseTransformPoint(_spine.T7Vertebra.Transform.Position);
         }
 
         public Mesh GenerateUpperChestMesh(HumanoidSpineProportions proportions, HumanoidNeckProportions neck)
@@ -138,20 +138,20 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh collar = new()
             {
                 bottom = upperChest,
-                bottomTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                bottomTransform = new SimpleTransform(float3.zero, quaternion.identity),
 
                 top = lowerNeck,
-                topTransform = SimpleTransform.Create(forward() * -proportions.upperChestOffsetZ + up() * neck.lowerNeckEllipsoid.height, quaternion.identity),
+                topTransform = new SimpleTransform(forward() * -proportions.upperChestOffsetZ + up() * neck.lowerNeckEllipsoid.height, quaternion.identity),
             };
 
             // Create upper chest -> chest
             EllipseCylinderMesh breast = new()
             {
                 bottom = chest,
-                bottomTransform = SimpleTransform.Create(forward() * proportions.chestOffsetZ + down() * proportions.upperChestEllipsoid.height, quaternion.identity),
+                bottomTransform = new SimpleTransform(forward() * proportions.chestOffsetZ + down() * proportions.upperChestEllipsoid.height, quaternion.identity),
 
                 top = upperChest,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Create mesh
@@ -168,10 +168,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = spine,
-                bottomTransform = SimpleTransform.Create(forward() * proportions.spineOffsetZ + down() * proportions.chestEllipsoid.height, quaternion.identity),
+                bottomTransform = new SimpleTransform(forward() * proportions.spineOffsetZ + down() * proportions.chestEllipsoid.height, quaternion.identity),
 
                 top = chest,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Create mesh
@@ -188,10 +188,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = pelvis,
-                bottomTransform = SimpleTransform.Create(forward() * proportions.pelvisOffsetZ + down() * proportions.spineEllipsoid.height, quaternion.identity),
+                bottomTransform = new SimpleTransform(forward() * proportions.pelvisOffsetZ + down() * proportions.spineEllipsoid.height, quaternion.identity),
 
                 top = spine,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Create mesh
@@ -208,10 +208,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = groin,
-                bottomTransform = SimpleTransform.Create(down() * proportions.pelvisEllipsoid.height, quaternion.identity),
+                bottomTransform = new SimpleTransform(down() * proportions.pelvisEllipsoid.height, quaternion.identity),
 
                 top = pelvis,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Create mesh

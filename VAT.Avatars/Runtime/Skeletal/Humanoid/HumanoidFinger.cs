@@ -46,14 +46,14 @@ namespace VAT.Avatars.Skeletal
 
         public quaternion defaultRotation = quaternion.identity;
 
-        public SimpleTransform target = SimpleTransform.Default;
+        public SimpleTransform target = SimpleTransform.Identity;
 
         public bool isLeft;
 
-        public SimpleTransform offsetHand = SimpleTransform.Default;
+        public SimpleTransform offsetHand = SimpleTransform.Identity;
         public bool shouldOffset = false;
 
-        private SimpleTransform _lastOffsetHand = SimpleTransform.Default;
+        private SimpleTransform _lastOffsetHand = SimpleTransform.Identity;
 
         public override void Initiate()
         {
@@ -68,13 +68,13 @@ namespace VAT.Avatars.Skeletal
         {
             base.BindPose();
 
-            MetaCarpal.localPosition = _proportions.metaCarpalTransform.position;
-            MetaCarpal.localRotation = _proportions.metaCarpalTransform.rotation;
+            MetaCarpal.localPosition = _proportions.metaCarpalTransform.Position;
+            MetaCarpal.localRotation = _proportions.metaCarpalTransform.Rotation;
 
-            Proximal.localPosition = _proportions.proximalTransform.position;
-            Proximal.localRotation = _proportions.proximalTransform.rotation;
+            Proximal.localPosition = _proportions.proximalTransform.Position;
+            Proximal.localRotation = _proportions.proximalTransform.Rotation;
 
-            Middle.localRotation = _proportions.middleTransform.rotation;
+            Middle.localRotation = _proportions.middleTransform.Rotation;
 
             _proximalLength = _proportions.proximalEllipsoid.height;
             _middleLength = _proportions.middleEllipsoid.height;
@@ -202,7 +202,7 @@ namespace VAT.Avatars.Skeletal
             if (shouldOffset)
             {
                 float lerp = Smoothing.CalculateDecay(24f, Time.deltaTime);
-                var newOffset = SimpleTransform.Create(Vector3.Slerp(_lastOffsetHand.position, offsetHand.position, lerp), Quaternion.Slerp(_lastOffsetHand.rotation, offsetHand.rotation, lerp));
+                var newOffset = new SimpleTransform(Vector3.Slerp(_lastOffsetHand.Position, offsetHand.Position, lerp), Quaternion.Slerp(_lastOffsetHand.Rotation, offsetHand.Rotation, lerp));
                 _lastOffsetHand = newOffset;
 
                 parent = parent.Transform(newOffset);
@@ -210,14 +210,14 @@ namespace VAT.Avatars.Skeletal
 
             var target = parent.Transform(this.target);
 
-            Vector3 vector = target.position - Proximal.position;
+            Vector3 vector = target.Position - Proximal.position;
 
             float a = vector.magnitude;
             float b = _proportions.proximalEllipsoid.height;
             float c = _proportions.middleEllipsoid.height;
 
-            float A = Mathf.Acos(((Mathf.Pow(a, 2f) + Mathf.Pow(b, 2f) - Mathf.Pow(c, 2f)) / (2f * a * b)).SinClamp());
-            float B = Mathf.Acos(((Mathf.Pow(b, 2f) + Mathf.Pow(c, 2f) - Mathf.Pow(a, 2f)) / (2f * b * c)).SinClamp());
+            float A = Mathf.Acos(((Mathf.Pow(a, 2f) + Mathf.Pow(b, 2f) - Mathf.Pow(c, 2f)) / (2f * a * b)).ClampSine());
+            float B = Mathf.Acos(((Mathf.Pow(b, 2f) + Mathf.Pow(c, 2f) - Mathf.Pow(a, 2f)) / (2f * b * c)).ClampSine());
 
             Proximal.rotation = Quaternion.LookRotation(vector, Quaternion.AngleAxis(-90f, Proximal.right) * vector);
             Proximal.rotation = Quaternion.AngleAxis(A * Mathf.Rad2Deg, -Proximal.right) * Proximal.rotation;
@@ -225,10 +225,10 @@ namespace VAT.Avatars.Skeletal
             Middle.rotation = Quaternion.AngleAxis(180f - B * Mathf.Rad2Deg, Proximal.right) * Proximal.rotation;
 
             // Reach
-            var rightOffset = Quaternion.FromToRotation(target.right, Middle.right);
-            var targetTip = target.position + target.forward * _distalLength;
+            var rightOffset = Quaternion.FromToRotation(target.Right, Middle.right);
+            var targetTip = target.Position + target.Forward * _distalLength;
 
-            Distal.rotation = rightOffset * Quaternion.LookRotation(math.normalize(targetTip - Distal.position), target.up);
+            Distal.rotation = rightOffset * Quaternion.LookRotation(math.normalize(targetTip - Distal.position), target.Up);
 
             // Blend for open pose (REPLACE IN FUTURE)
             float blendCurl = 1f - blendPose.phalanges[0].curl;
@@ -237,7 +237,7 @@ namespace VAT.Avatars.Skeletal
 
             _lastBlend = blendCurl;
 
-            var gripOffset = parent.rotation * Quaternion.Inverse(realParent.rotation);
+            var gripOffset = parent.Rotation * Quaternion.Inverse(realParent.Rotation);
 
             // If quaternion angle is > 180 degrees (w is negative) convert to shortened angle
             if (gripOffset.w < 0)

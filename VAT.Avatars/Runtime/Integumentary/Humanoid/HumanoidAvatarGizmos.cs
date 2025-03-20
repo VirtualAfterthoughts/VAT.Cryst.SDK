@@ -16,6 +16,7 @@ namespace VAT.Avatars.Integumentary
 {
     using System.Linq;
     using Unity.Mathematics;
+    using VAT.Shared.Utilities;
 
     public partial class HumanoidAvatar : Avatar
     {
@@ -71,7 +72,7 @@ namespace VAT.Avatars.Integumentary
                 return;
             }
 
-            using (TempGizmoColor.Create())
+            using (new TempGizmoColor())
             {
                 float3? eyeCenter = EditorGetEyeCenter();
 

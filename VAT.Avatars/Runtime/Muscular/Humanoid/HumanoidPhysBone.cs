@@ -105,13 +105,13 @@ namespace VAT.Avatars.Muscular
                     spring = 5e+06f,
                     damper = 1e+06f,
                 };
-                _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
+                _configurableJoint.ConfigurableJoint.SetMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
             }
             else
             {
                 Joint.ConnectedBody = null;
 
-                _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Free);
+                _configurableJoint.ConfigurableJoint.SetMotion(ConfigurableJointMotion.Free);
             }
 
             _configurableJoint.RecalculateJointSpace();

@@ -84,14 +84,14 @@ namespace VAT.Characters
 
             if (_enabled && Mathf.Abs(_smoothAxis) > 0.01f)
             {
-                float crouchDelta = _smoothAxis * Time.deltaTime * 2f * behaviourSpace.scale.y;
+                float crouchDelta = _smoothAxis * Time.deltaTime * 2f * behaviourSpace.Scale.y;
 
-                behaviourSpace.position += behaviourSpace.up * crouchDelta;
+                behaviourSpace.Position += behaviourSpace.Up * crouchDelta;
 
                 tipToeMult = 1f;
             }
 
-            float playerHeight = behaviourSpace.scale.y * _playerHeight;
+            float playerHeight = behaviourSpace.Scale.y * _playerHeight;
 
             float headHeight = playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
 
@@ -99,7 +99,7 @@ namespace VAT.Characters
 
             float clampedPos = Mathf.Clamp(headPos, 0f, playerHeight * tipToeMult);
 
-            behaviourSpace.position += behaviourSpace.up * (clampedPos - headPos);
+            behaviourSpace.Position += behaviourSpace.Up * (clampedPos - headPos);
 
             _behaviourRig.SetBehaviourSpace(behaviourSpace);
         }
@@ -107,7 +107,7 @@ namespace VAT.Characters
         public float GetHeadY(float headHeight)
         {
             var localHead = _behaviourRig.GetLocalHead();
-            float headPos = (localHead.position - localHead.forward * headHeight + localHead.up * headHeight).y;
+            float headPos = (localHead.Position - localHead.Forward * headHeight + localHead.Up * headHeight).y;
 
             return headPos;
         }
@@ -116,13 +116,13 @@ namespace VAT.Characters
         {
             var behaviourSpace = _behaviourRig.GetBehaviourSpace();
 
-            float playerHeight = _playerHeight * behaviourSpace.scale.y;
+            float playerHeight = _playerHeight * behaviourSpace.Scale.y;
 
             float headHeight = playerHeight * BodyMeasurementHelper.HeadHeightPercent * 0.5f;
 
             float headPos = GetHeadY(headHeight);
 
-            behaviourSpace.position += behaviourSpace.up * (playerHeight - headPos);
+            behaviourSpace.Position += behaviourSpace.Up * (playerHeight - headPos);
 
             _behaviourRig.SetBehaviourSpace(behaviourSpace);
         }

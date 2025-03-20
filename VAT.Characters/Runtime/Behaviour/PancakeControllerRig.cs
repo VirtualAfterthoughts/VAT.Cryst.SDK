@@ -76,7 +76,7 @@ namespace VAT.Characters
 
         public override bool TryGetArm(Handedness handedness, out IInputArm arm)
         {
-            var root = SimpleTransform.Create(transform.position, transform.rotation);
+            var root = new SimpleTransform(transform.position, transform.rotation);
 
             switch (handedness)
             {
@@ -84,10 +84,10 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist.position, _leftWrist.rotation)), _leftController));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(new SimpleTransform(_leftWrist.position, _leftWrist.rotation)), _leftController));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist.position, _rightWrist.rotation)), _rightController));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(new SimpleTransform(_rightWrist.position, _rightWrist.rotation)), _rightController));
                     return true;
             }
         }

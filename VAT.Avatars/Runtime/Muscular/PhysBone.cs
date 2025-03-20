@@ -32,11 +32,11 @@ namespace VAT.Avatars.Muscular
 
         public virtual SimpleTransform Transform
         {
-            get => SimpleTransform.Create(_transform.position, _transform.rotation, _transform.localScale);
+            get => new SimpleTransform(_transform.position, _transform.rotation, _transform.localScale);
             set
             {
-                _transform.SetPositionAndRotation(value.position, value.rotation);
-                _transform.localScale = value.scale;
+                _transform.SetPositionAndRotation(value.Position, value.Rotation);
+                _transform.localScale = value.Scale;
             }
         }
 

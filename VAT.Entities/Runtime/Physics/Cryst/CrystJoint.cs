@@ -22,7 +22,7 @@ namespace VAT.Entities
     /// <summary>
     /// The abstraction of a physics joint in Crystalline. When adding through code, invoke <see cref="CreateItem"/>.
     /// </summary>
-    public abstract class CrystJoint : MonoBehaviour, IRecreatable
+    public abstract class CrystJoint : MonoBehaviour
     {
         public static ComponentCache<CrystJoint> Cache = new();
 

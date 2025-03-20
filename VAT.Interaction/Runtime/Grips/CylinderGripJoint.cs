@@ -1,11 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
+using VAT.Shared.Math;
 
 namespace VAT.Interaction
 {
@@ -27,7 +24,7 @@ namespace VAT.Interaction
 
         private ConfigurableJoint _joint = null;
 
-        private ConfigurableJointSpace _jointSpace = null;
+        private JointSpace _jointSpace = null;
 
         public ConfigurableJoint Joint => _joint;
 
@@ -45,7 +42,7 @@ namespace VAT.Interaction
 
             var grabPoint = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, gripPose));
 
-            float dot = Vector3.Dot(grabPoint.up, _center.up);
+            float dot = Vector3.Dot(grabPoint.Up, _center.up);
 
             // Match grab rotation, so that the joint initializes with proper target
             // Since we can't set anchorRotation in Unity
@@ -58,8 +55,8 @@ namespace VAT.Interaction
             rb.transform.rotation = centerRotation * (grabPoint.InverseTransformRotation(rb.transform.rotation));
 
             var joint = rb.gameObject.AddComponent<ConfigurableJoint>();
-            joint.axis = Quaternion.Inverse(initialRotation) * grabPoint.up;
-            joint.secondaryAxis = Quaternion.Inverse(initialRotation) * grabPoint.forward;
+            joint.axis = Quaternion.Inverse(initialRotation) * grabPoint.Up;
+            joint.secondaryAxis = Quaternion.Inverse(initialRotation) * grabPoint.Forward;
 
             var host = grip.GetHost();
 
@@ -74,12 +71,12 @@ namespace VAT.Interaction
 
             grabPoint = palm.GetHostTransform().Transform(grip.GetPivotInInteractor(palm, gripPose));
 
-            joint.SetWorldAnchor((Vector3)grabPoint.position);
+            joint.SetWorldAnchor((Vector3)grabPoint.Position);
             joint.SetWorldConnectedAnchor(_center.position);
 
             _joint.swapBodies = true;
 
-            _jointSpace = new ConfigurableJointSpace(_joint);
+            _jointSpace = new JointSpace(_joint);
 
             rb.transform.rotation = initialRotation;
         }
@@ -144,7 +141,7 @@ namespace VAT.Interaction
 
         private Vector3 GetTargetPosition(SimpleTransform target)
         {
-            var targetPos = _jointSpace.GetTargetPositionWorld(target.position);
+            var targetPos = _jointSpace.GetTargetPositionWorld(target.Position);
 
             targetPos.y = 0f;
             targetPos.z = 0f;
@@ -154,7 +151,7 @@ namespace VAT.Interaction
 
         private Quaternion GetTargetRotation(SimpleTransform target)
         {
-            Quaternion targetRot = _jointSpace.GetTargetRotationWorld(target.rotation);
+            Quaternion targetRot = _jointSpace.GetTargetRotationWorld(target.Rotation);
 
             return targetRot;
         }
@@ -168,7 +165,7 @@ namespace VAT.Interaction
             var lastTargetRot = _joint.targetRotation;
             _joint.targetRotation = Quaternion.RotateTowards(targetRot, _joint.targetRotation, 10f * friction);
 
-            var targetAngularVelocity = PhysicsExtensions.GetAngularVelocity(lastTargetRot, _joint.targetRotation);
+            var targetAngularVelocity = Derivatives.GetAngularVelocity(lastTargetRot, _joint.targetRotation);
             _joint.targetAngularVelocity = targetAngularVelocity;
 
             var targetPos = GetTargetPosition(target);
@@ -178,7 +175,7 @@ namespace VAT.Interaction
 
         public void FreeJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
+            _joint.SetMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
             _joint.rotationDriveMode = RotationDriveMode.XYAndZ;
 
             _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 5f, positionDamper = 0f, maximumForce = float.MaxValue };
@@ -190,7 +187,7 @@ namespace VAT.Interaction
 
         public void LockJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Limited);
+            _joint.SetMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Limited);
             _joint.angularXMotion = ConfigurableJointMotion.Free;
 
             _joint.angularYLimit = _joint.angularZLimit = new SoftJointLimit() { limit = 100f };

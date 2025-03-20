@@ -1,14 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
 using UnityEditor;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
-
-using VAT.Shared.Extensions;
 
 using Object = UnityEngine.Object;
 
@@ -223,8 +218,8 @@ namespace VAT.Packaging.Editor
 
             crystal.OnValidate();
 
-            shard.ForceSerialize();
-            crystal.ForceSerialize();
+            EditorUtility.SetDirty(shard);
+            EditorUtility.SetDirty(crystal);
 
             AssetPackager.EditorForceRefresh();
         }
@@ -266,8 +261,8 @@ namespace VAT.Packaging.Editor
 
             _crystal.OnValidate();
 
-            shard.ForceSerialize();
-            _crystal.ForceSerialize();
+            EditorUtility.SetDirty(shard);
+            EditorUtility.SetDirty(_crystal);
 
             AssetPackager.EditorForceRefresh();
 

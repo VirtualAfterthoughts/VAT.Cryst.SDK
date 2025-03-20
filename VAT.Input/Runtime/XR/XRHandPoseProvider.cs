@@ -74,10 +74,10 @@ namespace VAT.Input
 
             if (hand.GetJoint(XRHandJointID.Wrist).TryGetPose(out var pose))
             {
-                return SimpleTransform.Create(pose.position, pose.rotation);
+                return new SimpleTransform(pose.position, pose.rotation);
             }
 
-            return SimpleTransform.Default;
+            return SimpleTransform.Identity;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace VAT.Interaction
 
             rb.transform.rotation = initialRotation;
 
-            joint.SetWorldAnchor((Vector3)grabPoint.position);
+            joint.SetWorldAnchor((Vector3)grabPoint.Position);
             joint.SetWorldConnectedAnchor(_center.position);
         }
 
@@ -82,7 +82,7 @@ namespace VAT.Interaction
 
         public void FreeJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
+            _joint.SetMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
             _joint.rotationDriveMode = RotationDriveMode.Slerp;
 
             _joint.xDrive = _joint.yDrive = _joint.zDrive = new JointDrive() { positionSpring = 5f, positionDamper = 0f, maximumForce = float.MaxValue };
@@ -94,7 +94,7 @@ namespace VAT.Interaction
 
         public void LockJoints()
         {
-            _joint.SetJointMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
+            _joint.SetMotion(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Free);
 
             _joint.linearLimit = new SoftJointLimit() { limit = _radius };
             _joint.linearLimitSpring = new SoftJointLimitSpring() { spring = 500f, damper = 1f };

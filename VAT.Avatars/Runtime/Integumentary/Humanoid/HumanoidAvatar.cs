@@ -39,7 +39,7 @@ namespace VAT.Avatars.Integumentary
 
         [HideInInspector]
         [Tooltip("The initial eye center position local to the avatar transform at runtime.")]
-        public SerializedNullableVector3 runtimeEyeCenter = null;
+        public Vector3 runtimeEyeCenter = Vector3.zero;
 
         private Transform _physicsRoot;
 
@@ -77,7 +77,7 @@ namespace VAT.Avatars.Integumentary
             {
                 var localEyeCenter = transform.InverseTransformPoint(editorEyeCenter.Value);
 
-                if (!runtimeEyeCenter.HasValue() || !localEyeCenter.Approximately(runtimeEyeCenter.GetValueOrDefault()))
+                if (!localEyeCenter.Approximately(runtimeEyeCenter))
                 {
                     runtimeEyeCenter = localEyeCenter;
                     EditorUtility.SetDirty(this);
@@ -137,7 +137,8 @@ namespace VAT.Avatars.Integumentary
 
         protected override void OnInitiateRuntime()
         {
-            _physicsRoot = GameObjectExtensions.CreateGameObject(PhysSkeletonName, transform.parent).transform;
+            _physicsRoot = new GameObject(PhysSkeletonName).transform;
+            _physicsRoot.SetParent(transform.parent, false);
 
             base.OnInitiateRuntime();
 
@@ -146,14 +147,7 @@ namespace VAT.Avatars.Integumentary
 
             eyeCenter.rotation = transform.rotation;
 
-            if (runtimeEyeCenter.HasValue())
-            {
-                eyeCenter.position = transform.TransformPoint(runtimeEyeCenter.Value);
-            }
-            else
-            {
-                throw new MissingReferenceException("No HumanoidAvatar eye center was found at runtime! Please recompile your avatar!");
-            }
+            eyeCenter.position = transform.TransformPoint(runtimeEyeCenter);
 
             // Properly initiate the physics skeleton
             Skeleton.PhysSkeleton.InitiateRuntime();

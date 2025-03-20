@@ -15,8 +15,8 @@ namespace VAT.Characters
         public override SimpleTransform GetProximityCenterInHost()
         {
             var grabPoint = GetUpperPalmInHost();
-            Vector3 direction = Vector3.Lerp(GetNormalInHost(), grabPoint.forward, 0.5f);
-            return SimpleTransform.Create((Vector3)grabPoint.position + (direction * radius), grabPoint.rotation);
+            Vector3 direction = Vector3.Lerp(GetNormalInHost(), grabPoint.Forward, 0.5f);
+            return new SimpleTransform((Vector3)grabPoint.Position + (direction * radius), grabPoint.Rotation);
         }
 
         public override Vector3 GetNormalInHost()

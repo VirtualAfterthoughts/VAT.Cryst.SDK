@@ -15,6 +15,7 @@ using VAT.Input.Data;
 using VAT.Interaction;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
+using VAT.Shared.Utilities;
 
 namespace VAT.Avatars.Posing
 {
@@ -22,7 +23,7 @@ namespace VAT.Avatars.Posing
     public sealed class HumanoidHandPoser : HandPoser
     {
         [HideInInspector]
-        public SimpleTransform offset = SimpleTransform.Default;
+        public SimpleTransform offset = SimpleTransform.Identity;
 
         [HideInInspector]
         public HandProportions proportions;
@@ -103,11 +104,11 @@ namespace VAT.Avatars.Posing
                 var targetInHand = GrabTargetHelper.GetTargetInInteractor(palm, handPoseData);
                 var targetInWorld = GrabTargetHelper.CalculateDefaultTargetInWorld(targetGrip, palm, handPoseData);
 
-                transform.rotation = (targetInWorld.rotation * Quaternion.Inverse(palm.GetHostTransform().Transform(targetInHand).rotation) * transform.rotation);
+                transform.rotation = (targetInWorld.Rotation * Quaternion.Inverse(palm.GetHostTransform().Transform(targetInHand).Rotation) * transform.rotation);
 
                 Solve();
 
-                transform.position += (Vector3)(targetInWorld.position - palm.GetHostTransform().Transform(targetInHand).position);
+                transform.position += (Vector3)(targetInWorld.Position - palm.GetHostTransform().Transform(targetInHand).Position);
             }
         }
 
@@ -137,7 +138,7 @@ namespace VAT.Avatars.Posing
             if (_hand == null)
                 return;
 
-            using (TempGizmoColor.Create())
+            using (new TempGizmoColor())
             {
                 Gizmos.color = new Color(255, 10f, 0f, 255f) / 255f;
 

@@ -99,7 +99,7 @@ namespace VAT.Characters
 
         public override bool TryGetHead(out IInputJoint head)
         {
-            var simpleTransform = SimpleTransform.Create(transform.position, transform.rotation).InverseTransform(SimpleTransform.Create(_head.position, _head.rotation));
+            var simpleTransform = new SimpleTransform(transform.position, transform.rotation).InverseTransform(new SimpleTransform(_head.position, _head.rotation));
 
             head = new BasicJoint(simpleTransform);
             return true;
@@ -115,32 +115,32 @@ namespace VAT.Characters
                     arm = default;
                     return false;
                 case Handedness.LEFT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_leftWrist.position, _leftWrist.rotation)), null));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(new SimpleTransform(_leftWrist.position, _leftWrist.rotation)), null));
                     return true;
                 case Handedness.RIGHT:
-                    arm = new GenericArm(new GenericHand(root.InverseTransform(SimpleTransform.Create(_rightWrist.position, _rightWrist.rotation)), null));
+                    arm = new GenericArm(new GenericHand(root.InverseTransform(new SimpleTransform(_rightWrist.position, _rightWrist.rotation)), null));
                     return true;
             }
         }
 
         public SimpleTransform GetRoot()
         {
-            return SimpleTransform.Create(transform.position, transform.rotation, transform.lossyScale);
+            return new SimpleTransform(transform.position, transform.rotation, transform.lossyScale);
         }
 
         public void SetRoot(SimpleTransform root)
         {
-            transform.SetPositionAndRotation(root.position, root.rotation);
+            transform.SetPositionAndRotation(root.Position, root.Rotation);
         }
 
         public SimpleTransform GetBehaviourSpace()
         {
-            return SimpleTransform.Create(vrRoot.localPosition, vrRoot.localRotation, vrRoot.lossyScale);
+            return new SimpleTransform(vrRoot.localPosition, vrRoot.localRotation, vrRoot.lossyScale);
         }
 
         public void SetBehaviourSpace(SimpleTransform transform)
         {
-            vrRoot.SetLocalPositionAndRotation(transform.position, transform.rotation);
+            vrRoot.SetLocalPositionAndRotation(transform.Position, transform.Rotation);
         }
 
         public IInputHand GetPrimaryHand()

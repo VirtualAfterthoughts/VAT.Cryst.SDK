@@ -70,11 +70,11 @@ namespace VAT.Characters
 
             if (handedness == Handedness.LEFT)
             {
-                leftWrist.SetLocalPositionAndRotation(hand.Transform.position, hand.Transform.rotation);
+                leftWrist.SetLocalPositionAndRotation(hand.Transform.Position, hand.Transform.Rotation);
             }
             else
             {
-                rightWrist.SetLocalPositionAndRotation(hand.Transform.position, hand.Transform.rotation);
+                rightWrist.SetLocalPositionAndRotation(hand.Transform.Position, hand.Transform.Rotation);
             }
         }
 
@@ -107,7 +107,7 @@ namespace VAT.Characters
             if (behaviourRig != null)
             {
                 var root = behaviourRig.GetRoot();
-                transform.SetPositionAndRotation(root.position, root.rotation);
+                transform.SetPositionAndRotation(root.Position, root.Rotation);
             }
 
             GetInputs(behaviourRig, Handedness.LEFT, out var leftSecondary, out var leftTrigger);
@@ -178,10 +178,10 @@ namespace VAT.Characters
                 var behaviourRoot = behaviourRig.GetRoot();
                 var worldHead = behaviourRoot.Transform(head.Transform);
 
-                root.position = worldHead.position;
+                root.position = worldHead.Position;
                 root.localPosition = new Vector3(root.localPosition.x, 0f, root.localPosition.z);
 
-                var headForward = worldHead.forward;
+                var headForward = worldHead.Forward;
                 headForward = transform.InverseTransformDirection(headForward);
                 headForward.y = 0f;
                 headForward = transform.TransformDirection(headForward);

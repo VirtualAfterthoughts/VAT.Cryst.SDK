@@ -88,9 +88,9 @@ namespace VAT.Characters
 
                 var headInRoot = root.InverseTransform(head);
 
-                root.rotation = Quaternion.AngleAxis(_snapTurnAngle * Mathf.Sign(axis), root.up) * root.rotation;
+                root.Rotation = Quaternion.AngleAxis(_snapTurnAngle * Mathf.Sign(axis), root.Up) * root.Rotation;
 
-                root.position += head.position - root.Transform(headInRoot).position;
+                root.Position += head.Position - root.Transform(headInRoot).Position;
 
                 _behaviourRig.SetBehaviourSpace(root);
             }
@@ -114,9 +114,9 @@ namespace VAT.Characters
 
                 var headInRoot = root.InverseTransform(head);
 
-                root.rotation = Quaternion.AngleAxis(Time.deltaTime * _smoothAxis * 50f * _smoothTurnSpeed, root.up) * root.rotation;
+                root.Rotation = Quaternion.AngleAxis(Time.deltaTime * _smoothAxis * 50f * _smoothTurnSpeed, root.Up) * root.Rotation;
 
-                root.position += head.position - root.Transform(headInRoot).position;
+                root.Position += head.Position - root.Transform(headInRoot).Position;
 
                 _behaviourRig.SetBehaviourSpace(root);
             }

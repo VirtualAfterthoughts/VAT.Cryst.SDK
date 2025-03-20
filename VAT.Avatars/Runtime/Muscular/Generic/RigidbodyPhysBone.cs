@@ -7,7 +7,7 @@ using VAT.Entities.PhysX;
 
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
-using VAT.Shared.Utilities;
+using VAT.Shared.Math;
 
 namespace VAT.Avatars.Muscular
 {
@@ -83,18 +83,15 @@ namespace VAT.Avatars.Muscular
                     spring = 5e+06f,
                     damper = 1e+06f,
                 };
-                _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Limited);
+                _configurableJoint.ConfigurableJoint.SetMotion(ConfigurableJointMotion.Limited);
 
-                _configurableJoint.ConfigurableJoint.SetAngularLimits(_limits);
-                _configurableJoint.ConfigurableJoint.angularXMotion = _limits.IsFree(Axis.X) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
-                _configurableJoint.ConfigurableJoint.angularYMotion = _limits.IsFree(Axis.Y) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
-                _configurableJoint.ConfigurableJoint.angularZMotion = _limits.IsFree(Axis.Z) ? ConfigurableJointMotion.Free : ConfigurableJointMotion.Limited;
+                _limits.ApplyLimits(_configurableJoint.ConfigurableJoint);
             }
             else
             {
                 Joint.ConnectedBody = null;
 
-                _configurableJoint.ConfigurableJoint.SetJointMotion(ConfigurableJointMotion.Free);
+                _configurableJoint.ConfigurableJoint.SetMotion(ConfigurableJointMotion.Free);
             }
 
             _configurableJoint.RecalculateJointSpace();
@@ -114,10 +111,10 @@ namespace VAT.Avatars.Muscular
         {
             var space = Joint.JointSpace;
             var previousTarget = space.RawTargetRotation;
-            var currentTarget = space.InverseTransformTargetRotation(target.rotation, CrystSpace.WORLD);
+            var currentTarget = space.InverseTransformTargetRotation(target.Rotation, CrystSpace.WORLD);
 
             space.RawTargetRotation = currentTarget;
-            space.RawTargetAngularVelocity = PhysicsExtensions.GetAngularVelocity(previousTarget, currentTarget);
+            space.RawTargetAngularVelocity = Derivatives.GetAngularVelocity(previousTarget, currentTarget);
         }
     }
 }

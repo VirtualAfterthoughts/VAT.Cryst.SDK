@@ -170,10 +170,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = wrist,
-                bottomTransform = SimpleTransform.Create(float3.zero, rotation),
+                bottomTransform = new SimpleTransform(float3.zero, rotation),
 
                 top = knuckle,
-                topTransform = SimpleTransform.Create(math.forward() * proportions.handProportions.wristEllipsoid.height, rotation),
+                topTransform = new SimpleTransform(math.forward() * proportions.handProportions.wristEllipsoid.height, rotation),
             };
 
             // Create mesh
@@ -191,10 +191,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = knuckle,
-                bottomTransform = SimpleTransform.Create(float3.zero, rotation),
+                bottomTransform = new SimpleTransform(float3.zero, rotation),
 
                 top = knuckle,
-                topTransform = SimpleTransform.Create(math.forward() * proportions.handProportions.knuckleEllipsoid.height, rotation),
+                topTransform = new SimpleTransform(math.forward() * proportions.handProportions.knuckleEllipsoid.height, rotation),
             };
 
             // Create mesh

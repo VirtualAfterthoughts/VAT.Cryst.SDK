@@ -28,16 +28,16 @@ namespace VAT.Avatars.Art
             SimpleTransform toe = BoneGroup.Toe.Transform;
 
             // Upper leg twist
-            Vector3 twistUp = Quaternion.FromToRotation(pelvis.up, hip.up) * pelvis.forward;
-            float upperTwist = Vector3.SignedAngle(hip.forward, twistUp, hip.up);
+            Vector3 twistUp = Quaternion.FromToRotation(pelvis.Up, hip.Up) * pelvis.Forward;
+            float upperTwist = Vector3.SignedAngle(hip.Forward, twistUp, hip.Up);
 
-            hip.rotation = Quaternion.AngleAxis(upperTwist * 0.7f, hip.up) * hip.rotation;
+            hip.Rotation = Quaternion.AngleAxis(upperTwist * 0.7f, hip.Up) * hip.Rotation;
 
             // Lower leg twist
-            Vector3 twistLower = Quaternion.FromToRotation(hip.up, ankle.up) * hip.forward;
-            float lowerTwist = Vector3.SignedAngle(ankle.forward, twistLower, knee.up);
+            Vector3 twistLower = Quaternion.FromToRotation(hip.Up, ankle.Up) * hip.Forward;
+            float lowerTwist = Vector3.SignedAngle(ankle.Forward, twistLower, knee.Up);
 
-            knee.rotation = Quaternion.AngleAxis(lowerTwist * 0.7f, knee.up) * knee.rotation;
+            knee.Rotation = Quaternion.AngleAxis(lowerTwist * 0.7f, knee.Up) * knee.Rotation;
 
             UpperLeg.Solve(hip);
             LowerLeg.Solve(knee);

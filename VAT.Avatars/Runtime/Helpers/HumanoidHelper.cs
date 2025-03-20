@@ -129,46 +129,46 @@ namespace VAT.Avatars.Helpers
         {
             FingerProportions finger = default;
 
-            finger.metaCarpalTransform = SimpleTransform.Default;
-            finger.proximalTransform = SimpleTransform.Default;
-            finger.middleTransform = SimpleTransform.Default;
+            finger.metaCarpalTransform = SimpleTransform.Identity;
+            finger.proximalTransform = SimpleTransform.Identity;
+            finger.middleTransform = SimpleTransform.Identity;
 
-            Vector3 offset = descriptor.middle.Transform.position - descriptor.proximal.Transform.position;
+            Vector3 offset = descriptor.middle.Transform.Position - descriptor.proximal.Transform.Position;
             up = hand.Hand.Transform.TransformVector(up);
 
             quaternion direction = Quaternion.LookRotation(offset.normalized, up);
             quaternion worldToLocal = inverse(direction);
 
-            Vector3 endOffset = descriptor.distal.Transform.position - descriptor.middle.Transform.position;
+            Vector3 endOffset = descriptor.distal.Transform.Position - descriptor.middle.Transform.Position;
             quaternion endDirection = Quaternion.LookRotation(endOffset.normalized, up);
 
             if (descriptor.metaCarpal.HasTransform)
             {
-                var metaCarpal = SimpleTransform.Create(descriptor.metaCarpal.Transform.position, direction);
+                var metaCarpal = new SimpleTransform(descriptor.metaCarpal.Transform.Position, direction);
                 finger.metaCarpalTransform = hand.Hand.Transform.InverseTransform(metaCarpal);
 
-                finger.proximalTransform.position = metaCarpal.InverseTransformPoint(descriptor.proximal.Transform.position);
+                finger.proximalTransform.Position = metaCarpal.InverseTransformPoint(descriptor.proximal.Transform.Position);
             }
             else if (descriptor.proximal.HasTransform)
             {
-                var metaCarpal = SimpleTransform.Create(descriptor.proximal.Transform.position, direction);
+                var metaCarpal = new SimpleTransform(descriptor.proximal.Transform.Position, direction);
 
                 finger.metaCarpalTransform = hand.Hand.Transform.InverseTransform(metaCarpal);
 
-                finger.middleTransform.rotation = metaCarpal.InverseTransformRotation(endDirection);
+                finger.middleTransform.Rotation = metaCarpal.InverseTransformRotation(endDirection);
             }
 
             finger.phalanxCount = descriptor.distal.HasTransform ? 3 : 2;
 
             if (descriptor.middle.HasTransform)
             {
-                float dist = abs(mul(worldToLocal, descriptor.middle.Transform.position - descriptor.proximal.Transform.position).z);
+                float dist = abs(mul(worldToLocal, descriptor.middle.Transform.Position - descriptor.proximal.Transform.Position).z);
                 finger.proximalEllipsoid.height = dist;
 
                 if (descriptor.distal.HasTransform)
                 {
-                    finger.middleEllipsoid.height = abs(mul(worldToLocal, descriptor.distal.Transform.position - descriptor.middle.Transform.position).z);
-                    finger.distalEllipsoid.height = abs(mul(worldToLocal, descriptor.distal.Transform.position - descriptor.middle.Transform.position).z);
+                    finger.middleEllipsoid.height = abs(mul(worldToLocal, descriptor.distal.Transform.Position - descriptor.middle.Transform.Position).z);
+                    finger.distalEllipsoid.height = abs(mul(worldToLocal, descriptor.distal.Transform.Position - descriptor.middle.Transform.Position).z);
                 }
                 else
                 {

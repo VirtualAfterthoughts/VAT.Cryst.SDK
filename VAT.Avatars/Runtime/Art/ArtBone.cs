@@ -22,10 +22,10 @@ namespace VAT.Avatars.Art
             {
                 if (HasReference)
                 {
-                    return ArtReference.Transform.Transform(SimpleTransform.Inverse(ArtReference.ArtOffset));
+                    return ArtReference.Transform.Transform(ArtReference.ArtOffset.Inverse);
                 }
 
-                return SimpleTransform.Default;
+                return SimpleTransform.Identity;
             }
             set
             {
@@ -36,7 +36,7 @@ namespace VAT.Avatars.Art
             }
         }
 
-        private SimpleTransform _defaultTransform = SimpleTransform.Default;
+        private SimpleTransform _defaultTransform = SimpleTransform.Identity;
 
         IBone IBone.Parent => throw new System.NotImplementedException();
 

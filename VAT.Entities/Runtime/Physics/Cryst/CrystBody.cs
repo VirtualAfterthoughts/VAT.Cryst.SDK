@@ -14,7 +14,7 @@ namespace VAT.Entities
     /// <summary>
     /// The abstraction of a physics body in Crystalline. When adding through code, invoke <see cref="CreateItem"/>.
     /// </summary>
-    public abstract class CrystBody : MonoBehaviour, IRecreatable
+    public abstract class CrystBody : MonoBehaviour
     {
         public static ComponentCache<CrystBody> Cache = new();
 

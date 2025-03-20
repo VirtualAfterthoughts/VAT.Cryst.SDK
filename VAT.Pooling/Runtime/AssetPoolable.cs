@@ -24,7 +24,7 @@ namespace VAT.Pooling
         public bool IsLocked => _isLocked;
 
         private Transform _initialParent;
-        private SimpleTransform _spawnTransform = SimpleTransform.Default;
+        private SimpleTransform _spawnTransform = SimpleTransform.Identity;
 
         public virtual bool CanSpawn
         {
@@ -44,7 +44,7 @@ namespace VAT.Pooling
             Cache.Add(gameObject, this);
 
             _initialParent = transform.parent;
-            _spawnTransform = SimpleTransform.Create(transform.position, transform.rotation);
+            _spawnTransform = new(transform.position, transform.rotation);
         }
 
         private void OnDestroy()
@@ -71,7 +71,7 @@ namespace VAT.Pooling
 
             OnDespawn();
 
-            transform.SetPositionAndRotation(_spawnTransform.position, _spawnTransform.rotation);
+            transform.SetPositionAndRotation(_spawnTransform.Position, _spawnTransform.Rotation);
 
             gameObject.SetActive(true);
             OnSpawn(_id);
@@ -83,7 +83,7 @@ namespace VAT.Pooling
             OnSpawnDelegate?.Invoke(this, id);
             InternalPoolSpawnDelegate?.Invoke(this);
 
-            _spawnTransform = SimpleTransform.Create(transform.position, transform.rotation);
+            _spawnTransform = new(transform.position, transform.rotation);
         }
 
 #if UNITY_EDITOR
@@ -114,7 +114,7 @@ namespace VAT.Pooling
             OnDespawnDelegate?.Invoke(this);
             InternalPoolDespawnDelegate?.Invoke(this);
 
-            transform.EnsureParent(_initialParent);
+            transform.parent = _initialParent;
         }
 
         /// <summary>

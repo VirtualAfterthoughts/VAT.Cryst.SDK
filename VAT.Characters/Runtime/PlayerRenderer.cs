@@ -34,9 +34,9 @@ namespace VAT.Characters
 
                 var headTransform = head.Transform;
 
-                float distance = math.length(headTransform.position - eyeCenter.position);
+                float distance = math.length(headTransform.Position - eyeCenter.Position);
 
-                headTransform.position -= headTransform.forward * distance * 0.5f;
+                headTransform.Position -= headTransform.Forward * distance * 0.5f;
 
                 head.Transform = headTransform;
             }

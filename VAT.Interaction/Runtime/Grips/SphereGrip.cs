@@ -32,14 +32,14 @@ namespace VAT.Interaction
             var palmHost = point.GetHostTransform();
 
             var grabPoint = palmHost.Transform(GrabTargetHelper.GetTargetInInteractor(point, pose));
-            var direction = ((Vector3)grabPoint.position - target.position).normalized;
+            var direction = ((Vector3)grabPoint.Position - target.position).normalized;
 
-            var grabRotation = Quaternion.FromToRotation(palmHost.TransformDirection(-point.GetNormalInHost()), direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(palmHost.TransformDirection(-point.GetNormalInHost()), direction) * grabPoint.Rotation;
 
-            var worldTarget = SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
+            var worldTarget = new SimpleTransform(target.position + direction * GetWorldRadius(), grabRotation);
 
             var host = GetHostGameObject().transform;
-            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
+            var hostTransform = new SimpleTransform(host.position, host.rotation);
 
             return hostTransform.InverseTransform(worldTarget);
         }
@@ -55,10 +55,10 @@ namespace VAT.Interaction
 
             var grabRotation = target.rotation;
 
-            var worldTarget = SimpleTransform.Create(target.position + direction * GetWorldRadius(), grabRotation);
+            var worldTarget = new SimpleTransform(target.position + direction * GetWorldRadius(), grabRotation);
 
             var host = GetHostGameObject().transform;
-            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
+            var hostTransform = new SimpleTransform(host.position, host.rotation);
 
             return hostTransform.InverseTransform(worldTarget);
         }

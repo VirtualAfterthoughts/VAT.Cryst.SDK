@@ -114,7 +114,7 @@ namespace VAT.Avatars.Editor
                         if (hips != null)
                         {
                             hips.parent = hand;
-                            hips.Reset();
+                            hips.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
                             hips.localScale = Vector3.zero;
                         }
 
@@ -339,19 +339,19 @@ namespace VAT.Avatars.Editor
             }
 
             var topTransform = dataSkeleton.Neck.Skull.Transform;
-            topTransform.position += neck.Skull.up * _avatar.proportions.neckProportions.skullEllipsoid.height * 0.5f;
+            topTransform.Position += neck.Skull.up * _avatar.proportions.neckProportions.skullEllipsoid.height * 0.5f;
             DrawAvatarEllipse(ref _avatar.proportions.neckProportions.topEllipse, _avatar, topTransform, "Top Head");
 
             var foreheadTransform = dataSkeleton.Neck.Skull.Transform;
-            foreheadTransform.position += neck.Skull.up * _avatar.proportions.neckProportions.skullEllipsoid.height * 0.3f;
+            foreheadTransform.Position += neck.Skull.up * _avatar.proportions.neckProportions.skullEllipsoid.height * 0.3f;
 
             DrawAvatarEllipse(ref _avatar.proportions.neckProportions.foreheadEllipse, _avatar, foreheadTransform, "Forehead");
 
             DrawAvatarEllipsoid(ref _avatar.proportions.neckProportions.skullEllipsoid, _avatar, dataSkeleton.Neck.Skull.Transform, 0f, "Skull");
 
             var jawTransform = dataSkeleton.Neck.Skull.Transform;
-            jawTransform.position -= neck.Skull.up * _avatar.proportions.neckProportions.skullEllipsoid.height * 0.3f;
-            jawTransform.rotation *= Quaternion.AngleAxis(25f, neck.Skull.right);
+            jawTransform.Position -= neck.Skull.up * _avatar.proportions.neckProportions.skullEllipsoid.height * 0.3f;
+            jawTransform.Rotation *= Quaternion.AngleAxis(25f, neck.Skull.right);
             DrawAvatarEllipse(ref _avatar.proportions.neckProportions.jawEllipse, _avatar, jawTransform, "Jaw");
 
             DrawAvatarEllipsoid(ref _avatar.proportions.neckProportions.upperNeckEllipsoid, _avatar, dataSkeleton.Neck.C1Vertebra.Transform, -1f, "Upper Neck");
@@ -467,29 +467,29 @@ namespace VAT.Avatars.Editor
         private void DrawArmHandles(ref HumanoidArmProportions proportions, ref HumanoidArmProportions otherProportions, HumanoidArm arm)
         {
             var clavicleTransform = arm.Clavicle.Transform;
-            clavicleTransform.position += arm.Clavicle.right * (arm.isLeft ? -1f : 1f) * proportions.clavicleEllipsoid.radius.x;
+            clavicleTransform.Position += arm.Clavicle.right * (arm.isLeft ? -1f : 1f) * proportions.clavicleEllipsoid.radius.x;
             DrawAvatarEllipsoidSymmetry(ref proportions.clavicleEllipsoid, ref otherProportions.clavicleEllipsoid, _avatar, clavicleTransform, -1f, "Clavicle");
 
             DrawAvatarEllipsoidSymmetry(ref proportions.shoulderBladeEllipsoid, ref otherProportions.shoulderBladeEllipsoid, _avatar, arm.Scapula.Transform, -1f, "Shoulder Blade");
 
             var upperArmTransform = arm.UpperArm.Transform;
-            upperArmTransform.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.UpperArm.forward);
+            upperArmTransform.Rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.UpperArm.forward);
             DrawAvatarEllipsoidSymmetry(ref proportions.upperArmEllipsoid, ref otherProportions.upperArmEllipsoid, _avatar, upperArmTransform, -1f, "Upper Arm");
 
             var elbowTransform = arm.Elbow.Transform;
-            elbowTransform.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Elbow.forward);
+            elbowTransform.Rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Elbow.forward);
             DrawAvatarEllipsoidSymmetry(ref proportions.elbowEllipsoid, ref otherProportions.elbowEllipsoid, _avatar, elbowTransform, -1f, "Elbow");
 
             var wristTransform = arm.Wrist.Transform;
-            wristTransform.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Wrist.forward);
+            wristTransform.Rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Wrist.forward);
             DrawAvatarEllipsoidSymmetry(ref proportions.handProportions.wristEllipsoid, ref otherProportions.handProportions.wristEllipsoid, _avatar, wristTransform, -1f, "Wrist");
 
             var knuckleTransform = arm.Wrist.Transform;
-            knuckleTransform.position += proportions.handProportions.wristEllipsoid.height * knuckleTransform.forward;
-            knuckleTransform.rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Wrist.forward);
+            knuckleTransform.Position += proportions.handProportions.wristEllipsoid.height * knuckleTransform.Forward;
+            knuckleTransform.Rotation *= Quaternion.AngleAxis(-90f * (arm.isLeft ? -1f : 1f), arm.Wrist.forward);
             DrawAvatarEllipsoidSymmetry(ref proportions.handProportions.knuckleEllipsoid, ref otherProportions.handProportions.knuckleEllipsoid, _avatar, knuckleTransform, -1f, "Knuckle");
 
-            if (DrawOffset(wristTransform.position, out var wristOffset))
+            if (DrawOffset(wristTransform.Position, out var wristOffset))
             {
                 Undo.RecordObject(_avatar, "Adjust Wrist Offset");
 
@@ -533,7 +533,7 @@ namespace VAT.Avatars.Editor
 
         private void DrawAvatarEllipsoid(ref Ellipsoid ellipsoid, HumanoidAvatar _avatar, SimpleTransform transform, float offset, string name)
         {
-            if (ellipsoid.DrawHandles(transform.position, transform.rotation, new float2(1f, -1f), out var radius, out var height, offset))
+            if (ellipsoid.DrawHandles(transform.Position, transform.Rotation, new float2(1f, -1f), out var radius, out var height, offset))
             {
                 Undo.RecordObject(_avatar, $"Adjust {name} Ellipsoid");
 
@@ -546,7 +546,7 @@ namespace VAT.Avatars.Editor
 
         private void DrawAvatarEllipse(ref Ellipse ellipse, HumanoidAvatar _avatar, SimpleTransform transform, string name)
         {
-            if (ellipse.DrawHandles(transform.position, transform.rotation, new float2(1f, -1f), out var radius))
+            if (ellipse.DrawHandles(transform.Position, transform.Rotation, new float2(1f, -1f), out var radius))
             {
                 Undo.RecordObject(_avatar, $"Adjust {name} Ellipse");
 
@@ -563,7 +563,7 @@ namespace VAT.Avatars.Editor
             if (handleDirections.HasValue)
                 directions = handleDirections.Value;
 
-            if (ellipsoid.DrawHandles(transform.position, transform.rotation, directions, out var radius, out var height, offset))
+            if (ellipsoid.DrawHandles(transform.Position, transform.Rotation, directions, out var radius, out var height, offset))
             {
                 Undo.RecordObject(_avatar, $"Adjust {name} Ellipsoid");
 

@@ -4,7 +4,7 @@ using VAT.Shared;
 
 namespace VAT.Pooling
 {
-    public sealed class LootTablePlacer : MonoBehaviour, ITriggerable
+    public sealed class LootTablePlacer : MonoBehaviour
     {
         [SerializeField]
         [Tooltip("The loot table to grab an item from.")]

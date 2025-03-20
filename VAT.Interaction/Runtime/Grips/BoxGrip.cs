@@ -41,48 +41,51 @@ namespace VAT.Interaction
 
         public override SimpleTransform CalculateTargetInHost(PalmPoint point, HandPoseData pose)
         {
-            var palmHost = point.GetHostTransform();
-            var grabPoint = palmHost.Transform(point.GetPressureCenterInHost(pose));
-            var targetTransform = GetTargetTransform();
-            var localGrabPoint = targetTransform.InverseTransformPoint(grabPoint.position);
+            return SimpleTransform.Identity;
 
-            var host = GetHostGameObject().transform;
-            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
-
-            var face = Geometry.ClosestFace(localGrabPoint, _center, _size, Faces.EVERYTHING);
-            if (face.HasValue)
-            {
-                var worldPoint = targetTransform.TransformPoint(face.Value.ClosestPoint(localGrabPoint));
-                var worldNormal = targetTransform.TransformDirection(face.Value.normal);
-
-                var grabRotation = Quaternion.FromToRotation(palmHost.TransformDirection(-point.GetNormalInHost()), worldNormal) * grabPoint.rotation;
-
-                var worldTarget = SimpleTransform.Create(worldPoint, grabRotation);
-
-                return hostTransform.InverseTransform(worldTarget);
-            }
-
-            return hostTransform.InverseTransform(grabPoint);
+            // var palmHost = point.GetHostTransform();
+            // var grabPoint = palmHost.Transform(point.GetPressureCenterInHost(pose));
+            // var targetTransform = GetTargetTransform();
+            // var localGrabPoint = targetTransform.InverseTransformPoint(grabPoint.position);
+            // 
+            // var host = GetHostGameObject().transform;
+            // var hostTransform = new SimpleTransform(host.position, host.rotation);
+            // 
+            // var face = Geometry.ClosestFace(localGrabPoint, _center, _size, Faces.EVERYTHING);
+            // if (face.HasValue)
+            // {
+            //     var worldPoint = targetTransform.TransformPoint(face.Value.ClosestPoint(localGrabPoint));
+            //     var worldNormal = targetTransform.TransformDirection(face.Value.normal);
+            // 
+            //     var grabRotation = Quaternion.FromToRotation(palmHost.TransformDirection(-point.GetNormalInHost()), worldNormal) * grabPoint.rotation;
+            // 
+            //     var worldTarget = new SimpleTransform(worldPoint, grabRotation);
+            // 
+            //     return hostTransform.InverseTransform(worldTarget);
+            // }
+            // 
+            // return hostTransform.InverseTransform(grabPoint);
         }
 
         public override SimpleTransform CalculateDefaultTargetInHost(PalmPoint point, HandPoseData pose)
         {
-            var targetTransform = GetTargetTransform();
-
-            var faces = Geometry.GetFaceInformation(_center, _size, Faces.PositiveX);
-            var face = faces[0];
-
-            var worldPoint = targetTransform.TransformPoint(face.origin);
-            var worldNormal = targetTransform.TransformDirection(face.normal);
-
-            var grabRotation = Quaternion.FromToRotation(targetTransform.right, worldNormal) * targetTransform.rotation;
-
-            var worldTarget = SimpleTransform.Create(worldPoint, grabRotation);
-
-            var host = GetHostGameObject().transform;
-            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
-
-            return hostTransform.InverseTransform(worldTarget);
+            return SimpleTransform.Identity;
+            //var targetTransform = GetTargetTransform();
+            //
+            //var faces = Geometry.GetFaceInformation(_center, _size, Faces.PositiveX);
+            //var face = faces[0];
+            //
+            //var worldPoint = targetTransform.TransformPoint(face.origin);
+            //var worldNormal = targetTransform.TransformDirection(face.normal);
+            //
+            //var grabRotation = Quaternion.FromToRotation(targetTransform.right, worldNormal) * targetTransform.rotation;
+            //
+            //var worldTarget = new SimpleTransform(worldPoint, grabRotation);
+            //
+            //var host = GetHostGameObject().transform;
+            //var hostTransform = new SimpleTransform(host.position, host.rotation);
+            //
+            //return hostTransform.InverseTransform(worldTarget);
         }
 
         private void OnDrawGizmosSelected()

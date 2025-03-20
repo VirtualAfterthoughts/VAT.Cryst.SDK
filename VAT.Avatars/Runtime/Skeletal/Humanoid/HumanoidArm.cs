@@ -169,7 +169,7 @@ namespace VAT.Avatars.Skeletal
             if (remappingMeasurements.HasValue)
             {
                 var shoulderPosition = _spine.T1Vertebra.position;
-                var vector = _target.position - shoulderPosition;
+                var vector = _target.Position - shoulderPosition;
 
                 vector = Quaternion.Inverse(_spine.T1Vertebra.rotation) * vector;
 
@@ -186,7 +186,7 @@ namespace VAT.Avatars.Skeletal
 
                 vector = (Quaternion)_spine.T1Vertebra.rotation * vector;
 
-                _target.position = shoulderPosition + vector;
+                _target.Position = shoulderPosition + vector;
             }
 
             _originalTarget = _target;
@@ -236,7 +236,7 @@ namespace VAT.Avatars.Skeletal
             // Get the direction from the clavicle to the hand (arm length)
             Vector3 upperArm = _spine.T1Vertebra.TransformPoint(_initialUpperArm);
 
-            Vector3 clav = _target.position - (float3)upperArm;
+            Vector3 clav = _target.Position - (float3)upperArm;
             clav /= _armLength;
 
             // Solve the Y axis of clavicles (back and forth)
@@ -295,7 +295,7 @@ namespace VAT.Avatars.Skeletal
 
             var shoulderPosition = UpperArm.position;
 
-            var target = _target.position;
+            var target = _target.Position;
 
             Vector3 newVector = target - shoulderPosition;
 
@@ -314,8 +314,8 @@ namespace VAT.Avatars.Skeletal
             float b = _armProportions.upperArmEllipsoid.height;
             float c = _armProportions.elbowEllipsoid.height;
 
-            float A = Mathf.Acos(((Mathf.Pow(a, 2f) + Mathf.Pow(b, 2f) - Mathf.Pow(c, 2f)) / (2f * a * b)).SinClamp());
-            float B = Mathf.Acos(((Mathf.Pow(b, 2f) + Mathf.Pow(c, 2f) - Mathf.Pow(a, 2f)) / (2f * b * c)).SinClamp());
+            float A = Mathf.Acos(((Mathf.Pow(a, 2f) + Mathf.Pow(b, 2f) - Mathf.Pow(c, 2f)) / (2f * a * b)).ClampSine());
+            float B = Mathf.Acos(((Mathf.Pow(b, 2f) + Mathf.Pow(c, 2f) - Mathf.Pow(a, 2f)) / (2f * b * c)).ClampSine());
 
             // Fixes flipping of the elbows along certain axes
             Vector3 crossRelax = Quaternion.AngleAxis(-90f, -Clavicle.right) * Vector3.ProjectOnPlane(_armVector, -Clavicle.right);
@@ -328,7 +328,7 @@ namespace VAT.Avatars.Skeletal
 
             if (_hasElbow)
             {
-                Vector3 elbowVector = _elbowTarget.position - UpperArm.position;
+                Vector3 elbowVector = _elbowTarget.Position - UpperArm.position;
                 elbowVector.Normalize();
 
                 up = -elbowVector;
@@ -349,14 +349,14 @@ namespace VAT.Avatars.Skeletal
         private void WristSolve()
         {
             // Rotate the wrist according to the hand. Hand should always match target rotation.
-            Wrist.rotation = Quaternion.AngleAxis(-Vector3.Angle(Elbow.forward, _target.forward), Vector3.Cross(Elbow.forward, _target.forward)) * _target.rotation;
+            Wrist.rotation = Quaternion.AngleAxis(-Vector3.Angle(Elbow.forward, _target.Forward), Vector3.Cross(Elbow.forward, _target.Forward)) * _target.Rotation;
 
             // Bend the carpal from the hand to the wrist like a spine
-            float bendAngle = Vector3.Angle(Elbow.forward, _target.forward);
-            Vector3 bendAxis = Vector3.Cross(Elbow.forward, _target.forward);
-            Carpal.rotation = Quaternion.AngleAxis(-CarpalBend.Evaluate(bendAngle), bendAxis) * _target.rotation;
+            float bendAngle = Vector3.Angle(Elbow.forward, _target.Forward);
+            Vector3 bendAxis = Vector3.Cross(Elbow.forward, _target.Forward);
+            Carpal.rotation = Quaternion.AngleAxis(-CarpalBend.Evaluate(bendAngle), bendAxis) * _target.Rotation;
 
-            Hand.Hand.rotation = _target.rotation;
+            Hand.Hand.rotation = _target.Rotation;
         }
 
         private float _smoothAngle = 0f;

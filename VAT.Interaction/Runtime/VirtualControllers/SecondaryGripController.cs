@@ -117,23 +117,23 @@ namespace VAT.Interaction
                 var secondaryTransform = payload.ActivePair.Interactor.GetRigidbody().transform;
                 var secondaryGrabTransform = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, payload.ActivePair.Grip.GetDefaultPose()));
                 var grabTarget = GrabTargetHelper.GetTargetInWorld(payload.ActivePair.Grip, payload.ActivePair.Interactor);
-                var relativeToGrab = secondaryGrabTransform.InverseTransform(SimpleTransform.Create(secondaryTransform.position, secondaryTransform.rotation));
+                var relativeToGrab = secondaryGrabTransform.InverseTransform(new(secondaryTransform.position, secondaryTransform.rotation));
 
-                var relative = SimpleTransform.Create(primaryTransform.position, primaryTransform.rotation).InverseTransform(grabTarget);
+                var relative = new SimpleTransform(primaryTransform.position, primaryTransform.rotation).InverseTransform(grabTarget);
 
                 var primaryTarget = primaryHand.GetTargetData().targetInRig;
 
-                var oldTargetInRig = payload.TargetInRig.rotation;
+                var oldTargetInRig = payload.TargetInRig.Rotation;
                 var result = primaryTarget.Transform(relative).Transform(relativeToGrab);
                 payload.TargetInRig = result;
 
                 var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(palm, payload.ActivePair.Grip.GetDefaultPose());
-                var worldTarget = math.mul(payload.Rig.TransformRotation(oldTargetInRig), targetInInteractor.rotation);
+                var worldTarget = math.mul(payload.Rig.TransformRotation(oldTargetInRig), targetInInteractor.Rotation);
 
                 var hostGameObject = payload.ActivePair.Grip.GetHostGameObject().transform;
-                var hostTransform = SimpleTransform.Create(hostGameObject.position, hostGameObject.rotation);
+                var hostTransform = new SimpleTransform(hostGameObject.position, hostGameObject.rotation);
                 var targetInGripHost = payload.TargetInGripHost;
-                targetInGripHost.rotation = hostTransform.InverseTransformRotation(worldTarget);
+                targetInGripHost.Rotation = hostTransform.InverseTransformRotation(worldTarget);
 
                 payload.TargetInGripHost = targetInGripHost;
             }

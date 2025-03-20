@@ -232,9 +232,9 @@ namespace VAT.Interaction
             var target = GrabTargetHelper.GetTargetInWorld(this, interactor);
             var grabCenter = palmHost.Transform(palm.GetProximityCenterInHost());
 
-            float distance = ((Vector3)(target.position - grabCenter.position)).magnitude;
+            float distance = ((Vector3)(target.Position - grabCenter.Position)).magnitude;
 
-            float angle = Quaternion.Angle(target.rotation, grabCenter.rotation) * Mathf.Deg2Rad * distance;
+            float angle = Quaternion.Angle(target.Rotation, grabCenter.Rotation) * Mathf.Deg2Rad * distance;
 
             return (true, (distance + angle) * _priority);
         }

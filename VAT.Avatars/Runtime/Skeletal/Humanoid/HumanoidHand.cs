@@ -10,6 +10,7 @@ using VAT.Input;
 using VAT.Shared.Data;
 using VAT.Shared.Extensions;
 using VAT.Input.Data;
+using VAT.Shared.Utilities;
 
 namespace VAT.Avatars.Skeletal
 {
@@ -123,7 +124,7 @@ namespace VAT.Avatars.Skeletal
                 thumb.Attach(this);
                 thumb.WriteProportions(proportions.thumbProportions[i], proportions);
                 thumb.isLeft = _handedness == Handedness.LEFT;
-                thumb.defaultRotation = proportions.thumbProportions[i].metaCarpalTransform.rotation;
+                thumb.defaultRotation = proportions.thumbProportions[i].metaCarpalTransform.Rotation;
                 _thumbs[i] = thumb;
             }
 
@@ -158,7 +159,7 @@ namespace VAT.Avatars.Skeletal
             var size2D = new Vector2(size.y, size.z) * 0.5f;
 
             var palmPos = Palm.position + Palm.forward * size2D.y * position.y + Palm.up * size2D.x * position.x;
-            return SimpleTransform.Create(palmPos, Palm.rotation);
+            return new SimpleTransform(palmPos, Palm.rotation);
         }
 
         public void SetOpenPose(HandPoseData data)
@@ -236,16 +237,16 @@ namespace VAT.Avatars.Skeletal
         {
             base.DrawGizmos();
 
-            using var color = TempGizmoColor.Create();
+            using var color = new TempGizmoColor();
 
             Gizmos.color = Color.red;
-            var palmPoint = GetPointOnPalm(_centerOfPressure).position;
+            var palmPoint = GetPointOnPalm(_centerOfPressure).Position;
 
             Gizmos.DrawSphere(palmPoint, 0.005f);
 
-            using (var matrix = TempGizmoMatrix.Create())
+            using (var matrix = new TempGizmoMatrix())
             {
-                Gizmos.matrix = Palm.Transform.localToWorldMatrix;
+                Gizmos.matrix = Palm.Transform.LocalToWorldMatrix;
 
                 Gizmos.DrawWireCube(Vector3.zero, GetPalmSize());
             }

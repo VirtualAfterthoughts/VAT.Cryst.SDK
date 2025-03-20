@@ -189,8 +189,8 @@ namespace VAT.Packaging.Editor
 
             _crystal.OnValidate();
 
-            shard.ForceSerialize();
-            _crystal.ForceSerialize();
+            EditorUtility.SetDirty(shard);
+            EditorUtility.SetDirty(_crystal);
 
             AssetPackager.EditorForceRefresh();
 

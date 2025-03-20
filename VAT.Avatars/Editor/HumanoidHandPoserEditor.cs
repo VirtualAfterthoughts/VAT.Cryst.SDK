@@ -260,13 +260,13 @@ namespace VAT.Avatars.Editor
 
                 rotationOffset = Quaternion.AngleAxis(angle, axis);
 
-                var newRotation = Handles.RotationHandle(worldTarget.rotation * rotationOffset, worldTarget.position);
+                var newRotation = Handles.RotationHandle(worldTarget.Rotation * rotationOffset, worldTarget.Position);
 
                 if (EditorGUI.EndChangeCheck())
                 {
                     Undo.RecordObject(_poser, "Modify Hand Pose Data");
 
-                    var newOffset = Quaternion.Inverse(worldTarget.rotation) * newRotation;
+                    var newOffset = Quaternion.Inverse(worldTarget.Rotation) * newRotation;
                     newOffset.ToAngleAxis(out var newAngle, out var newAxis);
 
                     if (dot > 0)
@@ -285,7 +285,7 @@ namespace VAT.Avatars.Editor
             }
             else
             {
-                bool pressed = Handles.Button(worldTarget.position, worldTarget.rotation, _handleSize, _handleSize / 2f, Handles.SphereHandleCap);
+                bool pressed = Handles.Button(worldTarget.Position, worldTarget.Rotation, _handleSize, _handleSize / 2f, Handles.SphereHandleCap);
 
                 if (pressed)
                 {

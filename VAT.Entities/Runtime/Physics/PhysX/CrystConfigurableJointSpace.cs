@@ -11,7 +11,7 @@ namespace VAT.Entities.PhysX
     public sealed class CrystConfigurableJointSpace : CrystJointSpace
     {
         private readonly ConfigurableJoint _joint;
-        private readonly ConfigurableJointSpace _space;
+        private readonly JointSpace _space;
 
         public override float3 RawTargetPosition { get => _joint.targetPosition; set => _joint.targetPosition = value; }
         public override quaternion RawTargetRotation { get => _joint.targetRotation; set => _joint.targetRotation = value; }
@@ -21,7 +21,7 @@ namespace VAT.Entities.PhysX
         public CrystConfigurableJointSpace(ConfigurableJoint joint)
         {
             _joint = joint;
-            _space = new ConfigurableJointSpace(joint);
+            _space = new JointSpace(joint);
         }
 
         public override float3 InverseTransformTargetPosition(float3 target, CrystSpace space = CrystSpace.WORLD)

@@ -8,6 +8,7 @@ using VAT.Avatars.Nervous;
 using VAT.Avatars.Posing;
 using VAT.Input.Data;
 using VAT.Shared.Extensions;
+using VAT.Shared.Utilities;
 
 namespace VAT.Avatars.Integumentary
 {
@@ -123,7 +124,7 @@ namespace VAT.Avatars.Integumentary
         {
             if (Initiated)
             {
-                using TempGizmoColor color = TempGizmoColor.Create();
+                using var color = new TempGizmoColor();
                 Gizmos.color = Color.green;
 
                 GetSkeleton().GetData().DrawGizmos();

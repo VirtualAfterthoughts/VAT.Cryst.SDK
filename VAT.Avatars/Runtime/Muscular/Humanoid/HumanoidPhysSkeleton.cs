@@ -203,7 +203,7 @@ namespace VAT.Avatars.Muscular
 
         public override SimpleTransform GetFloor()
         {
-            return SimpleTransform.Create(LocoLeg.GetCenterOfPressure(), Spine.Root.Transform.rotation);
+            return new SimpleTransform(LocoLeg.GetCenterOfPressure(), Spine.Root.Transform.Rotation);
         }
 
         public void WriteSkeleton(IHumanSkeleton skeleton)

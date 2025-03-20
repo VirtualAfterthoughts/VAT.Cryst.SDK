@@ -79,7 +79,9 @@ namespace VAT.Packaging
             int count = _shards.RemoveAll((c) => c == null);
 
             if (count > 0)
-                this.ForceSerialize();
+            {
+                UnityEditor.EditorUtility.SetDirty(this);
+            }
         }
 #endif
 

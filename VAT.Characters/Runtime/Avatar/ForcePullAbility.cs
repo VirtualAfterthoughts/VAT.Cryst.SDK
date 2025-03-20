@@ -94,7 +94,7 @@ namespace VAT.Characters
                 var worldTarget = GrabTargetHelper.GetTargetInWorld(_pullingGrip, _interactor);
                 var interactorTarget = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, _pullingGrip.GetDefaultPose()));
 
-                float distance = math.length(worldTarget.position - interactorTarget.position);
+                float distance = math.length(worldTarget.Position - interactorTarget.Position);
 
                 if (distance <= 0.05f)
                 {
@@ -119,10 +119,10 @@ namespace VAT.Characters
                 var targetInInteractor = GrabTargetHelper.GetTargetInInteractor(grabPoint, grip.GetDefaultPose());
 
                 var targetInWorld = GrabTargetHelper.GetTargetInWorld(_pullingGrip, _interactor);
-                var targetInHost = SimpleTransform.Create(rb.position, rb.rotation, rb.transform.localScale).InverseTransform(targetInWorld);
+                var targetInHost = new SimpleTransform(rb.position, rb.rotation, rb.transform.localScale).InverseTransform(targetInWorld);
 
                 var interactorInHost = grip.GetTargetInHost(_interactor);
-                var worldInteractor = rb.transform.TransformRotation(interactorInHost.rotation) * grabPoint.GetHostTransform().Transform(targetInInteractor).InverseTransformRotation(_interactor.GetRigidbody().transform.rotation);
+                var worldInteractor = rb.transform.TransformRotation(interactorInHost.Rotation) * grabPoint.GetHostTransform().Transform(targetInInteractor).InverseTransformRotation(_interactor.GetRigidbody().transform.rotation);
 
                 _joint = _interactor.GetRigidbody().gameObject.AddComponent<ConfigurableJoint>();
 
@@ -132,8 +132,8 @@ namespace VAT.Characters
                 _joint.rotationDriveMode = RotationDriveMode.Slerp;
                 _joint.slerpDrive = new JointDrive() { positionSpring = 1000f, positionDamper = 50f, maximumForce = 1000f };
                 _joint.autoConfigureConnectedAnchor = false;
-                _joint.anchor = targetInInteractor.position;
-                _joint.connectedAnchor = targetInHost.position;
+                _joint.anchor = targetInInteractor.Position;
+                _joint.connectedAnchor = targetInHost.Position;
 
                 _joint.UpdateRotation(_joint.transform, worldInteractor);
 

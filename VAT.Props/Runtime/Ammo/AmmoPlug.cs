@@ -10,7 +10,7 @@ namespace VAT.Props.Ammo
         public Magazine magazine;
 
         private ConfigurableJoint _insertJoint = null;
-        private ConfigurableJointSpace _jointSpace = null;
+        private JointSpace _jointSpace = null;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -109,7 +109,7 @@ namespace VAT.Props.Ammo
 
             Body.transform.rotation = startRotation;
 
-            _jointSpace = new ConfigurableJointSpace(_insertJoint);
+            _jointSpace = new JointSpace(_insertJoint);
         }
 
         private void FreeJoint(Socket socket)

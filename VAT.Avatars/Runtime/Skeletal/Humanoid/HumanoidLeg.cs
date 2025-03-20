@@ -41,7 +41,7 @@ namespace VAT.Avatars.Skeletal
 
         public SimpleTransform EndTarget => _originalTarget;
 
-        private SimpleTransform _originalTarget = SimpleTransform.Default;
+        private SimpleTransform _originalTarget = SimpleTransform.Identity;
 
         private int _legIndex;
 
@@ -117,16 +117,16 @@ namespace VAT.Avatars.Skeletal
 
         private void LegSolve(SimpleTransform target)
         {
-            var position = target.position;
-            var rotation = target.rotation;
+            var position = target.Position;
+            var rotation = target.Rotation;
 
             Vector3 legVector = position - Hip.position - mul(rotation, Vector3.down) * _legProportions.ankleEllipsoid.height;
             float a = legVector.magnitude;
             float b = _legProportions.hipEllipsoid.height;
             float c = _legProportions.kneeEllipsoid.height;
 
-            float A = Mathf.Acos(((Mathf.Pow(a, 2f) + Mathf.Pow(b, 2f) - Mathf.Pow(c, 2f)) / (2f * a * b)).SinClamp()) * Mathf.Rad2Deg;
-            float B = Mathf.Acos(((Mathf.Pow(b, 2f) + Mathf.Pow(c, 2f) - Mathf.Pow(a, 2f)) / (2f * b * c)).SinClamp()) * Mathf.Rad2Deg;
+            float A = Mathf.Acos(((Mathf.Pow(a, 2f) + Mathf.Pow(b, 2f) - Mathf.Pow(c, 2f)) / (2f * a * b)).ClampSine()) * Mathf.Rad2Deg;
+            float B = Mathf.Acos(((Mathf.Pow(b, 2f) + Mathf.Pow(c, 2f) - Mathf.Pow(a, 2f)) / (2f * b * c)).ClampSine()) * Mathf.Rad2Deg;
 
             // Get right bend direction
             Vector3 footRht = mul(rotation, Vector3.right);

@@ -85,7 +85,7 @@ namespace VAT.Avatars.Nervous
 
         public readonly bool TryGetFoot(Handedness handedness, out SimpleTransform result)
         {
-            result = SimpleTransform.Default;
+            result = SimpleTransform.Identity;
             return false;
         }
 
@@ -113,7 +113,7 @@ namespace VAT.Avatars.Nervous
 
         public readonly bool TryGetPelvis(out SimpleTransform result)
         {
-            result = SimpleTransform.Default;
+            result = SimpleTransform.Identity;
             return false;
         }
 

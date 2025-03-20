@@ -34,7 +34,7 @@ namespace VAT.Avatars.Skeletal
             {
                 var group = groups[i];
 
-                float dist = lengthsq(point - groups[i].transform.position);
+                float dist = lengthsq(point - groups[i].transform.Position);
 
                 if (!closest.HasValue || dist < distance)
                 {
@@ -51,7 +51,7 @@ namespace VAT.Avatars.Skeletal
                 if (group.GetHashCode() == closest.Value.GetHashCode())
                     continue;
 
-                float dist = lengthsq(point - groups[i].transform.position);
+                float dist = lengthsq(point - groups[i].transform.Position);
 
                 if (!secondClosest.HasValue || dist < secondDistance)
                 {
@@ -60,8 +60,8 @@ namespace VAT.Avatars.Skeletal
                 }
             }
 
-            var start = closest.Value.transform.position;
-            var end = secondClosest.Value.transform.position;
+            var start = closest.Value.transform.Position;
+            var end = secondClosest.Value.transform.Position;
             LineData line = new(start, end);
             float maxDist = distancesq(start, end);
             float lineDist = distancesq(start, line.ClosestPointOnLine(point));

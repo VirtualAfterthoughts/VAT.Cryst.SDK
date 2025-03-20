@@ -244,7 +244,7 @@ namespace VAT.Characters
         {
             _activeAvatar.transform.position = LastRig.transform.position;
 
-            var root = SimpleTransform.Create(_activeAvatar.transform.position, _activeAvatar.transform.rotation);
+            var root = new SimpleTransform(_activeAvatar.transform.position, _activeAvatar.transform.rotation);
 
             LastRig.TryGetHead(out var head);
             LastRig.TryGetArm(Handedness.LEFT, out var leftArm);
@@ -284,7 +284,7 @@ namespace VAT.Characters
 
         public override bool TryGetHead(out IInputJoint head)
         {
-            head = new BasicJoint(SimpleTransform.Create(transform.position, transform.rotation).InverseTransform(_activeAvatar.GetSkeleton().GetPhysics().GetEyeCenter()));
+            head = new BasicJoint(new SimpleTransform(transform.position, transform.rotation).InverseTransform(_activeAvatar.GetSkeleton().GetPhysics().GetEyeCenter()));
             return true;
         }
 
@@ -298,18 +298,18 @@ namespace VAT.Characters
             var skeleton = _activeAvatar.GetSkeleton();
 
             var root = behaviourRig.GetRoot();
-            root.rotation = Quaternion.Slerp(root.rotation, skeleton.GetPhysics().GetRoot().Transform.rotation, Smoothing.CalculateDecay(24f, Time.deltaTime));
+            root.Rotation = Quaternion.Slerp(root.Rotation, skeleton.GetPhysics().GetRoot().Transform.Rotation, Smoothing.CalculateDecay(24f, Time.deltaTime));
 
             // Position
             TryGetHead(out var thisHead);
             behaviourRig.TryGetHead(out var lastHead);
 
-            var physHead = SimpleTransform.Create(transform.position, transform.rotation).Transform(thisHead.Transform);
+            var physHead = new SimpleTransform(transform.position, transform.rotation).Transform(thisHead.Transform);
             var head = root.Transform(lastHead.Transform);
 
-            var pos = (physHead.position - head.position);
+            var pos = (physHead.Position - head.Position);
 
-            root.position += pos;
+            root.Position += pos;
 
             behaviourRig.SetRoot(root);
         }

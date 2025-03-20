@@ -57,7 +57,7 @@ namespace VAT.Interaction
             var palmHost = point.GetHostTransform();
             var grabPoint = palmHost.Transform(point.GetPressureCenterInHost(pose));
 
-            var distance = ((Vector3)grabPoint.position - target.position);
+            var distance = ((Vector3)grabPoint.Position - target.position);
             var relativeDistance = target.InverseTransformDirection(distance);
 
             float realHeight = GetWorldHeight() * 0.5f;
@@ -67,15 +67,15 @@ namespace VAT.Interaction
             fixedDirection.y = 0f;
             var direction = target.TransformDirection(fixedDirection.normalized);
 
-            var grabRotation = Quaternion.FromToRotation(palmHost.TransformDirection(-point.GetNormalInHost()), direction) * grabPoint.rotation;
+            var grabRotation = Quaternion.FromToRotation(palmHost.TransformDirection(-point.GetNormalInHost()), direction) * grabPoint.Rotation;
             Vector3 grabUp = grabRotation * Vector3.up;
             Vector3 targetUp = target.up * Mathf.Sign(Vector3.Dot(target.up, grabUp));
             grabRotation = Quaternion.FromToRotation(grabUp, targetUp) * grabRotation;
 
-            var worldTarget = SimpleTransform.Create(target.position + target.up * upOffset + direction * GetWorldRadius(), grabRotation);
+            var worldTarget = new SimpleTransform(target.position + target.up * upOffset + direction * GetWorldRadius(), grabRotation);
 
             var host = GetHostGameObject().transform;
-            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
+            var hostTransform = new SimpleTransform(host.position, host.rotation);
 
             return hostTransform.InverseTransform(worldTarget);
         }
@@ -100,10 +100,10 @@ namespace VAT.Interaction
             }
 #endif
 
-            var worldTarget = SimpleTransform.Create(grabPosition + direction * GetWorldRadius(), grabRotation);
+            var worldTarget = new SimpleTransform(grabPosition + direction * GetWorldRadius(), grabRotation);
 
             var host = GetHostGameObject().transform;
-            var hostTransform = SimpleTransform.Create(host.position, host.rotation);
+            var hostTransform = new SimpleTransform(host.position, host.rotation);
 
             return hostTransform.InverseTransform(worldTarget);
         }

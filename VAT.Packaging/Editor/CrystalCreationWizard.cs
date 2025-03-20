@@ -93,7 +93,7 @@ namespace VAT.Packaging.Editor
 
             AssetDatabase.CreateAsset(crystal, filePath);
 
-            crystal.ForceSerialize();
+            EditorUtility.SetDirty(crystal);
 
             AssetPackager.EditorForceRefresh();
 

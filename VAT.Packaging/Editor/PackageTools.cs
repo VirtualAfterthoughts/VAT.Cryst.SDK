@@ -51,11 +51,11 @@ namespace VAT.Packaging.Editor
                     crystal.Shards.Add(shard);
                     shard.MainCrystal = crystal;
 
-                    shard.ForceSerialize();
+                    EditorUtility.SetDirty(shard);
                 }
 
                 // Save
-                crystal.ForceSerialize();
+                EditorUtility.SetDirty(crystal);
 
                 // Show folder
                 EditorUtility.RevealInFinder(addressPath);

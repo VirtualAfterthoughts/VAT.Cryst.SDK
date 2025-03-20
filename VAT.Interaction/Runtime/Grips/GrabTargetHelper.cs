@@ -36,26 +36,26 @@ namespace VAT.Interaction
 
             var local = point.GetPressureCenterInHost(pose);
 
-            local.rotation *= offset;
+            local.Rotation *= offset;
             return local;
         }
 
         public static SimpleTransform GetTargetInWorld(IGrippable grip, IInteractor interactor)
         {
             var host = grip.GetHostGameObject().transform;
-            return SimpleTransform.Create(host.position, host.rotation).Transform(grip.GetTargetInHost(interactor));
+            return new SimpleTransform(host.position, host.rotation).Transform(grip.GetTargetInHost(interactor));
         }
 
         public static SimpleTransform CalculateTargetInWorld(IGrippable grip, PalmPoint point, HandPoseData pose)
         {
             var host = grip.GetHostGameObject().transform;
-            return SimpleTransform.Create(host.position, host.rotation).Transform(grip.CalculateTargetInHost(point, pose));
+            return new SimpleTransform(host.position, host.rotation).Transform(grip.CalculateTargetInHost(point, pose));
         }
 
         public static SimpleTransform CalculateDefaultTargetInWorld(IGrippable grip, PalmPoint point, HandPoseData pose)
         {
             var host = grip.GetHostGameObject().transform;
-            return SimpleTransform.Create(host.position, host.rotation).Transform(grip.CalculateDefaultTargetInHost(point, pose));
+            return new SimpleTransform(host.position, host.rotation).Transform(grip.CalculateDefaultTargetInHost(point, pose));
         }
     }
 }

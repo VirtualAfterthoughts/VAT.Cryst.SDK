@@ -46,7 +46,7 @@ namespace VAT.Misc
 
         protected override void OnRenderLine(LineRenderer renderer)
         {
-            float scale = transform.lossyScale.Maximum();
+            float scale = transform.lossyScale.Max();
             float radius = _radius * scale;
 
             var up = transform.up;

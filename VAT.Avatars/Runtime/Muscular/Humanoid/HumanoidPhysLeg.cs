@@ -83,17 +83,17 @@ namespace VAT.Avatars.Muscular
             var hipTarget = Hip.Parent.TransformBone(_leg.Hip.Parent, _leg.Hip);
             Hip.Solve(hipTarget);
 
-            Hip.SetConnectedAnchor(hipTarget.position);
+            Hip.SetConnectedAnchor(hipTarget.Position);
 
             var kneeTarget = Hip.TransformBone(_leg.Hip, _leg.Knee);
             Knee.Solve(kneeTarget);
 
-            Knee.SetConnectedAnchor(kneeTarget.position);
+            Knee.SetConnectedAnchor(kneeTarget.Position);
 
             var ankleTarget = Knee.TransformBone(_leg.Knee, _leg.Ankle);
             Ankle.Solve(ankleTarget);
 
-            Ankle.SetConnectedAnchor(ankleTarget.position);
+            Ankle.SetConnectedAnchor(ankleTarget.Position);
         }
 
         public override void Attach(PhysBoneGroup group)
@@ -143,10 +143,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = knee,
-                bottomTransform = SimpleTransform.Create(back() * proportions.kneeOffsetZ + down() * proportions.hipEllipsoid.height, quaternion.identity),
+                bottomTransform = new SimpleTransform(back() * proportions.kneeOffsetZ + down() * proportions.hipEllipsoid.height, quaternion.identity),
 
                 top = hip,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Create mesh
@@ -163,10 +163,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = ankle,
-                bottomTransform = SimpleTransform.Create(back() * proportions.ankleOffsetZ + down() * proportions.kneeEllipsoid.height, quaternion.identity),
+                bottomTransform = new SimpleTransform(back() * proportions.ankleOffsetZ + down() * proportions.kneeEllipsoid.height, quaternion.identity),
 
                 top = knee,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Create mesh
@@ -194,10 +194,10 @@ namespace VAT.Avatars.Muscular
             EllipseCylinderMesh cylinder = new()
             {
                 bottom = toe,
-                bottomTransform = SimpleTransform.Create(toeBottom, toeRotation),
+                bottomTransform = new SimpleTransform(toeBottom, toeRotation),
 
                 top = ankle,
-                topTransform = SimpleTransform.Create(float3.zero, quaternion.identity),
+                topTransform = new SimpleTransform(float3.zero, quaternion.identity),
             };
 
             // Create mesh

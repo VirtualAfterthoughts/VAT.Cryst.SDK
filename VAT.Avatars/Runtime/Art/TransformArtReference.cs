@@ -29,14 +29,14 @@ namespace VAT.Avatars.Art
             get
             {
                 if (HasTransform)
-                    return SimpleTransform.Create(transform.position, transform.rotation);
+                    return new SimpleTransform(transform.position, transform.rotation);
 
-                return SimpleTransform.Default;
+                return SimpleTransform.Identity;
             }
             set
             {
                 if (HasTransform)
-                    transform.SetPositionAndRotation(value.position, value.rotation);
+                    transform.SetPositionAndRotation(value.Position, value.Rotation);
             }
         }
 
@@ -46,16 +46,16 @@ namespace VAT.Avatars.Art
             {
                 if (HasTransform)
                 {
-                    return SimpleTransform.Create(transform.localPosition, transform.localRotation);
+                    return new SimpleTransform(transform.localPosition, transform.localRotation);
                 }
 
-                return SimpleTransform.Default;
+                return SimpleTransform.Identity;
             }
             set
             {
                 if (HasTransform)
                 {
-                    transform.SetLocalPositionAndRotation(value.position, value.rotation);
+                    transform.SetLocalPositionAndRotation(value.Position, value.Rotation);
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace VAT.Avatars.Art
         public TransformArtReference(Transform transform)
         {
             this.transform = transform;
-            this.offset = SimpleTransform.Default;
+            this.offset = SimpleTransform.Identity;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace VAT.Props
 
         public SimpleTransform GetFirePoint()
         {
-            return SimpleTransform.Create(_firePoint.position, _firePoint.rotation);
+            return new SimpleTransform(_firePoint.position, _firePoint.rotation);
         }
 
         public void Fire()

@@ -21,6 +21,7 @@ using VAT.Shared.Extensions;
 using VAT.Cryst.Math;
 using VAT.Avatars.Skeletal;
 using VAT.Interaction.Entities;
+using VAT.Shared.Math;
 
 namespace VAT.Characters
 {
@@ -86,7 +87,7 @@ namespace VAT.Characters
 
             ResetPose();
 
-            _lastTarget = SimpleTransform.Create(transform.position, transform.rotation);
+            _lastTarget = new SimpleTransform(transform.position, transform.rotation);
 
             var actions = hand.GetInputController().GetActions();
             actions.GrabAction.OnStateChanged += OnGrabStateChange;
@@ -117,7 +118,7 @@ namespace VAT.Characters
         }
 
         private float _pinAmount = 0f;
-        private SimpleTransform _lastTarget = SimpleTransform.Default;
+        private SimpleTransform _lastTarget = SimpleTransform.Identity;
 
         public IInteractable GetHoveringInteractable()
         {
@@ -136,7 +137,7 @@ namespace VAT.Characters
             SimpleTransform target = rig.Transform(result);
             var worldLastTarget = rig.Transform(_lastTarget);
 
-            Vector3 velocity = PhysicsExtensions.GetLinearVelocity(worldLastTarget.position, target.position);
+            Vector3 velocity = Derivatives.GetLinearVelocity(worldLastTarget.Position, target.Position);
             _pinAmount = Mathf.Lerp(_pinAmount, 0f, Mathf.Clamp01(velocity.magnitude * 0.3f - 0.05f));
 
             _lastTarget = rig.InverseTransform(target);
@@ -144,7 +145,7 @@ namespace VAT.Characters
             var values = GetValues(rig);
 
             var goal = values.Item1;
-            goal.rotation = target.rotation;
+            goal.Rotation = target.Rotation;
 
             target = SimpleTransform.Lerp(target, goal, Mathf.Pow(values.Item2, 2f));
 
@@ -158,7 +159,7 @@ namespace VAT.Characters
                 }
             }
 
-            _latestTar = rig.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation));
+            _latestTar = rig.InverseTransform(new SimpleTransform(transform.position, transform.rotation));
 
             return result;
         }
@@ -178,8 +179,8 @@ namespace VAT.Characters
             _isInteractionLocked = false;
         }
 
-        private SimpleTransform _latestTar = SimpleTransform.Default;
-        private SimpleTransform lastTar = SimpleTransform.Default;
+        private SimpleTransform _latestTar = SimpleTransform.Identity;
+        private SimpleTransform lastTar = SimpleTransform.Identity;
 
         private float _lerp;
 
@@ -190,9 +191,9 @@ namespace VAT.Characters
                 var palm = GetPalm();
                 var target = GrabTargetHelper.GetTargetInWorld(_attachedGrip, this);
                 var grabPoint = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, _attachedGrip.GetClosedPose(this).data));
-                grabPoint.rotation = target.rotation;
+                grabPoint.Rotation = target.Rotation;
 
-                var self = target.Transform(grabPoint.InverseTransform(SimpleTransform.Create(transform.position, transform.rotation)));
+                var self = target.Transform(grabPoint.InverseTransform(new SimpleTransform(transform.position, transform.rotation)));
                 lastTar = rig.InverseTransform(self);
                 _lerp = Mathf.Lerp(_lerp, 1f, Smoothing.CalculateDecay(12f, Time.deltaTime));
                 return (self, _lerp);
@@ -226,7 +227,7 @@ namespace VAT.Characters
             }
             else
             {
-                ((HumanoidHand)arm.DataArm.Hand).SetOffsetHand(SimpleTransform.Default);
+                ((HumanoidHand)arm.DataArm.Hand).SetOffsetHand(SimpleTransform.Identity);
             }
 
             var actions = controller.GetActions();
@@ -251,7 +252,7 @@ namespace VAT.Characters
                 var worldTarget = GrabTargetHelper.GetTargetInWorld(_attachedGrip, this);
                 var interactorTarget = palm.GetHostTransform().Transform(GrabTargetHelper.GetTargetInInteractor(palm, _attachedGrip.GetClosedPose(this).data));
 
-                float distance = math.length(worldTarget.position - interactorTarget.position);
+                float distance = math.length(worldTarget.Position - interactorTarget.Position);
 
                 var (valid, data) = _attachedGrip.GetClosedPose(this);
                 if (valid)
@@ -372,8 +373,8 @@ namespace VAT.Characters
 
         private Vector3 GetFarForward()
         {
-            Vector3 farForward = math.normalize(arm.PhysArm.Hand.Hand.Transform.position - arm.PhysArm.UpperArm.Transform.position);
-            Vector3 cameraForward = math.normalize((Vector3)arm.PhysArm.Hand.Hand.Transform.position - Camera.main.transform.position);
+            Vector3 farForward = math.normalize(arm.PhysArm.Hand.Hand.Transform.Position - arm.PhysArm.UpperArm.Transform.Position);
+            Vector3 cameraForward = math.normalize((Vector3)arm.PhysArm.Hand.Hand.Transform.Position - Camera.main.transform.position);
             farForward = Vector3.Lerp(farForward, cameraForward, 0.5f).normalized;
             return farForward;
         }
@@ -386,7 +387,7 @@ namespace VAT.Characters
             var host = _palm.GetHostTransform();
             var grabCenter = host.Transform(_palm.GetProximityCenterInHost());
 
-            var colliders = Physics.OverlapSphere(grabCenter.position, grabRadius, ~0, QueryTriggerInteraction.Collide);
+            var colliders = Physics.OverlapSphere(grabCenter.Position, grabRadius, ~0, QueryTriggerInteraction.Collide);
 
             var nearHover = GetInteractableFromColliders(colliders, HoverFlags.NEAR);
 
@@ -447,7 +448,7 @@ namespace VAT.Characters
             var host = _palm.GetHostTransform();
             var grabCenter = host.Transform(_palm.GetProximityCenterInHost());
 
-            Gizmos.DrawWireSphere(grabCenter.position, grabRadius);
+            Gizmos.DrawWireSphere(grabCenter.Position, grabRadius);
         }
 
         public void OnDrawGizmos()

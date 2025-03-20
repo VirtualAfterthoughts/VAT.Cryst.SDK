@@ -24,11 +24,11 @@ namespace VAT.Avatars.Skeletal
 
         public SimpleTransform Transform
         {
-            get { return SimpleTransform.Create(position, rotation); }
+            get { return new SimpleTransform(position, rotation); }
             set
             {
-                position = value.position;
-                rotation = value.rotation;
+                position = value.Position;
+                rotation = value.Rotation;
             }
         }
 
@@ -103,25 +103,25 @@ namespace VAT.Avatars.Skeletal
 
         public float3 TransformPoint(float3 point)
         {
-            BurstCompiled_Transform.BurstCompiled_TransformPoint(point, position, rotation, 1f, out var result);
+            BurstTransformExtensions.TransformPoint(point, position, rotation, 1f, out var result);
             return result;
         }
 
         public quaternion TransformRotation(quaternion rotation)
         {
-            BurstCompiled_Transform.BurstCompiled_TransformRotation(rotation, this.rotation, 1f, out var result);
+            BurstTransformExtensions.TransformRotation(rotation, this.rotation, 1f, out var result);
             return result;
         }
 
         public float3 InverseTransformPoint(float3 point)
         {
-            BurstCompiled_Transform.BurstCompiled_InverseTransformPoint(point, position, rotation, 1f, out var result);
+            BurstTransformExtensions.InverseTransformPoint(point, position, rotation, 1f, out var result);
             return result;
         }
 
         public quaternion InverseTransformRotation(quaternion rotation)
         {
-            BurstCompiled_Transform.BurstCompiled_InverseTransformRotation(rotation, this.rotation, 1f, out var result);
+            BurstTransformExtensions.InverseTransformRotation(rotation, this.rotation, 1f, out var result);
             return result;
         }
 

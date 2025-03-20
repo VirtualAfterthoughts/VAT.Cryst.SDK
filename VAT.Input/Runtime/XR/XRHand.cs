@@ -44,7 +44,7 @@ namespace VAT.Input
                 return provider.GetWristTransform();
             }
 
-            return SimpleTransform.Default;
+            return SimpleTransform.Identity;
         }
     }
 }

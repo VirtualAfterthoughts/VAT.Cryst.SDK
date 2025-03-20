@@ -52,7 +52,7 @@ namespace VAT.Props
             var targetData = interactor.GetTargetData();
             var targetInWorld = targetData.rig.Transform(targetData.targetInRig);
 
-            return transform.InverseTransformPoint(targetInWorld.position);
+            return transform.InverseTransformPoint(targetInWorld.Position);
         }
 
         private void OnDetached(IInteractor interactor)

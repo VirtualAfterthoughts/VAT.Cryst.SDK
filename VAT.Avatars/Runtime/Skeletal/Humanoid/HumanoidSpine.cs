@@ -55,7 +55,7 @@ namespace VAT.Avatars.Skeletal
 
         private quaternion lastChestRotation = quaternion.identity;
 
-        private SimpleTransform _targetRoot = SimpleTransform.Default;
+        private SimpleTransform _targetRoot = SimpleTransform.Identity;
 
         public override void Initiate()
         {
@@ -122,7 +122,7 @@ namespace VAT.Avatars.Skeletal
 
             TargetRoot.Transform = _targetRoot;
 
-            root.position += _floorOffset;
+            root.Position += _floorOffset;
 
             quaternion chestRotation = _neck.chestRotation;
 
@@ -138,18 +138,18 @@ namespace VAT.Avatars.Skeletal
 
             float height = _measurements.height;
 
-            float bendAngle = Vector3.Angle(root.up, t1Up);
-            Vector3 bendAxis = Vector3.Cross(root.up, t1Up);
+            float bendAngle = Vector3.Angle(root.Up, t1Up);
+            Vector3 bendAxis = Vector3.Cross(root.Up, t1Up);
             var thoracicRotation = Quaternion.AngleAxis(-bendAngle, bendAxis);
-            float neckHeight = Mathf.Clamp01(Vector3.Dot(root.up, T7Vertebra.position - root.position) / (height * 0.8f));
+            float neckHeight = Mathf.Clamp01(Vector3.Dot(root.Up, T7Vertebra.position - root.Position) / (height * 0.8f));
             float cervicalHeight = SacrumUpOffset.Evaluate(neckHeight);
 
-            Vector3 vector = Quaternion.AngleAxis(cervicalHeight * 90f, thoracicRotation * t1Right) * root.up;
+            Vector3 vector = Quaternion.AngleAxis(cervicalHeight * 90f, thoracicRotation * t1Right) * root.Up;
             float tiltAngle = Vector3.Angle(vector, t1Up);
             Vector3 tiltAxis = Vector3.Cross(vector, t1Up);
             _sacrumRotation = Quaternion.AngleAxis(-ThoraxTilt.Evaluate(tiltAngle), tiltAxis) * rawChestRot;
 
-            var initialSacrum = SimpleTransform.Create(Sacrum.position, _sacrumRotation);
+            var initialSacrum = new SimpleTransform(Sacrum.position, _sacrumRotation);
 
             SacrumPull();
 
@@ -186,7 +186,7 @@ namespace VAT.Avatars.Skeletal
 
         private float SolveSacrumYPull(HumanoidLocomotor locomotor)
         {
-            var pull = locomotor.Result.position - Sacrum.position;
+            var pull = locomotor.Result.Position - Sacrum.position;
             pull /= locomotor._legLength;
 
             var forward = math.mul(_sacrumRotation, Vector3.forward);

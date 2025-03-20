@@ -59,14 +59,14 @@ namespace VAT.Avatars.Art
             SimpleTransform carpal = BoneGroup.Carpal.Transform;
 
             // Axis correction
-            elbow.rotation = Quaternion.AngleAxis(90f * mult, elbow.forward) * elbow.rotation;
-            upperArm.rotation = Quaternion.AngleAxis(90f * mult, upperArm.forward) * upperArm.rotation;
+            elbow.Rotation = Quaternion.AngleAxis(90f * mult, elbow.Forward) * elbow.Rotation;
+            upperArm.Rotation = Quaternion.AngleAxis(90f * mult, upperArm.Forward) * upperArm.Rotation;
 
             // Upper arm twist
-            Vector3 twistUp = Quaternion.FromToRotation(clavicle.forward, upperArm.forward) * clavicle.up;
-            float upperTwist = Vector3.SignedAngle(upperArm.up, twistUp, upperArm.forward);
+            Vector3 twistUp = Quaternion.FromToRotation(clavicle.Forward, upperArm.Forward) * clavicle.Up;
+            float upperTwist = Vector3.SignedAngle(upperArm.Up, twistUp, upperArm.Forward);
 
-            upperArm.rotation = Quaternion.AngleAxis(upperTwist * 0.5f, upperArm.forward) * upperArm.rotation;
+            upperArm.Rotation = Quaternion.AngleAxis(upperTwist * 0.5f, upperArm.Forward) * upperArm.Rotation;
 
             UpperArm.Solve(upperArm);
             LowerArm.Solve(elbow);
@@ -80,7 +80,7 @@ namespace VAT.Avatars.Art
                 float percent = ((float)position / (float)count);
 
                 var transform = elbow;
-                transform.rotation = Quaternion.Lerp(transform.rotation, wrist.rotation, percent);
+                transform.Rotation = Quaternion.Lerp(transform.Rotation, wrist.Rotation, percent);
 
                 bone.Solve(transform);
             }

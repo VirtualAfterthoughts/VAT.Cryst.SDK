@@ -88,21 +88,21 @@ namespace VAT.Avatars.Skeletal
             _avatarPayload.TryGetHead(out var head);
             head = root.Transform(head);
 
-            root.position += _floorOffset;
+            root.Position += _floorOffset;
 
-            EyeCenter.rotation = head.rotation;
-            EyeCenter.position = head.position;
+            EyeCenter.rotation = head.Rotation;
+            EyeCenter.position = head.Position;
 
             float height = _measurements.height;
 
-            float bendAngle = Vector3.Angle(root.up, Skull.up);
-            Vector3 bendAxis = Vector3.Cross(root.up, Skull.up);
+            float bendAngle = Vector3.Angle(root.Up, Skull.up);
+            Vector3 bendAxis = Vector3.Cross(root.Up, Skull.up);
             var cervicalRotation = Quaternion.AngleAxis(-bendAngle, bendAxis);
 
-            float neckHeight = Mathf.Clamp01(Vector3.Dot(root.up, C1Vertebra.position - root.position) / (height * 0.9f));
+            float neckHeight = Mathf.Clamp01(Vector3.Dot(root.Up, C1Vertebra.position - root.Position) / (height * 0.9f));
             float cervicalHeight = CervicalUpOffset.Evaluate(neckHeight);
 
-            Vector3 tiltVector = Quaternion.AngleAxis(cervicalHeight * 90f, cervicalRotation * Skull.right) * root.up;
+            Vector3 tiltVector = Quaternion.AngleAxis(cervicalHeight * 90f, cervicalRotation * Skull.right) * root.Up;
             float tiltAngle = Vector3.Angle(tiltVector, Skull.up);
             Vector3 tiltAxis = Vector3.Cross(tiltVector, Skull.up);
             chestRotation = Quaternion.AngleAxis(-CervicalTilt.Evaluate(tiltAngle), tiltAxis) * Skull.rotation;
@@ -162,7 +162,7 @@ namespace VAT.Avatars.Skeletal
 
         private float SolveChestYPull(SimpleTransform hand)
         {
-            var pull = hand.position - C4Vertebra.position;
+            var pull = hand.Position - C4Vertebra.position;
             pull /= _armLength;
 
             var forward = math.mul(chestRotation, Vector3.forward);
@@ -176,7 +176,7 @@ namespace VAT.Avatars.Skeletal
 
         private float SolveChestZPull(SimpleTransform hand)
         {
-            var pull = hand.position - C4Vertebra.position;
+            var pull = hand.Position - C4Vertebra.position;
             pull /= _armLength;
 
             var forward = math.mul(chestRotation, Vector3.forward);
